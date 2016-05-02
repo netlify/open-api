@@ -75,6 +75,32 @@ func (a *Client) CreateSite(params *CreateSiteParams, authInfo runtime.ClientAut
 }
 
 /*
+CreateSiteDeploy create site deploy API
+*/
+func (a *Client) CreateSiteDeploy(params *CreateSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteDeployCreated, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewCreateSiteDeployParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "createSiteDeploy",
+		Method:             "POST",
+		PathPattern:        "/sites/{site_id}/deploys",
+		ProducesMediaTypes: []string{"application/io.swagger.netlify.v1+json"},
+		ConsumesMediaTypes: []string{"application/io.swagger.netlify.v1+json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &CreateSiteDeployReader{formats: a.formats},
+		AuthInfo:           authInfo,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*CreateSiteDeployCreated), nil
+}
+
+/*
 CreateSiteSnippet create site snippet API
 */
 func (a *Client) CreateSiteSnippet(params *CreateSiteSnippetParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteSnippetCreated, error) {

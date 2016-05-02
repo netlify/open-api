@@ -309,15 +309,34 @@ paths:
           schema:
             $ref: "#/definitions/error"
   /sites/{site_id}/deploys:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
     get:
       operationId: listSiteDeploys
-      parameters:
-        - name: site_id
-          type: string
-          in: path
-          required: true
       responses:
         '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/deploy"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+    post:
+      operationId: createSiteDeploy
+      parameters:
+        - name: deploy
+          in: body
+          schema:
+            $ref: "#/definitions/deployFiles"
+          required: true
+      responses:
+        '201':
           description: OK
           schema:
             type: array
@@ -624,12 +643,23 @@ definitions:
           type: string
         screenshot_url:
           type: string
+        required:
+          type: array
+          items:
+            type: string
         created_at:
           type: string
           format: dateTime
         updated_at:
           type: string
           format: dateTime
+    deployFiles:
+      type: object
+      properties:
+        files:
+          type: object
+        async:
+          type: boolean
     metadata:
       type: object
     error:
