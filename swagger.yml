@@ -20,70 +20,67 @@ produces:
   - application/io.swagger.netlify.v1+json
 schemes:
   - https
+basePath: /api/v1
 paths:
   /sites:
     get:
-      operationId: list
+      operationId: listSites
       responses:
         '200':
           description: OK
           schema:
             type: array
             items:
-              $ref: "#/definitions/site"
+              $ref: "definitions.yml#/site"
         default:
           description: error
           schema:
-            $ref: "#/definitions/error"
+            $ref: "definitions.yml#/error"
     post:
-      operationId: create
+      operationId: createSite
       consumes:
         - application/json
       parameters:
         - name: site
           in: body
           schema:
-            $ref: "#/definitions/site"
+            $ref: "definitions.yml#/site"
           required: true
       responses:
         '201':
           description: Created
           schema:
-            $ref: "#/definitions/site"
+            $ref: "definitions.yml#/site"
         default:
           description: error
           schema:
-            $ref: "#/definitions/error"
+            $ref: "definitions.yml#/error"
   /sites/{site_id}:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
     get:
-      operationId: show
-      parameters:
-        - name: site_id
-          type: string
-          in: path
-          required: true
+      operationId: getSite
       responses:
         '200':
           description: OK
           schema:
-            $ref: "#/definitions/site"
+            $ref: "definitions.yml#/site"
         default:
           description: error
           schema:
-            $ref: "#/definitions/error"
+            $ref: "definitions.yml#/error"
     patch:
-      operationId: update
+      operationId: updateSite
       consumes:
         - application/json
       parameters:
-        - name: site_id
-          type: string
-          in: path
-          required: true
         - name: site
           in: body
           schema:
-            $ref: "#/definitions/site"
+            $ref: "definitions.yml#/site"
           required: true
       responses:
         '204':
@@ -91,24 +88,19 @@ paths:
         default:
           description: error
           schema:
-            $ref: "#/definitions/error"
+            $ref: "definitions.yml#/error"
     delete:
-      operationId: destroy
-      parameters:
-        - name: site_id
-          type: string
-          in: path
-          required: true
+      operationId: deleteSite
       responses:
         '200':
           description: OK
         default:
           description: error
           schema:
-            $ref: "#/definitions/error"
+            $ref: "definitions.yml#/error"
   /sites/{site_id}/ssl:
     post:
-      operationId: provision
+      operationId: provisionSiteSSL
       parameters:
         - name: site_id
           type: string
@@ -120,10 +112,10 @@ paths:
         default:
           description: error
           schema:
-            $ref: "#/definitions/error"
+            $ref: "definitions.yml#/error"
   /sites/{site_id}/forms:
     get:
-      operationId: list
+      operationId: listSiteForms
       parameters:
         - name: site_id
           type: string
@@ -135,14 +127,14 @@ paths:
           schema:
             type: array
             items:
-              $ref: "#/definitions/form"
+              $ref: "definitions.yml#/form"
         default:
           description: error
           schema:
-            $ref: "#/definitions/error"
+            $ref: "definitions.yml#/error"
   /sites/{site_id}/submissions:
     get:
-      operationId: list
+      operationId: listSiteSubmissions
       parameters:
         - name: site_id
           type: string
@@ -154,14 +146,14 @@ paths:
           schema:
             type: array
             items:
-              $ref: "#/definitions/submission"
+              $ref: "definitions.yml#/submission"
         default:
           description: error
           schema:
-            $ref: "#/definitions/error"
+            $ref: "definitions.yml#/error"
   /sites/{site_id}/files:
     get:
-      operationId: list
+      operationId: listSiteFiles
       parameters:
         - name: site_id
           type: string
@@ -173,14 +165,14 @@ paths:
           schema:
             type: array
             items:
-              $ref: "#/definitions/file"
+              $ref: "definitions.yml#/file"
         default:
           description: error
           schema:
-            $ref: "#/definitions/error"
+            $ref: "definitions.yml#/error"
   /sites/{site_id}/files/{file_path}:
     get:
-      operationId: show
+      operationId: getSiteFileByPathName
       parameters:
         - name: site_id
           type: string
@@ -194,91 +186,79 @@ paths:
         '200':
           description: OK
           schema:
-            $ref: "#/definitions/file"
+            $ref: "definitions.yml#/file"
         default:
           description: error
           schema:
-            $ref: "#/definitions/error"
+            $ref: "definitions.yml#/error"
   /sites/{site_id}/snippets:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
     get:
-      operationId: list
-      parameters:
-        - name: site_id
-          type: string
-          in: path
-          required: true
+      operationId: listSiteSnippets
       responses:
         '200':
           description: OK
           schema:
             type: array
             items:
-              $ref: "#/definitions/snippet"
+              $ref: "definitions.yml#/snippet"
         default:
           description: error
           schema:
-            $ref: "#/definitions/error"
+            $ref: "definitions.yml#/error"
     post:
-      operationId: create
+      operationId: createSiteSnippet
       consumes:
         - application/json
       parameters:
-        - name: site_id
-          type: string
-          in: path
-          required: true
         - name: snippet
           in: body
           schema:
-            $ref: "#/definitions/snippet"
+            $ref: "definitions.yml#/snippet"
           required: true
       responses:
         '201':
           description: OK
           schema:
-            $ref: "#/definitions/snippet"
+            $ref: "definitions.yml#/snippet"
         default:
           description: error
           schema:
-            $ref: "#/definitions/error"
+            $ref: "definitions.yml#/error"
   /sites/{site_id}/snippets/{snippet_id}:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+      - name: snippet_id
+        type: string
+        in: path
+        required: true
     get:
-      operationId: show
-      parameters:
-        - name: site_id
-          type: string
-          in: path
-          required: true
-        - name: snippet_id
-          type: string
-          in: path
-          required: true
+      operationId: getSiteSnippet
       responses:
         '200':
           description: OK
           schema:
-            $ref: "#/definitions/snippet"
+            $ref: "definitions.yml#/snippet"
         default:
           description: error
           schema:
-            $ref: "#/definitions/error"
+            $ref: "definitions.yml#/error"
     put:
-      operationId: update
+      operationId: updateSiteSnippet
       consumes:
         - application/json
       parameters:
-        - name: site_id
-          type: string
-          in: path
-          required: true
-        - name: snippet_id
-          type: string
-          in: path
-          required: true
         - name: snippet
           in: body
           schema:
-            $ref: "#/definitions/snippet"
+            $ref: "definitions.yml#/snippet"
           required: true
       responses:
         '204':
@@ -286,48 +266,40 @@ paths:
         default:
           description: error
           schema:
-            $ref: "#/definitions/error"
+            $ref: "definitions.yml#/error"
     delete:
-      operationId: destroy
-      parameters:
-        - name: site_id
-          type: string
-          in: path
-          required: true
-        - name: snippet_id
-          type: string
-          in: path
-          required: true
+      operationId: deleteSiteSnippet
       responses:
         '204':
           description: No content
         default:
           description: error
           schema:
-            $ref: "#/definitions/error"
+            $ref: "definitions.yml#/error"
   /sites/{site_id}/metadata:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
     get:
-      operationId: show
-      parameters:
-        - name: site_id
-          type: string
-          in: path
-          required: true
+      operationId: getSiteMetadata
       responses:
         '200':
           description: OK
           schema:
-            $ref: "#/definitions/metadata"
+            $ref: "definitions.yml#/metadata"
         default:
           description: error
           schema:
-            $ref: "#/definitions/error"
+            $ref: "definitions.yml#/error"
     put:
-      operationId: update
+      operationId: updateSiteMetadata
       parameters:
-        - name: site_id
-          type: string
-          in: path
+        - name: metadata
+          in: body
+          schema:
+            $ref: "definitions.yml#/metadata"
           required: true
       responses:
         '204':
@@ -335,10 +307,10 @@ paths:
         default:
           description: error
           schema:
-            $ref: "#/definitions/error"
+            $ref: "definitions.yml#/error"
   /sites/{site_id}/deploys:
     get:
-      operationId: list
+      operationId: listSiteDeploys
       parameters:
         - name: site_id
           type: string
@@ -350,14 +322,14 @@ paths:
           schema:
             type: array
             items:
-              $ref: "#/definitions/deploy"
+              $ref: "definitions.yml#/deploy"
         default:
           description: error
           schema:
-            $ref: "#/definitions/error"
+            $ref: "definitions.yml#/error"
   /sites/{site_id}/deploys/{deploy_id}:
     get:
-      operationId: show
+      operationId: getSiteDeploy
       parameters:
         - name: site_id
           type: string
@@ -371,14 +343,14 @@ paths:
         '200':
           description: OK
           schema:
-            $ref: "#/definitions/deploy"
+            $ref: "definitions.yml#/deploy"
         default:
           description: error
           schema:
-            $ref: "#/definitions/error"
+            $ref: "definitions.yml#/error"
   /sites/{site_id}/deploys/{deploy_id}/restore:
     post:
-      operationId: restore
+      operationId: restoreSiteDeploy
       parameters:
         - name: site_id
           type: string
@@ -392,28 +364,28 @@ paths:
         '201':
           description: Created
           schema:
-            $ref: "#/definitions/deploy"
+            $ref: "definitions.yml#/deploy"
         default:
           description: error
           schema:
-            $ref: "#/definitions/error"
+            $ref: "definitions.yml#/error"
   /forms:
     get:
-      operationId: list
+      operationId: listForms
       responses:
         '200':
           description: OK
           schema:
             type: array
             items:
-              $ref: "#/definitions/form"
+              $ref: "definitions.yml#/form"
         default:
           description: error
           schema:
-            $ref: "#/definitions/error"
+            $ref: "definitions.yml#/error"
   /forms/{form_id}/submissions:
     get:
-      operationId: list
+      operationId: listFormSubmissions
       parameters:
         - name: form_id
           type: string
@@ -425,17 +397,17 @@ paths:
           schema:
             type: array
             items:
-              $ref: "#/definitions/submission"
+              $ref: "definitions.yml#/submission"
         default:
           description: error
           schema:
-            $ref: "#/definitions/error"
+            $ref: "definitions.yml#/error"
   /hooks:
-    get: # WHY?? This should be /sites/{site_id}/hooks
-      operationId: list
+    get:
+      operationId: listHooksBySiteId
       parameters:
         - name: site_id
-          in: formData
+          in: query
           type: string
           required: true
       responses:
@@ -444,37 +416,33 @@ paths:
           schema:
             type: array
             items:
-              $ref: "#/definitions/hook"
+              $ref: "definitions.yml#/hook"
         default:
           description: error
           schema:
-            $ref: "#/definitions/error"
-    post: # WHY?? This should be /sites/{site_id}/hooks
-      operationId: create
+            $ref: "definitions.yml#/error"
+    post:
+      operationId: createHookBySiteId
       consumes:
         - application/json
       parameters:
-        - name: site_id
-          type: string
-          in: query
-          required: true
         - name: hook
           in: body
           schema:
-            $ref: "#/definitions/hook"
+            $ref: "definitions.yml#/hook"
           required: true
       responses:
         '201':
           description: OK
           schema:
-            $ref: "#/definitions/hook"
+            $ref: "definitions.yml#/hook"
         default:
           description: error
           schema:
-            $ref: "#/definitions/error"
+            $ref: "definitions.yml#/error"
   /hooks/{hook_id}:
     delete:
-      operationId: destroy
+      operationId: deleteHookBySiteId
       parameters:
         - name: hook_id
           type: string
@@ -483,47 +451,17 @@ paths:
       responses:
         '204':
           description: No content
-          # TODO: WTF does this note mean? Note, for outgoing webhooks, returning a 410 Gone status code from the URL endpoint will trigger a deletion of the hook.
   /hooks/types:
     get:
-      operationId: list
+      operationId: listHookTypes
       responses:
         '200':
           description: OK
           schema:
             type: array
             items:
-              $ref: "#/definitions/hookType"
+              $ref: "definitions.yml#/hookType"
         default:
           description: error
           schema:
-            $ref: "#/definitions/error"
-definitions: # FIXME: complete definitions
-    site:
-      type: object
-    file:
-      type: object
-    snippet:
-      type: object
-    deploy:
-      type: object
-    form:
-      type: object
-    submission:
-      type: object
-    metadata:
-      type: object
-    hook:
-      type: object
-    hookType:
-      type: object
-    error:
-      type: object
-      required:
-        - message
-      properties:
-        code:
-          type: integer
-          format: int64
-        message:
-          type: string
+            $ref: "definitions.yml#/error"
