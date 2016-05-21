@@ -20,6 +20,7 @@ produces:
   - application/io.swagger.netlify.v1+json
 schemes:
   - https
+host: api.netlify.com
 basePath: /api/v1
 paths:
   /sites:

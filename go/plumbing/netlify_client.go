@@ -20,7 +20,7 @@ func NewHTTPClient(formats strfmt.Registry) *Netlify {
 	if formats == nil {
 		formats = strfmt.Default
 	}
-	transport := httptransport.New("localhost", "/api/v1", []string{"https"})
+	transport := httptransport.New("api.netlify.com", "/api/v1", []string{"https"})
 	return New(transport, formats)
 }
 
