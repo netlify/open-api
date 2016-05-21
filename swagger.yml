@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   version: 0.1.0
-  title: Netlify API definition
+  title: Netlify's API definition
 securityDefinitions:
   netlify_auth:
     type: oauth2
@@ -384,6 +384,35 @@ paths:
           description: Created
           schema:
             $ref: "#/definitions/deploy"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+  /sites/{site_id}/deploys/{deploy_id}/files/{file_path}:
+    put:
+      operationId: uploadDeployFile
+      parameters:
+        - name: site_id
+          type: string
+          in: path
+          required: true
+        - name: deploy_id
+          type: string
+          in: path
+          required: true
+        - name: file_path
+          type: string
+          in: path
+          required: true
+        - name: file_body
+          in: body
+          schema:
+            type: string
+            format: binary
+          required: true
+      responses:
+        '204':
+          description: No content
         default:
           description: error
           schema:

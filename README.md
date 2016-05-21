@@ -4,13 +4,17 @@ This repository contains Netlify's API definition in the [Open API format](https
 
 It's still a work in progress and we welcome feedback and contributions.
 
-## Validation
+## Installation
 
 We use [go-swagger](https://github.com/go-swagger/go-swagger) to validate our spec against the 2.0 spec of Open API.
 
-Follow the installation instruction in that repository. You can run this command to validate the spec:
+To download the toolchain follow the installation instructions in that repository. You'll need to have Go installed.
 
-	swagger validate -f swagger.yml
+## Spec validation
+
+You can run this command to validate the spec:
+
+	make validate
 
 ## Code generation
 
@@ -18,7 +22,7 @@ Currently, we're generating client code for Go, but we're planning on releasing 
 
 You can use this command to generate the Go client:
 
-	swagger generate client -t go -f swagger.yml
+	make generate
 
 ## License
 

@@ -724,6 +724,32 @@ func (a *Client) UpdateSiteSnippet(params *UpdateSiteSnippetParams, authInfo run
 	return result.(*UpdateSiteSnippetNoContent), nil
 }
 
+/*
+UploadDeployFile upload deploy file API
+*/
+func (a *Client) UploadDeployFile(params *UploadDeployFileParams, authInfo runtime.ClientAuthInfoWriter) (*UploadDeployFileNoContent, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewUploadDeployFileParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "uploadDeployFile",
+		Method:             "PUT",
+		PathPattern:        "/sites/{site_id}/deploys/{deploy_id}/files/{file_path}",
+		ProducesMediaTypes: []string{"application/io.swagger.netlify.v1+json"},
+		ConsumesMediaTypes: []string{"application/io.swagger.netlify.v1+json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &UploadDeployFileReader{formats: a.formats},
+		AuthInfo:           authInfo,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*UploadDeployFileNoContent), nil
+}
+
 // SetTransport changes the transport on the client
 func (a *Client) SetTransport(transport runtime.ClientTransport) {
 	a.transport = transport
