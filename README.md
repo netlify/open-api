@@ -10,7 +10,7 @@ We use [go-swagger](https://github.com/go-swagger/go-swagger) to validate our sp
 
 Follow the installation instruction in that repository. You can run this command to validate the spec:
 
-	swagger validate -f swagger.yml
+	make validate
 
 ## Code generation
 
@@ -18,7 +18,7 @@ Currently, we're generating client code for Go, but we're planning on releasing 
 
 You can use this command to generate the Go client:
 
-	swagger generate client -t go -f swagger.yml
+	make generate
 
 ## License
 
