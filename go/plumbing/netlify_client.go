@@ -9,7 +9,7 @@ import (
 
 	strfmt "github.com/go-openapi/strfmt"
 
-	"github.com/netlify/swagger-api-client/go/plumbing/operations"
+	"github.com/netlify/open-api/go/plumbing/operations"
 )
 
 // Default netlify HTTP client.

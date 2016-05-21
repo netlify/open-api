@@ -11,7 +11,7 @@ import (
 
 	strfmt "github.com/go-openapi/strfmt"
 
-	"github.com/netlify/swagger-api-client/go/models"
+	"github.com/netlify/open-api/go/models"
 )
 
 // UploadDeployFileReader is a Reader for the UploadDeployFile structure.

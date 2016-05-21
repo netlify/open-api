@@ -11,7 +11,7 @@ import (
 
 	strfmt "github.com/go-openapi/strfmt"
 
-	"github.com/netlify/swagger-api-client/go/models"
+	"github.com/netlify/open-api/go/models"
 )
 
 // CreateSiteSnippetReader is a Reader for the CreateSiteSnippet structure.
