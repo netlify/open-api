@@ -392,6 +392,8 @@ paths:
   /sites/{site_id}/deploys/{deploy_id}/files/{file_path}:
     put:
       operationId: uploadDeployFile
+      consumes:
+        - application/octet-stream
       parameters:
         - name: site_id
           type: string
