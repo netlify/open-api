@@ -738,7 +738,7 @@ func (a *Client) UploadDeployFile(params *UploadDeployFileParams, authInfo runti
 		Method:             "PUT",
 		PathPattern:        "/sites/{site_id}/deploys/{deploy_id}/files/{file_path}",
 		ProducesMediaTypes: []string{"application/io.swagger.netlify.v1+json"},
-		ConsumesMediaTypes: []string{"application/io.swagger.netlify.v1+json"},
+		ConsumesMediaTypes: []string{"application/octet-stream"},
 		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &UploadDeployFileReader{formats: a.formats},
