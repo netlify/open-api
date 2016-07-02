@@ -15,9 +15,9 @@ security:
       - write:sites
       - read:sites
 consumes:
-  - application/io.swagger.netlify.v1+json
+  - application/json
 produces:
-  - application/io.swagger.netlify.v1+json
+  - application/json
 schemes:
   - https
 host: api.netlify.com
