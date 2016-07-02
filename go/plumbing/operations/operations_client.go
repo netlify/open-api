@@ -77,7 +77,7 @@ func (a *Client) CreateSite(params *CreateSiteParams, authInfo runtime.ClientAut
 /*
 CreateSiteDeploy create site deploy API
 */
-func (a *Client) CreateSiteDeploy(params *CreateSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteDeployCreated, error) {
+func (a *Client) CreateSiteDeploy(params *CreateSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteDeployOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewCreateSiteDeployParams()
@@ -97,7 +97,7 @@ func (a *Client) CreateSiteDeploy(params *CreateSiteDeployParams, authInfo runti
 	if err != nil {
 		return nil, err
 	}
-	return result.(*CreateSiteDeployCreated), nil
+	return result.(*CreateSiteDeployOK), nil
 }
 
 /*
@@ -727,7 +727,7 @@ func (a *Client) UpdateSiteSnippet(params *UpdateSiteSnippetParams, authInfo run
 /*
 UploadDeployFile upload deploy file API
 */
-func (a *Client) UploadDeployFile(params *UploadDeployFileParams, authInfo runtime.ClientAuthInfoWriter) (*UploadDeployFileNoContent, error) {
+func (a *Client) UploadDeployFile(params *UploadDeployFileParams, authInfo runtime.ClientAuthInfoWriter) (*UploadDeployFileOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewUploadDeployFileParams()
@@ -736,7 +736,7 @@ func (a *Client) UploadDeployFile(params *UploadDeployFileParams, authInfo runti
 	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "uploadDeployFile",
 		Method:             "PUT",
-		PathPattern:        "/sites/{site_id}/deploys/{deploy_id}/files/{file_path}",
+		PathPattern:        "/deploys/{deploy_id}/files/{path}",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/octet-stream"},
 		Schemes:            []string{"https"},
@@ -747,7 +747,7 @@ func (a *Client) UploadDeployFile(params *UploadDeployFileParams, authInfo runti
 	if err != nil {
 		return nil, err
 	}
-	return result.(*UploadDeployFileNoContent), nil
+	return result.(*UploadDeployFileOK), nil
 }
 
 // SetTransport changes the transport on the client

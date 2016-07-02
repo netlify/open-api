@@ -28,10 +28,8 @@ type UploadDeployFileParams struct {
 	DeployID string
 	/*FileBody*/
 	FileBody io.ReadCloser
-	/*FilePath*/
-	FilePath string
-	/*SiteID*/
-	SiteID string
+	/*Path*/
+	Path string
 }
 
 // WithDeployID adds the deployId to the upload deploy file params
@@ -46,15 +44,9 @@ func (o *UploadDeployFileParams) WithFileBody(FileBody io.ReadCloser) *UploadDep
 	return o
 }
 
-// WithFilePath adds the filePath to the upload deploy file params
-func (o *UploadDeployFileParams) WithFilePath(FilePath string) *UploadDeployFileParams {
-	o.FilePath = FilePath
-	return o
-}
-
-// WithSiteID adds the siteId to the upload deploy file params
-func (o *UploadDeployFileParams) WithSiteID(SiteID string) *UploadDeployFileParams {
-	o.SiteID = SiteID
+// WithPath adds the path to the upload deploy file params
+func (o *UploadDeployFileParams) WithPath(Path string) *UploadDeployFileParams {
+	o.Path = Path
 	return o
 }
 
@@ -72,13 +64,8 @@ func (o *UploadDeployFileParams) WriteToRequest(r runtime.ClientRequest, reg str
 		return err
 	}
 
-	// path param file_path
-	if err := r.SetPathParam("file_path", o.FilePath); err != nil {
-		return err
-	}
-
-	// path param site_id
-	if err := r.SetPathParam("site_id", o.SiteID); err != nil {
+	// path param path
+	if err := r.SetPathParam("path", o.Path); err != nil {
 		return err
 	}
 

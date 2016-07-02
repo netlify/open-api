@@ -104,7 +104,7 @@ func (n *Netlify) createDeploy(siteID string, files *deployFiles, authInfo runti
 		return nil, err
 	}
 
-	deploy := resp.Payload[0]
+	deploy := resp.Payload
 	if files.OverCommitted() {
 		var err error
 		deploy, err = n.waitUntilReady(deploy, authInfo)
@@ -165,7 +165,7 @@ func (n *Netlify) uploadFiles(d *models.Deploy, files *deployFiles, authInfo run
 
 	wg.Wait()
 
-	return nil
+	return sharedErr.err
 }
 
 func (n *Netlify) uploadFile(d *models.Deploy, f *file, wg *sync.WaitGroup, sem chan int, sharedErr *uploadError, authInfo runtime.ClientAuthInfoWriter) {
@@ -180,18 +180,20 @@ func (n *Netlify) uploadFile(d *models.Deploy, f *file, wg *sync.WaitGroup, sem 
 		return
 	}
 	sharedErr.mutex.Unlock()
+
 	b := backoff.NewExponentialBackOff()
 	b.MaxElapsedTime = 2 * time.Minute
 
 	err := backoff.Retry(func() error {
 		sharedErr.mutex.Lock()
+
 		if sharedErr.err != nil {
 			sharedErr.mutex.Unlock()
 			return fmt.Errorf("Upload cancelled: %s", f.Name)
 		}
+		sharedErr.mutex.Unlock()
 
-		params := operations.NewUploadDeployFileParams().WithDeployID(d.ID).WithFilePath(f.Name).WithFileBody(f).WithSiteID(d.SiteID)
-
+		params := operations.NewUploadDeployFileParams().WithDeployID(d.ID).WithPath(f.Name).WithFileBody(f)
 		_, err := n.Operations.UploadDeployFile(params, authInfo)
 		return err
 	}, b)

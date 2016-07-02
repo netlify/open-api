@@ -23,8 +23,8 @@ type UploadDeployFileReader struct {
 func (o *UploadDeployFileReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
 
-	case 204:
-		result := NewUploadDeployFileNoContent()
+	case 200:
+		result := NewUploadDeployFileOK()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -39,23 +39,31 @@ func (o *UploadDeployFileReader) ReadResponse(response runtime.ClientResponse, c
 	}
 }
 
-// NewUploadDeployFileNoContent creates a UploadDeployFileNoContent with default headers values
-func NewUploadDeployFileNoContent() *UploadDeployFileNoContent {
-	return &UploadDeployFileNoContent{}
+// NewUploadDeployFileOK creates a UploadDeployFileOK with default headers values
+func NewUploadDeployFileOK() *UploadDeployFileOK {
+	return &UploadDeployFileOK{}
 }
 
-/*UploadDeployFileNoContent handles this case with default header values.
+/*UploadDeployFileOK handles this case with default header values.
 
-No content
+OK
 */
-type UploadDeployFileNoContent struct {
+type UploadDeployFileOK struct {
+	Payload *models.File
 }
 
-func (o *UploadDeployFileNoContent) Error() string {
-	return fmt.Sprintf("[PUT /sites/{site_id}/deploys/{deploy_id}/files/{file_path}][%d] uploadDeployFileNoContent ", 204)
+func (o *UploadDeployFileOK) Error() string {
+	return fmt.Sprintf("[PUT /deploys/{deploy_id}/files/{path}][%d] uploadDeployFileOK  %+v", 200, o.Payload)
 }
 
-func (o *UploadDeployFileNoContent) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+func (o *UploadDeployFileOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.File)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -83,7 +91,7 @@ func (o *UploadDeployFileDefault) Code() int {
 }
 
 func (o *UploadDeployFileDefault) Error() string {
-	return fmt.Sprintf("[PUT /sites/{site_id}/deploys/{deploy_id}/files/{file_path}][%d] uploadDeployFile default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[PUT /deploys/{deploy_id}/files/{path}][%d] uploadDeployFile default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *UploadDeployFileDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

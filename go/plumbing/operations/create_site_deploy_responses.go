@@ -23,8 +23,8 @@ type CreateSiteDeployReader struct {
 func (o *CreateSiteDeployReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
 
-	case 201:
-		result := NewCreateSiteDeployCreated()
+	case 200:
+		result := NewCreateSiteDeployOK()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -39,27 +39,29 @@ func (o *CreateSiteDeployReader) ReadResponse(response runtime.ClientResponse, c
 	}
 }
 
-// NewCreateSiteDeployCreated creates a CreateSiteDeployCreated with default headers values
-func NewCreateSiteDeployCreated() *CreateSiteDeployCreated {
-	return &CreateSiteDeployCreated{}
+// NewCreateSiteDeployOK creates a CreateSiteDeployOK with default headers values
+func NewCreateSiteDeployOK() *CreateSiteDeployOK {
+	return &CreateSiteDeployOK{}
 }
 
-/*CreateSiteDeployCreated handles this case with default header values.
+/*CreateSiteDeployOK handles this case with default header values.
 
 OK
 */
-type CreateSiteDeployCreated struct {
-	Payload []*models.Deploy
+type CreateSiteDeployOK struct {
+	Payload *models.Deploy
 }
 
-func (o *CreateSiteDeployCreated) Error() string {
-	return fmt.Sprintf("[POST /sites/{site_id}/deploys][%d] createSiteDeployCreated  %+v", 201, o.Payload)
+func (o *CreateSiteDeployOK) Error() string {
+	return fmt.Sprintf("[POST /sites/{site_id}/deploys][%d] createSiteDeployOK  %+v", 200, o.Payload)
 }
 
-func (o *CreateSiteDeployCreated) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+func (o *CreateSiteDeployOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.Deploy)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
 		return err
 	}
 

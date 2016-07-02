@@ -337,12 +337,10 @@ paths:
             $ref: "#/definitions/deployFiles"
           required: true
       responses:
-        '201':
+        '200':
           description: OK
           schema:
-            type: array
-            items:
-              $ref: "#/definitions/deploy"
+            $ref: "#/definitions/deploy"
         default:
           description: error
           schema:
@@ -389,21 +387,17 @@ paths:
           description: error
           schema:
             $ref: "#/definitions/error"
-  /sites/{site_id}/deploys/{deploy_id}/files/{file_path}:
+  /deploys/{deploy_id}/files/{path}:
     put:
       operationId: uploadDeployFile
       consumes:
         - application/octet-stream
       parameters:
-        - name: site_id
-          type: string
-          in: path
-          required: true
         - name: deploy_id
           type: string
           in: path
           required: true
-        - name: file_path
+        - name: path
           type: string
           in: path
           required: true
@@ -414,8 +408,10 @@ paths:
             format: binary
           required: true
       responses:
-        '204':
-          description: No content
+        '200':
+          description: OK
+          schema:
+            $ref: "#/definitions/file"
         default:
           description: error
           schema:
