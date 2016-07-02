@@ -14,9 +14,11 @@ import (
 	"time"
 
 	"github.com/cenkalti/backoff"
+	logContext "github.com/docker/distribution/context"
 	"github.com/go-openapi/runtime"
 	"github.com/netlify/open-api/go/models"
 	"github.com/netlify/open-api/go/plumbing/operations"
+	"github.com/netlify/open-api/go/porcelain/context"
 )
 
 const (
@@ -75,7 +77,7 @@ func (d *deployFiles) OverCommitted() bool {
 
 // DeploySite creates a new deploy for a site given a directory in the filesystem.
 // It uploads the necessary files that changed between deploys.
-func (n *Netlify) DeploySite(siteID, dir string, authInfo runtime.ClientAuthInfoWriter) (*models.Deploy, error) {
+func (n *Netlify) DeploySite(ctx context.Context, siteID, dir string) (*models.Deploy, error) {
 	f, err := os.Stat(dir)
 	if err != nil {
 		return nil, err
@@ -89,14 +91,17 @@ func (n *Netlify) DeploySite(siteID, dir string, authInfo runtime.ClientAuthInfo
 		return nil, err
 	}
 
-	return n.createDeploy(siteID, files, authInfo)
+	return n.createDeploy(ctx, siteID, files)
 }
 
-func (n *Netlify) createDeploy(siteID string, files *deployFiles, authInfo runtime.ClientAuthInfoWriter) (*models.Deploy, error) {
+func (n *Netlify) createDeploy(ctx context.Context, siteID string, files *deployFiles) (*models.Deploy, error) {
 	deployFiles := &models.DeployFiles{
 		Files: files.Sums,
 		Async: files.OverCommitted(),
 	}
+
+	logContext.GetLoggerWithFields(ctx, context.Fields{"site_id": siteID, "deploy_files": len(files.Sums)}).Debug("Deploy files")
+	authInfo := context.GetAuthInfo(ctx)
 
 	params := operations.NewCreateSiteDeployParams().WithSiteID(siteID).WithDeploy(deployFiles)
 	resp, err := n.Operations.CreateSiteDeploy(params, authInfo)
@@ -107,20 +112,20 @@ func (n *Netlify) createDeploy(siteID string, files *deployFiles, authInfo runti
 	deploy := resp.Payload
 	if files.OverCommitted() {
 		var err error
-		deploy, err = n.waitUntilReady(deploy, authInfo)
+		deploy, err = n.waitUntilReady(ctx, deploy, authInfo)
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	if err := n.uploadFiles(deploy, files, authInfo); err != nil {
+	if err := n.uploadFiles(ctx, deploy, files); err != nil {
 		return nil, err
 	}
 
 	return deploy, nil
 }
 
-func (n *Netlify) waitUntilReady(d *models.Deploy, authInfo runtime.ClientAuthInfoWriter) (*models.Deploy, error) {
+func (n *Netlify) waitUntilReady(ctx context.Context, d *models.Deploy, authInfo runtime.ClientAuthInfoWriter) (*models.Deploy, error) {
 	ticker := time.NewTicker(2 * time.Second)
 	defer ticker.Stop()
 
@@ -132,6 +137,8 @@ func (n *Netlify) waitUntilReady(d *models.Deploy, authInfo runtime.ClientAuthIn
 			time.Sleep(3 * time.Second)
 			continue
 		}
+
+		logContext.GetLoggerWithFields(ctx, context.Fields{"deploy_id": d.ID, "state": resp.Payload.State}).Debug("Wait until deploy ready")
 
 		if resp.Payload.State == "prepared" || resp.Payload.State == "ready" {
 			return resp.Payload, nil
@@ -149,7 +156,7 @@ func (n *Netlify) waitUntilReady(d *models.Deploy, authInfo runtime.ClientAuthIn
 	return d, nil
 }
 
-func (n *Netlify) uploadFiles(d *models.Deploy, files *deployFiles, authInfo runtime.ClientAuthInfoWriter) error {
+func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *deployFiles) error {
 	sharedErr := &uploadError{err: nil, mutex: &sync.Mutex{}}
 	sem := make(chan int, 10) // FIXME(david): make max concurrent uploads configurable.
 	wg := &sync.WaitGroup{}
@@ -159,7 +166,7 @@ func (n *Netlify) uploadFiles(d *models.Deploy, files *deployFiles, authInfo run
 			sem <- 1
 			wg.Add(1)
 
-			go n.uploadFile(d, file, wg, sem, sharedErr, authInfo)
+			go n.uploadFile(ctx, d, file, wg, sem, sharedErr)
 		}
 	}
 
@@ -168,7 +175,7 @@ func (n *Netlify) uploadFiles(d *models.Deploy, files *deployFiles, authInfo run
 	return sharedErr.err
 }
 
-func (n *Netlify) uploadFile(d *models.Deploy, f *file, wg *sync.WaitGroup, sem chan int, sharedErr *uploadError, authInfo runtime.ClientAuthInfoWriter) {
+func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *file, wg *sync.WaitGroup, sem chan int, sharedErr *uploadError) {
 	defer func() {
 		wg.Done()
 		<-sem
@@ -180,6 +187,10 @@ func (n *Netlify) uploadFile(d *models.Deploy, f *file, wg *sync.WaitGroup, sem 
 		return
 	}
 	sharedErr.mutex.Unlock()
+
+	authInfo := context.GetAuthInfo(ctx)
+
+	logContext.GetLoggerWithFields(ctx, context.Fields{"deploy_id": d.ID, "file_path": f.Name, "file_sum": f.Sum()}).Debug("Upload file")
 
 	b := backoff.NewExponentialBackOff()
 	b.MaxElapsedTime = 2 * time.Minute
@@ -195,6 +206,11 @@ func (n *Netlify) uploadFile(d *models.Deploy, f *file, wg *sync.WaitGroup, sem 
 
 		params := operations.NewUploadDeployFileParams().WithDeployID(d.ID).WithPath(f.Name).WithFileBody(f)
 		_, err := n.Operations.UploadDeployFile(params, authInfo)
+
+		if err != nil {
+			logContext.GetLogger(ctx).Error(err)
+		}
+
 		return err
 	}, b)
 
