@@ -15,7 +15,6 @@ import (
 
 	"github.com/cenkalti/backoff"
 	logContext "github.com/docker/distribution/context"
-	"github.com/go-openapi/runtime"
 	"github.com/netlify/open-api/go/models"
 	"github.com/netlify/open-api/go/plumbing/operations"
 	"github.com/netlify/open-api/go/porcelain/context"
@@ -112,7 +111,7 @@ func (n *Netlify) createDeploy(ctx context.Context, siteID string, files *deploy
 	deploy := resp.Payload
 	if files.OverCommitted() {
 		var err error
-		deploy, err = n.waitUntilReady(ctx, deploy, authInfo)
+		deploy, err = n.WaitUntilDeployReady(ctx, deploy)
 		if err != nil {
 			return nil, err
 		}
@@ -125,7 +124,8 @@ func (n *Netlify) createDeploy(ctx context.Context, siteID string, files *deploy
 	return deploy, nil
 }
 
-func (n *Netlify) waitUntilReady(ctx context.Context, d *models.Deploy, authInfo runtime.ClientAuthInfoWriter) (*models.Deploy, error) {
+func (n *Netlify) WaitUntilDeployReady(ctx context.Context, d *models.Deploy) (*models.Deploy, error) {
+	authInfo := context.GetAuthInfo(ctx)
 	ticker := time.NewTicker(2 * time.Second)
 	defer ticker.Stop()
 

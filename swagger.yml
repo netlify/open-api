@@ -667,9 +667,15 @@ definitions:
           type: string
         deploy_url:
           type: string
-        site_url:
+        deploy_ssl_url:
+          type: string
+        url:
           type: string
         screenshot_url:
+          type: string
+        commit_ref:
+          type: string
+        review_id:
           type: string
         required:
           type: array

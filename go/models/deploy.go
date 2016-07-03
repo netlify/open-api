@@ -16,9 +16,17 @@ swagger:model deploy
 */
 type Deploy struct {
 
+	/* commit ref
+	 */
+	CommitRef string `json:"commit_ref,omitempty"`
+
 	/* created at
 	 */
 	CreatedAt string `json:"created_at,omitempty"`
+
+	/* deploy ssl url
+	 */
+	DeploySslURL string `json:"deploy_ssl_url,omitempty"`
 
 	/* deploy url
 	 */
@@ -32,6 +40,10 @@ type Deploy struct {
 	 */
 	Required []string `json:"required,omitempty"`
 
+	/* review id
+	 */
+	ReviewID string `json:"review_id,omitempty"`
+
 	/* screenshot url
 	 */
 	ScreenshotURL string `json:"screenshot_url,omitempty"`
@@ -40,10 +52,6 @@ type Deploy struct {
 	 */
 	SiteID string `json:"site_id,omitempty"`
 
-	/* site url
-	 */
-	SiteURL string `json:"site_url,omitempty"`
-
 	/* state
 	 */
 	State string `json:"state,omitempty"`
@@ -51,6 +59,10 @@ type Deploy struct {
 	/* updated at
 	 */
 	UpdatedAt string `json:"updated_at,omitempty"`
+
+	/* url
+	 */
+	URL string `json:"url,omitempty"`
 
 	/* user id
 	 */
