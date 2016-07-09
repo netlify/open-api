@@ -23,6 +23,10 @@ type Site struct {
 	 */
 	CustomDomain string `json:"custom_domain,omitempty"`
 
+	/* force ssl
+	 */
+	ForceSsl bool `json:"force_ssl,omitempty"`
+
 	/* id
 	 */
 	ID string `json:"id,omitempty"`

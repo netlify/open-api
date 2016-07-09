@@ -10,17 +10,17 @@ import (
 	strfmt "github.com/go-openapi/strfmt"
 )
 
-// NewProvisionSiteSSLParams creates a new ProvisionSiteSSLParams object
+// NewProvisionSiteTLSCertificateParams creates a new ProvisionSiteTLSCertificateParams object
 // with the default values initialized.
-func NewProvisionSiteSSLParams() *ProvisionSiteSSLParams {
+func NewProvisionSiteTLSCertificateParams() *ProvisionSiteTLSCertificateParams {
 	var ()
-	return &ProvisionSiteSSLParams{}
+	return &ProvisionSiteTLSCertificateParams{}
 }
 
-/*ProvisionSiteSSLParams contains all the parameters to send to the API endpoint
-for the provision site s s l operation typically these are written to a http.Request
+/*ProvisionSiteTLSCertificateParams contains all the parameters to send to the API endpoint
+for the provision site TLS certificate operation typically these are written to a http.Request
 */
-type ProvisionSiteSSLParams struct {
+type ProvisionSiteTLSCertificateParams struct {
 
 	/*CaCertificates*/
 	CaCertificates *string
@@ -32,32 +32,32 @@ type ProvisionSiteSSLParams struct {
 	SiteID string
 }
 
-// WithCaCertificates adds the caCertificates to the provision site s s l params
-func (o *ProvisionSiteSSLParams) WithCaCertificates(CaCertificates *string) *ProvisionSiteSSLParams {
+// WithCaCertificates adds the caCertificates to the provision site TLS certificate params
+func (o *ProvisionSiteTLSCertificateParams) WithCaCertificates(CaCertificates *string) *ProvisionSiteTLSCertificateParams {
 	o.CaCertificates = CaCertificates
 	return o
 }
 
-// WithCertificate adds the certificate to the provision site s s l params
-func (o *ProvisionSiteSSLParams) WithCertificate(Certificate *string) *ProvisionSiteSSLParams {
+// WithCertificate adds the certificate to the provision site TLS certificate params
+func (o *ProvisionSiteTLSCertificateParams) WithCertificate(Certificate *string) *ProvisionSiteTLSCertificateParams {
 	o.Certificate = Certificate
 	return o
 }
 
-// WithKey adds the key to the provision site s s l params
-func (o *ProvisionSiteSSLParams) WithKey(Key *string) *ProvisionSiteSSLParams {
+// WithKey adds the key to the provision site TLS certificate params
+func (o *ProvisionSiteTLSCertificateParams) WithKey(Key *string) *ProvisionSiteTLSCertificateParams {
 	o.Key = Key
 	return o
 }
 
-// WithSiteID adds the siteId to the provision site s s l params
-func (o *ProvisionSiteSSLParams) WithSiteID(SiteID string) *ProvisionSiteSSLParams {
+// WithSiteID adds the siteId to the provision site TLS certificate params
+func (o *ProvisionSiteTLSCertificateParams) WithSiteID(SiteID string) *ProvisionSiteTLSCertificateParams {
 	o.SiteID = SiteID
 	return o
 }
 
 // WriteToRequest writes these params to a swagger request
-func (o *ProvisionSiteSSLParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
+func (o *ProvisionSiteTLSCertificateParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
 	var res []error
 

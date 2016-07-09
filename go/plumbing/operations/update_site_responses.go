@@ -23,8 +23,8 @@ type UpdateSiteReader struct {
 func (o *UpdateSiteReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
 
-	case 204:
-		result := NewUpdateSiteNoContent()
+	case 200:
+		result := NewUpdateSiteOK()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -39,23 +39,31 @@ func (o *UpdateSiteReader) ReadResponse(response runtime.ClientResponse, consume
 	}
 }
 
-// NewUpdateSiteNoContent creates a UpdateSiteNoContent with default headers values
-func NewUpdateSiteNoContent() *UpdateSiteNoContent {
-	return &UpdateSiteNoContent{}
+// NewUpdateSiteOK creates a UpdateSiteOK with default headers values
+func NewUpdateSiteOK() *UpdateSiteOK {
+	return &UpdateSiteOK{}
 }
 
-/*UpdateSiteNoContent handles this case with default header values.
+/*UpdateSiteOK handles this case with default header values.
 
-Updated
+OK
 */
-type UpdateSiteNoContent struct {
+type UpdateSiteOK struct {
+	Payload *models.Site
 }
 
-func (o *UpdateSiteNoContent) Error() string {
-	return fmt.Sprintf("[PATCH /sites/{site_id}][%d] updateSiteNoContent ", 204)
+func (o *UpdateSiteOK) Error() string {
+	return fmt.Sprintf("[PATCH /sites/{site_id}][%d] updateSiteOK  %+v", 200, o.Payload)
 }
 
-func (o *UpdateSiteNoContent) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+func (o *UpdateSiteOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.Site)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }

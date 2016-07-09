@@ -23,6 +23,32 @@ type Client struct {
 }
 
 /*
+ConfigureDNSForSite configure DNS for site API
+*/
+func (a *Client) ConfigureDNSForSite(params *ConfigureDNSForSiteParams, authInfo runtime.ClientAuthInfoWriter) (*ConfigureDNSForSiteOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewConfigureDNSForSiteParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "configureDNSForSite",
+		Method:             "PUT",
+		PathPattern:        "/sites/{site_id}/dns",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &ConfigureDNSForSiteReader{formats: a.formats},
+		AuthInfo:           authInfo,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*ConfigureDNSForSiteOK), nil
+}
+
+/*
 CreateHookBySiteID create hook by site Id API
 */
 func (a *Client) CreateHookBySiteID(params *CreateHookBySiteIDParams, authInfo runtime.ClientAuthInfoWriter) (*CreateHookBySiteIDCreated, error) {
@@ -202,6 +228,32 @@ func (a *Client) DeleteSiteSnippet(params *DeleteSiteSnippetParams, authInfo run
 		return nil, err
 	}
 	return result.(*DeleteSiteSnippetNoContent), nil
+}
+
+/*
+GetDNSForSite get DNS for site API
+*/
+func (a *Client) GetDNSForSite(params *GetDNSForSiteParams, authInfo runtime.ClientAuthInfoWriter) (*GetDNSForSiteOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetDNSForSiteParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "getDNSForSite",
+		Method:             "GET",
+		PathPattern:        "/sites/{site_id}/dns",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &GetDNSForSiteReader{formats: a.formats},
+		AuthInfo:           authInfo,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*GetDNSForSiteOK), nil
 }
 
 /*
@@ -595,29 +647,29 @@ func (a *Client) ListSites(params *ListSitesParams, authInfo runtime.ClientAuthI
 }
 
 /*
-ProvisionSiteSSL provision site s s l API
+ProvisionSiteTLSCertificate provision site TLS certificate API
 */
-func (a *Client) ProvisionSiteSSL(params *ProvisionSiteSSLParams, authInfo runtime.ClientAuthInfoWriter) (*ProvisionSiteSSLOK, error) {
+func (a *Client) ProvisionSiteTLSCertificate(params *ProvisionSiteTLSCertificateParams, authInfo runtime.ClientAuthInfoWriter) (*ProvisionSiteTLSCertificateOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
-		params = NewProvisionSiteSSLParams()
+		params = NewProvisionSiteTLSCertificateParams()
 	}
 
 	result, err := a.transport.Submit(&runtime.ClientOperation{
-		ID:                 "provisionSiteSSL",
+		ID:                 "provisionSiteTLSCertificate",
 		Method:             "POST",
 		PathPattern:        "/sites/{site_id}/ssl",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"https"},
 		Params:             params,
-		Reader:             &ProvisionSiteSSLReader{formats: a.formats},
+		Reader:             &ProvisionSiteTLSCertificateReader{formats: a.formats},
 		AuthInfo:           authInfo,
 	})
 	if err != nil {
 		return nil, err
 	}
-	return result.(*ProvisionSiteSSLOK), nil
+	return result.(*ProvisionSiteTLSCertificateOK), nil
 }
 
 /*
@@ -647,9 +699,35 @@ func (a *Client) RestoreSiteDeploy(params *RestoreSiteDeployParams, authInfo run
 }
 
 /*
+ShowSiteTLSCertificate show site TLS certificate API
+*/
+func (a *Client) ShowSiteTLSCertificate(params *ShowSiteTLSCertificateParams, authInfo runtime.ClientAuthInfoWriter) (*ShowSiteTLSCertificateOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewShowSiteTLSCertificateParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "showSiteTLSCertificate",
+		Method:             "GET",
+		PathPattern:        "/sites/{site_id}/ssl",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &ShowSiteTLSCertificateReader{formats: a.formats},
+		AuthInfo:           authInfo,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*ShowSiteTLSCertificateOK), nil
+}
+
+/*
 UpdateSite update site API
 */
-func (a *Client) UpdateSite(params *UpdateSiteParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateSiteNoContent, error) {
+func (a *Client) UpdateSite(params *UpdateSiteParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateSiteOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewUpdateSiteParams()
@@ -669,7 +747,7 @@ func (a *Client) UpdateSite(params *UpdateSiteParams, authInfo runtime.ClientAut
 	if err != nil {
 		return nil, err
 	}
-	return result.(*UpdateSiteNoContent), nil
+	return result.(*UpdateSiteOK), nil
 }
 
 /*

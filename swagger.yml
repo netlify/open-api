@@ -47,6 +47,10 @@ paths:
           schema:
             $ref: "#/definitions/site"
           required: true
+        - name: configure_dns
+          type: boolean
+          in: query
+          required: false
       responses:
         '201':
           description: Created
@@ -84,8 +88,10 @@ paths:
             $ref: "#/definitions/site"
           required: true
       responses:
-        '204':
-          description: Updated
+        '200':
+          description: OK
+          schema:
+            $ref: "#/definitions/site"
         default:
           description: error
           schema:
@@ -101,7 +107,35 @@ paths:
             $ref: "#/definitions/error"
   /sites/{site_id}/ssl:
     post:
-      operationId: provisionSiteSSL
+      operationId: provisionSiteTLSCertificate
+      parameters:
+        - name: site_id
+          type: string
+          in: path
+          required: true
+        - name: certificate
+          type: string
+          in: query
+          required: false
+        - name: key
+          type: string
+          in: query
+          required: false
+        - name: ca_certificates
+          type: string
+          in: query
+          required: false
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: "#/definitions/sniCertificate"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+    get:
+      operationId: showSiteTLSCertificate
       parameters:
         - name: site_id
           type: string
@@ -110,6 +144,8 @@ paths:
       responses:
         '200':
           description: OK
+          schema:
+            $ref: "#/definitions/sniCertificate"
         default:
           description: error
           schema:
@@ -387,6 +423,38 @@ paths:
           description: error
           schema:
             $ref: "#/definitions/error"
+  /sites/{site_id}/dns:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+    get:
+      operationId: getDNSForSite
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/dnsZone"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+    put:
+      operationId: configureDNSForSite
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/dnsZone"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
   /deploys/{deploy_id}/files/{path}:
     put:
       operationId: uploadDeployFile
@@ -538,6 +606,8 @@ definitions:
           format: dateTime
         user_id:
           type: string
+        force_ssl:
+          type: boolean
     submission:
       type: object
       properties:
@@ -696,6 +766,52 @@ definitions:
           type: boolean
     metadata:
       type: object
+    dnsZone:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        records:
+          type: array
+          items:
+            $ref: "#/definitions/dnsRecord"
+    dnsRecord:
+      type: object
+      properties:
+        id:
+          type: string
+        hostname:
+          type: string
+        type:
+          type: string
+        value:
+          type: string
+        ttl:
+          type: integer
+          format: int64
+        priority:
+          type: integer
+          format: int64
+    sniCertificate:
+      type: object
+      properties:
+        state:
+          type: string
+        domains:
+          type: array
+          items:
+            type: string
+        created_at:
+          type: string
+          format: dateTime
+        updated_at:
+          type: string
+          format: dateTime
+        expires_at:
+          type: string
+          format: dateTime
     error:
       type: object
       required:

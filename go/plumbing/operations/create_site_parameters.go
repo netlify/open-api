@@ -6,6 +6,7 @@ package operations
 import (
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
+	"github.com/go-openapi/swag"
 
 	strfmt "github.com/go-openapi/strfmt"
 
@@ -24,8 +25,16 @@ for the create site operation typically these are written to a http.Request
 */
 type CreateSiteParams struct {
 
+	/*ConfigureDNS*/
+	ConfigureDNS *bool
 	/*Site*/
 	Site *models.Site
+}
+
+// WithConfigureDNS adds the configureDns to the create site params
+func (o *CreateSiteParams) WithConfigureDNS(ConfigureDNS *bool) *CreateSiteParams {
+	o.ConfigureDNS = ConfigureDNS
+	return o
 }
 
 // WithSite adds the site to the create site params
@@ -38,6 +47,22 @@ func (o *CreateSiteParams) WithSite(Site *models.Site) *CreateSiteParams {
 func (o *CreateSiteParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
 	var res []error
+
+	if o.ConfigureDNS != nil {
+
+		// query param configure_dns
+		var qrConfigureDNS bool
+		if o.ConfigureDNS != nil {
+			qrConfigureDNS = *o.ConfigureDNS
+		}
+		qConfigureDNS := swag.FormatBool(qrConfigureDNS)
+		if qConfigureDNS != "" {
+			if err := r.SetQueryParam("configure_dns", qConfigureDNS); err != nil {
+				return err
+			}
+		}
+
+	}
 
 	if o.Site == nil {
 		o.Site = new(models.Site)
