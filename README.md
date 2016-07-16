@@ -24,6 +24,10 @@ You can use this command to generate the Go client:
 
 	make generate
 
+## Explore API
+
+Go to https://open-api.netlify.com to explore the spec definitions using Open-Api's UI.
+
 ## License
 
 MIT. See [LICENSE](LICENSE) for more details.
