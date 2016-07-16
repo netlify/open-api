@@ -3,17 +3,12 @@ info:
   version: 0.1.0
   title: Netlify's API definition
 securityDefinitions:
-  netlify_auth:
+  netlifyAuth:
     type: oauth2
     flow: implicit
     authorizationUrl: https://app.netlify.com/authorize
-    scopes:
-      write:sites: modify sites in your account
-      read:sites: read sites in your account
 security:
-  - netlify_auth:
-      - write:sites
-      - read:sites
+  - netlifyAuth: []
 consumes:
   - application/json
 produces:
