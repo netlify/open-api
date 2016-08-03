@@ -24,7 +24,7 @@ type BuildMessage struct {
 	SiteID       string
 	DeployID     string
 	BuildID      string
-	Data         map[string]string
+	Data         map[string]interface{}
 	Time         string
 }
 
@@ -46,7 +46,8 @@ func (n *Netlify) StreamBuildLog(ctx context.Context, buildID string) (<-chan *B
 	l := logContext.GetLoggerWithFields(ctx, context.Fields{
 		"build_id": buildID,
 		"endpoint": endpoint,
-	}).Debug("Connecting to streaming endpoint")
+	})
+	l.Debug("Connecting to streaming endpoint")
 
 	// Connect to endpoint
 	conn, err := io.Dial(endpoint, transport.GetDefaultWebsocketTransport())
@@ -59,7 +60,7 @@ func (n *Netlify) StreamBuildLog(ctx context.Context, buildID string) (<-chan *B
 	l.Debug("Connected")
 
 	// start a shutdown listener
-	go listenForShutdown(conn, shutdownChan)
+	go listenForShutdown(conn, shutdownChan, msgChan)
 
 	// now bind up to the different topics
 	buildLogHandle := fmt.Sprintf(buildLogFmtHandle, buildID)
@@ -76,7 +77,7 @@ func (n *Netlify) StreamBuildLog(ctx context.Context, buildID string) (<-chan *B
 	})
 
 	l.Debug("Bound different handlers - sending request")
-	err := conn.Emit(buildRequestHandle, buildID)
+	err = conn.Emit(buildRequestHandle, buildID)
 	if err != nil {
 		shutdownChan <- true
 		return msgChan, shutdownChan, err
@@ -86,7 +87,7 @@ func (n *Netlify) StreamBuildLog(ctx context.Context, buildID string) (<-chan *B
 	return msgChan, shutdownChan, nil
 }
 
-func listenForShutdown(conn *io.Channel, shutdown chan bool, msgChan chan *BuildMessage) {
+func listenForShutdown(conn *io.Client, shutdown chan bool, msgChan chan *BuildMessage) {
 	select {
 	case <-shutdown:
 		conn.Close()
@@ -113,7 +114,7 @@ type completeMessage string
 func (m completeMessage) convert() *BuildMessage {
 	return &BuildMessage{
 		Completed: true,
-		BuildID:   m,
+		BuildID:   fmt.Sprintf("%s", m),
 	}
 }
 

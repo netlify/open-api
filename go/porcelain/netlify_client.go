@@ -18,7 +18,7 @@ var Default = NewHTTPClient(nil)
 // NewHTTPClient creates a new netlify HTTP client.
 func NewHTTPClient(formats strfmt.Registry) *Netlify {
 	n := plumbing.NewHTTPClient(formats)
-	ret := &Netlify{n}
+	ret := &Netlify{n, nil}
 	ret.SetStreamingEndpoint("wss://" + defaultStreamingHost + defaultStreamingPath)
 	return ret
 }
@@ -26,7 +26,7 @@ func NewHTTPClient(formats strfmt.Registry) *Netlify {
 // New creates a new netlify client
 func New(transport runtime.ClientTransport, formats strfmt.Registry) *Netlify {
 	n := plumbing.New(transport, formats)
-	ret := &Netlify{n}
+	ret := &Netlify{n, nil}
 	ret.SetStreamingEndpoint("wss://" + defaultStreamingHost + defaultStreamingPath)
 	return ret
 }
@@ -45,7 +45,7 @@ func (n *Netlify) SetStreamingEndpoint(endpoint string) error {
 	}
 
 	if u.Scheme == "" {
-		u.Scheme == "ws"
+		u.Scheme = "ws"
 	}
 
 	if !(u.Scheme == "ws" || u.Scheme == "wss") {
