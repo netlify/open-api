@@ -13,3 +13,4 @@ import:
 - package: github.com/go-openapi/strfmt
 - package: github.com/go-openapi/swag
 - package: github.com/go-openapi/validate
+- package: github.com/graarh/golang-socketio
