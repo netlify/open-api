@@ -1,5 +1,5 @@
 hash: bc613fa601080261e7647e6d15f0a92d8d71f6d7538b222fcf304192d9b6fd7f
-updated: 2016-08-02T18:06:33.352757454-07:00
+updated: 2016-08-03T14:06:40.435738991-07:00
 imports:
 - name: github.com/asaskevich/govalidator
   version: 593d64559f7600f29581a3ee42177f5dbded27a9
@@ -36,8 +36,13 @@ imports:
   version: 14f550f51af52180c2eefed15e5fd18d63c0a64a
 - name: github.com/gorilla/mux
   version: e444e69cbd2e2e3e0749a2f3c717cec491552bbf
+- name: github.com/gorilla/websocket
+  version: a69d25be2fe2923a97c2af6849b2f52426f68fc0
 - name: github.com/graarh/golang-socketio
   version: ccde7b309cd75dde2cf40d9bf38a3003ddef8d6d
+  subpackages:
+  - transport
+  - protocol
 - name: github.com/mailru/easyjson
   version: d5b7844b561a7bc640052f1b935f7b800330d7e0
   subpackages:
