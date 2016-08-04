@@ -100,7 +100,7 @@ func (n *Netlify) createDeploy(ctx context.Context, siteID string, files *deploy
 	}
 
 	logContext.GetLoggerWithFields(ctx, context.Fields{"site_id": siteID, "deploy_files": len(files.Sums)}).Debug("Deploy files")
-	authInfo := context.GetAuthInfo(ctx)
+	authInfo := context.GetAuthWriter(ctx)
 
 	params := operations.NewCreateSiteDeployParams().WithSiteID(siteID).WithDeploy(deployFiles)
 	resp, err := n.Operations.CreateSiteDeploy(params, authInfo)
@@ -125,7 +125,7 @@ func (n *Netlify) createDeploy(ctx context.Context, siteID string, files *deploy
 }
 
 func (n *Netlify) WaitUntilDeployReady(ctx context.Context, d *models.Deploy) (*models.Deploy, error) {
-	authInfo := context.GetAuthInfo(ctx)
+	authInfo := context.GetAuthWriter(ctx)
 	ticker := time.NewTicker(2 * time.Second)
 	defer ticker.Stop()
 
@@ -188,7 +188,7 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *file, wg 
 	}
 	sharedErr.mutex.Unlock()
 
-	authInfo := context.GetAuthInfo(ctx)
+	authInfo := context.GetAuthWriter(ctx)
 
 	logContext.GetLoggerWithFields(ctx, context.Fields{"deploy_id": d.ID, "file_path": f.Name, "file_sum": f.Sum()}).Debug("Upload file")
 

@@ -1,0 +1,79 @@
+hash: bc613fa601080261e7647e6d15f0a92d8d71f6d7538b222fcf304192d9b6fd7f
+updated: 2016-08-03T14:06:40.435738991-07:00
+imports:
+- name: github.com/asaskevich/govalidator
+  version: 593d64559f7600f29581a3ee42177f5dbded27a9
+- name: github.com/cenkalti/backoff
+  version: 32cd0c5b3aef12c76ed64aaf678f6c79736be7dc
+- name: github.com/docker/distribution
+  version: a9b1322edf48b1fb9aee4e5ded7a4f4ac37c6830
+  subpackages:
+  - context
+  - uuid
+- name: github.com/go-openapi/analysis
+  version: abc9a6171f5bf03ada39aead1aa7fd7bbd44d50f
+- name: github.com/go-openapi/errors
+  version: d24ebc2075bad502fac3a8ae27aa6dd58e1952dc
+- name: github.com/go-openapi/jsonpointer
+  version: 46af16f9f7b149af66e5d1bd010e3574dc06de98
+- name: github.com/go-openapi/jsonreference
+  version: 13c6e3589ad90f49bd3e3bbe2c2cb3d7a4142272
+- name: github.com/go-openapi/loads
+  version: 18441dfa706d924a39a030ee2c3b1d8d81917b38
+- name: github.com/go-openapi/runtime
+  version: 11e322eeecc1032d5a0a96c566ed53f2b5c26e22
+  subpackages:
+  - client
+- name: github.com/go-openapi/spec
+  version: e9fab754f5629065e6b7a6100301226545d4477e
+- name: github.com/go-openapi/strfmt
+  version: dfda818c47a4ae5a1dde75ac776f34b2c95de993
+- name: github.com/go-openapi/swag
+  version: 1d0bd113de87027671077d3c71eb3ac5d7dbba72
+- name: github.com/go-openapi/validate
+  version: deaf2c9013bc1a7f4c774662259a506ba874d80f
+- name: github.com/gorilla/context
+  version: 14f550f51af52180c2eefed15e5fd18d63c0a64a
+- name: github.com/gorilla/mux
+  version: e444e69cbd2e2e3e0749a2f3c717cec491552bbf
+- name: github.com/gorilla/websocket
+  version: a69d25be2fe2923a97c2af6849b2f52426f68fc0
+- name: github.com/graarh/golang-socketio
+  version: ccde7b309cd75dde2cf40d9bf38a3003ddef8d6d
+  subpackages:
+  - transport
+  - protocol
+- name: github.com/mailru/easyjson
+  version: d5b7844b561a7bc640052f1b935f7b800330d7e0
+  subpackages:
+  - jlexer
+  - jwriter
+  - buffer
+- name: github.com/PuerkitoBio/purell
+  version: 8a290539e2e8629dbc4e6bad948158f790ec31f4
+- name: github.com/PuerkitoBio/urlesc
+  version: 5bd2802263f21d8788851d5305584c82a5c75d7e
+- name: github.com/Sirupsen/logrus
+  version: 55eb11d21d2a31a3cc93838241d04800f52e823d
+  subpackages:
+  - formatters/logstash
+- name: golang.org/x/net
+  version: 4876518f9e71663000c348837735820161a42df7
+  subpackages:
+  - context
+  - context/ctxhttp
+  - idna
+- name: golang.org/x/text
+  version: 2910a502d2bf9e43193af9d68ca516529614eed3
+  subpackages:
+  - secure/precis
+  - unicode/norm
+  - cases
+  - runes
+  - secure/bidirule
+  - transform
+  - width
+  - language
+  - unicode/bidi
+  - internal/tag
+testImports: []
