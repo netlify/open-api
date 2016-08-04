@@ -20,7 +20,7 @@ type CustomTLSCertificate struct {
 
 // ListSites lists the sites a user has access to.
 func (n *Netlify) ListSites(ctx context.Context, params *operations.ListSitesParams) ([]*models.Site, error) {
-	resp, err := n.Netlify.Operations.ListSites(params, context.GetAuthInfo(ctx))
+	resp, err := n.Netlify.Operations.ListSites(params, context.GetAuthWriter(ctx))
 	if err != nil {
 		return nil, err
 	}
@@ -30,7 +30,7 @@ func (n *Netlify) ListSites(ctx context.Context, params *operations.ListSitesPar
 
 // GetSite returns a site.
 func (n *Netlify) GetSite(ctx context.Context, siteID string) (*models.Site, error) {
-	authInfo := context.GetAuthInfo(ctx)
+	authInfo := context.GetAuthWriter(ctx)
 	resp, err := n.Netlify.Operations.GetSite(operations.NewGetSiteParams().WithSiteID(siteID), authInfo)
 	if err != nil {
 		return nil, err
@@ -40,7 +40,7 @@ func (n *Netlify) GetSite(ctx context.Context, siteID string) (*models.Site, err
 
 // CreateSite creates a new site.
 func (n *Netlify) CreateSite(ctx context.Context, site *models.Site, configureDNS bool) (*models.Site, error) {
-	authInfo := context.GetAuthInfo(ctx)
+	authInfo := context.GetAuthWriter(ctx)
 
 	params := operations.NewCreateSiteParams().WithSite(site).WithConfigureDNS(&configureDNS)
 	resp, err := n.Netlify.Operations.CreateSite(params, authInfo)
@@ -52,7 +52,7 @@ func (n *Netlify) CreateSite(ctx context.Context, site *models.Site, configureDN
 
 // UpdateSite modifies an existent site.
 func (n *Netlify) UpdateSite(ctx context.Context, site *models.Site) error {
-	authInfo := context.GetAuthInfo(ctx)
+	authInfo := context.GetAuthWriter(ctx)
 
 	params := operations.NewUpdateSiteParams().WithSite(site).WithSiteID(site.ID)
 	_, err := n.Netlify.Operations.UpdateSite(params, authInfo)
@@ -62,7 +62,7 @@ func (n *Netlify) UpdateSite(ctx context.Context, site *models.Site) error {
 // ConfigureSiteTLS provisions a TLS certificate for a site with a custom domain.
 // It uses Let's Encrypt if the certificate is empty.
 func (n *Netlify) ConfigureSiteTLSCertificate(ctx context.Context, siteID string, cert *CustomTLSCertificate) (*models.SniCertificate, error) {
-	authInfo := context.GetAuthInfo(ctx)
+	authInfo := context.GetAuthWriter(ctx)
 
 	params := operations.NewProvisionSiteTLSCertificateParams().WithSiteID(siteID)
 	if cert != nil {
@@ -77,7 +77,7 @@ func (n *Netlify) ConfigureSiteTLSCertificate(ctx context.Context, siteID string
 
 // GetSiteTLSCertificate shows the TLS certificate configured for a site.
 func (n *Netlify) GetSiteTLSCertificate(ctx context.Context, siteID string) (*models.SniCertificate, error) {
-	authInfo := context.GetAuthInfo(ctx)
+	authInfo := context.GetAuthWriter(ctx)
 
 	params := operations.NewShowSiteTLSCertificateParams().WithSiteID(siteID)
 	resp, err := n.Netlify.Operations.ShowSiteTLSCertificate(params, authInfo)

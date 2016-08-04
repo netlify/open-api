@@ -21,6 +21,7 @@ type BuildMessage struct {
 	ErrorMessage string
 	Completed    bool
 	Message      string
+	Phase        string
 	SiteID       string
 	DeployID     string
 	BuildID      string
@@ -32,20 +33,23 @@ type BuildMessage struct {
 // push incoming messages back to the client. In the event of an error (e.g. the
 // log doesn't exist) the 'ErrorMessage' field will be set. On completion the
 // 'Completed' flag will be set. On error or completion the channel will be closed
-func (n *Netlify) StreamBuildLog(ctx context.Context, buildID string) (<-chan *BuildMessage, chan<- bool, error) {
+func (n *Netlify) StreamBuildLog(ctx context.Context, deployID string) (<-chan *BuildMessage, chan<- bool, error) {
 	msgChan := make(chan *BuildMessage)
 	shutdownChan := make(chan bool)
 
-	if buildID == "" {
-		close(msgChan)
-		close(shutdownChan)
+	if deployID == "" {
 		return msgChan, shutdownChan, errors.New("Must provide a build ID")
+	}
+
+	authToken := context.GetAuthToken(ctx)
+	if authToken == "" {
+		return msgChan, shutdownChan, errors.New("No auth token specified")
 	}
 
 	endpoint := fmt.Sprintf("%s", n.streamingURL)
 	l := logContext.GetLoggerWithFields(ctx, context.Fields{
-		"build_id": buildID,
-		"endpoint": endpoint,
+		"deploy_id": deployID,
+		"endpoint":  endpoint,
 	})
 	l.Debug("Connecting to streaming endpoint")
 
@@ -63,7 +67,7 @@ func (n *Netlify) StreamBuildLog(ctx context.Context, buildID string) (<-chan *B
 	go listenForShutdown(conn, shutdownChan, msgChan)
 
 	// now bind up to the different topics
-	buildLogHandle := fmt.Sprintf(buildLogFmtHandle, buildID)
+	buildLogHandle := fmt.Sprintf(buildLogFmtHandle, deployID)
 	conn.On(buildLogHandle, func(c *io.Channel, m logMessage) {
 		msgChan <- m.convert()
 	})
@@ -77,7 +81,10 @@ func (n *Netlify) StreamBuildLog(ctx context.Context, buildID string) (<-chan *B
 	})
 
 	l.Debug("Bound different handlers - sending request")
-	err = conn.Emit(buildRequestHandle, buildID)
+	err = conn.Emit(buildRequestHandle, buildRequest{
+		DeployID:  deployID,
+		AuthToken: authToken,
+	})
 	if err != nil {
 		shutdownChan <- true
 		return msgChan, shutdownChan, err
@@ -96,16 +103,21 @@ func listenForShutdown(conn *io.Client, shutdown chan bool, msgChan chan *BuildM
 	}
 }
 
+type buildRequest struct {
+	DeployID  string `json:"deploy_id"`
+	AuthToken string `json:"auth_token"`
+}
+
 type errorMessage struct {
-	BuildID string `json:"build_id"`
-	Reason  string `json:"reason"`
+	DeployID string `json:"deploy_id"`
+	Reason   string `json:"reason"`
 }
 
 func (m errorMessage) convert() *BuildMessage {
 	return &BuildMessage{
 		ErrorMessage: m.Reason,
 		Completed:    true,
-		BuildID:      m.BuildID,
+		DeployID:     m.DeployID,
 	}
 }
 
@@ -114,7 +126,7 @@ type completeMessage string
 func (m completeMessage) convert() *BuildMessage {
 	return &BuildMessage{
 		Completed: true,
-		BuildID:   fmt.Sprintf("%s", m),
+		DeployID:  fmt.Sprintf("%s", m),
 	}
 }
 
@@ -135,6 +147,7 @@ func (m logMessage) convert() *BuildMessage {
 		DeployID:  m.DeployID,
 		SiteID:    m.SiteID,
 		BuildID:   m.BuildID,
+		Phase:     m.Phase,
 		Data:      m.Data,
 		Time:      m.Time,
 	}
