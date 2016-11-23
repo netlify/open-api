@@ -239,13 +239,13 @@ func walk(dir string) (*deployFiles, error) {
 				return nil
 			}
 
-			o, err := os.Open(rel)
+			o, err := os.Open(path)
 			if err != nil {
 				return err
 			}
 
 			file := &file{
-				Name:   rel,
+				Name:   path,
 				SHA1:   sha1.New(),
 				Buffer: new(bytes.Buffer),
 			}
@@ -255,7 +255,7 @@ func walk(dir string) (*deployFiles, error) {
 				return err
 			}
 
-			files.Add(rel, file)
+			files.Add(path, file)
 		}
 
 		return nil
