@@ -15,7 +15,11 @@ var Default = NewHTTPClient(nil)
 // NewHTTPClient creates a new netlify HTTP client.
 func NewHTTPClient(formats strfmt.Registry) *Netlify {
 	n := plumbing.NewHTTPClient(formats)
-	return &Netlify{n}
+	return &Netlify{
+		Netlify:       n,
+		syncFileLimit: DefaultSyncFileLimit,
+		uploadLimit:   DefaultConcurrentUploadLimit,
+	}
 }
 
 // New creates a new netlify client
