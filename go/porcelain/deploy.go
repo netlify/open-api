@@ -22,8 +22,7 @@ import (
 )
 
 const (
-	maxFilesForSyncDeploy = 7000
-	preProcessingTimeout  = time.Minute * 5
+	preProcessingTimeout = time.Minute * 5
 )
 
 type uploadError struct {
@@ -72,8 +71,8 @@ func (d *deployFiles) Add(p string, f *file) {
 	d.Hashed[sum] = f
 }
 
-func (d *deployFiles) OverCommitted() bool {
-	return len(d.Files) > maxFilesForSyncDeploy
+func (n *Netlify) overCommitted(d *deployFiles) bool {
+	return len(d.Files) > n.syncFileLimit
 }
 
 // DeploySite creates a new deploy for a site given a directory in the filesystem.
@@ -98,12 +97,13 @@ func (n *Netlify) DeploySite(ctx context.Context, siteID, dir string) (*models.D
 func (n *Netlify) createDeploy(ctx context.Context, siteID string, files *deployFiles) (*models.Deploy, error) {
 	deployFiles := &models.DeployFiles{
 		Files: files.Sums,
-		Async: files.OverCommitted(),
+		Async: n.overCommitted(files),
 	}
-	context.GetLogger(ctx).WithFields(logrus.Fields{
+	l := context.GetLogger(ctx)
+	l.WithFields(logrus.Fields{
 		"site_id":      siteID,
 		"deploy_files": len(files.Sums),
-	}).Debug("Deploy files")
+	}).Debug("Starting to deploy files")
 	authInfo := context.GetAuthInfo(ctx)
 
 	params := operations.NewCreateSiteDeployParams().WithSiteID(siteID).WithDeploy(deployFiles)
@@ -113,7 +113,7 @@ func (n *Netlify) createDeploy(ctx context.Context, siteID string, files *deploy
 	}
 
 	deploy := resp.Payload
-	if files.OverCommitted() {
+	if n.overCommitted(files) {
 		var err error
 		deploy, err = n.WaitUntilDeployReady(ctx, deploy)
 		if err != nil {
@@ -121,6 +121,7 @@ func (n *Netlify) createDeploy(ctx context.Context, siteID string, files *deploy
 		}
 	}
 
+	l.Debugf("Site and deploy created, uploading %d files necessary", len(deploy.Required))
 	if err := n.uploadFiles(ctx, deploy, files); err != nil {
 		return nil, err
 	}
@@ -164,7 +165,7 @@ func (n *Netlify) WaitUntilDeployReady(ctx context.Context, d *models.Deploy) (*
 
 func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *deployFiles) error {
 	sharedErr := &uploadError{err: nil, mutex: &sync.Mutex{}}
-	sem := make(chan int, 10) // FIXME(david): make max concurrent uploads configurable.
+	sem := make(chan int, n.uploadLimit)
 	wg := &sync.WaitGroup{}
 
 	for _, sha := range d.Required {
