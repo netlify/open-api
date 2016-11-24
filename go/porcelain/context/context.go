@@ -1,7 +1,9 @@
 package context
 
 import (
-	"github.com/docker/distribution/context"
+	"context"
+
+	"github.com/Sirupsen/logrus"
 	"github.com/go-openapi/runtime"
 )
 
@@ -17,4 +19,16 @@ func WithAuthInfo(ctx Context, authInfo runtime.ClientAuthInfoWriter) Context {
 
 func GetAuthInfo(ctx Context) runtime.ClientAuthInfoWriter {
 	return ctx.Value("netlify.auth_info").(runtime.ClientAuthInfoWriter)
+}
+
+func WithLogger(ctx Context, entry *logrus.Entry) Context {
+	return context.WithValue(ctx, "netlify.logger", entry)
+}
+
+func GetLogger(ctx Context) *logrus.Entry {
+	logger := ctx.Value("netlify.logger")
+	if logger == nil {
+		return logrus.NewEntry(logrus.StandardLogger())
+	}
+	return logger.(*logrus.Entry)
 }

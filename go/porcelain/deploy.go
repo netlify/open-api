@@ -13,8 +13,9 @@ import (
 	"sync"
 	"time"
 
+	"github.com/Sirupsen/logrus"
 	"github.com/cenkalti/backoff"
-	logContext "github.com/docker/distribution/context"
+
 	"github.com/netlify/open-api/go/models"
 	"github.com/netlify/open-api/go/plumbing/operations"
 	"github.com/netlify/open-api/go/porcelain/context"
@@ -31,9 +32,10 @@ type uploadError struct {
 }
 
 type file struct {
-	Name   string
-	SHA1   hash.Hash
-	Buffer *bytes.Buffer
+	Name    string
+	AbsPath string
+	SHA1    hash.Hash
+	Buffer  *bytes.Buffer
 }
 
 func (f *file) Sum() string {
@@ -98,8 +100,10 @@ func (n *Netlify) createDeploy(ctx context.Context, siteID string, files *deploy
 		Files: files.Sums,
 		Async: files.OverCommitted(),
 	}
-
-	logContext.GetLoggerWithFields(ctx, context.Fields{"site_id": siteID, "deploy_files": len(files.Sums)}).Debug("Deploy files")
+	context.GetLogger(ctx).WithFields(logrus.Fields{
+		"site_id":      siteID,
+		"deploy_files": len(files.Sums),
+	}).Debug("Deploy files")
 	authInfo := context.GetAuthInfo(ctx)
 
 	params := operations.NewCreateSiteDeployParams().WithSiteID(siteID).WithDeploy(deployFiles)
@@ -137,8 +141,10 @@ func (n *Netlify) WaitUntilDeployReady(ctx context.Context, d *models.Deploy) (*
 			time.Sleep(3 * time.Second)
 			continue
 		}
-
-		logContext.GetLoggerWithFields(ctx, context.Fields{"deploy_id": d.ID, "state": resp.Payload.State}).Debug("Wait until deploy ready")
+		context.GetLogger(ctx).WithFields(logrus.Fields{
+			"deploy_id": d.ID,
+			"state":     resp.Payload.State,
+		}).Debug("Waiting until deploy ready")
 
 		if resp.Payload.State == "prepared" || resp.Payload.State == "ready" {
 			return resp.Payload, nil
@@ -190,7 +196,11 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *file, wg 
 
 	authInfo := context.GetAuthInfo(ctx)
 
-	logContext.GetLoggerWithFields(ctx, context.Fields{"deploy_id": d.ID, "file_path": f.Name, "file_sum": f.Sum()}).Debug("Upload file")
+	context.GetLogger(ctx).WithFields(logrus.Fields{
+		"deploy_id": d.ID,
+		"file_path": f.Name,
+		"file_sum":  f.Sum(),
+	}).Debug("Uploading file")
 
 	b := backoff.NewExponentialBackOff()
 	b.MaxElapsedTime = 2 * time.Minute
@@ -204,11 +214,11 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *file, wg 
 		}
 		sharedErr.mutex.Unlock()
 
-		params := operations.NewUploadDeployFileParams().WithDeployID(d.ID).WithPath(f.Name).WithFileBody(f)
+		params := operations.NewUploadDeployFileParams().WithDeployID(d.ID).WithPath(f.AbsPath).WithFileBody(f)
 		_, err := n.Operations.UploadDeployFile(params, authInfo)
 
 		if err != nil {
-			logContext.GetLogger(ctx).Error(err)
+			context.GetLogger(ctx).WithError(err).Error("Failed to upload file")
 		}
 
 		return err
@@ -239,15 +249,16 @@ func walk(dir string) (*deployFiles, error) {
 				return nil
 			}
 
-			o, err := os.Open(rel)
+			o, err := os.Open(path)
 			if err != nil {
 				return err
 			}
 
 			file := &file{
-				Name:   rel,
-				SHA1:   sha1.New(),
-				Buffer: new(bytes.Buffer),
+				Name:    rel,
+				AbsPath: path,
+				SHA1:    sha1.New(),
+				Buffer:  new(bytes.Buffer),
 			}
 			m := io.MultiWriter(file.SHA1, file.Buffer)
 
@@ -255,7 +266,7 @@ func walk(dir string) (*deployFiles, error) {
 				return err
 			}
 
-			files.Add(rel, file)
+			files.Add(path, file)
 		}
 
 		return nil
