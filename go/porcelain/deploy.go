@@ -267,7 +267,7 @@ func walk(dir string) (*deployFiles, error) {
 				return err
 			}
 
-			files.Add(path, file)
+			files.Add(rel, file)
 		}
 
 		return nil
