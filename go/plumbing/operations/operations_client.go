@@ -101,6 +101,32 @@ func (a *Client) CreateSite(params *CreateSiteParams, authInfo runtime.ClientAut
 }
 
 /*
+CreateSiteAsset create site asset API
+*/
+func (a *Client) CreateSiteAsset(params *CreateSiteAssetParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteAssetCreated, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewCreateSiteAssetParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "createSiteAsset",
+		Method:             "POST",
+		PathPattern:        "/sites/{site_id}/assets",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &CreateSiteAssetReader{formats: a.formats},
+		AuthInfo:           authInfo,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*CreateSiteAssetCreated), nil
+}
+
+/*
 CreateSiteDeploy create site deploy API
 */
 func (a *Client) CreateSiteDeploy(params *CreateSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteDeployOK, error) {
@@ -205,6 +231,32 @@ func (a *Client) DeleteSite(params *DeleteSiteParams, authInfo runtime.ClientAut
 }
 
 /*
+DeleteSiteAsset delete site asset API
+*/
+func (a *Client) DeleteSiteAsset(params *DeleteSiteAssetParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSiteAssetNoContent, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewDeleteSiteAssetParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "deleteSiteAsset",
+		Method:             "DELETE",
+		PathPattern:        "/sites/{site_id}/assets/{asset_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &DeleteSiteAssetReader{formats: a.formats},
+		AuthInfo:           authInfo,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*DeleteSiteAssetNoContent), nil
+}
+
+/*
 DeleteSiteSnippet delete site snippet API
 */
 func (a *Client) DeleteSiteSnippet(params *DeleteSiteSnippetParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSiteSnippetNoContent, error) {
@@ -280,6 +332,58 @@ func (a *Client) GetSite(params *GetSiteParams, authInfo runtime.ClientAuthInfoW
 		return nil, err
 	}
 	return result.(*GetSiteOK), nil
+}
+
+/*
+GetSiteAssetInfo get site asset info API
+*/
+func (a *Client) GetSiteAssetInfo(params *GetSiteAssetInfoParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteAssetInfoOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetSiteAssetInfoParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "getSiteAssetInfo",
+		Method:             "GET",
+		PathPattern:        "/sites/{site_id}/assets/{asset_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &GetSiteAssetInfoReader{formats: a.formats},
+		AuthInfo:           authInfo,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*GetSiteAssetInfoOK), nil
+}
+
+/*
+GetSiteAssetPublicSignature get site asset public signature API
+*/
+func (a *Client) GetSiteAssetPublicSignature(params *GetSiteAssetPublicSignatureParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteAssetPublicSignatureOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetSiteAssetPublicSignatureParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "getSiteAssetPublicSignature",
+		Method:             "GET",
+		PathPattern:        "/sites/{site_id}/assets/{asset_id}/public_signature",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &GetSiteAssetPublicSignatureReader{formats: a.formats},
+		AuthInfo:           authInfo,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*GetSiteAssetPublicSignatureOK), nil
 }
 
 /*
@@ -488,6 +592,32 @@ func (a *Client) ListHooksBySiteID(params *ListHooksBySiteIDParams, authInfo run
 		return nil, err
 	}
 	return result.(*ListHooksBySiteIDOK), nil
+}
+
+/*
+ListSiteAssets list site assets API
+*/
+func (a *Client) ListSiteAssets(params *ListSiteAssetsParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteAssetsOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewListSiteAssetsParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "listSiteAssets",
+		Method:             "GET",
+		PathPattern:        "/sites/{site_id}/assets",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &ListSiteAssetsReader{formats: a.formats},
+		AuthInfo:           authInfo,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*ListSiteAssetsOK), nil
 }
 
 /*
@@ -748,6 +878,32 @@ func (a *Client) UpdateSite(params *UpdateSiteParams, authInfo runtime.ClientAut
 		return nil, err
 	}
 	return result.(*UpdateSiteOK), nil
+}
+
+/*
+UpdateSiteAsset update site asset API
+*/
+func (a *Client) UpdateSiteAsset(params *UpdateSiteAssetParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateSiteAssetOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewUpdateSiteAssetParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "updateSiteAsset",
+		Method:             "PUT",
+		PathPattern:        "/sites/{site_id}/assets/{asset_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &UpdateSiteAssetReader{formats: a.formats},
+		AuthInfo:           authInfo,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*UpdateSiteAssetOK), nil
 }
 
 /*
