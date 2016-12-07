@@ -31,10 +31,9 @@ type uploadError struct {
 }
 
 type file struct {
-	Name    string
-	AbsPath string
-	SHA1    hash.Hash
-	Buffer  *bytes.Buffer
+	Name   string
+	SHA1   hash.Hash
+	Buffer *bytes.Buffer
 }
 
 func (f *file) Sum() string {
@@ -215,7 +214,7 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *file, wg 
 		}
 		sharedErr.mutex.Unlock()
 
-		params := operations.NewUploadDeployFileParams().WithDeployID(d.ID).WithPath(f.AbsPath).WithFileBody(f)
+		params := operations.NewUploadDeployFileParams().WithDeployID(d.ID).WithPath(f.Name).WithFileBody(f)
 		_, err := n.Operations.UploadDeployFile(params, authInfo)
 
 		if err != nil {
@@ -256,10 +255,9 @@ func walk(dir string) (*deployFiles, error) {
 			}
 
 			file := &file{
-				Name:    rel,
-				AbsPath: path,
-				SHA1:    sha1.New(),
-				Buffer:  new(bytes.Buffer),
+				Name:   rel,
+				SHA1:   sha1.New(),
+				Buffer: new(bytes.Buffer),
 			}
 			m := io.MultiWriter(file.SHA1, file.Buffer)
 
