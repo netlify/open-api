@@ -113,6 +113,10 @@ func (n *Netlify) createDeploy(ctx context.Context, siteID string, files *deploy
 	}
 
 	deploy := resp.Payload
+	if len(deploy.Required) == 0 {
+		return deploy, nil
+	}
+
 	if n.overCommitted(files) {
 		var err error
 		deploy, err = n.WaitUntilDeployReady(ctx, deploy)
@@ -121,7 +125,7 @@ func (n *Netlify) createDeploy(ctx context.Context, siteID string, files *deploy
 		}
 	}
 
-	l.Debugf("Site and deploy created, uploading %d files necessary", len(deploy.Required))
+	l.Debugf("Site and deploy created, uploading %d required files", len(deploy.Required))
 	if err := n.uploadFiles(ctx, deploy, files); err != nil {
 		return nil, err
 	}
