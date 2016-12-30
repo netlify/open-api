@@ -76,7 +76,7 @@ func (n *Netlify) overCommitted(d *deployFiles) bool {
 
 // DeploySite creates a new deploy for a site given a directory in the filesystem.
 // It uploads the necessary files that changed between deploys.
-func (n *Netlify) DeploySite(ctx context.Context, siteID, dir string) (*models.Deploy, error) {
+func (n *Netlify) DeploySite(ctx context.Context, siteID, dir string, draft bool) (*models.Deploy, error) {
 	f, err := os.Stat(dir)
 	if err != nil {
 		return nil, err
@@ -90,12 +90,13 @@ func (n *Netlify) DeploySite(ctx context.Context, siteID, dir string) (*models.D
 		return nil, err
 	}
 
-	return n.createDeploy(ctx, siteID, files)
+	return n.createDeploy(ctx, siteID, draft, files)
 }
 
-func (n *Netlify) createDeploy(ctx context.Context, siteID string, files *deployFiles) (*models.Deploy, error) {
+func (n *Netlify) createDeploy(ctx context.Context, siteID string, draft bool, files *deployFiles) (*models.Deploy, error) {
 	deployFiles := &models.DeployFiles{
 		Files: files.Sums,
+		Draft: draft,
 		Async: n.overCommitted(files),
 	}
 	l := context.GetLogger(ctx)

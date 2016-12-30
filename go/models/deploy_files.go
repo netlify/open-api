@@ -15,6 +15,10 @@ type DeployFiles struct {
 	 */
 	Async bool `json:"async,omitempty"`
 
+	/* draft
+	 */
+	Draft bool `json:"draft,omitempty"`
+
 	/* files
 	 */
 	Files interface{} `json:"files,omitempty"`
