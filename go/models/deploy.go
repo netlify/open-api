@@ -16,9 +16,25 @@ swagger:model deploy
 */
 type Deploy struct {
 
+	/* admin url
+	 */
+	AdminURL string `json:"admin_url,omitempty"`
+
+	/* branch
+	 */
+	Branch string `json:"branch,omitempty"`
+
+	/* build id
+	 */
+	BuildID string `json:"build_id,omitempty"`
+
 	/* commit ref
 	 */
 	CommitRef string `json:"commit_ref,omitempty"`
+
+	/* commit url
+	 */
+	CommitURL string `json:"commit_url,omitempty"`
 
 	/* created at
 	 */
@@ -36,9 +52,17 @@ type Deploy struct {
 	 */
 	Draft bool `json:"draft,omitempty"`
 
+	/* error message
+	 */
+	ErrorMessage string `json:"error_message,omitempty"`
+
 	/* id
 	 */
 	ID string `json:"id,omitempty"`
+
+	/* name
+	 */
+	Name string `json:"name,omitempty"`
 
 	/* required
 	 */
@@ -55,6 +79,10 @@ type Deploy struct {
 	/* site id
 	 */
 	SiteID string `json:"site_id,omitempty"`
+
+	/* skipped
+	 */
+	Skipped bool `json:"skipped,omitempty"`
 
 	/* state
 	 */
