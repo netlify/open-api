@@ -32,6 +32,10 @@ type Deploy struct {
 	 */
 	DeployURL string `json:"deploy_url,omitempty"`
 
+	/* draft
+	 */
+	Draft bool `json:"draft,omitempty"`
+
 	/* id
 	 */
 	ID string `json:"id,omitempty"`

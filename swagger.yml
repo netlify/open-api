@@ -742,6 +742,8 @@ definitions:
           type: string
         review_id:
           type: string
+        draft:
+          type: boolean
         required:
           type: array
           items:
@@ -757,6 +759,8 @@ definitions:
       properties:
         files:
           type: object
+        draft:
+          type: boolean
         async:
           type: boolean
     metadata:
