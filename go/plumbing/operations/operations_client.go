@@ -257,6 +257,32 @@ func (a *Client) GetDNSForSite(params *GetDNSForSiteParams, authInfo runtime.Cli
 }
 
 /*
+GetDeploy get deploy API
+*/
+func (a *Client) GetDeploy(params *GetDeployParams, authInfo runtime.ClientAuthInfoWriter) (*GetDeployOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetDeployParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "getDeploy",
+		Method:             "GET",
+		PathPattern:        "/deploys/{deploy_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &GetDeployReader{formats: a.formats},
+		AuthInfo:           authInfo,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*GetDeployOK), nil
+}
+
+/*
 GetSite get site API
 */
 func (a *Client) GetSite(params *GetSiteParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteOK, error) {

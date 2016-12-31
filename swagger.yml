@@ -450,6 +450,23 @@ paths:
           description: error
           schema:
             $ref: "#/definitions/error"
+  /deploys/{deploy_id}:
+    get:
+      operationId: getDeploy
+      parameters:
+        - name: deploy_id
+          type: string
+          in: path
+          required: true
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: "#/definitions/deploy"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
   /deploys/{deploy_id}/files/{path}:
     put:
       operationId: uploadDeployFile
@@ -728,17 +745,21 @@ definitions:
           type: string
         user_id:
           type: string
+        build_id:
+          type: string
         state:
+          type: string
+        name:
+          type: string
+        url:
+          type: string
+        admin_url:
           type: string
         deploy_url:
           type: string
         deploy_ssl_url:
           type: string
-        url:
-          type: string
         screenshot_url:
-          type: string
-        commit_ref:
           type: string
         review_id:
           type: string
@@ -748,6 +769,18 @@ definitions:
           type: array
           items:
             type: string
+        error_message:
+          type: string
+        review_id:
+          type: string
+        branch:
+          type: string
+        commit_ref:
+          type: string
+        commit_url:
+          type: string
+        skipped:
+          type: boolean
         created_at:
           type: string
           format: dateTime
