@@ -34,3 +34,17 @@ func (n *Netlify) UpdateSiteAsset(ctx context.Context, params *operations.Update
 
 	return resp.Payload, nil
 }
+
+func (n *Netlify) ListSiteAssets(ctx context.Context, params *operations.ListSiteAssetsParams) ([]*models.Asset, error) {
+	l := context.GetLogger(ctx)
+	l.WithFields(logrus.Fields{
+		"site_id": params.SiteID,
+	}).Debug("Listing site assets")
+
+	resp, err := n.Netlify.Operations.ListSiteAssets(params, context.GetAuthInfo(ctx))
+	if err != nil {
+		return nil, err
+	}
+
+	return resp.Payload, nil
+}
