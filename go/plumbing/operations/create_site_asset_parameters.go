@@ -31,6 +31,8 @@ type CreateSiteAssetParams struct {
 	SiteID string
 	/*Size*/
 	Size int64
+	/*Visibility*/
+	Visibility *string
 }
 
 // WithContentType adds the contentType to the create site asset params
@@ -54,6 +56,12 @@ func (o *CreateSiteAssetParams) WithSiteID(SiteID string) *CreateSiteAssetParams
 // WithSize adds the size to the create site asset params
 func (o *CreateSiteAssetParams) WithSize(Size int64) *CreateSiteAssetParams {
 	o.Size = Size
+	return o
+}
+
+// WithVisibility adds the visibility to the create site asset params
+func (o *CreateSiteAssetParams) WithVisibility(Visibility *string) *CreateSiteAssetParams {
+	o.Visibility = Visibility
 	return o
 }
 
@@ -92,6 +100,22 @@ func (o *CreateSiteAssetParams) WriteToRequest(r runtime.ClientRequest, reg strf
 		if err := r.SetQueryParam("size", qSize); err != nil {
 			return err
 		}
+	}
+
+	if o.Visibility != nil {
+
+		// query param visibility
+		var qrVisibility string
+		if o.Visibility != nil {
+			qrVisibility = *o.Visibility
+		}
+		qVisibility := qrVisibility
+		if qVisibility != "" {
+			if err := r.SetQueryParam("visibility", qVisibility); err != nil {
+				return err
+			}
+		}
+
 	}
 
 	if len(res) > 0 {
