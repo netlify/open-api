@@ -598,9 +598,19 @@ definitions:
       properties:
         id:
           type: string
+        state:
+          type: string
+        plan:
+          type: string
         name:
           type: string
         custom_domain:
+          type: string
+        domain_aliases:
+          type: array
+          items:
+            type: string
+        password:
           type: string
         notification_email:
           type: string
@@ -618,8 +628,16 @@ definitions:
           format: dateTime
         user_id:
           type: string
+        ssl:
+          type: boolean
         force_ssl:
           type: boolean
+        managed_dns:
+          type: boolean
+        deploy_url:
+          type: string
+        published_deploy:
+          $ref: "#/definitions/deploy"
     submission:
       type: object
       properties:
