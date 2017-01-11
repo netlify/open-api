@@ -51,12 +51,15 @@ func (n *Netlify) CreateSite(ctx context.Context, site *models.Site, configureDN
 }
 
 // UpdateSite modifies an existent site.
-func (n *Netlify) UpdateSite(ctx context.Context, site *models.Site) error {
+func (n *Netlify) UpdateSite(ctx context.Context, site *models.Site) (*models.Site, error) {
 	authInfo := context.GetAuthInfo(ctx)
 
 	params := operations.NewUpdateSiteParams().WithSite(site).WithSiteID(site.ID)
-	_, err := n.Netlify.Operations.UpdateSite(params, authInfo)
-	return err
+	resp, err := n.Netlify.Operations.UpdateSite(params, authInfo)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload, nil
 }
 
 // ConfigureSiteTLS provisions a TLS certificate for a site with a custom domain.
