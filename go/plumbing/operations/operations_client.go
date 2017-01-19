@@ -153,6 +153,32 @@ func (a *Client) CreateSiteSnippet(params *CreateSiteSnippetParams, authInfo run
 }
 
 /*
+CreateTicket create ticket API
+*/
+func (a *Client) CreateTicket(params *CreateTicketParams, authInfo runtime.ClientAuthInfoWriter) (*CreateTicketCreated, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewCreateTicketParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "createTicket",
+		Method:             "POST",
+		PathPattern:        "/oauth/tickets",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &CreateTicketReader{formats: a.formats},
+		AuthInfo:           authInfo,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*CreateTicketCreated), nil
+}
+
+/*
 DeleteHookBySiteID delete hook by site Id API
 */
 func (a *Client) DeleteHookBySiteID(params *DeleteHookBySiteIDParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteHookBySiteIDNoContent, error) {
@@ -228,6 +254,32 @@ func (a *Client) DeleteSiteSnippet(params *DeleteSiteSnippetParams, authInfo run
 		return nil, err
 	}
 	return result.(*DeleteSiteSnippetNoContent), nil
+}
+
+/*
+ExchangeTicket exchange ticket API
+*/
+func (a *Client) ExchangeTicket(params *ExchangeTicketParams, authInfo runtime.ClientAuthInfoWriter) (*ExchangeTicketCreated, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewExchangeTicketParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "exchangeTicket",
+		Method:             "POST",
+		PathPattern:        "/oauth/tickets/{ticket_id}/exchange",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &ExchangeTicketReader{formats: a.formats},
+		AuthInfo:           authInfo,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*ExchangeTicketCreated), nil
 }
 
 /*
@@ -748,6 +800,32 @@ func (a *Client) ShowSiteTLSCertificate(params *ShowSiteTLSCertificateParams, au
 		return nil, err
 	}
 	return result.(*ShowSiteTLSCertificateOK), nil
+}
+
+/*
+ShowTicket show ticket API
+*/
+func (a *Client) ShowTicket(params *ShowTicketParams, authInfo runtime.ClientAuthInfoWriter) (*ShowTicketOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewShowTicketParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "showTicket",
+		Method:             "GET",
+		PathPattern:        "/oauth/tickets/{ticket_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &ShowTicketReader{formats: a.formats},
+		AuthInfo:           authInfo,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*ShowTicketOK), nil
 }
 
 /*
