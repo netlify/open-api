@@ -592,6 +592,57 @@ paths:
           description: error
           schema:
             $ref: "#/definitions/error"
+  /oauth/tickets:
+    post:
+      operationId: createTicket
+      parameters:
+        - name: client_id
+          type: string
+          in: query
+          required: true
+      responses:
+        '201':
+          description: ok
+          schema:
+            $ref: "#/definitions/ticket"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+  /oauth/tickets/{ticket_id}:
+    get:
+      operationId: showTicket
+      parameters:
+        - name: ticket_id
+          type: string
+          in: path
+          required: true
+      responses:
+        '200':
+          description: ok
+          schema:
+            $ref: "#/definitions/ticket"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+  /oauth/tickets/{ticket_id}/exchange:
+    post:
+      operationId: exchangeTicket
+      parameters:
+        - name: ticket_id
+          type: string
+          in: path
+          required: true
+      responses:
+        '201':
+          description: ok
+          schema:
+            $ref: "#/definitions/accessToken"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
 definitions:
     site:
       type: object
@@ -860,6 +911,32 @@ definitions:
           type: string
           format: dateTime
         expires_at:
+          type: string
+          format: dateTime
+    ticket:
+      type: object
+      properties:
+        id:
+          type: string
+        client_id:
+          type: string
+        authorized:
+          type: boolean
+        created_at:
+          type: string
+          format: dateTime
+    accessToken:
+      type: object
+      properties:
+        id:
+          type: string
+        access_token:
+          type: string
+        user_id:
+          type: string
+        user_email:
+          type: string
+        created_at:
           type: string
           format: dateTime
     error:
