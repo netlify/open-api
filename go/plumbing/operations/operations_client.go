@@ -725,6 +725,32 @@ func (a *Client) ListSites(params *ListSitesParams, authInfo runtime.ClientAuthI
 }
 
 /*
+LockDeploy lock deploy API
+*/
+func (a *Client) LockDeploy(params *LockDeployParams, authInfo runtime.ClientAuthInfoWriter) (*LockDeployOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewLockDeployParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "lockDeploy",
+		Method:             "POST",
+		PathPattern:        "/deploys/{deploy_id}/lock",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &LockDeployReader{formats: a.formats},
+		AuthInfo:           authInfo,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*LockDeployOK), nil
+}
+
+/*
 ProvisionSiteTLSCertificate provision site TLS certificate API
 */
 func (a *Client) ProvisionSiteTLSCertificate(params *ProvisionSiteTLSCertificateParams, authInfo runtime.ClientAuthInfoWriter) (*ProvisionSiteTLSCertificateOK, error) {
@@ -826,6 +852,32 @@ func (a *Client) ShowTicket(params *ShowTicketParams, authInfo runtime.ClientAut
 		return nil, err
 	}
 	return result.(*ShowTicketOK), nil
+}
+
+/*
+UnlockDeploy unlock deploy API
+*/
+func (a *Client) UnlockDeploy(params *UnlockDeployParams, authInfo runtime.ClientAuthInfoWriter) (*UnlockDeployOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewUnlockDeployParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "unlockDeploy",
+		Method:             "POST",
+		PathPattern:        "/deploys/{deploy_id}/unlock",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &UnlockDeployReader{formats: a.formats},
+		AuthInfo:           authInfo,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*UnlockDeployOK), nil
 }
 
 /*

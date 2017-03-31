@@ -467,6 +467,40 @@ paths:
           description: error
           schema:
             $ref: "#/definitions/error"
+  /deploys/{deploy_id}/lock:
+    post:
+      operationId: lockDeploy
+      parameters:
+        - name: deploy_id
+          type: string
+          in: path
+          required: true
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: "#/definitions/deploy"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+  /deploys/{deploy_id}/unlock:
+    post:
+      operationId: unlockDeploy
+      parameters:
+        - name: deploy_id
+          type: string
+          in: path
+          required: true
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: "#/definitions/deploy"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
   /deploys/{deploy_id}/files/{path}:
     put:
       operationId: uploadDeployFile
