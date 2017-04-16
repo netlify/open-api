@@ -874,8 +874,6 @@ definitions:
             type: string
         error_message:
           type: string
-        review_id:
-          type: string
         branch:
           type: string
         commit_ref:
