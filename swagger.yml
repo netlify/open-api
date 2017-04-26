@@ -362,6 +362,9 @@ paths:
     post:
       operationId: createSiteDeploy
       parameters:
+        - name: title
+          type: string
+          in: query
         - name: deploy
           in: body
           schema:
@@ -890,6 +893,8 @@ definitions:
         updated_at:
           type: string
           format: dateTime
+        title:
+          type: string
     deployFiles:
       type: object
       properties:
