@@ -88,6 +88,10 @@ type Deploy struct {
 	 */
 	State string `json:"state,omitempty"`
 
+	/* title
+	 */
+	Title string `json:"title,omitempty"`
+
 	/* updated at
 	 */
 	UpdatedAt string `json:"updated_at,omitempty"`

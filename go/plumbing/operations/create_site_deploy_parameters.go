@@ -28,6 +28,8 @@ type CreateSiteDeployParams struct {
 	Deploy *models.DeployFiles
 	/*SiteID*/
 	SiteID string
+	/*Title*/
+	Title *string
 }
 
 // WithDeploy adds the deploy to the create site deploy params
@@ -39,6 +41,12 @@ func (o *CreateSiteDeployParams) WithDeploy(Deploy *models.DeployFiles) *CreateS
 // WithSiteID adds the siteId to the create site deploy params
 func (o *CreateSiteDeployParams) WithSiteID(SiteID string) *CreateSiteDeployParams {
 	o.SiteID = SiteID
+	return o
+}
+
+// WithTitle adds the title to the create site deploy params
+func (o *CreateSiteDeployParams) WithTitle(Title *string) *CreateSiteDeployParams {
+	o.Title = Title
 	return o
 }
 
@@ -58,6 +66,22 @@ func (o *CreateSiteDeployParams) WriteToRequest(r runtime.ClientRequest, reg str
 	// path param site_id
 	if err := r.SetPathParam("site_id", o.SiteID); err != nil {
 		return err
+	}
+
+	if o.Title != nil {
+
+		// query param title
+		var qrTitle string
+		if o.Title != nil {
+			qrTitle = *o.Title
+		}
+		qTitle := qrTitle
+		if qTitle != "" {
+			if err := r.SetQueryParam("title", qTitle); err != nil {
+				return err
+			}
+		}
+
 	}
 
 	if len(res) > 0 {
