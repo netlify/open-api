@@ -23,6 +23,8 @@ Currently, we're generating client code for Go, but we're planning on releasing 
 You can use this command to generate the Go client:
 
 	make generate
+	
+You may first want to edit swagger.yml to add your field or endpoint definitions.
 
 ## Explore API
 
