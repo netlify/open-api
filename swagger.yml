@@ -533,6 +533,35 @@ paths:
           description: error
           schema:
             $ref: "#/definitions/error"
+  /deploys/{deploy_id}/functions/{name}:
+    put:
+      operationId: uploadDeployFunction
+      consumes:
+        - application/octet-stream
+      parameters:
+        - name: deploy_id
+          type: string
+          in: path
+          required: true
+        - name: name
+          type: string
+          in: path
+          required: true
+        - name: file_body
+          in: body
+          schema:
+            type: string
+            format: binary
+          required: true
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: "#/definitions/function"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
   /forms:
     get:
       operationId: listForms
@@ -824,6 +853,15 @@ definitions:
         size:
           type: integer
           format: int64
+    function:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        sha:
+          type: string
     snippet:
       type: object
       properties:
@@ -875,6 +913,10 @@ definitions:
           type: array
           items:
             type: string
+        requiredFunctions:
+          type: array
+          items:
+            type: string
         error_message:
           type: string
         branch:
@@ -902,6 +944,8 @@ definitions:
           type: boolean
         async:
           type: boolean
+        functions:
+          type: object
     metadata:
       type: object
     dnsZone:

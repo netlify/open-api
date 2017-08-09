@@ -3,7 +3,7 @@ package context
 import (
 	"context"
 
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 	"github.com/go-openapi/runtime"
 )
 

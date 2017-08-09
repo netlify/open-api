@@ -12,25 +12,22 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// Ticket ticket
-// swagger:model ticket
-type Ticket struct {
-
-	// authorized
-	Authorized bool `json:"authorized,omitempty"`
-
-	// client id
-	ClientID string `json:"client_id,omitempty"`
-
-	// created at
-	CreatedAt string `json:"created_at,omitempty"`
+// Function function
+// swagger:model function
+type Function struct {
 
 	// id
 	ID string `json:"id,omitempty"`
+
+	// name
+	Name string `json:"name,omitempty"`
+
+	// sha
+	Sha string `json:"sha,omitempty"`
 }
 
-// Validate validates this ticket
-func (m *Ticket) Validate(formats strfmt.Registry) error {
+// Validate validates this function
+func (m *Function) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if len(res) > 0 {
@@ -40,7 +37,7 @@ func (m *Ticket) Validate(formats strfmt.Registry) error {
 }
 
 // MarshalBinary interface implementation
-func (m *Ticket) MarshalBinary() ([]byte, error) {
+func (m *Function) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -48,8 +45,8 @@ func (m *Ticket) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *Ticket) UnmarshalBinary(b []byte) error {
-	var res Ticket
+func (m *Function) UnmarshalBinary(b []byte) error {
+	var res Function
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

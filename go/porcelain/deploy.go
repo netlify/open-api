@@ -1,20 +1,23 @@
 package porcelain
 
 import (
+	"archive/zip"
 	"bytes"
 	"crypto/sha1"
+	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
 	"hash"
 	"io"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
 	"sync"
 	"time"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/cenkalti/backoff"
+	"github.com/sirupsen/logrus"
 
 	"github.com/netlify/open-api/go/models"
 	"github.com/netlify/open-api/go/plumbing/operations"
@@ -25,6 +28,29 @@ const (
 	preProcessingTimeout = time.Minute * 5
 )
 
+type uploadType int
+
+const (
+	fileUpload uploadType = iota
+	functionUpload
+)
+
+// DeployOptions holds the option for creating a new deploy
+type DeployOptions struct {
+	SiteID       string
+	Dir          string
+	FunctionsDir string
+
+	IsDraft bool
+
+	Title     string
+	Branch    string
+	CommitRef string
+
+	files     *deployFiles
+	functions *deployFiles
+}
+
 type uploadError struct {
 	err   error
 	mutex *sync.Mutex
@@ -32,12 +58,12 @@ type uploadError struct {
 
 type file struct {
 	Name   string
-	SHA1   hash.Hash
+	SHA    hash.Hash
 	Buffer *bytes.Buffer
 }
 
 func (f *file) Sum() string {
-	return hex.EncodeToString(f.SHA1.Sum(nil))
+	return hex.EncodeToString(f.SHA.Sum(nil))
 }
 
 func (f *file) Read(p []byte) (n int, err error) {
@@ -76,39 +102,47 @@ func (n *Netlify) overCommitted(d *deployFiles) bool {
 
 // DeploySite creates a new deploy for a site given a directory in the filesystem.
 // It uploads the necessary files that changed between deploys.
-func (n *Netlify) DeploySite(ctx context.Context, siteID, title, dir string, draft bool) (*models.Deploy, error) {
-	f, err := os.Stat(dir)
+func (n *Netlify) DeploySite(ctx context.Context, options DeployOptions) (*models.Deploy, error) {
+	f, err := os.Stat(options.Dir)
 	if err != nil {
 		return nil, err
 	}
 	if !f.IsDir() {
-		return nil, fmt.Errorf("%s is not a directory", dir)
+		return nil, fmt.Errorf("%s is not a directory", options.Dir)
 	}
 
-	files, err := walk(dir)
+	files, err := walk(options.Dir)
 	if err != nil {
 		return nil, err
 	}
+	options.files = files
 
-	return n.createDeploy(ctx, siteID, title, draft, files)
+	functions, err := bundle(options.FunctionsDir)
+	if err != nil {
+		return nil, err
+	}
+	options.functions = functions
+
+	return n.createDeploy(ctx, &options)
 }
 
-func (n *Netlify) createDeploy(ctx context.Context, siteID, title string, draft bool, files *deployFiles) (*models.Deploy, error) {
+func (n *Netlify) createDeploy(ctx context.Context, options *DeployOptions) (*models.Deploy, error) {
 	deployFiles := &models.DeployFiles{
-		Files: files.Sums,
-		Draft: draft,
-		Async: n.overCommitted(files),
+		Files:     options.files.Sums,
+		Draft:     options.IsDraft,
+		Async:     n.overCommitted(options.files),
+		Functions: options.functions.Sums,
 	}
 	l := context.GetLogger(ctx)
 	l.WithFields(logrus.Fields{
-		"site_id":      siteID,
-		"deploy_files": len(files.Sums),
+		"site_id":      options.SiteID,
+		"deploy_files": len(options.files.Sums),
 	}).Debug("Starting to deploy files")
 	authInfo := context.GetAuthInfo(ctx)
 
-	params := operations.NewCreateSiteDeployParams().WithSiteID(siteID).WithDeploy(deployFiles)
-	if title != "" {
-		params = params.WithTitle(&title)
+	params := operations.NewCreateSiteDeployParams().WithSiteID(options.SiteID).WithDeploy(deployFiles)
+	if options.Title != "" {
+		params = params.WithTitle(&options.Title)
 	}
 	resp, err := n.Operations.CreateSiteDeploy(params, authInfo)
 	if err != nil {
@@ -120,7 +154,7 @@ func (n *Netlify) createDeploy(ctx context.Context, siteID, title string, draft 
 		return deploy, nil
 	}
 
-	if n.overCommitted(files) {
+	if n.overCommitted(options.files) {
 		var err error
 		deploy, err = n.WaitUntilDeployReady(ctx, deploy)
 		if err != nil {
@@ -129,8 +163,14 @@ func (n *Netlify) createDeploy(ctx context.Context, siteID, title string, draft 
 	}
 
 	l.Debugf("Site and deploy created, uploading %d required files", len(deploy.Required))
-	if err := n.uploadFiles(ctx, deploy, files); err != nil {
+	if err := n.uploadFiles(ctx, deploy, options.files, fileUpload); err != nil {
 		return nil, err
+	}
+
+	if options.functions != nil {
+		if err := n.uploadFiles(ctx, deploy, options.functions, functionUpload); err != nil {
+			return nil, err
+		}
 	}
 
 	return deploy, nil
@@ -170,17 +210,25 @@ func (n *Netlify) WaitUntilDeployReady(ctx context.Context, d *models.Deploy) (*
 	return d, nil
 }
 
-func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *deployFiles) error {
+func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *deployFiles, t uploadType) error {
 	sharedErr := &uploadError{err: nil, mutex: &sync.Mutex{}}
 	sem := make(chan int, n.uploadLimit)
 	wg := &sync.WaitGroup{}
 
-	for _, sha := range d.Required {
+	var required []string
+	switch t {
+	case fileUpload:
+		required = d.Required
+	case functionUpload:
+		required = d.RequiredFunctions
+	}
+
+	for _, sha := range required {
 		if file, exist := files.Hashed[sha]; exist {
 			sem <- 1
 			wg.Add(1)
 
-			go n.uploadFile(ctx, d, file, wg, sem, sharedErr)
+			go n.uploadFile(ctx, d, file, t, wg, sem, sharedErr)
 		}
 	}
 
@@ -189,7 +237,7 @@ func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *depl
 	return sharedErr.err
 }
 
-func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *file, wg *sync.WaitGroup, sem chan int, sharedErr *uploadError) {
+func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *file, t uploadType, wg *sync.WaitGroup, sem chan int, sharedErr *uploadError) {
 	defer func() {
 		wg.Done()
 		<-sem
@@ -222,14 +270,22 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *file, wg 
 		}
 		sharedErr.mutex.Unlock()
 
-		params := operations.NewUploadDeployFileParams().WithDeployID(d.ID).WithPath(f.Name).WithFileBody(f)
-		_, err := n.Operations.UploadDeployFile(params, authInfo)
+		var operationError error
 
-		if err != nil {
-			context.GetLogger(ctx).WithError(err).Error("Failed to upload file")
+		switch t {
+		case fileUpload:
+			params := operations.NewUploadDeployFileParams().WithDeployID(d.ID).WithPath(f.Name).WithFileBody(f)
+			_, operationError = n.Operations.UploadDeployFile(params, authInfo)
+		case functionUpload:
+			params := operations.NewUploadDeployFunctionParams().WithDeployID(d.ID).WithName(f.Name).WithFileBody(f)
+			_, operationError = n.Operations.UploadDeployFunction(params, authInfo)
 		}
 
-		return err
+		if operationError != nil {
+			context.GetLogger(ctx).WithError(operationError).Error("Failed to upload file")
+		}
+
+		return operationError
 	}, b)
 
 	if err != nil {
@@ -264,10 +320,10 @@ func walk(dir string) (*deployFiles, error) {
 
 			file := &file{
 				Name:   rel,
-				SHA1:   sha1.New(),
+				SHA:    sha1.New(),
 				Buffer: new(bytes.Buffer),
 			}
-			m := io.MultiWriter(file.SHA1, file.Buffer)
+			m := io.MultiWriter(file.SHA, file.Buffer)
 
 			if _, err := io.Copy(m, o); err != nil {
 				return err
@@ -279,6 +335,52 @@ func walk(dir string) (*deployFiles, error) {
 		return nil
 	})
 	return files, err
+}
+
+func bundle(functionDir string) (*deployFiles, error) {
+	if functionDir == "" {
+		return nil, nil
+	}
+
+	functions := newDeployFiles()
+
+	info, err := ioutil.ReadDir(functionDir)
+	if err != nil {
+		return nil, err
+	}
+	for _, i := range info {
+		switch filepath.Ext(i.Name()) {
+		case ".js":
+			file := &file{
+				Name:   strings.TrimSuffix(i.Name(), filepath.Ext(i.Name())),
+				SHA:    sha256.New(),
+				Buffer: new(bytes.Buffer),
+			}
+
+			archive := zip.NewWriter(file.Buffer)
+			fileHeader, err := archive.Create(i.Name())
+			if err != nil {
+				return nil, err
+			}
+			fileEntry, err := os.Open(filepath.Join(functionDir, i.Name()))
+			if err != nil {
+				return nil, err
+			}
+			_, err = io.Copy(fileHeader, fileEntry)
+			fileEntry.Close()
+			archive.Close()
+			if err != nil {
+				return nil, err
+			}
+			io.Copy(file.SHA, file.Buffer)
+
+			functions.Add(file.Name, file)
+		default:
+			// Ignore this file
+		}
+	}
+
+	return functions, nil
 }
 
 func ignoreFile(rel string) bool {
