@@ -153,7 +153,7 @@ func (n *Netlify) createDeploy(ctx context.Context, options *DeployOptions) (*mo
 	}
 
 	deploy := resp.Payload
-	if len(deploy.Required) == 0 {
+	if len(deploy.Required) == 0 && len(deploy.RequiredFunctions) == 0 {
 		return deploy, nil
 	}
 
@@ -165,7 +165,6 @@ func (n *Netlify) createDeploy(ctx context.Context, options *DeployOptions) (*mo
 		}
 	}
 
-	l.Debugf("Site and deploy created, uploading %d required files", len(deploy.Required))
 	if err := n.uploadFiles(ctx, deploy, options.files, fileUpload); err != nil {
 		return nil, err
 	}

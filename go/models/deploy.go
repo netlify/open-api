@@ -56,7 +56,7 @@ type Deploy struct {
 	Required []string `json:"required"`
 
 	// required functions
-	RequiredFunctions []string `json:"requiredFunctions"`
+	RequiredFunctions []string `json:"required_functions"`
 
 	// review id
 	ReviewID string `json:"review_id,omitempty"`

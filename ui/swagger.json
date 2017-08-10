@@ -1170,7 +1170,7 @@
             "type": "string"
           }
         },
-        "requiredFunctions": {
+        "required_functions": {
           "type": "array",
           "items": {
             "type": "string"
