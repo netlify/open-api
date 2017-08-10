@@ -359,7 +359,8 @@ func bundle(functionDir string) (*deployFiles, error) {
 				Buffer: new(bytes.Buffer),
 			}
 
-			archive := zip.NewWriter(file.Buffer)
+			buf := new(bytes.Buffer)
+			archive := zip.NewWriter(buf)
 			fileHeader, err := archive.Create(i.Name())
 			if err != nil {
 				return nil, err
@@ -368,13 +369,19 @@ func bundle(functionDir string) (*deployFiles, error) {
 			if err != nil {
 				return nil, err
 			}
-			_, err = io.Copy(fileHeader, fileEntry)
-			fileEntry.Close()
-			archive.Close()
-			if err != nil {
+			if _, err = io.Copy(fileHeader, fileEntry); err != nil {
 				return nil, err
 			}
-			io.Copy(file.SHA, file.Buffer)
+
+			if err := archive.Close(); err != nil {
+				return nil, err
+			}
+
+			m := io.MultiWriter(file.SHA, file.Buffer)
+
+			if _, err := io.Copy(m, buf); err != nil {
+				return nil, err
+			}
 
 			functions.Add(file.Name, file)
 		default:
