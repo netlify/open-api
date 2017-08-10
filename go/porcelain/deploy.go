@@ -128,11 +128,14 @@ func (n *Netlify) DeploySite(ctx context.Context, options DeployOptions) (*model
 
 func (n *Netlify) createDeploy(ctx context.Context, options *DeployOptions) (*models.Deploy, error) {
 	deployFiles := &models.DeployFiles{
-		Files:     options.files.Sums,
-		Draft:     options.IsDraft,
-		Async:     n.overCommitted(options.files),
-		Functions: options.functions.Sums,
+		Files: options.files.Sums,
+		Draft: options.IsDraft,
+		Async: n.overCommitted(options.files),
 	}
+	if options.functions != nil {
+		deployFiles.Functions = options.functions.Sums
+	}
+
 	l := context.GetLogger(ctx)
 	l.WithFields(logrus.Fields{
 		"site_id":      options.SiteID,
