@@ -400,6 +400,31 @@ paths:
           description: error
           schema:
             $ref: "#/definitions/error"
+    put:
+      operationId: updateSiteDeploy
+      parameters:
+        - name: site_id
+          type: string
+          in: path
+          required: true
+        - name: deploy_id
+          type: string
+          in: path
+          required: true
+        - name: deploy
+          in: body
+          schema:
+            $ref: "#/definitions/deployFiles"
+          required: true
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: "#/definitions/deploy"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
   /sites/{site_id}/deploys/{deploy_id}/restore:
     post:
       operationId: restoreSiteDeploy

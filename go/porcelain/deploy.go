@@ -103,6 +103,12 @@ func (n *Netlify) overCommitted(d *deployFiles) bool {
 // DeploySite creates a new deploy for a site given a directory in the filesystem.
 // It uploads the necessary files that changed between deploys.
 func (n *Netlify) DeploySite(ctx context.Context, options DeployOptions) (*models.Deploy, error) {
+	return n.DoDeploy(ctx, &options, nil)
+}
+
+// DoDeploy deploys the changes for a site given a directory in the filesystem.
+// It uploads the necessary files that changed between deploys.
+func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *models.Deploy) (*models.Deploy, error) {
 	f, err := os.Stat(options.Dir)
 	if err != nil {
 		return nil, err
@@ -123,10 +129,6 @@ func (n *Netlify) DeploySite(ctx context.Context, options DeployOptions) (*model
 	}
 	options.functions = functions
 
-	return n.createDeploy(ctx, &options)
-}
-
-func (n *Netlify) createDeploy(ctx context.Context, options *DeployOptions) (*models.Deploy, error) {
 	deployFiles := &models.DeployFiles{
 		Files: options.files.Sums,
 		Draft: options.IsDraft,
@@ -143,16 +145,25 @@ func (n *Netlify) createDeploy(ctx context.Context, options *DeployOptions) (*mo
 	}).Debug("Starting to deploy files")
 	authInfo := context.GetAuthInfo(ctx)
 
-	params := operations.NewCreateSiteDeployParams().WithSiteID(options.SiteID).WithDeploy(deployFiles)
-	if options.Title != "" {
-		params = params.WithTitle(&options.Title)
-	}
-	resp, err := n.Operations.CreateSiteDeploy(params, authInfo)
-	if err != nil {
-		return nil, err
+	if deploy == nil {
+		params := operations.NewCreateSiteDeployParams().WithSiteID(options.SiteID).WithDeploy(deployFiles)
+		if options.Title != "" {
+			params = params.WithTitle(&options.Title)
+		}
+		resp, err := n.Operations.CreateSiteDeploy(params, authInfo)
+		if err != nil {
+			return nil, err
+		}
+		deploy = resp.Payload
+	} else {
+		params := operations.NewUpdateSiteDeployParams().WithSiteID(options.SiteID).WithDeploy(deployFiles)
+		resp, err := n.Operations.UpdateSiteDeploy(params, authInfo)
+		if err != nil {
+			return nil, err
+		}
+		deploy = resp.Payload
 	}
 
-	deploy := resp.Payload
 	if len(deploy.Required) == 0 && len(deploy.RequiredFunctions) == 0 {
 		return deploy, nil
 	}

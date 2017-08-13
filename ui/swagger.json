@@ -641,6 +641,45 @@
             }
           }
         }
+      },
+      "put": {
+        "operationId": "updateSiteDeploy",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "site_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "name": "deploy_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "name": "deploy",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/deployFiles"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/deploy"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
       }
     },
     "/sites/{site_id}/deploys/{deploy_id}/restore": {

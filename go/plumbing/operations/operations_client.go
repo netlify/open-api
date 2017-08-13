@@ -1011,6 +1011,35 @@ func (a *Client) UpdateSite(params *UpdateSiteParams, authInfo runtime.ClientAut
 }
 
 /*
+UpdateSiteDeploy update site deploy API
+*/
+func (a *Client) UpdateSiteDeploy(params *UpdateSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateSiteDeployOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewUpdateSiteDeployParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "updateSiteDeploy",
+		Method:             "PUT",
+		PathPattern:        "/sites/{site_id}/deploys/{deploy_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &UpdateSiteDeployReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*UpdateSiteDeployOK), nil
+
+}
+
+/*
 UpdateSiteMetadata update site metadata API
 */
 func (a *Client) UpdateSiteMetadata(params *UpdateSiteMetadataParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateSiteMetadataNoContent, error) {
