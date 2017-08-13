@@ -166,7 +166,7 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 		}
 		deploy = resp.Payload
 	} else {
-		params := operations.NewUpdateSiteDeployParams().WithSiteID(options.SiteID).WithDeploy(deployFiles)
+		params := operations.NewUpdateSiteDeployParams().WithSiteID(options.SiteID).WithDeployID(deploy.ID).WithDeploy(deployFiles)
 		resp, err := n.Operations.UpdateSiteDeploy(params, authInfo)
 		if err != nil {
 			return nil, err
