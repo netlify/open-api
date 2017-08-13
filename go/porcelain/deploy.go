@@ -100,6 +100,16 @@ func (n *Netlify) overCommitted(d *deployFiles) bool {
 	return len(d.Files) > n.syncFileLimit
 }
 
+// GetDeploy returns a deploy.
+func (n *Netlify) GetDeploy(ctx context.Context, deployID string) (*models.Deploy, error) {
+	authInfo := context.GetAuthInfo(ctx)
+	resp, err := n.Netlify.Operations.GetDeploy(operations.NewGetDeployParams().WithDeployID(deployID), authInfo)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload, nil
+}
+
 // DeploySite creates a new deploy for a site given a directory in the filesystem.
 // It uploads the necessary files that changed between deploys.
 func (n *Netlify) DeploySite(ctx context.Context, options DeployOptions) (*models.Deploy, error) {
