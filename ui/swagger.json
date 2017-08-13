@@ -16,6 +16,65 @@
   "host": "api.netlify.com",
   "basePath": "/api/v1",
   "paths": {
+    "/builds/{build_id}": {
+      "get": {
+        "operationId": "getSiteBuild",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/build"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "build_id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/builds/{build_id}/log": {
+      "post": {
+        "operationId": "updateSiteBuildLog",
+        "responses": {
+          "204": {
+            "description": "No content"
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "build_id",
+          "in": "path",
+          "required": true
+        },
+        {
+          "name": "msg",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/buildLogMsg"
+          }
+        }
+      ]
+    },
     "/deploys/{deploy_id}": {
       "get": {
         "operationId": "getDeploy",
@@ -529,6 +588,36 @@
             "description": "OK",
             "schema": {
               "$ref": "#/definitions/site"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "site_id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/sites/{site_id}/builds": {
+      "get": {
+        "operationId": "listSiteBuilds",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/build"
+              }
             }
           },
           "default": {
@@ -1159,6 +1248,41 @@
           "type": "string"
         },
         "user_id": {
+          "type": "string"
+        }
+      }
+    },
+    "build": {
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "format": "dateTime"
+        },
+        "deploy_id": {
+          "type": "string"
+        },
+        "done": {
+          "type": "boolean"
+        },
+        "error": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "sha": {
+          "type": "string"
+        }
+      }
+    },
+    "buildLogMsg": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "boolean"
+        },
+        "message": {
           "type": "string"
         }
       }

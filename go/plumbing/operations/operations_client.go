@@ -402,6 +402,35 @@ func (a *Client) GetSite(params *GetSiteParams, authInfo runtime.ClientAuthInfoW
 }
 
 /*
+GetSiteBuild get site build API
+*/
+func (a *Client) GetSiteBuild(params *GetSiteBuildParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteBuildOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetSiteBuildParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "getSiteBuild",
+		Method:             "GET",
+		PathPattern:        "/builds/{build_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &GetSiteBuildReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*GetSiteBuildOK), nil
+
+}
+
+/*
 GetSiteDeploy get site deploy API
 */
 func (a *Client) GetSiteDeploy(params *GetSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteDeployOK, error) {
@@ -630,6 +659,35 @@ func (a *Client) ListHooksBySiteID(params *ListHooksBySiteIDParams, authInfo run
 		return nil, err
 	}
 	return result.(*ListHooksBySiteIDOK), nil
+
+}
+
+/*
+ListSiteBuilds list site builds API
+*/
+func (a *Client) ListSiteBuilds(params *ListSiteBuildsParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteBuildsOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewListSiteBuildsParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "listSiteBuilds",
+		Method:             "GET",
+		PathPattern:        "/sites/{site_id}/builds",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &ListSiteBuildsReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*ListSiteBuildsOK), nil
 
 }
 
@@ -1007,6 +1065,35 @@ func (a *Client) UpdateSite(params *UpdateSiteParams, authInfo runtime.ClientAut
 		return nil, err
 	}
 	return result.(*UpdateSiteOK), nil
+
+}
+
+/*
+UpdateSiteBuildLog update site build log API
+*/
+func (a *Client) UpdateSiteBuildLog(params *UpdateSiteBuildLogParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateSiteBuildLogNoContent, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewUpdateSiteBuildLogParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "updateSiteBuildLog",
+		Method:             "POST",
+		PathPattern:        "/builds/{build_id}/log",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &UpdateSiteBuildLogReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*UpdateSiteBuildLogNoContent), nil
 
 }
 

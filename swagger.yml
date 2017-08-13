@@ -446,6 +446,62 @@ paths:
           description: error
           schema:
             $ref: "#/definitions/error"
+  /sites/{site_id}/builds:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+    get:
+      operationId: listSiteBuilds
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/build"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+  /builds/{build_id}:
+    parameters:
+      - name: build_id
+        type: string
+        in: path
+        required: true
+    get:
+      operationId: getSiteBuild
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: "#/definitions/build"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+  /builds/{build_id}/log:
+    parameters:
+      - name: build_id
+        type: string
+        in: path
+        required: true
+      - name: msg
+        in: body
+        schema:
+          $ref: "#/definitions/buildLogMsg"
+        required: true
+    post:
+      operationId: updateSiteBuildLog
+      responses:
+        '204':
+          description: No content
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
   /sites/{site_id}/dns:
     parameters:
       - name: site_id
@@ -971,6 +1027,29 @@ definitions:
           type: boolean
         functions:
           type: object
+    build:
+      type: object
+      properties:
+        id:
+          type: string
+        deploy_id:
+          type: string
+        sha:
+          type: string
+        done:
+          type: boolean
+        error:
+          type: string
+        created_at:
+          type: string
+          format: dateTime
+    buildLogMsg:
+      type: object
+      properties:
+        message:
+          type: string
+        error:
+          type: boolean
     metadata:
       type: object
     dnsZone:
