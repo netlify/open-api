@@ -59,7 +59,7 @@ type uploadError struct {
 type file struct {
 	Name   string
 	SHA    hash.Hash
-	Buffer *bytes.Buffer
+	Buffer *bytes.Reader
 }
 
 func (f *file) Sum() string {
@@ -72,6 +72,11 @@ func (f *file) Read(p []byte) (n int, err error) {
 
 func (f *file) Close() error {
 	return nil
+}
+
+func (f *file) Rewind() error {
+	_, err := f.Buffer.Seek(0, 0)
+	return err
 }
 
 type deployFiles struct {
@@ -305,6 +310,7 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *file, t u
 		}
 
 		if operationError != nil {
+			f.Rewind()
 			context.GetLogger(ctx).WithError(operationError).Error("Failed to upload file")
 		}
 
@@ -341,17 +347,18 @@ func walk(dir string) (*deployFiles, error) {
 				return err
 			}
 
+			buf := new(bytes.Buffer)
 			file := &file{
-				Name:   rel,
-				SHA:    sha1.New(),
-				Buffer: new(bytes.Buffer),
+				Name: rel,
+				SHA:  sha1.New(),
 			}
-			m := io.MultiWriter(file.SHA, file.Buffer)
+			m := io.MultiWriter(file.SHA, buf)
 
 			if _, err := io.Copy(m, o); err != nil {
 				return err
 			}
 
+			file.Buffer = bytes.NewReader(buf.Bytes())
 			files.Add(rel, file)
 		}
 
@@ -375,9 +382,8 @@ func bundle(functionDir string) (*deployFiles, error) {
 		switch filepath.Ext(i.Name()) {
 		case ".js":
 			file := &file{
-				Name:   strings.TrimSuffix(i.Name(), filepath.Ext(i.Name())),
-				SHA:    sha256.New(),
-				Buffer: new(bytes.Buffer),
+				Name: strings.TrimSuffix(i.Name(), filepath.Ext(i.Name())),
+				SHA:  sha256.New(),
 			}
 
 			buf := new(bytes.Buffer)
@@ -398,12 +404,14 @@ func bundle(functionDir string) (*deployFiles, error) {
 				return nil, err
 			}
 
-			m := io.MultiWriter(file.SHA, file.Buffer)
+			fileBuffer := new(bytes.Buffer)
+			m := io.MultiWriter(file.SHA, fileBuffer)
 
 			if _, err := io.Copy(m, buf); err != nil {
 				return nil, err
 			}
 
+			file.Buffer = bytes.NewReader(fileBuffer.Bytes())
 			functions.Add(file.Name, file)
 		default:
 			// Ignore this file
