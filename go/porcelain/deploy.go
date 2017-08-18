@@ -82,14 +82,14 @@ func (f *file) Rewind() error {
 type deployFiles struct {
 	Files  map[string]*file
 	Sums   map[string]string
-	Hashed map[string]*file
+	Hashed map[string][]*file
 }
 
 func newDeployFiles() *deployFiles {
 	return &deployFiles{
 		Files:  make(map[string]*file),
 		Sums:   make(map[string]string),
-		Hashed: make(map[string]*file),
+		Hashed: make(map[string][]*file),
 	}
 }
 
@@ -98,7 +98,12 @@ func (d *deployFiles) Add(p string, f *file) {
 
 	d.Files[p] = f
 	d.Sums[p] = sum
-	d.Hashed[sum] = f
+	list, ok := d.Hashed[sum]
+	if ok {
+		d.Hashed[sum] = []*file{f}
+	} else {
+		d.Hashed[sum] = append(list, f)
+	}
 }
 
 func (n *Netlify) overCommitted(d *deployFiles) bool {
@@ -252,11 +257,13 @@ func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *depl
 	}
 
 	for _, sha := range required {
-		if file, exist := files.Hashed[sha]; exist {
-			sem <- 1
-			wg.Add(1)
+		if files, exist := files.Hashed[sha]; exist {
+			for _, file := range files {
+				sem <- 1
+				wg.Add(1)
 
-			go n.uploadFile(ctx, d, file, t, wg, sem, sharedErr)
+				go n.uploadFile(ctx, d, file, t, wg, sem, sharedErr)
+			}
 		}
 	}
 
