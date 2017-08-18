@@ -1340,7 +1340,7 @@
           }
         },
         "review_id": {
-          "type": "string"
+          "type": "number"
         },
         "screenshot_url": {
           "type": "string"

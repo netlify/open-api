@@ -987,7 +987,7 @@ definitions:
         screenshot_url:
           type: string
         review_id:
-          type: string
+          type: number
         draft:
           type: boolean
         required:

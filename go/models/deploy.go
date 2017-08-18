@@ -59,7 +59,7 @@ type Deploy struct {
 	RequiredFunctions []string `json:"required_functions"`
 
 	// review id
-	ReviewID string `json:"review_id,omitempty"`
+	ReviewID float64 `json:"review_id,omitempty"`
 
 	// screenshot url
 	ScreenshotURL string `json:"screenshot_url,omitempty"`
