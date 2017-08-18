@@ -179,16 +179,16 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 		deploy = resp.Payload
 	}
 
-	if len(deploy.Required) == 0 && len(deploy.RequiredFunctions) == 0 {
-		return deploy, nil
-	}
-
 	if n.overCommitted(options.files) {
 		var err error
 		deploy, err = n.WaitUntilDeployReady(ctx, deploy)
 		if err != nil {
 			return nil, err
 		}
+	}
+
+	if len(deploy.Required) == 0 && len(deploy.RequiredFunctions) == 0 {
+		return deploy, nil
 	}
 
 	if err := n.uploadFiles(ctx, deploy, options.files, fileUpload); err != nil {
