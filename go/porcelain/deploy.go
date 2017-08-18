@@ -98,12 +98,8 @@ func (d *deployFiles) Add(p string, f *file) {
 
 	d.Files[p] = f
 	d.Sums[p] = sum
-	list, ok := d.Hashed[sum]
-	if ok {
-		d.Hashed[sum] = []*file{f}
-	} else {
-		d.Hashed[sum] = append(list, f)
-	}
+	list, _ := d.Hashed[sum]
+	d.Hashed[sum] = append(list, f)
 }
 
 func (n *Netlify) overCommitted(d *deployFiles) bool {
