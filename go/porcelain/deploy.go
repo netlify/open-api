@@ -22,6 +22,8 @@ import (
 	"github.com/netlify/open-api/go/models"
 	"github.com/netlify/open-api/go/plumbing/operations"
 	"github.com/netlify/open-api/go/porcelain/context"
+
+	"github.com/go-openapi/errors"
 )
 
 const (
@@ -252,6 +254,17 @@ func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *depl
 		required = d.RequiredFunctions
 	}
 
+	count := 0
+	for _, sha := range required {
+		if files, exist := files.Hashed[sha]; exist {
+			for range files {
+				count++
+			}
+		}
+	}
+
+	context.GetLogger(ctx).Infof("Uploading %v files", count)
+
 	for _, sha := range required {
 		if files, exist := files.Hashed[sha]; exist {
 			for _, file := range files {
@@ -303,6 +316,8 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *file, t u
 
 		var operationError error
 
+		context.GetLogger(ctx).Infof("Uploading file %v", f.Name)
+
 		switch t {
 		case fileUpload:
 			params := operations.NewUploadDeployFileParams().WithDeployID(d.ID).WithPath(f.Name).WithFileBody(f)
@@ -314,7 +329,14 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *file, t u
 
 		if operationError != nil {
 			f.Rewind()
-			context.GetLogger(ctx).WithError(operationError).Error("Failed to upload file")
+			context.GetLogger(ctx).WithError(operationError).Errorf("Failed to upload file %v", f.Name)
+			apiErr, ok := operationError.(errors.Error)
+
+			if ok && apiErr.Code() == 401 {
+				sharedErr.mutex.Lock()
+				sharedErr.err = operationError
+				sharedErr.mutex.Unlock()
+			}
 		}
 
 		return operationError
