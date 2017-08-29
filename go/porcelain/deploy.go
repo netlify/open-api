@@ -59,9 +59,10 @@ type uploadError struct {
 }
 
 type file struct {
-	Name   string
-	SHA    hash.Hash
-	Buffer *bytes.Reader
+	Name string
+	SHA  hash.Hash
+
+	Buffer io.ReadSeeker
 }
 
 func (f *file) Sum() string {
@@ -73,6 +74,10 @@ func (f *file) Read(p []byte) (n int, err error) {
 }
 
 func (f *file) Close() error {
+	closer, ok := f.Buffer.(io.Closer)
+	if ok {
+		return closer.Close()
+	}
 	return nil
 }
 
@@ -337,6 +342,8 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *file, t u
 				sharedErr.err = operationError
 				sharedErr.mutex.Unlock()
 			}
+		} else {
+			f.Close()
 		}
 
 		return operationError
@@ -383,7 +390,8 @@ func walk(dir string) (*deployFiles, error) {
 				return err
 			}
 
-			file.Buffer = bytes.NewReader(buf.Bytes())
+			o.Seek(0, 0)
+			file.Buffer = o
 			files.Add(rel, file)
 		}
 
@@ -436,7 +444,8 @@ func bundle(functionDir string) (*deployFiles, error) {
 				return nil, err
 			}
 
-			file.Buffer = bytes.NewReader(fileBuffer.Bytes())
+			fileEntry.Seek(0, 0)
+			file.Buffer = fileEntry
 			functions.Add(file.Name, file)
 		default:
 			// Ignore this file
