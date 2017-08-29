@@ -74,6 +74,13 @@ func (f *file) Read(p []byte) (n int, err error) {
 }
 
 func (f *file) Close() error {
+	return nil
+}
+
+// We're mocking up a closer, to make sure the underlying file handle
+// doesn't get closed during an upload, but can be rewinded for retries
+// This method closes the file handle for real.
+func (f *file) CloseForReal() error {
 	closer, ok := f.Buffer.(io.Closer)
 	if ok {
 		return closer.Close()
@@ -343,7 +350,7 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *file, t u
 				sharedErr.mutex.Unlock()
 			}
 		} else {
-			f.Close()
+			f.CloseForReal()
 		}
 
 		return operationError
