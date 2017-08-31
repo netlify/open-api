@@ -386,14 +386,12 @@ func walk(dir string) (*deployFiles, error) {
 				return err
 			}
 
-			buf := new(bytes.Buffer)
 			file := &file{
 				Name: rel,
 				SHA:  sha1.New(),
 			}
-			m := io.MultiWriter(file.SHA, buf)
 
-			if _, err := io.Copy(m, o); err != nil {
+			if _, err := io.Copy(file.SHA, o); err != nil {
 				return err
 			}
 
@@ -452,7 +450,7 @@ func bundle(functionDir string) (*deployFiles, error) {
 			}
 
 			fileEntry.Seek(0, 0)
-			file.Buffer = fileEntry
+			file.Buffer = bytes.NewReader(fileBuffer.Bytes())
 			functions.Add(file.Name, file)
 		default:
 			// Ignore this file
