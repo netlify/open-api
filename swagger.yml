@@ -826,6 +826,8 @@ definitions:
           format: dateTime
         user_id:
           type: string
+        session_id:
+          type: string
         ssl:
           type: boolean
         force_ssl:
