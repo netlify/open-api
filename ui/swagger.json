@@ -1612,6 +1612,9 @@
         "screenshot_url": {
           "type": "string"
         },
+        "session_id": {
+          "type": "string"
+        },
         "ssl": {
           "type": "boolean"
         },

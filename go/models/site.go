@@ -58,6 +58,9 @@ type Site struct {
 	// screenshot url
 	ScreenshotURL string `json:"screenshot_url,omitempty"`
 
+	// session id
+	SessionID string `json:"session_id,omitempty"`
+
 	// ssl
 	Ssl bool `json:"ssl,omitempty"`
 
