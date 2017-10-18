@@ -202,6 +202,120 @@ paths:
           description: error
           schema:
             $ref: "#/definitions/error"
+  /sites/{site_id}/assets:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+    get:
+      operationId: listSiteAssets
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/asset"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+    post:
+      operationId: createSiteAsset
+      parameters:
+        - name: name
+          type: string
+          in: query
+          required: true
+        - name: size
+          type: integer
+          format: int64
+          in: query
+          required: true
+        - name: content_type
+          type: string
+          in: query
+          required: true
+        - name: visibility
+          type: string
+          in: query
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: "#/definitions/assetSignature"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+  /sites/{site_id}/assets/{asset_id}:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+      - name: asset_id
+        type: string
+        in: path
+        required: true
+    get:
+      operationId: getSiteAssetInfo
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: "#/definitions/asset"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+    put:
+      operationId: updateSiteAsset
+      parameters:
+        - name: state
+          type: string
+          in: query
+          required: true
+      responses:
+        '200':
+          description: Updated
+          schema:
+            $ref: "#/definitions/asset"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+    delete:
+      operationId: deleteSiteAsset
+      responses:
+        '204':
+          description: Deleted
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+  /sites/{site_id}/assets/{asset_id}/public_signature:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+      - name: asset_id
+        type: string
+        in: path
+        required: true
+    get:
+      operationId: getSiteAssetPublicSignature
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: "#/definitions/assetPublicSignature"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
   /sites/{site_id}/files/{file_path}:
     get:
       operationId: getSiteFileByPathName
@@ -1126,6 +1240,59 @@ definitions:
         created_at:
           type: string
           format: dateTime
+    asset:
+      type: object
+      properties:
+        id:
+          type: string
+        site_id:
+          type: string
+        creator_id:
+          type: string
+        name:
+          type: string
+        state:
+          type: string
+        content_type:
+          type: string
+        url:
+          type: string
+        key:
+          type: string
+        visibility:
+          type: string
+        size:
+          type: integer
+          format: int64
+        created_at:
+          type: string
+          format: dateTime
+        updated_at:
+          type: string
+          format: dateTime
+    assetForm:
+      type: object
+      properties:
+        url:
+          type: string
+        fields:
+          type: object
+          additionalProperties:
+            type: string
+    assetSignature:
+      type: object
+      properties:
+        form:
+          type: object
+          $ref: "#/definitions/assetForm"
+        asset:
+          type: object
+          $ref: "#/definitions/asset"
+    assetPublicSignature:
+      type: object
+      properties:
+        url:
+          type: string
     error:
       type: object
       required:
