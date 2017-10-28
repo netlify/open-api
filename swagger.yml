@@ -40,7 +40,7 @@ paths:
         - name: site
           in: body
           schema:
-            $ref: "#/definitions/site"
+            $ref: "#/definitions/siteSetup"
           required: true
         - name: configure_dns
           type: boolean
@@ -80,7 +80,7 @@ paths:
         - name: site
           in: body
           schema:
-            $ref: "#/definitions/site"
+            $ref: "#/definitions/siteSetup"
           required: true
       responses:
         '200':
@@ -450,6 +450,69 @@ paths:
       responses:
         '204':
           description: No content
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+  /sites/{site_id}/deploy_keys:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+    post:
+      operationId: createSiteDeployKey
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: "#/definitions/deployKey"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+  /sites/{site_id}/deploys/{deploy_id}:
+    get:
+      operationId: getSiteDeploy
+      parameters:
+        - name: site_id
+          type: string
+          in: path
+          required: true
+        - name: deploy_id
+          type: string
+          in: path
+          required: true
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: "#/definitions/deploy"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+    put:
+      operationId: updateSiteDeploy
+      parameters:
+        - name: site_id
+          type: string
+          in: path
+          required: true
+        - name: deploy_id
+          type: string
+          in: path
+          required: true
+        - name: deploy
+          in: body
+          schema:
+            $ref: "#/definitions/deployFiles"
+          required: true
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: "#/definitions/deploy"
         default:
           description: error
           schema:
@@ -952,6 +1015,50 @@ definitions:
           type: string
         published_deploy:
           $ref: "#/definitions/deploy"
+        account_name:
+          type: string
+        account_slug:
+          type: string
+        git_provider:
+          type: string
+        build_settings:
+          type: object
+          properties:
+            branch:
+              type: string
+            dir:
+              type: string
+            cmd:
+              type: string
+            allowed_branches:
+              type: array
+              items:
+                type: string
+    siteSetup:
+      allOf:
+        - $ref: "#/definitions/site"
+        - properties:
+            repo:
+              $ref: "#/definitions/repoSetup"
+    repoSetup:
+      type: object
+      properties:
+        id:
+          type: string
+        deploy_key_id:
+          type: string
+        repo:
+          type: string
+        branch:
+          type: string
+        dir:
+          type: string
+        cmd:
+          type: string
+        allowed_branches:
+          type: array
+          items:
+            type: string
     submission:
       type: object
       properties:
@@ -1293,6 +1400,16 @@ definitions:
       properties:
         url:
           type: string
+    deployKey:
+      type: object
+      properties:
+        id:
+          type: string
+        public_key:
+          type: string
+        created_at:
+          type: string
+          format: dateTime
     error:
       type: object
       required:

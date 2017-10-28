@@ -25,13 +25,13 @@ for the update site operation typically these are written to a http.Request
 type UpdateSiteParams struct {
 
 	/*Site*/
-	Site *models.Site
+	Site *models.SiteSetup
 	/*SiteID*/
 	SiteID string
 }
 
 // WithSite adds the site to the update site params
-func (o *UpdateSiteParams) WithSite(Site *models.Site) *UpdateSiteParams {
+func (o *UpdateSiteParams) WithSite(Site *models.SiteSetup) *UpdateSiteParams {
 	o.Site = Site
 	return o
 }
@@ -48,7 +48,7 @@ func (o *UpdateSiteParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Re
 	var res []error
 
 	if o.Site == nil {
-		o.Site = new(models.Site)
+		o.Site = new(models.SiteSetup)
 	}
 
 	if err := r.SetBodyParam(o.Site); err != nil {

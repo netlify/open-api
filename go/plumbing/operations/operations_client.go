@@ -153,6 +153,32 @@ func (a *Client) CreateSiteDeploy(params *CreateSiteDeployParams, authInfo runti
 }
 
 /*
+CreateSiteDeployKey create site deploy key API
+*/
+func (a *Client) CreateSiteDeployKey(params *CreateSiteDeployKeyParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteDeployKeyOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewCreateSiteDeployKeyParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "createSiteDeployKey",
+		Method:             "POST",
+		PathPattern:        "/sites/{site_id}/deploy_keys",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &CreateSiteDeployKeyReader{formats: a.formats},
+		AuthInfo:           authInfo,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*CreateSiteDeployKeyOK), nil
+}
+
+/*
 CreateSiteSnippet create site snippet API
 */
 func (a *Client) CreateSiteSnippet(params *CreateSiteSnippetParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteSnippetCreated, error) {
