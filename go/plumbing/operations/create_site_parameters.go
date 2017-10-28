@@ -28,7 +28,7 @@ type CreateSiteParams struct {
 	/*ConfigureDNS*/
 	ConfigureDNS *bool
 	/*Site*/
-	Site *models.Site
+	Site *models.SiteSetup
 }
 
 // WithConfigureDNS adds the configureDns to the create site params
@@ -38,7 +38,7 @@ func (o *CreateSiteParams) WithConfigureDNS(ConfigureDNS *bool) *CreateSiteParam
 }
 
 // WithSite adds the site to the create site params
-func (o *CreateSiteParams) WithSite(Site *models.Site) *CreateSiteParams {
+func (o *CreateSiteParams) WithSite(Site *models.SiteSetup) *CreateSiteParams {
 	o.Site = Site
 	return o
 }
@@ -65,7 +65,7 @@ func (o *CreateSiteParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Re
 	}
 
 	if o.Site == nil {
-		o.Site = new(models.Site)
+		o.Site = new(models.SiteSetup)
 	}
 
 	if err := r.SetBodyParam(o.Site); err != nil {

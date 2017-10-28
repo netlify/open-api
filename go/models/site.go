@@ -16,9 +16,21 @@ swagger:model site
 */
 type Site struct {
 
+	/* account name
+	 */
+	AccountName string `json:"account_name,omitempty"`
+
+	/* account slug
+	 */
+	AccountSlug string `json:"account_slug,omitempty"`
+
 	/* admin url
 	 */
 	AdminURL string `json:"admin_url,omitempty"`
+
+	/* build settings
+	 */
+	BuildSettings *SiteBuildSettings `json:"build_settings,omitempty"`
 
 	/* created at
 	 */
@@ -39,6 +51,10 @@ type Site struct {
 	/* force ssl
 	 */
 	ForceSsl bool `json:"force_ssl,omitempty"`
+
+	/* git provider
+	 */
+	GitProvider string `json:"git_provider,omitempty"`
 
 	/* id
 	 */
@@ -101,6 +117,11 @@ type Site struct {
 func (m *Site) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateBuildSettings(formats); err != nil {
+		// prop
+		res = append(res, err)
+	}
+
 	if err := m.validateDomainAliases(formats); err != nil {
 		// prop
 		res = append(res, err)
@@ -112,9 +133,72 @@ func (m *Site) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Site) validateBuildSettings(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.BuildSettings) { // not required
+		return nil
+	}
+
+	if m.BuildSettings != nil {
+
+		if err := m.BuildSettings.Validate(formats); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (m *Site) validateDomainAliases(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.DomainAliases) { // not required
+		return nil
+	}
+
+	return nil
+}
+
+/*SiteBuildSettings site build settings
+
+swagger:model SiteBuildSettings
+*/
+type SiteBuildSettings struct {
+
+	/* allowed branches
+	 */
+	AllowedBranches []string `json:"allowed_branches,omitempty"`
+
+	/* branch
+	 */
+	Branch string `json:"branch,omitempty"`
+
+	/* cmd
+	 */
+	Cmd string `json:"cmd,omitempty"`
+
+	/* dir
+	 */
+	Dir string `json:"dir,omitempty"`
+}
+
+// Validate validates this site build settings
+func (m *SiteBuildSettings) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateAllowedBranches(formats); err != nil {
+		// prop
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *SiteBuildSettings) validateAllowedBranches(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.AllowedBranches) { // not required
 		return nil
 	}
 

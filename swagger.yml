@@ -40,7 +40,7 @@ paths:
         - name: site
           in: body
           schema:
-            $ref: "#/definitions/site"
+            $ref: "#/definitions/siteSetup"
           required: true
         - name: configure_dns
           type: boolean
@@ -80,7 +80,7 @@ paths:
         - name: site
           in: body
           schema:
-            $ref: "#/definitions/site"
+            $ref: "#/definitions/siteSetup"
           required: true
       responses:
         '200':
@@ -1015,6 +1015,50 @@ definitions:
           type: string
         published_deploy:
           $ref: "#/definitions/deploy"
+        account_name:
+          type: string
+        account_slug:
+          type: string
+        git_provider:
+          type: string
+        build_settings:
+          type: object
+          properties:
+            branch:
+              type: string
+            dir:
+              type: string
+            cmd:
+              type: string
+            allowed_branches:
+              type: array
+              items:
+                type: string
+    siteSetup:
+      allOf:
+        - $ref: "#/definitions/site"
+        - properties:
+            repo:
+              $ref: "#/definitions/repoSetup"
+    repoSetup:
+      type: object
+      properties:
+        id:
+          type: string
+        deploy_key_id:
+          type: string
+        repo:
+          type: string
+        branch:
+          type: string
+        dir:
+          type: string
+        cmd:
+          type: string
+        allowed_branches:
+          type: array
+          items:
+            type: string
     submission:
       type: object
       properties:
