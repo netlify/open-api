@@ -39,10 +39,10 @@ func (n *Netlify) GetSite(ctx context.Context, siteID string) (*models.Site, err
 }
 
 // CreateSite creates a new site.
-func (n *Netlify) CreateSite(ctx context.Context, site *models.Site, configureDNS bool) (*models.Site, error) {
+func (n *Netlify) CreateSite(ctx context.Context, site *models.SiteSetup, configureDNS bool) (*models.Site, error) {
 	authInfo := context.GetAuthInfo(ctx)
 
-	params := operations.NewCreateSiteParams().WithSite(site).WithConfigureDNS(&configureDNS)
+	params := operations.NewCreateSiteParams().WithSiteSetup(site).WithConfigureDNS(&configureDNS)
 	resp, err := n.Netlify.Operations.CreateSite(params, authInfo)
 	if err != nil {
 		return nil, err
@@ -51,10 +51,10 @@ func (n *Netlify) CreateSite(ctx context.Context, site *models.Site, configureDN
 }
 
 // UpdateSite modifies an existent site.
-func (n *Netlify) UpdateSite(ctx context.Context, site *models.Site) (*models.Site, error) {
+func (n *Netlify) UpdateSite(ctx context.Context, site *models.SiteSetup) (*models.Site, error) {
 	authInfo := context.GetAuthInfo(ctx)
 
-	params := operations.NewUpdateSiteParams().WithSite(site).WithSiteID(site.ID)
+	params := operations.NewUpdateSiteParams().WithSiteSetup(site).WithSiteID(site.ID)
 	resp, err := n.Netlify.Operations.UpdateSite(params, authInfo)
 	if err != nil {
 		return nil, err
