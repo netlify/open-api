@@ -42,7 +42,7 @@ func (n *Netlify) GetSite(ctx context.Context, siteID string) (*models.Site, err
 func (n *Netlify) CreateSite(ctx context.Context, site *models.SiteSetup, configureDNS bool) (*models.Site, error) {
 	authInfo := context.GetAuthInfo(ctx)
 
-	params := operations.NewCreateSiteParams().WithSiteSetup(site).WithConfigureDNS(&configureDNS)
+	params := operations.NewCreateSiteParams().WithSite(site).WithConfigureDNS(&configureDNS)
 	resp, err := n.Netlify.Operations.CreateSite(params, authInfo)
 	if err != nil {
 		return nil, err
@@ -54,7 +54,7 @@ func (n *Netlify) CreateSite(ctx context.Context, site *models.SiteSetup, config
 func (n *Netlify) UpdateSite(ctx context.Context, site *models.SiteSetup) (*models.Site, error) {
 	authInfo := context.GetAuthInfo(ctx)
 
-	params := operations.NewUpdateSiteParams().WithSiteSetup(site).WithSiteID(site.ID)
+	params := operations.NewUpdateSiteParams().WithSite(site).WithSiteID(site.ID)
 	resp, err := n.Netlify.Operations.UpdateSite(params, authInfo)
 	if err != nil {
 		return nil, err
