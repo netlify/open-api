@@ -1420,3 +1420,4 @@ definitions:
           format: int64
         message:
           type: string
+          x-nullable: false
