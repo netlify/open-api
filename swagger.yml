@@ -454,23 +454,6 @@ paths:
           description: error
           schema:
             $ref: "#/definitions/error"
-  /sites/{site_id}/deploy_keys:
-    parameters:
-      - name: site_id
-        type: string
-        in: path
-        required: true
-    post:
-      operationId: createSiteDeployKey
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: "#/definitions/deployKey"
-        default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
   /sites/{site_id}/deploys/{deploy_id}:
     get:
       operationId: getSiteDeploy
@@ -967,6 +950,20 @@ paths:
           description: error
           schema:
             $ref: "#/definitions/error"
+  /deploy_keys:
+    post:
+      operationId: createDeployKey
+      consumes:
+        - application/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: "#/definitions/deployKey"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
 definitions:
     site:
       type: object
@@ -1021,6 +1018,8 @@ definitions:
           type: string
         git_provider:
           type: string
+        web_hook:
+          type: string
         build_settings:
           type: object
           properties:
@@ -1044,6 +1043,8 @@ definitions:
       type: object
       properties:
         id:
+          type: integer
+        provider:
           type: string
         deploy_key_id:
           type: string
