@@ -10,21 +10,21 @@ import (
 	strfmt "github.com/go-openapi/strfmt"
 )
 
-// NewListHookTypesParams creates a new ListHookTypesParams object
+// NewCreateDeployKeyParams creates a new CreateDeployKeyParams object
 // with the default values initialized.
-func NewListHookTypesParams() *ListHookTypesParams {
+func NewCreateDeployKeyParams() *CreateDeployKeyParams {
 
-	return &ListHookTypesParams{}
+	return &CreateDeployKeyParams{}
 }
 
-/*ListHookTypesParams contains all the parameters to send to the API endpoint
-for the list hook types operation typically these are written to a http.Request
+/*CreateDeployKeyParams contains all the parameters to send to the API endpoint
+for the create deploy key operation typically these are written to a http.Request
 */
-type ListHookTypesParams struct {
+type CreateDeployKeyParams struct {
 }
 
 // WriteToRequest writes these params to a swagger request
-func (o *ListHookTypesParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
+func (o *CreateDeployKeyParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
 	var res []error
 
