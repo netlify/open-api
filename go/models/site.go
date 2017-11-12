@@ -40,6 +40,10 @@ type Site struct {
 	 */
 	CustomDomain string `json:"custom_domain,omitempty"`
 
+	/* deploy hook
+	 */
+	DeployHook string `json:"deploy_hook,omitempty"`
+
 	/* deploy url
 	 */
 	DeployURL string `json:"deploy_url,omitempty"`
@@ -111,10 +115,6 @@ type Site struct {
 	/* user id
 	 */
 	UserID string `json:"user_id,omitempty"`
-
-	/* web hook
-	 */
-	WebHook string `json:"web_hook,omitempty"`
 }
 
 // Validate validates this site
