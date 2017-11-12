@@ -40,9 +40,17 @@ type RepoSetup struct {
 	 */
 	ID int64 `json:"id,omitempty"`
 
+	/* private logs
+	 */
+	PrivateLogs bool `json:"private_logs,omitempty"`
+
 	/* provider
 	 */
 	Provider string `json:"provider,omitempty"`
+
+	/* public repo
+	 */
+	PublicRepo bool `json:"public_repo,omitempty"`
 
 	/* repo
 	 */

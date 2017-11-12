@@ -26,11 +26,19 @@ type CreateHookBySiteIDParams struct {
 
 	/*Hook*/
 	Hook *models.Hook
+	/*SiteID*/
+	SiteID string
 }
 
 // WithHook adds the hook to the create hook by site Id params
 func (o *CreateHookBySiteIDParams) WithHook(Hook *models.Hook) *CreateHookBySiteIDParams {
 	o.Hook = Hook
+	return o
+}
+
+// WithSiteID adds the siteId to the create hook by site Id params
+func (o *CreateHookBySiteIDParams) WithSiteID(SiteID string) *CreateHookBySiteIDParams {
+	o.SiteID = SiteID
 	return o
 }
 
@@ -45,6 +53,15 @@ func (o *CreateHookBySiteIDParams) WriteToRequest(r runtime.ClientRequest, reg s
 
 	if err := r.SetBodyParam(o.Hook); err != nil {
 		return err
+	}
+
+	// query param site_id
+	qrSiteID := o.SiteID
+	qSiteID := qrSiteID
+	if qSiteID != "" {
+		if err := r.SetQueryParam("site_id", qSiteID); err != nil {
+			return err
+		}
 	}
 
 	if len(res) > 0 {
