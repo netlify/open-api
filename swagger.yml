@@ -1018,7 +1018,7 @@ definitions:
           type: string
         git_provider:
           type: string
-        web_hook:
+        deploy_hook:
           type: string
         build_settings:
           type: object
