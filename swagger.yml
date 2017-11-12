@@ -860,6 +860,10 @@ paths:
       consumes:
         - application/json
       parameters:
+        - name: site_id
+          type: string
+          in: query
+          required: true
         - name: hook
           in: body
           schema:
@@ -1060,6 +1064,10 @@ definitions:
           type: array
           items:
             type: string
+        public_repo:
+          type: boolean
+        private_logs:
+          type: boolean
     submission:
       type: object
       properties:
@@ -1144,6 +1152,8 @@ definitions:
         updated_at:
           type: string
           format: dateTime
+        disabled:
+          type: boolean
     file:
       type: object
       properties:

@@ -19,6 +19,10 @@ type Hook struct {
 	 */
 	Data interface{} `json:"data,omitempty"`
 
+	/* disabled
+	 */
+	Disabled bool `json:"disabled,omitempty"`
+
 	/* event
 	 */
 	Event string `json:"event,omitempty"`
