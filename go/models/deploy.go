@@ -36,6 +36,10 @@ type Deploy struct {
 	 */
 	CommitURL string `json:"commit_url,omitempty"`
 
+	/* context
+	 */
+	Context string `json:"context,omitempty"`
+
 	/* created at
 	 */
 	CreatedAt string `json:"created_at,omitempty"`
@@ -60,9 +64,17 @@ type Deploy struct {
 	 */
 	ID string `json:"id,omitempty"`
 
+	/* locked
+	 */
+	Locked bool `json:"locked,omitempty"`
+
 	/* name
 	 */
 	Name string `json:"name,omitempty"`
+
+	/* published at
+	 */
+	PublishedAt string `json:"published_at,omitempty"`
 
 	/* required
 	 */
@@ -76,6 +88,10 @@ type Deploy struct {
 	 */
 	ReviewID float64 `json:"review_id,omitempty"`
 
+	/* review url
+	 */
+	ReviewURL string `json:"review_url,omitempty"`
+
 	/* screenshot url
 	 */
 	ScreenshotURL string `json:"screenshot_url,omitempty"`
@@ -87,6 +103,10 @@ type Deploy struct {
 	/* skipped
 	 */
 	Skipped bool `json:"skipped,omitempty"`
+
+	/* ssl url
+	 */
+	SslURL string `json:"ssl_url,omitempty"`
 
 	/* state
 	 */
