@@ -38,6 +38,11 @@ const (
 )
 
 type DeployObserver interface {
+	OnSetupWalk() error
+	OnSuccessfulStep(*FileBundle) error
+	OnSuccessfulWalk(*models.DeployFiles) error
+	OnFailedWalk()
+
 	OnSetupDelta(*models.DeployFiles) error
 	OnSuccessfulDelta(*models.DeployFiles, *models.Deploy) error
 	OnFailedDelta(*models.DeployFiles)
@@ -159,14 +164,26 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 		return nil, fmt.Errorf("%s is not a directory", options.Dir)
 	}
 
-	files, err := walk(options.Dir)
+	if options.Observer != nil {
+		if err := options.Observer.OnSetupWalk(); err != nil {
+			return nil, err
+		}
+	}
+
+	files, err := walk(options.Dir, options.Observer)
 	if err != nil {
+		if options.Observer != nil {
+			options.Observer.OnFailedWalk()
+		}
 		return nil, err
 	}
 	options.files = files
 
-	functions, err := bundle(options.FunctionsDir)
+	functions, err := bundle(options.FunctionsDir, options.Observer)
 	if err != nil {
+		if options.Observer != nil {
+			options.Observer.OnFailedWalk()
+		}
 		return nil, err
 	}
 	options.functions = functions
@@ -178,6 +195,12 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 	}
 	if options.functions != nil {
 		deployFiles.Functions = options.functions.Sums
+	}
+
+	if options.Observer != nil {
+		if err := options.Observer.OnSuccessfulWalk(deployFiles); err != nil {
+			return nil, err
+		}
 	}
 
 	l := context.GetLogger(ctx)
@@ -417,7 +440,7 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 	}
 }
 
-func walk(dir string) (*deployFiles, error) {
+func walk(dir string, observer DeployObserver) (*deployFiles, error) {
 	files := newDeployFiles()
 
 	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
@@ -452,6 +475,12 @@ func walk(dir string) (*deployFiles, error) {
 			o.Seek(0, 0)
 			file.Buffer = o
 			files.Add(rel, file)
+
+			if observer != nil {
+				if err := observer.OnSuccessfulStep(file); err != nil {
+					return err
+				}
+			}
 		}
 
 		return nil
@@ -459,7 +488,7 @@ func walk(dir string) (*deployFiles, error) {
 	return files, err
 }
 
-func bundle(functionDir string) (*deployFiles, error) {
+func bundle(functionDir string, observer DeployObserver) (*deployFiles, error) {
 	if functionDir == "" {
 		return nil, nil
 	}
@@ -506,6 +535,12 @@ func bundle(functionDir string) (*deployFiles, error) {
 			fileEntry.Seek(0, 0)
 			file.Buffer = bytes.NewReader(fileBuffer.Bytes())
 			functions.Add(file.Name, file)
+
+			if observer != nil {
+				if err := observer.OnSuccessfulStep(file); err != nil {
+					return nil, err
+				}
+			}
 		default:
 			// Ignore this file
 		}
