@@ -100,6 +100,10 @@ type Site struct {
 	 */
 	Ssl bool `json:"ssl,omitempty"`
 
+	/* ssl url
+	 */
+	SslURL string `json:"ssl_url,omitempty"`
+
 	/* state
 	 */
 	State string `json:"state,omitempty"`

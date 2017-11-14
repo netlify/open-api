@@ -999,6 +999,8 @@ definitions:
           type: string
         url:
           type: string
+        ssl_url:
+          type: string
         admin_url:
           type: string
         screenshot_url:
