@@ -32,21 +32,19 @@ const (
 
 type uploadType int
 
-type DeployCallback func(*models.Deploy) error
-type UploadCallback func(*FileBundle) error
-type FailedUploadCallback func(*FileBundle, error) error
-
 const (
 	fileUpload uploadType = iota
 	functionUpload
 )
 
-type DeployCallbacks struct {
-	OnSetupDeploy DeployCallback
+type DeployObserver interface {
+	OnSetupDelta(*models.DeployFiles) error
+	OnSuccessfulDelta(*models.DeployFiles, *models.Deploy) error
+	OnFailedDelta(*models.DeployFiles)
 
-	OnSetupUpload      UploadCallback
-	OnSuccessfulUpload UploadCallback
-	OnFailedUpload     FailedUploadCallback
+	OnSetupUpload(*FileBundle) error
+	OnSuccessfulUpload(*FileBundle) error
+	OnFailedUpload(*FileBundle)
 }
 
 // DeployOptions holds the option for creating a new deploy
@@ -61,7 +59,7 @@ type DeployOptions struct {
 	Branch    string
 	CommitRef string
 
-	Callbacks *DeployCallbacks
+	Observer DeployObserver
 
 	files     *deployFiles
 	functions *deployFiles
@@ -189,6 +187,12 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 	}).Debug("Starting to deploy files")
 	authInfo := context.GetAuthInfo(ctx)
 
+	if options.Observer != nil {
+		if err := options.Observer.OnSetupDelta(deployFiles); err != nil {
+			return nil, err
+		}
+	}
+
 	if deploy == nil {
 		params := operations.NewCreateSiteDeployParams().WithSiteID(options.SiteID).WithDeploy(deployFiles)
 		if options.Title != "" {
@@ -196,6 +200,9 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 		}
 		resp, err := n.Operations.CreateSiteDeploy(params, authInfo)
 		if err != nil {
+			if options.Observer != nil {
+				options.Observer.OnFailedDelta(deployFiles)
+			}
 			return nil, err
 		}
 		deploy = resp.Payload
@@ -203,6 +210,9 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 		params := operations.NewUpdateSiteDeployParams().WithSiteID(options.SiteID).WithDeployID(deploy.ID).WithDeploy(deployFiles)
 		resp, err := n.Operations.UpdateSiteDeploy(params, authInfo)
 		if err != nil {
+			if options.Observer != nil {
+				options.Observer.OnFailedDelta(deployFiles)
+			}
 			return nil, err
 		}
 		deploy = resp.Payload
@@ -212,6 +222,15 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 		var err error
 		deploy, err = n.WaitUntilDeployReady(ctx, deploy)
 		if err != nil {
+			if options.Observer != nil {
+				options.Observer.OnFailedDelta(deployFiles)
+			}
+			return nil, err
+		}
+	}
+
+	if options.Observer != nil {
+		if err := options.Observer.OnSuccessfulDelta(deployFiles, deploy); err != nil {
 			return nil, err
 		}
 	}
@@ -220,18 +239,12 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 		return deploy, nil
 	}
 
-	if options.Callbacks != nil && options.Callbacks.OnSetupDeploy != nil {
-		if err := options.Callbacks.OnSetupDeploy(deploy); err != nil {
-			return nil, err
-		}
-	}
-
-	if err := n.uploadFiles(ctx, deploy, options.files, options.Callbacks, fileUpload); err != nil {
+	if err := n.uploadFiles(ctx, deploy, options.files, options.Observer, fileUpload); err != nil {
 		return nil, err
 	}
 
 	if options.functions != nil {
-		if err := n.uploadFiles(ctx, deploy, options.functions, options.Callbacks, functionUpload); err != nil {
+		if err := n.uploadFiles(ctx, deploy, options.functions, options.Observer, functionUpload); err != nil {
 			return nil, err
 		}
 	}
@@ -273,7 +286,7 @@ func (n *Netlify) WaitUntilDeployReady(ctx context.Context, d *models.Deploy) (*
 	return d, nil
 }
 
-func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *deployFiles, callbacks *DeployCallbacks, t uploadType) error {
+func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *deployFiles, observer DeployObserver, t uploadType) error {
 	sharedErr := &uploadError{err: nil, mutex: &sync.Mutex{}}
 	sem := make(chan int, n.uploadLimit)
 	wg := &sync.WaitGroup{}
@@ -303,7 +316,7 @@ func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *depl
 				sem <- 1
 				wg.Add(1)
 
-				go n.uploadFile(ctx, d, file, callbacks, t, wg, sem, sharedErr)
+				go n.uploadFile(ctx, d, file, observer, t, wg, sem, sharedErr)
 			}
 		}
 	}
@@ -313,7 +326,7 @@ func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *depl
 	return sharedErr.err
 }
 
-func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundle, c *DeployCallbacks, t uploadType, wg *sync.WaitGroup, sem chan int, sharedErr *uploadError) {
+func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundle, c DeployObserver, t uploadType, wg *sync.WaitGroup, sem chan int, sharedErr *uploadError) {
 	defer func() {
 		wg.Done()
 		<-sem
@@ -337,7 +350,7 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 	b := backoff.NewExponentialBackOff()
 	b.MaxElapsedTime = 2 * time.Minute
 
-	if c != nil && c.OnSetupUpload != nil {
+	if c != nil {
 		if err := c.OnSetupUpload(f); err != nil {
 			sharedErr.mutex.Lock()
 			sharedErr.err = err
@@ -386,15 +399,15 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 	}, b)
 
 	if err != nil {
-		if c != nil && c.OnFailedUpload != nil {
-			c.OnFailedUpload(f, err)
+		if c != nil {
+			c.OnFailedUpload(f)
 		}
 
 		sharedErr.mutex.Lock()
 		sharedErr.err = err
 		sharedErr.mutex.Unlock()
 	} else {
-		if c != nil && c.OnSuccessfulUpload != nil {
+		if c != nil {
 			if err := c.OnSuccessfulUpload(f); err != nil {
 				sharedErr.mutex.Lock()
 				sharedErr.err = err
