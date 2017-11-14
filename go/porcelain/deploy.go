@@ -37,6 +37,16 @@ const (
 	functionUpload
 )
 
+type DeployObserver interface {
+	OnSetupDelta(*models.DeployFiles) error
+	OnSuccessfulDelta(*models.DeployFiles, *models.Deploy) error
+	OnFailedDelta(*models.DeployFiles)
+
+	OnSetupUpload(*FileBundle) error
+	OnSuccessfulUpload(*FileBundle) error
+	OnFailedUpload(*FileBundle)
+}
+
 // DeployOptions holds the option for creating a new deploy
 type DeployOptions struct {
 	SiteID       string
@@ -49,6 +59,8 @@ type DeployOptions struct {
 	Branch    string
 	CommitRef string
 
+	Observer DeployObserver
+
 	files     *deployFiles
 	functions *deployFiles
 }
@@ -58,29 +70,29 @@ type uploadError struct {
 	mutex *sync.Mutex
 }
 
-type file struct {
+type FileBundle struct {
 	Name string
 	SHA  hash.Hash
 
 	Buffer io.ReadSeeker
 }
 
-func (f *file) Sum() string {
+func (f *FileBundle) Sum() string {
 	return hex.EncodeToString(f.SHA.Sum(nil))
 }
 
-func (f *file) Read(p []byte) (n int, err error) {
+func (f *FileBundle) Read(p []byte) (n int, err error) {
 	return f.Buffer.Read(p)
 }
 
-func (f *file) Close() error {
+func (f *FileBundle) Close() error {
 	return nil
 }
 
 // We're mocking up a closer, to make sure the underlying file handle
 // doesn't get closed during an upload, but can be rewinded for retries
 // This method closes the file handle for real.
-func (f *file) CloseForReal() error {
+func (f *FileBundle) CloseForReal() error {
 	closer, ok := f.Buffer.(io.Closer)
 	if ok {
 		return closer.Close()
@@ -88,26 +100,26 @@ func (f *file) CloseForReal() error {
 	return nil
 }
 
-func (f *file) Rewind() error {
+func (f *FileBundle) Rewind() error {
 	_, err := f.Buffer.Seek(0, 0)
 	return err
 }
 
 type deployFiles struct {
-	Files  map[string]*file
+	Files  map[string]*FileBundle
 	Sums   map[string]string
-	Hashed map[string][]*file
+	Hashed map[string][]*FileBundle
 }
 
 func newDeployFiles() *deployFiles {
 	return &deployFiles{
-		Files:  make(map[string]*file),
+		Files:  make(map[string]*FileBundle),
 		Sums:   make(map[string]string),
-		Hashed: make(map[string][]*file),
+		Hashed: make(map[string][]*FileBundle),
 	}
 }
 
-func (d *deployFiles) Add(p string, f *file) {
+func (d *deployFiles) Add(p string, f *FileBundle) {
 	sum := f.Sum()
 
 	d.Files[p] = f
@@ -175,6 +187,12 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 	}).Debug("Starting to deploy files")
 	authInfo := context.GetAuthInfo(ctx)
 
+	if options.Observer != nil {
+		if err := options.Observer.OnSetupDelta(deployFiles); err != nil {
+			return nil, err
+		}
+	}
+
 	if deploy == nil {
 		params := operations.NewCreateSiteDeployParams().WithSiteID(options.SiteID).WithDeploy(deployFiles)
 		if options.Title != "" {
@@ -182,6 +200,9 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 		}
 		resp, err := n.Operations.CreateSiteDeploy(params, authInfo)
 		if err != nil {
+			if options.Observer != nil {
+				options.Observer.OnFailedDelta(deployFiles)
+			}
 			return nil, err
 		}
 		deploy = resp.Payload
@@ -189,6 +210,9 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 		params := operations.NewUpdateSiteDeployParams().WithSiteID(options.SiteID).WithDeployID(deploy.ID).WithDeploy(deployFiles)
 		resp, err := n.Operations.UpdateSiteDeploy(params, authInfo)
 		if err != nil {
+			if options.Observer != nil {
+				options.Observer.OnFailedDelta(deployFiles)
+			}
 			return nil, err
 		}
 		deploy = resp.Payload
@@ -198,6 +222,15 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 		var err error
 		deploy, err = n.WaitUntilDeployReady(ctx, deploy)
 		if err != nil {
+			if options.Observer != nil {
+				options.Observer.OnFailedDelta(deployFiles)
+			}
+			return nil, err
+		}
+	}
+
+	if options.Observer != nil {
+		if err := options.Observer.OnSuccessfulDelta(deployFiles, deploy); err != nil {
 			return nil, err
 		}
 	}
@@ -206,12 +239,12 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 		return deploy, nil
 	}
 
-	if err := n.uploadFiles(ctx, deploy, options.files, fileUpload); err != nil {
+	if err := n.uploadFiles(ctx, deploy, options.files, options.Observer, fileUpload); err != nil {
 		return nil, err
 	}
 
 	if options.functions != nil {
-		if err := n.uploadFiles(ctx, deploy, options.functions, functionUpload); err != nil {
+		if err := n.uploadFiles(ctx, deploy, options.functions, options.Observer, functionUpload); err != nil {
 			return nil, err
 		}
 	}
@@ -253,7 +286,7 @@ func (n *Netlify) WaitUntilDeployReady(ctx context.Context, d *models.Deploy) (*
 	return d, nil
 }
 
-func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *deployFiles, t uploadType) error {
+func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *deployFiles, observer DeployObserver, t uploadType) error {
 	sharedErr := &uploadError{err: nil, mutex: &sync.Mutex{}}
 	sem := make(chan int, n.uploadLimit)
 	wg := &sync.WaitGroup{}
@@ -283,7 +316,7 @@ func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *depl
 				sem <- 1
 				wg.Add(1)
 
-				go n.uploadFile(ctx, d, file, t, wg, sem, sharedErr)
+				go n.uploadFile(ctx, d, file, observer, t, wg, sem, sharedErr)
 			}
 		}
 	}
@@ -293,7 +326,7 @@ func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *depl
 	return sharedErr.err
 }
 
-func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *file, t uploadType, wg *sync.WaitGroup, sem chan int, sharedErr *uploadError) {
+func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundle, c DeployObserver, t uploadType, wg *sync.WaitGroup, sem chan int, sharedErr *uploadError) {
 	defer func() {
 		wg.Done()
 		<-sem
@@ -316,6 +349,15 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *file, t u
 
 	b := backoff.NewExponentialBackOff()
 	b.MaxElapsedTime = 2 * time.Minute
+
+	if c != nil {
+		if err := c.OnSetupUpload(f); err != nil {
+			sharedErr.mutex.Lock()
+			sharedErr.err = err
+			sharedErr.mutex.Unlock()
+			return
+		}
+	}
 
 	err := backoff.Retry(func() error {
 		sharedErr.mutex.Lock()
@@ -357,9 +399,21 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *file, t u
 	}, b)
 
 	if err != nil {
+		if c != nil {
+			c.OnFailedUpload(f)
+		}
+
 		sharedErr.mutex.Lock()
 		sharedErr.err = err
 		sharedErr.mutex.Unlock()
+	} else {
+		if c != nil {
+			if err := c.OnSuccessfulUpload(f); err != nil {
+				sharedErr.mutex.Lock()
+				sharedErr.err = err
+				sharedErr.mutex.Unlock()
+			}
+		}
 	}
 }
 
@@ -386,7 +440,7 @@ func walk(dir string) (*deployFiles, error) {
 				return err
 			}
 
-			file := &file{
+			file := &FileBundle{
 				Name: rel,
 				SHA:  sha1.New(),
 			}
@@ -419,7 +473,7 @@ func bundle(functionDir string) (*deployFiles, error) {
 	for _, i := range info {
 		switch filepath.Ext(i.Name()) {
 		case ".js":
-			file := &file{
+			file := &FileBundle{
 				Name: strings.TrimSuffix(i.Name(), filepath.Ext(i.Name())),
 				SHA:  sha256.New(),
 			}
