@@ -1221,6 +1221,8 @@ definitions:
           type: string
         url:
           type: string
+        ssl_url:
+          type: string
         admin_url:
           type: string
         deploy_url:
@@ -1257,7 +1259,16 @@ definitions:
         updated_at:
           type: string
           format: dateTime
+        published_at:
+          type: string
+          format: dateTime
         title:
+          type: string
+        context:
+          type: string
+        locked:
+          type: boolean
+        review_url:
           type: string
     deployFiles:
       type: object
