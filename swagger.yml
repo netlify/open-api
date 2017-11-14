@@ -21,6 +21,13 @@ paths:
   /sites:
     get:
       operationId: listSites
+      parameters:
+        - name: name
+          in: query
+          type: string
+        - name: filter
+          in: query
+          type: string
       responses:
         '200':
           description: OK

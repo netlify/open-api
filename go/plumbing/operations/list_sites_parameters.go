@@ -13,7 +13,7 @@ import (
 // NewListSitesParams creates a new ListSitesParams object
 // with the default values initialized.
 func NewListSitesParams() *ListSitesParams {
-
+	var ()
 	return &ListSitesParams{}
 }
 
@@ -21,12 +21,61 @@ func NewListSitesParams() *ListSitesParams {
 for the list sites operation typically these are written to a http.Request
 */
 type ListSitesParams struct {
+
+	/*Filter*/
+	Filter *string
+	/*Name*/
+	Name *string
+}
+
+// WithFilter adds the filter to the list sites params
+func (o *ListSitesParams) WithFilter(Filter *string) *ListSitesParams {
+	o.Filter = Filter
+	return o
+}
+
+// WithName adds the name to the list sites params
+func (o *ListSitesParams) WithName(Name *string) *ListSitesParams {
+	o.Name = Name
+	return o
 }
 
 // WriteToRequest writes these params to a swagger request
 func (o *ListSitesParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
 	var res []error
+
+	if o.Filter != nil {
+
+		// query param filter
+		var qrFilter string
+		if o.Filter != nil {
+			qrFilter = *o.Filter
+		}
+		qFilter := qrFilter
+		if qFilter != "" {
+			if err := r.SetQueryParam("filter", qFilter); err != nil {
+				return err
+			}
+		}
+
+	}
+
+	if o.Name != nil {
+
+		// query param name
+		var qrName string
+		if o.Name != nil {
+			qrName = *o.Name
+		}
+		qName := qrName
+		if qName != "" {
+			if err := r.SetQueryParam("name", qName); err != nil {
+				return err
+			}
+		}
+
+	}
 
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
