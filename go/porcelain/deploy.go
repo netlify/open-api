@@ -60,9 +60,10 @@ type DeployOptions struct {
 
 	IsDraft bool
 
-	Title     string
-	Branch    string
-	CommitRef string
+	Title         string
+	Branch        string
+	CommitRef     string
+	UploadTimeout time.Duration
 
 	Observer DeployObserver
 
@@ -262,12 +263,12 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 		return deploy, nil
 	}
 
-	if err := n.uploadFiles(ctx, deploy, options.files, options.Observer, fileUpload); err != nil {
+	if err := n.uploadFiles(ctx, deploy, options.files, options.Observer, fileUpload, options.UploadTimeout); err != nil {
 		return nil, err
 	}
 
 	if options.functions != nil {
-		if err := n.uploadFiles(ctx, deploy, options.functions, options.Observer, functionUpload); err != nil {
+		if err := n.uploadFiles(ctx, deploy, options.functions, options.Observer, functionUpload, options.UploadTimeout); err != nil {
 			return nil, err
 		}
 	}
@@ -309,7 +310,7 @@ func (n *Netlify) WaitUntilDeployReady(ctx context.Context, d *models.Deploy) (*
 	return d, nil
 }
 
-func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *deployFiles, observer DeployObserver, t uploadType) error {
+func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *deployFiles, observer DeployObserver, t uploadType, timeout time.Duration) error {
 	sharedErr := &uploadError{err: nil, mutex: &sync.Mutex{}}
 	sem := make(chan int, n.uploadLimit)
 	wg := &sync.WaitGroup{}
@@ -339,7 +340,7 @@ func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *depl
 				sem <- 1
 				wg.Add(1)
 
-				go n.uploadFile(ctx, d, file, observer, t, wg, sem, sharedErr)
+				go n.uploadFile(ctx, d, file, observer, t, timeout, wg, sem, sharedErr)
 			}
 		}
 	}
@@ -349,7 +350,7 @@ func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *depl
 	return sharedErr.err
 }
 
-func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundle, c DeployObserver, t uploadType, wg *sync.WaitGroup, sem chan int, sharedErr *uploadError) {
+func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundle, c DeployObserver, t uploadType, timeout time.Duration, wg *sync.WaitGroup, sem chan int, sharedErr *uploadError) {
 	defer func() {
 		wg.Done()
 		<-sem
@@ -398,9 +399,15 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 		switch t {
 		case fileUpload:
 			params := operations.NewUploadDeployFileParams().WithDeployID(d.ID).WithPath(f.Name).WithFileBody(f)
+			if timeout != 0 {
+				params.SetTimeout(timeout)
+			}
 			_, operationError = n.Operations.UploadDeployFile(params, authInfo)
 		case functionUpload:
 			params := operations.NewUploadDeployFunctionParams().WithDeployID(d.ID).WithName(f.Name).WithFileBody(f)
+			if timeout != 0 {
+				params.SetTimeout(timeout)
+			}
 			_, operationError = n.Operations.UploadDeployFunction(params, authInfo)
 		}
 
