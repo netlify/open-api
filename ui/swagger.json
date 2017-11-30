@@ -517,6 +517,11 @@
             "in": "query"
           },
           {
+            "enum": [
+              "all",
+              "owner",
+              "guest"
+            ],
             "type": "string",
             "name": "filter",
             "in": "query"
@@ -1446,6 +1451,109 @@
           }
         }
       }
+    },
+    "/{account_slug}/members": {
+      "get": {
+        "operationId": "listMembersForAccount",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/member"
+              }
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "addMemberToAccount",
+        "parameters": [
+          {
+            "enum": [
+              "Owner",
+              "Collaborator",
+              "Controller"
+            ],
+            "type": "string",
+            "name": "role",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "name": "email",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/member"
+              }
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "account_slug",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/{account_slug}/sites": {
+      "get": {
+        "operationId": "listSitesForAccount",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "name",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "name": "account_slug",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/site"
+              }
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -1888,6 +1996,26 @@
           }
         },
         "name": {
+          "type": "string"
+        }
+      }
+    },
+    "member": {
+      "type": "object",
+      "properties": {
+        "avatar": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "full_name": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "role": {
           "type": "string"
         }
       }
