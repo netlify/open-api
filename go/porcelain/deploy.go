@@ -10,6 +10,7 @@ import (
 	"hash"
 	"io"
 	"io/ioutil"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
@@ -398,7 +399,8 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 
 		switch t {
 		case fileUpload:
-			params := operations.NewUploadDeployFileParams().WithDeployID(d.ID).WithPath(f.Name).WithFileBody(f)
+			name := (&url.URL{Path: f.Name}).EscapedPath()
+			params := operations.NewUploadDeployFileParams().WithDeployID(d.ID).WithPath(name).WithFileBody(f)
 			if timeout != 0 {
 				params.SetTimeout(timeout)
 			}
