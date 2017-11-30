@@ -28,6 +28,7 @@ paths:
         - name: filter
           in: query
           type: string
+          enum: ["all", "owner", "guest"]
       responses:
         '200':
           description: OK
@@ -975,6 +976,69 @@ paths:
           description: error
           schema:
             $ref: "#/definitions/error"
+  /{account_slug}/sites:
+    get:
+      operationId: listSitesForAccount # an account represents a team or a user
+      parameters:
+        - name: name
+          in: query
+          type: string
+        - name: account_slug
+          in: path
+          type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/site"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+  /{account_slug}/members:
+    parameters:
+      - name: account_slug
+        in: path
+        type: string
+        required: true
+    get:
+      operationId: listMembersForAccount # an account represents a team or a user
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/member"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+    post:
+      operationId: addMemberToAccount # an account represents a team or a user
+      parameters:
+        - name: role
+          in: query
+          type: string
+          enum: ["Owner", "Collaborator", "Controller"]
+        - name: email
+          in: query
+          type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/member"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
 definitions:
     site:
       type: object
@@ -1441,6 +1505,19 @@ definitions:
         created_at:
           type: string
           format: dateTime
+    member:
+      type: object
+      properties:
+        id:
+          type: string
+        full_name:
+          type: string
+        email:
+          type: string
+        avatar:
+          type: string
+        role:
+          type: string
     error:
       type: object
       required:

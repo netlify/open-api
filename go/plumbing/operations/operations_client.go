@@ -25,6 +25,35 @@ type Client struct {
 }
 
 /*
+AddMemberToAccount add member to account API
+*/
+func (a *Client) AddMemberToAccount(params *AddMemberToAccountParams, authInfo runtime.ClientAuthInfoWriter) (*AddMemberToAccountOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewAddMemberToAccountParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "addMemberToAccount",
+		Method:             "POST",
+		PathPattern:        "/{account_slug}/members",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &AddMemberToAccountReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*AddMemberToAccountOK), nil
+
+}
+
+/*
 ConfigureDNSForSite configure DNS for site API
 */
 func (a *Client) ConfigureDNSForSite(params *ConfigureDNSForSiteParams, authInfo runtime.ClientAuthInfoWriter) (*ConfigureDNSForSiteOK, error) {
@@ -808,6 +837,35 @@ func (a *Client) ListHooksBySiteID(params *ListHooksBySiteIDParams, authInfo run
 }
 
 /*
+ListMembersForAccount list members for account API
+*/
+func (a *Client) ListMembersForAccount(params *ListMembersForAccountParams, authInfo runtime.ClientAuthInfoWriter) (*ListMembersForAccountOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewListMembersForAccountParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "listMembersForAccount",
+		Method:             "GET",
+		PathPattern:        "/{account_slug}/members",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &ListMembersForAccountReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*ListMembersForAccountOK), nil
+
+}
+
+/*
 ListSiteAssets list site assets API
 */
 func (a *Client) ListSiteAssets(params *ListSiteAssetsParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteAssetsOK, error) {
@@ -1036,6 +1094,35 @@ func (a *Client) ListSites(params *ListSitesParams, authInfo runtime.ClientAuthI
 		return nil, err
 	}
 	return result.(*ListSitesOK), nil
+
+}
+
+/*
+ListSitesForAccount list sites for account API
+*/
+func (a *Client) ListSitesForAccount(params *ListSitesForAccountParams, authInfo runtime.ClientAuthInfoWriter) (*ListSitesForAccountOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewListSitesForAccountParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "listSitesForAccount",
+		Method:             "GET",
+		PathPattern:        "/{account_slug}/sites",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &ListSitesForAccountReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*ListSitesForAccountOK), nil
 
 }
 
