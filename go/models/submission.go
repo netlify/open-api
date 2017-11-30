@@ -14,6 +14,7 @@ import (
 
 // Submission submission
 // swagger:model submission
+
 type Submission struct {
 
 	// body
@@ -52,6 +53,30 @@ type Submission struct {
 	// summary
 	Summary string `json:"summary,omitempty"`
 }
+
+/* polymorph submission body false */
+
+/* polymorph submission company false */
+
+/* polymorph submission created_at false */
+
+/* polymorph submission data false */
+
+/* polymorph submission email false */
+
+/* polymorph submission first_name false */
+
+/* polymorph submission id false */
+
+/* polymorph submission last_name false */
+
+/* polymorph submission name false */
+
+/* polymorph submission number false */
+
+/* polymorph submission site_url false */
+
+/* polymorph submission summary false */
 
 // Validate validates this submission
 func (m *Submission) Validate(formats strfmt.Registry) error {

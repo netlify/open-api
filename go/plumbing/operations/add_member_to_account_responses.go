@@ -54,7 +54,7 @@ func NewAddMemberToAccountOK() *AddMemberToAccountOK {
 OK
 */
 type AddMemberToAccountOK struct {
-	Payload models.AddMemberToAccountOKBody
+	Payload []*models.Member
 }
 
 func (o *AddMemberToAccountOK) Error() string {

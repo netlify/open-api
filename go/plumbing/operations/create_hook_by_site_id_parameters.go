@@ -137,10 +137,12 @@ func (o *CreateHookBySiteIDParams) WriteToRequest(r runtime.ClientRequest, reg s
 	}
 	var res []error
 
-	if o.Hook != nil {
-		if err := r.SetBodyParam(o.Hook); err != nil {
-			return err
-		}
+	if o.Hook == nil {
+		o.Hook = new(models.Hook)
+	}
+
+	if err := r.SetBodyParam(o.Hook); err != nil {
+		return err
 	}
 
 	// query param site_id

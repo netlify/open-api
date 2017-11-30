@@ -137,10 +137,12 @@ func (o *UpdateSiteParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Re
 	}
 	var res []error
 
-	if o.Site != nil {
-		if err := r.SetBodyParam(o.Site); err != nil {
-			return err
-		}
+	if o.Site == nil {
+		o.Site = new(models.SiteSetup)
+	}
+
+	if err := r.SetBodyParam(o.Site); err != nil {
+		return err
 	}
 
 	// path param site_id

@@ -14,6 +14,7 @@ import (
 
 // Site site
 // swagger:model site
+
 type Site struct {
 
 	// account name
@@ -94,6 +95,58 @@ type Site struct {
 	// user id
 	UserID string `json:"user_id,omitempty"`
 }
+
+/* polymorph site account_name false */
+
+/* polymorph site account_slug false */
+
+/* polymorph site admin_url false */
+
+/* polymorph site build_settings false */
+
+/* polymorph site created_at false */
+
+/* polymorph site custom_domain false */
+
+/* polymorph site deploy_hook false */
+
+/* polymorph site deploy_url false */
+
+/* polymorph site domain_aliases false */
+
+/* polymorph site force_ssl false */
+
+/* polymorph site git_provider false */
+
+/* polymorph site id false */
+
+/* polymorph site managed_dns false */
+
+/* polymorph site name false */
+
+/* polymorph site notification_email false */
+
+/* polymorph site password false */
+
+/* polymorph site plan false */
+
+/* polymorph site published_deploy false */
+
+/* polymorph site screenshot_url false */
+
+/* polymorph site session_id false */
+
+/* polymorph site ssl false */
+
+/* polymorph site ssl_url false */
+
+/* polymorph site state false */
+
+/* polymorph site updated_at false */
+
+/* polymorph site url false */
+
+/* polymorph site user_id false */
 
 // Validate validates this site
 func (m *Site) Validate(formats strfmt.Registry) error {
@@ -178,6 +231,74 @@ func (m *Site) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *Site) UnmarshalBinary(b []byte) error {
 	var res Site
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*m = res
+	return nil
+}
+
+// SiteBuildSettings site build settings
+// swagger:model SiteBuildSettings
+
+type SiteBuildSettings struct {
+
+	// allowed branches
+	AllowedBranches []string `json:"allowed_branches"`
+
+	// branch
+	Branch string `json:"branch,omitempty"`
+
+	// cmd
+	Cmd string `json:"cmd,omitempty"`
+
+	// dir
+	Dir string `json:"dir,omitempty"`
+}
+
+/* polymorph SiteBuildSettings allowed_branches false */
+
+/* polymorph SiteBuildSettings branch false */
+
+/* polymorph SiteBuildSettings cmd false */
+
+/* polymorph SiteBuildSettings dir false */
+
+// Validate validates this site build settings
+func (m *SiteBuildSettings) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateAllowedBranches(formats); err != nil {
+		// prop
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *SiteBuildSettings) validateAllowedBranches(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.AllowedBranches) { // not required
+		return nil
+	}
+
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (m *SiteBuildSettings) MarshalBinary() ([]byte, error) {
+	if m == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(m)
+}
+
+// UnmarshalBinary interface implementation
+func (m *SiteBuildSettings) UnmarshalBinary(b []byte) error {
+	var res SiteBuildSettings
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

@@ -14,6 +14,7 @@ import (
 
 // Snippet snippet
 // swagger:model snippet
+
 type Snippet struct {
 
 	// general
@@ -37,6 +38,20 @@ type Snippet struct {
 	// title
 	Title string `json:"title,omitempty"`
 }
+
+/* polymorph snippet general false */
+
+/* polymorph snippet general_position false */
+
+/* polymorph snippet goal false */
+
+/* polymorph snippet goal_position false */
+
+/* polymorph snippet id false */
+
+/* polymorph snippet site_id false */
+
+/* polymorph snippet title false */
 
 // Validate validates this snippet
 func (m *Snippet) Validate(formats strfmt.Registry) error {

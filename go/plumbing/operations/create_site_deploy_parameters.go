@@ -150,10 +150,12 @@ func (o *CreateSiteDeployParams) WriteToRequest(r runtime.ClientRequest, reg str
 	}
 	var res []error
 
-	if o.Deploy != nil {
-		if err := r.SetBodyParam(o.Deploy); err != nil {
-			return err
-		}
+	if o.Deploy == nil {
+		o.Deploy = new(models.DeployFiles)
+	}
+
+	if err := r.SetBodyParam(o.Deploy); err != nil {
+		return err
 	}
 
 	// path param site_id

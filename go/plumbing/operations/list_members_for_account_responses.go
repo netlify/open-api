@@ -54,7 +54,7 @@ func NewListMembersForAccountOK() *ListMembersForAccountOK {
 OK
 */
 type ListMembersForAccountOK struct {
-	Payload models.ListMembersForAccountOKBody
+	Payload []*models.Member
 }
 
 func (o *ListMembersForAccountOK) Error() string {

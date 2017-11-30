@@ -54,7 +54,7 @@ func NewListFormsOK() *ListFormsOK {
 OK
 */
 type ListFormsOK struct {
-	Payload models.ListFormsOKBody
+	Payload []*models.Form
 }
 
 func (o *ListFormsOK) Error() string {

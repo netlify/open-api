@@ -142,10 +142,12 @@ func (o *UpdateSiteBuildLogParams) WriteToRequest(r runtime.ClientRequest, reg s
 		return err
 	}
 
-	if o.Msg != nil {
-		if err := r.SetBodyParam(o.Msg); err != nil {
-			return err
-		}
+	if o.Msg == nil {
+		o.Msg = new(models.BuildLogMsg)
+	}
+
+	if err := r.SetBodyParam(o.Msg); err != nil {
+		return err
 	}
 
 	if len(res) > 0 {

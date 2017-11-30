@@ -54,7 +54,7 @@ func NewListHooksBySiteIDOK() *ListHooksBySiteIDOK {
 OK
 */
 type ListHooksBySiteIDOK struct {
-	Payload models.ListHooksBySiteIDOKBody
+	Payload []*models.Hook
 }
 
 func (o *ListHooksBySiteIDOK) Error() string {

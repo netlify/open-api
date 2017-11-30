@@ -14,6 +14,7 @@ import (
 
 // Member member
 // swagger:model member
+
 type Member struct {
 
 	// avatar
@@ -31,6 +32,16 @@ type Member struct {
 	// role
 	Role string `json:"role,omitempty"`
 }
+
+/* polymorph member avatar false */
+
+/* polymorph member email false */
+
+/* polymorph member full_name false */
+
+/* polymorph member id false */
+
+/* polymorph member role false */
 
 // Validate validates this member
 func (m *Member) Validate(formats strfmt.Registry) error {

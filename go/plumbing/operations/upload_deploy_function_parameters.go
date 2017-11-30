@@ -154,6 +154,10 @@ func (o *UploadDeployFunctionParams) WriteToRequest(r runtime.ClientRequest, reg
 		return err
 	}
 
+	if err := r.SetBodyParam(o.FileBody); err != nil {
+		return err
+	}
+
 	// path param name
 	if err := r.SetPathParam("name", o.Name); err != nil {
 		return err

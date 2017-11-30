@@ -14,6 +14,7 @@ import (
 
 // DNSRecord dns record
 // swagger:model dnsRecord
+
 type DNSRecord struct {
 
 	// hostname
@@ -34,6 +35,18 @@ type DNSRecord struct {
 	// value
 	Value string `json:"value,omitempty"`
 }
+
+/* polymorph dnsRecord hostname false */
+
+/* polymorph dnsRecord id false */
+
+/* polymorph dnsRecord priority false */
+
+/* polymorph dnsRecord ttl false */
+
+/* polymorph dnsRecord type false */
+
+/* polymorph dnsRecord value false */
 
 // Validate validates this dns record
 func (m *DNSRecord) Validate(formats strfmt.Registry) error {

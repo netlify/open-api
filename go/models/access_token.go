@@ -14,6 +14,7 @@ import (
 
 // AccessToken access token
 // swagger:model accessToken
+
 type AccessToken struct {
 
 	// access token
@@ -31,6 +32,16 @@ type AccessToken struct {
 	// user id
 	UserID string `json:"user_id,omitempty"`
 }
+
+/* polymorph accessToken access_token false */
+
+/* polymorph accessToken created_at false */
+
+/* polymorph accessToken id false */
+
+/* polymorph accessToken user_email false */
+
+/* polymorph accessToken user_id false */
 
 // Validate validates this access token
 func (m *AccessToken) Validate(formats strfmt.Registry) error {

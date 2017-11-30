@@ -137,6 +137,10 @@ func (o *UpdateSiteMetadataParams) WriteToRequest(r runtime.ClientRequest, reg s
 	}
 	var res []error
 
+	if err := r.SetBodyParam(o.Metadata); err != nil {
+		return err
+	}
+
 	// path param site_id
 	if err := r.SetPathParam("site_id", o.SiteID); err != nil {
 		return err

@@ -54,7 +54,7 @@ func NewListSiteFilesOK() *ListSiteFilesOK {
 OK
 */
 type ListSiteFilesOK struct {
-	Payload models.ListSiteFilesOKBody
+	Payload []*models.File
 }
 
 func (o *ListSiteFilesOK) Error() string {

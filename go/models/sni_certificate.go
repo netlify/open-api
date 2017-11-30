@@ -14,6 +14,7 @@ import (
 
 // SniCertificate sni certificate
 // swagger:model sniCertificate
+
 type SniCertificate struct {
 
 	// created at
@@ -31,6 +32,16 @@ type SniCertificate struct {
 	// updated at
 	UpdatedAt string `json:"updated_at,omitempty"`
 }
+
+/* polymorph sniCertificate created_at false */
+
+/* polymorph sniCertificate domains false */
+
+/* polymorph sniCertificate expires_at false */
+
+/* polymorph sniCertificate state false */
+
+/* polymorph sniCertificate updated_at false */
 
 // Validate validates this sni certificate
 func (m *SniCertificate) Validate(formats strfmt.Registry) error {

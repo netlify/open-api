@@ -54,7 +54,7 @@ func NewListHookTypesOK() *ListHookTypesOK {
 OK
 */
 type ListHookTypesOK struct {
-	Payload models.ListHookTypesOKBody
+	Payload []*models.HookType
 }
 
 func (o *ListHookTypesOK) Error() string {

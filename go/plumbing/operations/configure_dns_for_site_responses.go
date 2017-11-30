@@ -54,7 +54,7 @@ func NewConfigureDNSForSiteOK() *ConfigureDNSForSiteOK {
 OK
 */
 type ConfigureDNSForSiteOK struct {
-	Payload models.ConfigureDNSForSiteOKBody
+	Payload []*models.DNSZone
 }
 
 func (o *ConfigureDNSForSiteOK) Error() string {

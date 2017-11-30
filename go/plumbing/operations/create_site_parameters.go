@@ -154,10 +154,12 @@ func (o *CreateSiteParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Re
 
 	}
 
-	if o.Site != nil {
-		if err := r.SetBodyParam(o.Site); err != nil {
-			return err
-		}
+	if o.Site == nil {
+		o.Site = new(models.SiteSetup)
+	}
+
+	if err := r.SetBodyParam(o.Site); err != nil {
+		return err
 	}
 
 	if len(res) > 0 {

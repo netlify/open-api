@@ -14,6 +14,7 @@ import (
 
 // Deploy deploy
 // swagger:model deploy
+
 type Deploy struct {
 
 	// admin url
@@ -100,6 +101,62 @@ type Deploy struct {
 	// user id
 	UserID string `json:"user_id,omitempty"`
 }
+
+/* polymorph deploy admin_url false */
+
+/* polymorph deploy branch false */
+
+/* polymorph deploy build_id false */
+
+/* polymorph deploy commit_ref false */
+
+/* polymorph deploy commit_url false */
+
+/* polymorph deploy context false */
+
+/* polymorph deploy created_at false */
+
+/* polymorph deploy deploy_ssl_url false */
+
+/* polymorph deploy deploy_url false */
+
+/* polymorph deploy draft false */
+
+/* polymorph deploy error_message false */
+
+/* polymorph deploy id false */
+
+/* polymorph deploy locked false */
+
+/* polymorph deploy name false */
+
+/* polymorph deploy published_at false */
+
+/* polymorph deploy required false */
+
+/* polymorph deploy required_functions false */
+
+/* polymorph deploy review_id false */
+
+/* polymorph deploy review_url false */
+
+/* polymorph deploy screenshot_url false */
+
+/* polymorph deploy site_id false */
+
+/* polymorph deploy skipped false */
+
+/* polymorph deploy ssl_url false */
+
+/* polymorph deploy state false */
+
+/* polymorph deploy title false */
+
+/* polymorph deploy updated_at false */
+
+/* polymorph deploy url false */
+
+/* polymorph deploy user_id false */
 
 // Validate validates this deploy
 func (m *Deploy) Validate(formats strfmt.Registry) error {

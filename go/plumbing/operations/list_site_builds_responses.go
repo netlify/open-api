@@ -54,7 +54,7 @@ func NewListSiteBuildsOK() *ListSiteBuildsOK {
 OK
 */
 type ListSiteBuildsOK struct {
-	Payload models.ListSiteBuildsOKBody
+	Payload []*models.Build
 }
 
 func (o *ListSiteBuildsOK) Error() string {

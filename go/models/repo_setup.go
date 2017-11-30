@@ -14,6 +14,7 @@ import (
 
 // RepoSetup repo setup
 // swagger:model repoSetup
+
 type RepoSetup struct {
 
 	// allowed branches
@@ -46,6 +47,26 @@ type RepoSetup struct {
 	// repo
 	Repo string `json:"repo,omitempty"`
 }
+
+/* polymorph repoSetup allowed_branches false */
+
+/* polymorph repoSetup branch false */
+
+/* polymorph repoSetup cmd false */
+
+/* polymorph repoSetup deploy_key_id false */
+
+/* polymorph repoSetup dir false */
+
+/* polymorph repoSetup id false */
+
+/* polymorph repoSetup private_logs false */
+
+/* polymorph repoSetup provider false */
+
+/* polymorph repoSetup public_repo false */
+
+/* polymorph repoSetup repo false */
 
 // Validate validates this repo setup
 func (m *RepoSetup) Validate(formats strfmt.Registry) error {

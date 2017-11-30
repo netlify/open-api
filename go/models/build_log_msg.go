@@ -14,6 +14,7 @@ import (
 
 // BuildLogMsg build log msg
 // swagger:model buildLogMsg
+
 type BuildLogMsg struct {
 
 	// error
@@ -22,6 +23,10 @@ type BuildLogMsg struct {
 	// message
 	Message string `json:"message,omitempty"`
 }
+
+/* polymorph buildLogMsg error false */
+
+/* polymorph buildLogMsg message false */
 
 // Validate validates this build log msg
 func (m *BuildLogMsg) Validate(formats strfmt.Registry) error {

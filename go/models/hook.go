@@ -14,6 +14,7 @@ import (
 
 // Hook hook
 // swagger:model hook
+
 type Hook struct {
 
 	// created at
@@ -40,6 +41,22 @@ type Hook struct {
 	// updated at
 	UpdatedAt string `json:"updated_at,omitempty"`
 }
+
+/* polymorph hook created_at false */
+
+/* polymorph hook data false */
+
+/* polymorph hook disabled false */
+
+/* polymorph hook event false */
+
+/* polymorph hook id false */
+
+/* polymorph hook site_id false */
+
+/* polymorph hook type false */
+
+/* polymorph hook updated_at false */
 
 // Validate validates this hook
 func (m *Hook) Validate(formats strfmt.Registry) error {

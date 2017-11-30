@@ -14,10 +14,12 @@ import (
 
 // SiteSetup site setup
 // swagger:model siteSetup
+
 type SiteSetup struct {
 	Site
 
-	SiteSetupAllOf1
+	// repo
+	Repo *RepoSetup `json:"repo,omitempty"`
 }
 
 // UnmarshalJSON unmarshals this object from a JSON structure
@@ -29,11 +31,14 @@ func (m *SiteSetup) UnmarshalJSON(raw []byte) error {
 	}
 	m.Site = aO0
 
-	var aO1 SiteSetupAllOf1
-	if err := swag.ReadJSON(raw, &aO1); err != nil {
+	var data struct {
+		Repo *RepoSetup `json:"repo,omitempty"`
+	}
+	if err := swag.ReadJSON(raw, &data); err != nil {
 		return err
 	}
-	m.SiteSetupAllOf1 = aO1
+
+	m.Repo = data.Repo
 
 	return nil
 }
@@ -48,11 +53,17 @@ func (m SiteSetup) MarshalJSON() ([]byte, error) {
 	}
 	_parts = append(_parts, aO0)
 
-	aO1, err := swag.WriteJSON(m.SiteSetupAllOf1)
+	var data struct {
+		Repo *RepoSetup `json:"repo,omitempty"`
+	}
+
+	data.Repo = m.Repo
+
+	jsonData, err := swag.WriteJSON(data)
 	if err != nil {
 		return nil, err
 	}
-	_parts = append(_parts, aO1)
+	_parts = append(_parts, jsonData)
 
 	return swag.ConcatJSON(_parts...), nil
 }
@@ -65,13 +76,32 @@ func (m *SiteSetup) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.SiteSetupAllOf1.Validate(formats); err != nil {
+	if err := m.validateRepo(formats); err != nil {
 		res = append(res, err)
 	}
 
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *SiteSetup) validateRepo(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Repo) { // not required
+		return nil
+	}
+
+	if m.Repo != nil {
+
+		if err := m.Repo.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("repo")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 
