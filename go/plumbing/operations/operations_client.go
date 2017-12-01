@@ -54,6 +54,35 @@ func (a *Client) AddMemberToAccount(params *AddMemberToAccountParams, authInfo r
 }
 
 /*
+CancelAccount cancel account API
+*/
+func (a *Client) CancelAccount(params *CancelAccountParams, authInfo runtime.ClientAuthInfoWriter) (*CancelAccountNoContent, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewCancelAccountParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "cancelAccount",
+		Method:             "DELETE",
+		PathPattern:        "/accounts/{account_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &CancelAccountReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*CancelAccountNoContent), nil
+
+}
+
+/*
 ConfigureDNSForSite configure DNS for site API
 */
 func (a *Client) ConfigureDNSForSite(params *ConfigureDNSForSiteParams, authInfo runtime.ClientAuthInfoWriter) (*ConfigureDNSForSiteOK, error) {
@@ -79,6 +108,35 @@ func (a *Client) ConfigureDNSForSite(params *ConfigureDNSForSiteParams, authInfo
 		return nil, err
 	}
 	return result.(*ConfigureDNSForSiteOK), nil
+
+}
+
+/*
+CreateAccount create account API
+*/
+func (a *Client) CreateAccount(params *CreateAccountParams, authInfo runtime.ClientAuthInfoWriter) (*CreateAccountCreated, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewCreateAccountParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "createAccount",
+		Method:             "POST",
+		PathPattern:        "/accounts",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &CreateAccountReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*CreateAccountCreated), nil
 
 }
 
@@ -721,6 +779,93 @@ func (a *Client) GetSiteSnippet(params *GetSiteSnippetParams, authInfo runtime.C
 }
 
 /*
+ListAccountAuditEvents list account audit events API
+*/
+func (a *Client) ListAccountAuditEvents(params *ListAccountAuditEventsParams, authInfo runtime.ClientAuthInfoWriter) (*ListAccountAuditEventsOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewListAccountAuditEventsParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "listAccountAuditEvents",
+		Method:             "GET",
+		PathPattern:        "/accounts/{account_id}/audit",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &ListAccountAuditEventsReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*ListAccountAuditEventsOK), nil
+
+}
+
+/*
+ListAccountTypesForUser list account types for user API
+*/
+func (a *Client) ListAccountTypesForUser(params *ListAccountTypesForUserParams, authInfo runtime.ClientAuthInfoWriter) (*ListAccountTypesForUserOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewListAccountTypesForUserParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "listAccountTypesForUser",
+		Method:             "GET",
+		PathPattern:        "/accounts/types",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &ListAccountTypesForUserReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*ListAccountTypesForUserOK), nil
+
+}
+
+/*
+ListAccountsForUser list accounts for user API
+*/
+func (a *Client) ListAccountsForUser(params *ListAccountsForUserParams, authInfo runtime.ClientAuthInfoWriter) (*ListAccountsForUserOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewListAccountsForUserParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "listAccountsForUser",
+		Method:             "GET",
+		PathPattern:        "/accounts",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &ListAccountsForUserReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*ListAccountsForUserOK), nil
+
+}
+
+/*
 ListFormSubmissions list form submissions API
 */
 func (a *Client) ListFormSubmissions(params *ListFormSubmissionsParams, authInfo runtime.ClientAuthInfoWriter) (*ListFormSubmissionsOK, error) {
@@ -862,6 +1007,35 @@ func (a *Client) ListMembersForAccount(params *ListMembersForAccountParams, auth
 		return nil, err
 	}
 	return result.(*ListMembersForAccountOK), nil
+
+}
+
+/*
+ListPaymentMethodsForUser list payment methods for user API
+*/
+func (a *Client) ListPaymentMethodsForUser(params *ListPaymentMethodsForUserParams, authInfo runtime.ClientAuthInfoWriter) (*ListPaymentMethodsForUserOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewListPaymentMethodsForUserParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "listPaymentMethodsForUser",
+		Method:             "GET",
+		PathPattern:        "/billing/payment_methods",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &ListPaymentMethodsForUserReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*ListPaymentMethodsForUserOK), nil
 
 }
 
@@ -1297,6 +1471,35 @@ func (a *Client) UnlockDeploy(params *UnlockDeployParams, authInfo runtime.Clien
 		return nil, err
 	}
 	return result.(*UnlockDeployOK), nil
+
+}
+
+/*
+UpdateAccount update account API
+*/
+func (a *Client) UpdateAccount(params *UpdateAccountParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateAccountOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewUpdateAccountParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "updateAccount",
+		Method:             "PUT",
+		PathPattern:        "/accounts/{account_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &UpdateAccountReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*UpdateAccountOK), nil
 
 }
 
