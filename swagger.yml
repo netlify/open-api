@@ -1039,6 +1039,122 @@ paths:
           description: error
           schema:
             $ref: "#/definitions/error"
+  /billing/payment_methods:
+    get:
+      operationId: listPaymentMethodsForUser
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/paymentMethod"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+  /accounts/types:
+    get:
+      operationId: listAccountTypesForUser
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/accountType"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+  /accounts:
+    get:
+      operationId: listAccountsForUser
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/accountMembership"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+    post:
+      operationId: createAccount
+      parameters:
+        - name: accountSetup
+          in: body
+          schema:
+            $ref: "#/definitions/accountSetup"
+          required: true
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: "#/definitions/accountMembership"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+  /accounts/{account_id}:
+    parameters:
+      - name: account_id
+        type: string
+        in: path
+        required: true
+    put:
+      operationId: updateAccount
+      parameters:
+        - name: accountUpdateSetup
+          in: body
+          schema:
+            $ref: "#/definitions/accountUpdateSetup"
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: "#/definitions/accountMembership"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+    delete:
+      operationId: cancelAccount
+      responses:
+        '204':
+          description: Not Content
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+  /accounts/{account_id}/audit:
+    parameters:
+      - name: account_id
+        type: string
+        in: path
+        required: true
+    get:
+      operationId: listAccountAuditEvents
+      parameters:
+        - name: query
+          type: string
+          in: query
+        - name: log_type
+          type: string
+          in: query
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/auditLog"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
 definitions:
     site:
       type: object
@@ -1518,6 +1634,167 @@ definitions:
           type: string
         role:
           type: string
+    paymentMethod:
+      type: object
+      properties:
+        id:
+          type: string
+        method_name:
+          type: string
+        type:
+          type: string
+        state:
+          type: string
+        data:
+          type: object
+          properties:
+            card_type:
+              type: string
+            last4:
+              type: string
+            email:
+              type: string
+        created_at:
+          type: string
+          format: dateTime
+        updated_at:
+          type: string
+          format: dateTime
+    accountType:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        capabilities:
+          type: object
+        monthly_dollar_price:
+          type: integer
+        yearly_dollar_price:
+          type: integer
+        monthly_seats_addon_dollar_price:
+          type: integer
+        yearly_seats_addon_dollar_price:
+          type: integer
+    accountSetup:
+      type: object
+      required:
+        - name
+        - type_id
+      properties:
+        name:
+          type: string
+        type_id:
+          type: string
+        # Payment method is not required if the user only has one payment method in file on Netlify.
+        # It's required when there are more than two payment methods in file.
+        payment_method_id:
+          type: string
+        period:
+          type: string
+          enum: ["monthly", "yearly"]
+        extra_seats_block:
+          type: integer
+    accountUpdateSetup:
+      type: object
+      properties:
+        name:
+          type: string
+        slug:
+          type: string
+        type_id:
+          type: string
+        payment_method_id:
+          type: string
+        extra_seats_block:
+          type: integer
+        billing_name:
+          type: string
+        billing_email:
+          type: string
+        billing_details:
+          type: string
+    accountMembership:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        slug:
+          type: string
+        type:
+          type: string
+        capabilities:
+          type: object
+          properties:
+            sites:
+              $ref: "#/definitions/accountUsageCapability"
+            collaborators:
+              $ref: "#/definitions/accountUsageCapability"
+        billing_name:
+          type: string
+        billing_email:
+          type: string
+        billing_details:
+          type: string
+        billing_period:
+          type: string
+        payment_method_id:
+          type: string
+        type_name:
+          type: string
+        type_id:
+          type: string
+        owner_ids:
+          type: array
+          items:
+            type: string
+        roles_allowed:
+          type: array
+          items:
+            type: string
+        created_at:
+          type: string
+          format: dateTime
+        updated_at:
+          type: string
+          format: dateTime
+    auditLog:
+      type: object
+      properties:
+        id:
+          type: string
+        account_id:
+          type: string
+        payload:
+          type: object
+          properties:
+            actor_id:
+              type: string
+            actor_name:
+              type: string
+            actor_email:
+              type: string
+            action:
+              type: string
+            timestamp:
+              type: string
+              format: dateTime
+            log_type:
+              type: string
+          additionalProperties:
+            type: object
+    accountUsageCapability:
+      type: object
+      properties:
+        included:
+          type: integer
+        used:
+          type: integer
     error:
       type: object
       required:

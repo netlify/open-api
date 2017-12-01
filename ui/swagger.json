@@ -16,6 +16,191 @@
   "host": "api.netlify.com",
   "basePath": "/api/v1",
   "paths": {
+    "/accounts": {
+      "get": {
+        "operationId": "listAccountsForUser",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/accountMembership"
+              }
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "createAccount",
+        "parameters": [
+          {
+            "name": "accountSetup",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/accountSetup"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/accountMembership"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/accounts/types": {
+      "get": {
+        "operationId": "listAccountTypesForUser",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/accountType"
+              }
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/accounts/{account_id}": {
+      "put": {
+        "operationId": "updateAccount",
+        "parameters": [
+          {
+            "name": "accountUpdateSetup",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/accountUpdateSetup"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/accountMembership"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "cancelAccount",
+        "responses": {
+          "204": {
+            "description": "Not Content"
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "account_id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/accounts/{account_id}/audit": {
+      "get": {
+        "operationId": "listAccountAuditEvents",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "query",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "name": "log_type",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/auditLog"
+              }
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "account_id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/billing/payment_methods": {
+      "get": {
+        "operationId": "listPaymentMethodsForUser",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/paymentMethod"
+              }
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
     "/builds/{build_id}": {
       "get": {
         "operationId": "getSiteBuild",
@@ -1578,6 +1763,172 @@
         }
       }
     },
+    "accountMembership": {
+      "type": "object",
+      "properties": {
+        "billing_details": {
+          "type": "string"
+        },
+        "billing_email": {
+          "type": "string"
+        },
+        "billing_name": {
+          "type": "string"
+        },
+        "billing_period": {
+          "type": "string"
+        },
+        "capabilities": {
+          "type": "object",
+          "properties": {
+            "collaborators": {
+              "$ref": "#/definitions/accountUsageCapability"
+            },
+            "sites": {
+              "$ref": "#/definitions/accountUsageCapability"
+            }
+          }
+        },
+        "created_at": {
+          "type": "string",
+          "format": "dateTime"
+        },
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "owner_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "payment_method_id": {
+          "type": "string"
+        },
+        "roles_allowed": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "slug": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "type_id": {
+          "type": "string"
+        },
+        "type_name": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "dateTime"
+        }
+      }
+    },
+    "accountSetup": {
+      "type": "object",
+      "required": [
+        "name",
+        "type_id"
+      ],
+      "properties": {
+        "extra_seats_block": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        },
+        "payment_method_id": {
+          "type": "string"
+        },
+        "period": {
+          "type": "string",
+          "enum": [
+            "monthly",
+            "yearly"
+          ]
+        },
+        "type_id": {
+          "type": "string"
+        }
+      }
+    },
+    "accountType": {
+      "type": "object",
+      "properties": {
+        "capabilities": {
+          "type": "object"
+        },
+        "description": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "monthly_dollar_price": {
+          "type": "integer"
+        },
+        "monthly_seats_addon_dollar_price": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        },
+        "yearly_dollar_price": {
+          "type": "integer"
+        },
+        "yearly_seats_addon_dollar_price": {
+          "type": "integer"
+        }
+      }
+    },
+    "accountUpdateSetup": {
+      "type": "object",
+      "properties": {
+        "billing_details": {
+          "type": "string"
+        },
+        "billing_email": {
+          "type": "string"
+        },
+        "billing_name": {
+          "type": "string"
+        },
+        "extra_seats_block": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        },
+        "payment_method_id": {
+          "type": "string"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "type_id": {
+          "type": "string"
+        }
+      }
+    },
+    "accountUsageCapability": {
+      "type": "object",
+      "properties": {
+        "included": {
+          "type": "integer"
+        },
+        "used": {
+          "type": "integer"
+        }
+      }
+    },
     "asset": {
       "type": "object",
       "properties": {
@@ -1654,6 +2005,44 @@
         "form": {
           "type": "object",
           "$ref": "#/definitions/assetForm"
+        }
+      }
+    },
+    "auditLog": {
+      "type": "object",
+      "properties": {
+        "account_id": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "action": {
+              "type": "string"
+            },
+            "actor_email": {
+              "type": "string"
+            },
+            "actor_id": {
+              "type": "string"
+            },
+            "actor_name": {
+              "type": "string"
+            },
+            "log_type": {
+              "type": "string"
+            },
+            "timestamp": {
+              "type": "string",
+              "format": "dateTime"
+            }
+          },
+          "additionalProperties": {
+            "type": "object"
+          }
         }
       }
     },
@@ -2022,6 +2411,45 @@
     },
     "metadata": {
       "type": "object"
+    },
+    "paymentMethod": {
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "format": "dateTime"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "card_type": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            },
+            "last4": {
+              "type": "string"
+            }
+          }
+        },
+        "id": {
+          "type": "string"
+        },
+        "method_name": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "dateTime"
+        }
+      }
     },
     "repoSetup": {
       "type": "object",
