@@ -404,8 +404,7 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 
 		switch t {
 		case fileUpload:
-			name := f.Name
-			params := operations.NewUploadDeployFileParams().WithDeployID(d.ID).WithPath(name).WithFileBody(f)
+			params := operations.NewUploadDeployFileParams().WithDeployID(d.ID).WithPath(f.Name).WithFileBody(f)
 			if timeout != 0 {
 				params.SetTimeout(timeout)
 			}
