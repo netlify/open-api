@@ -10,7 +10,6 @@ import (
 	"hash"
 	"io"
 	"io/ioutil"
-	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
@@ -179,6 +178,12 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 		}
 		return nil, err
 	}
+	for name := range files.Files {
+		if strings.ContainsAny(name, "#?") {
+			return nil, fmt.Errorf("Invalid filename '%s'. Deployed filenames cannot contain # or ? characters", name)
+		}
+	}
+
 	options.files = files
 
 	functions, err := bundle(options.FunctionsDir, options.Observer)
@@ -399,7 +404,7 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 
 		switch t {
 		case fileUpload:
-			name := (&url.URL{Path: f.Name}).EscapedPath()
+			name := f.Name
 			params := operations.NewUploadDeployFileParams().WithDeployID(d.ID).WithPath(name).WithFileBody(f)
 			if timeout != 0 {
 				params.SetTimeout(timeout)
