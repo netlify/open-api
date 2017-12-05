@@ -1213,6 +1213,10 @@ definitions:
           type: string
         deploy_hook:
           type: string
+        capabilities:
+          type: object
+          additionalProperties:
+            type: object
         build_settings:
           type: object
           properties:

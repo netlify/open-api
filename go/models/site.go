@@ -29,6 +29,9 @@ type Site struct {
 	// build settings
 	BuildSettings *SiteBuildSettings `json:"build_settings,omitempty"`
 
+	// capabilities
+	Capabilities map[string]interface{} `json:"capabilities,omitempty"`
+
 	// created at
 	CreatedAt string `json:"created_at,omitempty"`
 
@@ -103,6 +106,8 @@ type Site struct {
 /* polymorph site admin_url false */
 
 /* polymorph site build_settings false */
+
+/* polymorph site capabilities false */
 
 /* polymorph site created_at false */
 
