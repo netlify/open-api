@@ -2521,6 +2521,12 @@
             }
           }
         },
+        "capabilities": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
         "created_at": {
           "type": "string",
           "format": "dateTime"
