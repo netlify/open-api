@@ -2473,6 +2473,17 @@
     "metadata": {
       "type": "object"
     },
+    "minifyOptions": {
+      "type": "object",
+      "properties": {
+        "bundle": {
+          "type": "boolean"
+        },
+        "minify": {
+          "type": "boolean"
+        }
+      }
+    },
     "paymentMethod": {
       "type": "object",
       "properties": {
@@ -2630,6 +2641,36 @@
         },
         "plan": {
           "type": "string"
+        },
+        "processing_settings": {
+          "type": "object",
+          "properties": {
+            "css": {
+              "$ref": "#/definitions/minifyOptions"
+            },
+            "html": {
+              "type": "object",
+              "properties": {
+                "pretty_urls": {
+                  "type": "boolean"
+                }
+              }
+            },
+            "images": {
+              "type": "object",
+              "properties": {
+                "optimize": {
+                  "type": "boolean"
+                }
+              }
+            },
+            "js": {
+              "$ref": "#/definitions/minifyOptions"
+            },
+            "skip": {
+              "type": "boolean"
+            }
+          }
         },
         "published_deploy": {
           "$ref": "#/definitions/deploy"
