@@ -787,7 +787,7 @@
       "delete": {
         "operationId": "deleteSite",
         "responses": {
-          "200": {
+          "204": {
             "description": "OK"
           },
           "default": {
