@@ -25,8 +25,8 @@ type CreateDeployKeyReader struct {
 func (o *CreateDeployKeyReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
 
-	case 200:
-		result := NewCreateDeployKeyOK()
+	case 201:
+		result := NewCreateDeployKeyCreated()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -44,24 +44,24 @@ func (o *CreateDeployKeyReader) ReadResponse(response runtime.ClientResponse, co
 	}
 }
 
-// NewCreateDeployKeyOK creates a CreateDeployKeyOK with default headers values
-func NewCreateDeployKeyOK() *CreateDeployKeyOK {
-	return &CreateDeployKeyOK{}
+// NewCreateDeployKeyCreated creates a CreateDeployKeyCreated with default headers values
+func NewCreateDeployKeyCreated() *CreateDeployKeyCreated {
+	return &CreateDeployKeyCreated{}
 }
 
-/*CreateDeployKeyOK handles this case with default header values.
+/*CreateDeployKeyCreated handles this case with default header values.
 
-OK
+Created
 */
-type CreateDeployKeyOK struct {
+type CreateDeployKeyCreated struct {
 	Payload *models.DeployKey
 }
 
-func (o *CreateDeployKeyOK) Error() string {
-	return fmt.Sprintf("[POST /deploy_keys][%d] createDeployKeyOK  %+v", 200, o.Payload)
+func (o *CreateDeployKeyCreated) Error() string {
+	return fmt.Sprintf("[POST /deploy_keys][%d] createDeployKeyCreated  %+v", 201, o.Payload)
 }
 
-func (o *CreateDeployKeyOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+func (o *CreateDeployKeyCreated) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	o.Payload = new(models.DeployKey)
 

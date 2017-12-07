@@ -963,15 +963,54 @@ paths:
           schema:
             $ref: "#/definitions/error"
   /deploy_keys:
+    get:
+      operationId: listDeployKeys
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/deployKey"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
     post:
       operationId: createDeployKey
       consumes:
         - application/json
       responses:
+        '201':
+          description: Created
+          schema:
+            $ref: "#/definitions/deployKey"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+  /deploy_keys/{key_id}:
+    parameters:
+      - name: key_id
+        type: string
+        in: path
+        required: true
+    get:
+      operationId: getDeployKey
+      responses:
         '200':
           description: OK
           schema:
             $ref: "#/definitions/deployKey"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+    delete:
+      operationId: deleteDeployKey
+      responses:
+        '204':
+          description: Not Content
         default:
           description: error
           schema:

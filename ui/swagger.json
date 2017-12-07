@@ -261,11 +261,50 @@
       ]
     },
     "/deploy_keys": {
+      "get": {
+        "operationId": "listDeployKeys",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/deployKey"
+              }
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
       "post": {
         "consumes": [
           "application/json"
         ],
         "operationId": "createDeployKey",
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/deployKey"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/deploy_keys/{key_id}": {
+      "get": {
+        "operationId": "getDeployKey",
         "responses": {
           "200": {
             "description": "OK",
@@ -280,7 +319,29 @@
             }
           }
         }
-      }
+      },
+      "delete": {
+        "operationId": "deleteDeployKey",
+        "responses": {
+          "204": {
+            "description": "Not Content"
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "key_id",
+          "in": "path",
+          "required": true
+        }
+      ]
     },
     "/deploys/{deploy_id}": {
       "get": {
