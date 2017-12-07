@@ -51,7 +51,7 @@ func NewDeleteSiteNoContent() *DeleteSiteNoContent {
 
 /*DeleteSiteNoContent handles this case with default header values.
 
-OK
+Deleted
 */
 type DeleteSiteNoContent struct {
 }

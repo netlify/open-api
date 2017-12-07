@@ -103,7 +103,7 @@ paths:
       operationId: deleteSite
       responses:
         '204':
-          description: OK
+          description: Deleted
         default:
           description: error
           schema:
