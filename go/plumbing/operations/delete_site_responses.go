@@ -25,8 +25,8 @@ type DeleteSiteReader struct {
 func (o *DeleteSiteReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
 
-	case 200:
-		result := NewDeleteSiteOK()
+	case 204:
+		result := NewDeleteSiteNoContent()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -44,23 +44,23 @@ func (o *DeleteSiteReader) ReadResponse(response runtime.ClientResponse, consume
 	}
 }
 
-// NewDeleteSiteOK creates a DeleteSiteOK with default headers values
-func NewDeleteSiteOK() *DeleteSiteOK {
-	return &DeleteSiteOK{}
+// NewDeleteSiteNoContent creates a DeleteSiteNoContent with default headers values
+func NewDeleteSiteNoContent() *DeleteSiteNoContent {
+	return &DeleteSiteNoContent{}
 }
 
-/*DeleteSiteOK handles this case with default header values.
+/*DeleteSiteNoContent handles this case with default header values.
 
-OK
+Deleted
 */
-type DeleteSiteOK struct {
+type DeleteSiteNoContent struct {
 }
 
-func (o *DeleteSiteOK) Error() string {
-	return fmt.Sprintf("[DELETE /sites/{site_id}][%d] deleteSiteOK ", 200)
+func (o *DeleteSiteNoContent) Error() string {
+	return fmt.Sprintf("[DELETE /sites/{site_id}][%d] deleteSiteNoContent ", 204)
 }
 
-func (o *DeleteSiteOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+func (o *DeleteSiteNoContent) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	return nil
 }

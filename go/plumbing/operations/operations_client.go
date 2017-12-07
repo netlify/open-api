@@ -375,7 +375,7 @@ func (a *Client) DeleteHookBySiteID(params *DeleteHookBySiteIDParams, authInfo r
 /*
 DeleteSite delete site API
 */
-func (a *Client) DeleteSite(params *DeleteSiteParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSiteOK, error) {
+func (a *Client) DeleteSite(params *DeleteSiteParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSiteNoContent, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDeleteSiteParams()
@@ -397,7 +397,7 @@ func (a *Client) DeleteSite(params *DeleteSiteParams, authInfo runtime.ClientAut
 	if err != nil {
 		return nil, err
 	}
-	return result.(*DeleteSiteOK), nil
+	return result.(*DeleteSiteNoContent), nil
 
 }
 
