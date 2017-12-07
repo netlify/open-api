@@ -143,7 +143,7 @@ func (a *Client) CreateAccount(params *CreateAccountParams, authInfo runtime.Cli
 /*
 CreateDeployKey create deploy key API
 */
-func (a *Client) CreateDeployKey(params *CreateDeployKeyParams, authInfo runtime.ClientAuthInfoWriter) (*CreateDeployKeyOK, error) {
+func (a *Client) CreateDeployKey(params *CreateDeployKeyParams, authInfo runtime.ClientAuthInfoWriter) (*CreateDeployKeyCreated, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewCreateDeployKeyParams()
@@ -165,7 +165,7 @@ func (a *Client) CreateDeployKey(params *CreateDeployKeyParams, authInfo runtime
 	if err != nil {
 		return nil, err
 	}
-	return result.(*CreateDeployKeyOK), nil
+	return result.(*CreateDeployKeyCreated), nil
 
 }
 
@@ -340,6 +340,35 @@ func (a *Client) CreateTicket(params *CreateTicketParams, authInfo runtime.Clien
 		return nil, err
 	}
 	return result.(*CreateTicketCreated), nil
+
+}
+
+/*
+DeleteDeployKey delete deploy key API
+*/
+func (a *Client) DeleteDeployKey(params *DeleteDeployKeyParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteDeployKeyNoContent, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewDeleteDeployKeyParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "deleteDeployKey",
+		Method:             "DELETE",
+		PathPattern:        "/deploy_keys/{key_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &DeleteDeployKeyReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*DeleteDeployKeyNoContent), nil
 
 }
 
@@ -543,6 +572,35 @@ func (a *Client) GetDeploy(params *GetDeployParams, authInfo runtime.ClientAuthI
 		return nil, err
 	}
 	return result.(*GetDeployOK), nil
+
+}
+
+/*
+GetDeployKey get deploy key API
+*/
+func (a *Client) GetDeployKey(params *GetDeployKeyParams, authInfo runtime.ClientAuthInfoWriter) (*GetDeployKeyOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetDeployKeyParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "getDeployKey",
+		Method:             "GET",
+		PathPattern:        "/deploy_keys/{key_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &GetDeployKeyReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*GetDeployKeyOK), nil
 
 }
 
@@ -862,6 +920,35 @@ func (a *Client) ListAccountsForUser(params *ListAccountsForUserParams, authInfo
 		return nil, err
 	}
 	return result.(*ListAccountsForUserOK), nil
+
+}
+
+/*
+ListDeployKeys list deploy keys API
+*/
+func (a *Client) ListDeployKeys(params *ListDeployKeysParams, authInfo runtime.ClientAuthInfoWriter) (*ListDeployKeysOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewListDeployKeysParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "listDeployKeys",
+		Method:             "GET",
+		PathPattern:        "/deploy_keys",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &ListDeployKeysReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*ListDeployKeysOK), nil
 
 }
 
