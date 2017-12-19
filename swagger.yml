@@ -1406,25 +1406,14 @@ definitions:
                 pretty_urls:
                   type: boolean
         build_settings:
-          type: object
-          properties:
-            branch:
-              type: string
-            dir:
-              type: string
-            cmd:
-              type: string
-            allowed_branches:
-              type: array
-              items:
-                type: string
+          $ref: "#/definitions/repoInfo"
     siteSetup:
       allOf:
         - $ref: "#/definitions/site"
         - properties:
             repo:
-              $ref: "#/definitions/repoSetup"
-    repoSetup:
+              $ref: "#/definitions/repoInfo"
+    repoInfo:
       type: object
       properties:
         id:
@@ -1435,7 +1424,7 @@ definitions:
           type: string
         repo:
           type: string
-        branch:
+        repo_branch:
           type: string
         dir:
           type: string
@@ -1449,6 +1438,12 @@ definitions:
           type: boolean
         private_logs:
           type: boolean
+        repo_url:
+          type: string
+        env:
+          type: object
+          additionalProperties:
+            type: string
     submission:
       type: object
       properties:

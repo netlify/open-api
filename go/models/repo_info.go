@@ -12,16 +12,13 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// RepoSetup repo setup
-// swagger:model repoSetup
+// RepoInfo repo info
+// swagger:model repoInfo
 
-type RepoSetup struct {
+type RepoInfo struct {
 
 	// allowed branches
 	AllowedBranches []string `json:"allowed_branches"`
-
-	// branch
-	Branch string `json:"branch,omitempty"`
 
 	// cmd
 	Cmd string `json:"cmd,omitempty"`
@@ -31,6 +28,9 @@ type RepoSetup struct {
 
 	// dir
 	Dir string `json:"dir,omitempty"`
+
+	// env
+	Env map[string]string `json:"env,omitempty"`
 
 	// id
 	ID int64 `json:"id,omitempty"`
@@ -46,30 +46,40 @@ type RepoSetup struct {
 
 	// repo
 	Repo string `json:"repo,omitempty"`
+
+	// repo branch
+	RepoBranch string `json:"repo_branch,omitempty"`
+
+	// repo url
+	RepoURL string `json:"repo_url,omitempty"`
 }
 
-/* polymorph repoSetup allowed_branches false */
+/* polymorph repoInfo allowed_branches false */
 
-/* polymorph repoSetup branch false */
+/* polymorph repoInfo cmd false */
 
-/* polymorph repoSetup cmd false */
+/* polymorph repoInfo deploy_key_id false */
 
-/* polymorph repoSetup deploy_key_id false */
+/* polymorph repoInfo dir false */
 
-/* polymorph repoSetup dir false */
+/* polymorph repoInfo env false */
 
-/* polymorph repoSetup id false */
+/* polymorph repoInfo id false */
 
-/* polymorph repoSetup private_logs false */
+/* polymorph repoInfo private_logs false */
 
-/* polymorph repoSetup provider false */
+/* polymorph repoInfo provider false */
 
-/* polymorph repoSetup public_repo false */
+/* polymorph repoInfo public_repo false */
 
-/* polymorph repoSetup repo false */
+/* polymorph repoInfo repo false */
 
-// Validate validates this repo setup
-func (m *RepoSetup) Validate(formats strfmt.Registry) error {
+/* polymorph repoInfo repo_branch false */
+
+/* polymorph repoInfo repo_url false */
+
+// Validate validates this repo info
+func (m *RepoInfo) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateAllowedBranches(formats); err != nil {
@@ -83,7 +93,7 @@ func (m *RepoSetup) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *RepoSetup) validateAllowedBranches(formats strfmt.Registry) error {
+func (m *RepoInfo) validateAllowedBranches(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.AllowedBranches) { // not required
 		return nil
@@ -93,7 +103,7 @@ func (m *RepoSetup) validateAllowedBranches(formats strfmt.Registry) error {
 }
 
 // MarshalBinary interface implementation
-func (m *RepoSetup) MarshalBinary() ([]byte, error) {
+func (m *RepoInfo) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -101,8 +111,8 @@ func (m *RepoSetup) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *RepoSetup) UnmarshalBinary(b []byte) error {
-	var res RepoSetup
+func (m *RepoInfo) UnmarshalBinary(b []byte) error {
+	var res RepoInfo
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}
