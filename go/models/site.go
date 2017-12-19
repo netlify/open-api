@@ -27,7 +27,7 @@ type Site struct {
 	AdminURL string `json:"admin_url,omitempty"`
 
 	// build settings
-	BuildSettings *SiteBuildSettings `json:"build_settings,omitempty"`
+	BuildSettings *RepoInfo `json:"build_settings,omitempty"`
 
 	// capabilities
 	Capabilities map[string]interface{} `json:"capabilities,omitempty"`
@@ -265,74 +265,6 @@ func (m *Site) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *Site) UnmarshalBinary(b []byte) error {
 	var res Site
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*m = res
-	return nil
-}
-
-// SiteBuildSettings site build settings
-// swagger:model SiteBuildSettings
-
-type SiteBuildSettings struct {
-
-	// allowed branches
-	AllowedBranches []string `json:"allowed_branches"`
-
-	// branch
-	Branch string `json:"branch,omitempty"`
-
-	// cmd
-	Cmd string `json:"cmd,omitempty"`
-
-	// dir
-	Dir string `json:"dir,omitempty"`
-}
-
-/* polymorph SiteBuildSettings allowed_branches false */
-
-/* polymorph SiteBuildSettings branch false */
-
-/* polymorph SiteBuildSettings cmd false */
-
-/* polymorph SiteBuildSettings dir false */
-
-// Validate validates this site build settings
-func (m *SiteBuildSettings) Validate(formats strfmt.Registry) error {
-	var res []error
-
-	if err := m.validateAllowedBranches(formats); err != nil {
-		// prop
-		res = append(res, err)
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-func (m *SiteBuildSettings) validateAllowedBranches(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.AllowedBranches) { // not required
-		return nil
-	}
-
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (m *SiteBuildSettings) MarshalBinary() ([]byte, error) {
-	if m == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(m)
-}
-
-// UnmarshalBinary interface implementation
-func (m *SiteBuildSettings) UnmarshalBinary(b []byte) error {
-	var res SiteBuildSettings
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

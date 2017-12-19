@@ -2752,7 +2752,7 @@
         }
       }
     },
-    "repoSetup": {
+    "repoInfo": {
       "type": "object",
       "properties": {
         "allowed_branches": {
@@ -2760,9 +2760,6 @@
           "items": {
             "type": "string"
           }
-        },
-        "branch": {
-          "type": "string"
         },
         "cmd": {
           "type": "string"
@@ -2772,6 +2769,12 @@
         },
         "dir": {
           "type": "string"
+        },
+        "env": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
         },
         "id": {
           "type": "integer"
@@ -2786,6 +2789,12 @@
           "type": "boolean"
         },
         "repo": {
+          "type": "string"
+        },
+        "repo_branch": {
+          "type": "string"
+        },
+        "repo_url": {
           "type": "string"
         }
       }
@@ -2803,24 +2812,7 @@
           "type": "string"
         },
         "build_settings": {
-          "type": "object",
-          "properties": {
-            "allowed_branches": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            "branch": {
-              "type": "string"
-            },
-            "cmd": {
-              "type": "string"
-            },
-            "dir": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/repoInfo"
         },
         "capabilities": {
           "type": "object",
@@ -2939,7 +2931,7 @@
         {
           "properties": {
             "repo": {
-              "$ref": "#/definitions/repoSetup"
+              "$ref": "#/definitions/repoInfo"
             }
           }
         }

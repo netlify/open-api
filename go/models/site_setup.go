@@ -19,7 +19,7 @@ type SiteSetup struct {
 	Site
 
 	// repo
-	Repo *RepoSetup `json:"repo,omitempty"`
+	Repo *RepoInfo `json:"repo,omitempty"`
 }
 
 // UnmarshalJSON unmarshals this object from a JSON structure
@@ -32,7 +32,7 @@ func (m *SiteSetup) UnmarshalJSON(raw []byte) error {
 	m.Site = aO0
 
 	var data struct {
-		Repo *RepoSetup `json:"repo,omitempty"`
+		Repo *RepoInfo `json:"repo,omitempty"`
 	}
 	if err := swag.ReadJSON(raw, &data); err != nil {
 		return err
@@ -54,7 +54,7 @@ func (m SiteSetup) MarshalJSON() ([]byte, error) {
 	_parts = append(_parts, aO0)
 
 	var data struct {
-		Repo *RepoSetup `json:"repo,omitempty"`
+		Repo *RepoInfo `json:"repo,omitempty"`
 	}
 
 	data.Repo = m.Repo
