@@ -462,6 +462,91 @@ paths:
           description: error
           schema:
             $ref: "#/definitions/error"
+  /sites/{site_id}/build_hooks:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+    get:
+      operationId: listSiteBuildHooks
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/buildHook"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+    post:
+      operationId: createSiteBuildHook
+      consumes:
+        - application/json
+      parameters:
+        - name: buildHook
+          in: body
+          schema:
+            $ref: "#/definitions/buildHook"
+          required: true
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: "#/definitions/snippet"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+  /sites/{site_id}/build_hooks/{id}:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+      - name: id
+        type: string
+        in: path
+        required: true
+    get:
+      operationId: getSiteBuildHook
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: "#/definitions/buildHook"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+    put:
+      operationId: updateSiteBuildHook
+      consumes:
+        - application/json
+      parameters:
+        - name: buildHook
+          in: body
+          schema:
+            $ref: "#/definitions/buildHook"
+          required: true
+      responses:
+        '204':
+          description: No content
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+    delete:
+      operationId: deleteSiteBuildHook
+      responses:
+        '204':
+          description: No content
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
   /sites/{site_id}/deploys/{deploy_id}:
     get:
       operationId: getSiteDeploy
@@ -1864,6 +1949,22 @@ definitions:
           type: boolean
         minify:
           type: boolean
+    buildHook:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        branch:
+          type: string
+        url:
+          type: string
+        site_id:
+          type: string
+        created_at:
+          type: string
+          format: dateTime
     error:
       type: object
       required:

@@ -257,6 +257,35 @@ func (a *Client) CreateSiteAsset(params *CreateSiteAssetParams, authInfo runtime
 }
 
 /*
+CreateSiteBuildHook create site build hook API
+*/
+func (a *Client) CreateSiteBuildHook(params *CreateSiteBuildHookParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteBuildHookCreated, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewCreateSiteBuildHookParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "createSiteBuildHook",
+		Method:             "POST",
+		PathPattern:        "/sites/{site_id}/build_hooks",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &CreateSiteBuildHookReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*CreateSiteBuildHookCreated), nil
+
+}
+
+/*
 CreateSiteDeploy create site deploy API
 */
 func (a *Client) CreateSiteDeploy(params *CreateSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteDeployOK, error) {
@@ -456,6 +485,35 @@ func (a *Client) DeleteSiteAsset(params *DeleteSiteAssetParams, authInfo runtime
 		return nil, err
 	}
 	return result.(*DeleteSiteAssetNoContent), nil
+
+}
+
+/*
+DeleteSiteBuildHook delete site build hook API
+*/
+func (a *Client) DeleteSiteBuildHook(params *DeleteSiteBuildHookParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSiteBuildHookNoContent, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewDeleteSiteBuildHookParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "deleteSiteBuildHook",
+		Method:             "DELETE",
+		PathPattern:        "/sites/{site_id}/build_hooks/{id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &DeleteSiteBuildHookReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*DeleteSiteBuildHookNoContent), nil
 
 }
 
@@ -717,6 +775,35 @@ func (a *Client) GetSiteBuild(params *GetSiteBuildParams, authInfo runtime.Clien
 		return nil, err
 	}
 	return result.(*GetSiteBuildOK), nil
+
+}
+
+/*
+GetSiteBuildHook get site build hook API
+*/
+func (a *Client) GetSiteBuildHook(params *GetSiteBuildHookParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteBuildHookOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetSiteBuildHookParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "getSiteBuildHook",
+		Method:             "GET",
+		PathPattern:        "/sites/{site_id}/build_hooks/{id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &GetSiteBuildHookReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*GetSiteBuildHookOK), nil
 
 }
 
@@ -1152,6 +1239,35 @@ func (a *Client) ListSiteAssets(params *ListSiteAssetsParams, authInfo runtime.C
 		return nil, err
 	}
 	return result.(*ListSiteAssetsOK), nil
+
+}
+
+/*
+ListSiteBuildHooks list site build hooks API
+*/
+func (a *Client) ListSiteBuildHooks(params *ListSiteBuildHooksParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteBuildHooksOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewListSiteBuildHooksParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "listSiteBuildHooks",
+		Method:             "GET",
+		PathPattern:        "/sites/{site_id}/build_hooks",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &ListSiteBuildHooksReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*ListSiteBuildHooksOK), nil
 
 }
 
@@ -1645,6 +1761,35 @@ func (a *Client) UpdateSiteAsset(params *UpdateSiteAssetParams, authInfo runtime
 		return nil, err
 	}
 	return result.(*UpdateSiteAssetOK), nil
+
+}
+
+/*
+UpdateSiteBuildHook update site build hook API
+*/
+func (a *Client) UpdateSiteBuildHook(params *UpdateSiteBuildHookParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateSiteBuildHookNoContent, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewUpdateSiteBuildHookParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "updateSiteBuildHook",
+		Method:             "PUT",
+		PathPattern:        "/sites/{site_id}/build_hooks/{id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &UpdateSiteBuildHookReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*UpdateSiteBuildHookNoContent), nil
 
 }
 
