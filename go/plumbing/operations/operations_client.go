@@ -547,6 +547,35 @@ func (a *Client) DeleteSiteSnippet(params *DeleteSiteSnippetParams, authInfo run
 }
 
 /*
+EnableHook enable hook API
+*/
+func (a *Client) EnableHook(params *EnableHookParams, authInfo runtime.ClientAuthInfoWriter) (*EnableHookOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewEnableHookParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "enableHook",
+		Method:             "POST",
+		PathPattern:        "/hooks/{hook_id}/enable",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &EnableHookReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*EnableHookOK), nil
+
+}
+
+/*
 ExchangeTicket exchange ticket API
 */
 func (a *Client) ExchangeTicket(params *ExchangeTicketParams, authInfo runtime.ClientAuthInfoWriter) (*ExchangeTicketCreated, error) {
@@ -659,6 +688,35 @@ func (a *Client) GetDeployKey(params *GetDeployKeyParams, authInfo runtime.Clien
 		return nil, err
 	}
 	return result.(*GetDeployKeyOK), nil
+
+}
+
+/*
+GetHook get hook API
+*/
+func (a *Client) GetHook(params *GetHookParams, authInfo runtime.ClientAuthInfoWriter) (*GetHookOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetHookParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "getHook",
+		Method:             "GET",
+		PathPattern:        "/hooks/{hook_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &GetHookReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*GetHookOK), nil
 
 }
 
@@ -1703,6 +1761,35 @@ func (a *Client) UpdateAccount(params *UpdateAccountParams, authInfo runtime.Cli
 		return nil, err
 	}
 	return result.(*UpdateAccountOK), nil
+
+}
+
+/*
+UpdateHook update hook API
+*/
+func (a *Client) UpdateHook(params *UpdateHookParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateHookOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewUpdateHookParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "updateHook",
+		Method:             "PUT",
+		PathPattern:        "/hooks/{hook_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &UpdateHookReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*UpdateHookOK), nil
 
 }
 

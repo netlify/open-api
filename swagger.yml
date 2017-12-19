@@ -972,16 +972,61 @@ paths:
           schema:
             $ref: "#/definitions/error"
   /hooks/{hook_id}:
+    parameters:
+      - name: hook_id
+        type: string
+        in: path
+        required: true
+    get:
+      operationId: getHook
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: "#/definitions/hook"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+    put:
+      operationId: updateHook
+      parameters:
+        - name: hook
+          in: body
+          schema:
+            $ref: "#/definitions/hook"
+          required: true
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: "#/definitions/hook"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
     delete:
       operationId: deleteHookBySiteId
-      parameters:
-        - name: hook_id
-          type: string
-          in: path
-          required: true
       responses:
         '204':
           description: No content
+  /hooks/{hook_id}/enable:
+    parameters:
+      - name: hook_id
+        type: string
+        in: path
+        required: true
+    post:
+      operationId: enableHook
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: "#/definitions/hook"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
   /hooks/types:
     get:
       operationId: listHookTypes

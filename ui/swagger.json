@@ -655,22 +655,93 @@
       }
     },
     "/hooks/{hook_id}": {
-      "delete": {
-        "operationId": "deleteHookBySiteId",
+      "get": {
+        "operationId": "getHook",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/hook"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "updateHook",
         "parameters": [
           {
-            "type": "string",
-            "name": "hook_id",
-            "in": "path",
-            "required": true
+            "name": "hook",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/hook"
+            }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/hook"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteHookBySiteId",
         "responses": {
           "204": {
             "description": "No content"
           }
         }
-      }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "hook_id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/hooks/{hook_id}/enable": {
+      "post": {
+        "operationId": "enableHook",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/hook"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "hook_id",
+          "in": "path",
+          "required": true
+        }
+      ]
     },
     "/oauth/tickets": {
       "post": {
