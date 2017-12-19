@@ -1076,6 +1076,140 @@
         }
       ]
     },
+    "/sites/{site_id}/build_hooks": {
+      "get": {
+        "operationId": "listSiteBuildHooks",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/buildHook"
+              }
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "createSiteBuildHook",
+        "parameters": [
+          {
+            "name": "buildHook",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/buildHook"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/snippet"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "site_id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/sites/{site_id}/build_hooks/{id}": {
+      "get": {
+        "operationId": "getSiteBuildHook",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/buildHook"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "updateSiteBuildHook",
+        "parameters": [
+          {
+            "name": "buildHook",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/buildHook"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No content"
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteSiteBuildHook",
+        "responses": {
+          "204": {
+            "description": "No content"
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "site_id",
+          "in": "path",
+          "required": true
+        },
+        {
+          "type": "string",
+          "name": "id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
     "/sites/{site_id}/builds": {
       "get": {
         "operationId": "listSiteBuilds",
@@ -2127,6 +2261,30 @@
           "type": "string"
         },
         "sha": {
+          "type": "string"
+        }
+      }
+    },
+    "buildHook": {
+      "type": "object",
+      "properties": {
+        "branch": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "dateTime"
+        },
+        "id": {
+          "type": "string"
+        },
+        "site_id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "url": {
           "type": "string"
         }
       }
