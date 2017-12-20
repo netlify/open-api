@@ -44,11 +44,11 @@ type RepoInfo struct {
 	// public repo
 	PublicRepo bool `json:"public_repo,omitempty"`
 
-	// repo
-	Repo string `json:"repo,omitempty"`
-
 	// repo branch
 	RepoBranch string `json:"repo_branch,omitempty"`
+
+	// repo path
+	RepoPath string `json:"repo_path,omitempty"`
 
 	// repo url
 	RepoURL string `json:"repo_url,omitempty"`
@@ -72,9 +72,9 @@ type RepoInfo struct {
 
 /* polymorph repoInfo public_repo false */
 
-/* polymorph repoInfo repo false */
-
 /* polymorph repoInfo repo_branch false */
+
+/* polymorph repoInfo repo_path false */
 
 /* polymorph repoInfo repo_url false */
 

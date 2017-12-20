@@ -2788,10 +2788,10 @@
         "public_repo": {
           "type": "boolean"
         },
-        "repo": {
+        "repo_branch": {
           "type": "string"
         },
-        "repo_branch": {
+        "repo_path": {
           "type": "string"
         },
         "repo_url": {

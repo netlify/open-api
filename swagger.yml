@@ -1422,7 +1422,7 @@ definitions:
           type: string
         deploy_key_id:
           type: string
-        repo:
+        repo_path:
           type: string
         repo_branch:
           type: string
