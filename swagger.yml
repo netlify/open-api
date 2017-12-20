@@ -495,7 +495,7 @@ paths:
         '201':
           description: Created
           schema:
-            $ref: "#/definitions/snippet"
+            $ref: "#/definitions/buildHook"
         default:
           description: error
           schema:
