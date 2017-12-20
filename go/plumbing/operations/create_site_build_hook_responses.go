@@ -54,7 +54,7 @@ func NewCreateSiteBuildHookCreated() *CreateSiteBuildHookCreated {
 Created
 */
 type CreateSiteBuildHookCreated struct {
-	Payload *models.Snippet
+	Payload *models.BuildHook
 }
 
 func (o *CreateSiteBuildHookCreated) Error() string {
@@ -63,7 +63,7 @@ func (o *CreateSiteBuildHookCreated) Error() string {
 
 func (o *CreateSiteBuildHookCreated) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Snippet)
+	o.Payload = new(models.BuildHook)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
