@@ -44,29 +44,33 @@ func (t *RetryableTransport) Submit(op *runtime.ClientOperation) (interface{}, e
 
 	op.Client = client
 
-	return t.tr.Submit(op)
+	res, err := t.tr.Submit(op)
+
+	// restore original transport
+	op.Client.Transport = transport
+
+	return res, err
 }
 
-func (tr *retryableRoundTripper) RoundTrip(req *http.Request) (resp *http.Response, err error) {
+func (t *retryableRoundTripper) RoundTrip(req *http.Request) (resp *http.Response, err error) {
 	rr := autorest.NewRetriableRequest(req)
 
-	// Increment to add the first call (attempts denotes number of retries)
-	attempts := tr.attempts
-	attempts++
-	for attempt := 0; attempt < attempts; attempt++ {
+	for attempt := 0; attempt < t.attempts; attempt++ {
 		err = rr.Prepare()
 		if err != nil {
 			return resp, err
 		}
 
-		resp, err = tr.tr.RoundTrip(rr.Request())
+		resp, err = t.tr.RoundTrip(rr.Request())
 
 		if err != nil || resp.StatusCode != http.StatusTooManyRequests {
 			return resp, err
 		}
 
-		if !delayWithRateLimit(resp, req.Cancel) {
-			return resp, err
+		if attempt+1 < t.attempts { // ignore delay check in the last request attempt
+			if !delayWithRateLimit(resp, req.Cancel) {
+				return resp, err
+			}
 		}
 	}
 
