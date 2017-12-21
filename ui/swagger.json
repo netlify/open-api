@@ -30,10 +30,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -57,10 +54,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       }
@@ -79,10 +73,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       }
@@ -107,10 +98,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -121,10 +109,7 @@
             "description": "Not Content"
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -163,10 +148,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -193,10 +175,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       }
@@ -212,10 +191,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -236,10 +212,7 @@
             "description": "No content"
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -274,10 +247,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -294,10 +264,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       }
@@ -313,10 +280,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -327,10 +291,7 @@
             "description": "Not Content"
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -362,10 +323,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       }
@@ -407,10 +365,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       }
@@ -452,10 +407,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       }
@@ -479,10 +431,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       }
@@ -506,10 +455,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       }
@@ -528,10 +474,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       }
@@ -558,10 +501,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       }
@@ -588,10 +528,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -624,10 +561,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       }
@@ -646,10 +580,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       }
@@ -665,10 +596,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -692,10 +620,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -727,10 +652,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -762,10 +684,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       }
@@ -789,10 +708,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       }
@@ -816,10 +732,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       }
@@ -855,10 +768,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -890,10 +800,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       }
@@ -909,10 +816,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -923,10 +827,7 @@
             "description": "Deleted"
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -953,10 +854,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -983,10 +881,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -1026,10 +921,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -1053,10 +945,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -1078,10 +967,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -1092,10 +978,7 @@
             "description": "Deleted"
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -1125,10 +1008,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -1161,10 +1041,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -1191,10 +1068,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -1218,10 +1092,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -1245,10 +1116,7 @@
             "description": "No content"
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -1259,10 +1127,7 @@
             "description": "No content"
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -1295,10 +1160,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -1325,10 +1187,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -1357,10 +1216,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -1398,10 +1254,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -1437,10 +1290,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       }
@@ -1470,10 +1320,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       }
@@ -1492,10 +1339,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -1512,10 +1356,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -1550,10 +1391,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       }
@@ -1583,10 +1421,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       }
@@ -1613,10 +1448,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       }
@@ -1632,10 +1464,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -1656,10 +1485,7 @@
             "description": "No content"
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -1686,10 +1512,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -1716,10 +1539,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -1743,10 +1563,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -1770,10 +1587,7 @@
             "description": "No content"
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -1784,10 +1598,7 @@
             "description": "No content"
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -1825,10 +1636,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -1865,10 +1673,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       }
@@ -1895,10 +1700,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       }
@@ -1917,10 +1719,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -1955,10 +1754,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       },
@@ -1998,10 +1794,7 @@
             }
           },
           "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
+            "$ref": "#/responses/error"
           }
         }
       }
@@ -3049,6 +2842,14 @@
         "id": {
           "type": "string"
         }
+      }
+    }
+  },
+  "responses": {
+    "error": {
+      "description": "error",
+      "schema": {
+        "$ref": "#/definitions/error"
       }
     }
   },

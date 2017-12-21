@@ -48,3 +48,7 @@
 [[constraint]]
   name = "github.com/sirupsen/logrus"
   version = "1.0.3"
+
+[[constraint]]
+  name = "github.com/Azure/go-autorest"
+  version = "v9.6.0"
