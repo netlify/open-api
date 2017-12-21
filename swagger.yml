@@ -15,6 +15,11 @@ produces:
   - application/json
 schemes:
   - https
+responses:
+  error:
+    description: error
+    schema:
+      $ref: "#/definitions/error"
 host: api.netlify.com
 basePath: /api/v1
 paths:
@@ -37,9 +42,7 @@ paths:
             items:
               $ref: "#/definitions/site"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
     post:
       operationId: createSite
       consumes:
@@ -60,9 +63,7 @@ paths:
           schema:
             $ref: "#/definitions/site"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /sites/{site_id}:
     parameters:
       - name: site_id
@@ -77,9 +78,7 @@ paths:
           schema:
             $ref: "#/definitions/site"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
     patch:
       operationId: updateSite
       consumes:
@@ -96,18 +95,14 @@ paths:
           schema:
             $ref: "#/definitions/site"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
     delete:
       operationId: deleteSite
       responses:
         '204':
           description: Deleted
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /sites/{site_id}/ssl:
     post:
       operationId: provisionSiteTLSCertificate
@@ -134,9 +129,7 @@ paths:
           schema:
             $ref: "#/definitions/sniCertificate"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
     get:
       operationId: showSiteTLSCertificate
       parameters:
@@ -150,9 +143,7 @@ paths:
           schema:
             $ref: "#/definitions/sniCertificate"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /sites/{site_id}/forms:
     get:
       operationId: listSiteForms
@@ -169,9 +160,7 @@ paths:
             items:
               $ref: "#/definitions/form"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /sites/{site_id}/submissions:
     get:
       operationId: listSiteSubmissions
@@ -188,9 +177,7 @@ paths:
             items:
               $ref: "#/definitions/submission"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /sites/{site_id}/files:
     get:
       operationId: listSiteFiles
@@ -207,9 +194,7 @@ paths:
             items:
               $ref: "#/definitions/file"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /sites/{site_id}/assets:
     parameters:
       - name: site_id
@@ -226,9 +211,7 @@ paths:
             items:
               $ref: "#/definitions/asset"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
     post:
       operationId: createSiteAsset
       parameters:
@@ -254,9 +237,7 @@ paths:
           schema:
             $ref: "#/definitions/assetSignature"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /sites/{site_id}/assets/{asset_id}:
     parameters:
       - name: site_id
@@ -275,9 +256,7 @@ paths:
           schema:
             $ref: "#/definitions/asset"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
     put:
       operationId: updateSiteAsset
       parameters:
@@ -291,18 +270,14 @@ paths:
           schema:
             $ref: "#/definitions/asset"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
     delete:
       operationId: deleteSiteAsset
       responses:
         '204':
           description: Deleted
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /sites/{site_id}/assets/{asset_id}/public_signature:
     parameters:
       - name: site_id
@@ -321,9 +296,7 @@ paths:
           schema:
             $ref: "#/definitions/assetPublicSignature"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /sites/{site_id}/files/{file_path}:
     get:
       operationId: getSiteFileByPathName
@@ -342,9 +315,7 @@ paths:
           schema:
             $ref: "#/definitions/file"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /sites/{site_id}/snippets:
     parameters:
       - name: site_id
@@ -361,9 +332,7 @@ paths:
             items:
               $ref: "#/definitions/snippet"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
     post:
       operationId: createSiteSnippet
       consumes:
@@ -380,9 +349,7 @@ paths:
           schema:
             $ref: "#/definitions/snippet"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /sites/{site_id}/snippets/{snippet_id}:
     parameters:
       - name: site_id
@@ -401,9 +368,7 @@ paths:
           schema:
             $ref: "#/definitions/snippet"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
     put:
       operationId: updateSiteSnippet
       consumes:
@@ -418,18 +383,14 @@ paths:
         '204':
           description: No content
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
     delete:
       operationId: deleteSiteSnippet
       responses:
         '204':
           description: No content
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /sites/{site_id}/metadata:
     parameters:
       - name: site_id
@@ -444,9 +405,7 @@ paths:
           schema:
             $ref: "#/definitions/metadata"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
     put:
       operationId: updateSiteMetadata
       parameters:
@@ -459,9 +418,7 @@ paths:
         '204':
           description: No content
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /sites/{site_id}/build_hooks:
     parameters:
       - name: site_id
@@ -478,9 +435,7 @@ paths:
             items:
               $ref: "#/definitions/buildHook"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
     post:
       operationId: createSiteBuildHook
       consumes:
@@ -497,9 +452,7 @@ paths:
           schema:
             $ref: "#/definitions/buildHook"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /sites/{site_id}/build_hooks/{id}:
     parameters:
       - name: site_id
@@ -518,9 +471,7 @@ paths:
           schema:
             $ref: "#/definitions/buildHook"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
     put:
       operationId: updateSiteBuildHook
       consumes:
@@ -535,18 +486,14 @@ paths:
         '204':
           description: No content
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
     delete:
       operationId: deleteSiteBuildHook
       responses:
         '204':
           description: No content
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /sites/{site_id}/deploys/{deploy_id}:
     get:
       operationId: getSiteDeploy
@@ -565,9 +512,7 @@ paths:
           schema:
             $ref: "#/definitions/deploy"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
     put:
       operationId: updateSiteDeploy
       parameters:
@@ -590,9 +535,7 @@ paths:
           schema:
             $ref: "#/definitions/deploy"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /sites/{site_id}/deploys:
     parameters:
       - name: site_id
@@ -609,9 +552,7 @@ paths:
             items:
               $ref: "#/definitions/deploy"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
     post:
       operationId: createSiteDeploy
       parameters:
@@ -629,9 +570,7 @@ paths:
           schema:
             $ref: "#/definitions/deploy"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /sites/{site_id}/deploys/{deploy_id}:
     get:
       operationId: getSiteDeploy
@@ -650,9 +589,7 @@ paths:
           schema:
             $ref: "#/definitions/deploy"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
     put:
       operationId: updateSiteDeploy
       parameters:
@@ -675,9 +612,7 @@ paths:
           schema:
             $ref: "#/definitions/deploy"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /sites/{site_id}/deploys/{deploy_id}/restore:
     post:
       operationId: restoreSiteDeploy
@@ -696,9 +631,7 @@ paths:
           schema:
             $ref: "#/definitions/deploy"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /sites/{site_id}/builds:
     parameters:
       - name: site_id
@@ -715,9 +648,7 @@ paths:
             items:
               $ref: "#/definitions/build"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /builds/{build_id}:
     parameters:
       - name: build_id
@@ -732,9 +663,7 @@ paths:
           schema:
             $ref: "#/definitions/build"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /builds/{build_id}/log:
     parameters:
       - name: build_id
@@ -752,9 +681,7 @@ paths:
         '204':
           description: No content
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /sites/{site_id}/dns:
     parameters:
       - name: site_id
@@ -771,9 +698,7 @@ paths:
             items:
               $ref: "#/definitions/dnsZone"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
     put:
       operationId: configureDNSForSite
       responses:
@@ -784,9 +709,7 @@ paths:
             items:
               $ref: "#/definitions/dnsZone"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /deploys/{deploy_id}:
     get:
       operationId: getDeploy
@@ -801,9 +724,7 @@ paths:
           schema:
             $ref: "#/definitions/deploy"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /deploys/{deploy_id}/lock:
     post:
       operationId: lockDeploy
@@ -818,9 +739,7 @@ paths:
           schema:
             $ref: "#/definitions/deploy"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /deploys/{deploy_id}/unlock:
     post:
       operationId: unlockDeploy
@@ -835,9 +754,7 @@ paths:
           schema:
             $ref: "#/definitions/deploy"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /deploys/{deploy_id}/files/{path}:
     put:
       operationId: uploadDeployFile
@@ -864,9 +781,7 @@ paths:
           schema:
             $ref: "#/definitions/file"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /deploys/{deploy_id}/functions/{name}:
     put:
       operationId: uploadDeployFunction
@@ -893,9 +808,7 @@ paths:
           schema:
             $ref: "#/definitions/function"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /forms:
     get:
       operationId: listForms
@@ -907,9 +820,7 @@ paths:
             items:
               $ref: "#/definitions/form"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /forms/{form_id}/submissions:
     get:
       operationId: listFormSubmissions
@@ -926,9 +837,7 @@ paths:
             items:
               $ref: "#/definitions/submission"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /hooks:
     get:
       operationId: listHooksBySiteId
@@ -945,9 +854,7 @@ paths:
             items:
               $ref: "#/definitions/hook"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
     post:
       operationId: createHookBySiteId
       consumes:
@@ -968,9 +875,7 @@ paths:
           schema:
             $ref: "#/definitions/hook"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /hooks/{hook_id}:
     parameters:
       - name: hook_id
@@ -985,9 +890,7 @@ paths:
           schema:
             $ref: "#/definitions/hook"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
     put:
       operationId: updateHook
       parameters:
@@ -1002,9 +905,7 @@ paths:
           schema:
             $ref: "#/definitions/hook"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
     delete:
       operationId: deleteHookBySiteId
       responses:
@@ -1024,9 +925,7 @@ paths:
           schema:
             $ref: "#/definitions/hook"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /hooks/types:
     get:
       operationId: listHookTypes
@@ -1038,9 +937,7 @@ paths:
             items:
               $ref: "#/definitions/hookType"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /oauth/tickets:
     post:
       operationId: createTicket
@@ -1055,9 +952,7 @@ paths:
           schema:
             $ref: "#/definitions/ticket"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /oauth/tickets/{ticket_id}:
     get:
       operationId: showTicket
@@ -1072,9 +967,7 @@ paths:
           schema:
             $ref: "#/definitions/ticket"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /oauth/tickets/{ticket_id}/exchange:
     post:
       operationId: exchangeTicket
@@ -1089,9 +982,7 @@ paths:
           schema:
             $ref: "#/definitions/accessToken"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /deploy_keys:
     get:
       operationId: listDeployKeys
@@ -1103,9 +994,7 @@ paths:
             items:
               $ref: "#/definitions/deployKey"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
     post:
       operationId: createDeployKey
       consumes:
@@ -1116,9 +1005,7 @@ paths:
           schema:
             $ref: "#/definitions/deployKey"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /deploy_keys/{key_id}:
     parameters:
       - name: key_id
@@ -1133,18 +1020,14 @@ paths:
           schema:
             $ref: "#/definitions/deployKey"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
     delete:
       operationId: deleteDeployKey
       responses:
         '204':
           description: Not Content
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /{account_slug}/sites:
     get:
       operationId: listSitesForAccount # an account represents a team or a user
@@ -1164,9 +1047,7 @@ paths:
             items:
               $ref: "#/definitions/site"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /{account_slug}/members:
     parameters:
       - name: account_slug
@@ -1183,9 +1064,7 @@ paths:
             items:
               $ref: "#/definitions/member"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
     post:
       operationId: addMemberToAccount # an account represents a team or a user
       parameters:
@@ -1205,9 +1084,7 @@ paths:
             items:
               $ref: "#/definitions/member"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /billing/payment_methods:
     get:
       operationId: listPaymentMethodsForUser
@@ -1219,9 +1096,7 @@ paths:
             items:
               $ref: "#/definitions/paymentMethod"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /accounts/types:
     get:
       operationId: listAccountTypesForUser
@@ -1233,9 +1108,7 @@ paths:
             items:
               $ref: "#/definitions/accountType"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /accounts:
     get:
       operationId: listAccountsForUser
@@ -1247,9 +1120,7 @@ paths:
             items:
               $ref: "#/definitions/accountMembership"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
     post:
       operationId: createAccount
       parameters:
@@ -1264,9 +1135,7 @@ paths:
           schema:
             $ref: "#/definitions/accountMembership"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /accounts/{account_id}:
     parameters:
       - name: account_id
@@ -1286,18 +1155,14 @@ paths:
           schema:
             $ref: "#/definitions/accountMembership"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
     delete:
       operationId: cancelAccount
       responses:
         '204':
           description: Not Content
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
   /accounts/{account_id}/audit:
     parameters:
       - name: account_id
@@ -1321,9 +1186,7 @@ paths:
             items:
               $ref: "#/definitions/auditLog"
         default:
-          description: error
-          schema:
-            $ref: "#/definitions/error"
+          $ref: "#/responses/error"
 definitions:
     site:
       type: object

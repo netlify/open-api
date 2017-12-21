@@ -48,3 +48,11 @@
 [[constraint]]
   name = "github.com/sirupsen/logrus"
   version = "1.0.3"
+
+[[constraint]]
+  name = "github.com/Azure/go-autorest"
+  version = "v9.6.0"
+
+[[constraint]]
+  name = "github.com/stretchr/testify"
+  version = "v1.1.4"
