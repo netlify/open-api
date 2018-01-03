@@ -1173,6 +1173,33 @@
         }
       ]
     },
+    "/sites/{site_id}/deployed-branches": {
+      "get": {
+        "operationId": "listSiteDeployedBranches",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/deployedBranch"
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/responses/error"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "site_id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
     "/sites/{site_id}/deploys": {
       "get": {
         "operationId": "listSiteDeploys",
@@ -2290,6 +2317,29 @@
           "type": "string"
         },
         "public_key": {
+          "type": "string"
+        }
+      }
+    },
+    "deployedBranch": {
+      "type": "object",
+      "properties": {
+        "deploy_id": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "ssl_url": {
+          "type": "string"
+        },
+        "url": {
           "type": "string"
         }
       }

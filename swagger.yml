@@ -649,6 +649,23 @@ paths:
               $ref: "#/definitions/build"
         default:
           $ref: "#/responses/error"
+  /sites/{site_id}/deployed-branches:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+    get:
+      operationId: listSiteDeployedBranches
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/deployedBranch"
+        default:
+          $ref: "#/responses/error"
   /builds/{build_id}:
     parameters:
       - name: build_id
@@ -1868,6 +1885,21 @@ definitions:
         created_at:
           type: string
           format: dateTime
+    deployedBranch:
+      type: object
+      properties:
+        id:
+          type: string
+        deploy_id:
+          type: string
+        name:
+          type: string
+        slug:
+          type: string
+        url:
+          type: string
+        ssl_url:
+          type: string
     error:
       type: object
       required:

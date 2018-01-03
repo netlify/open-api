@@ -1359,6 +1359,35 @@ func (a *Client) ListSiteBuilds(params *ListSiteBuildsParams, authInfo runtime.C
 }
 
 /*
+ListSiteDeployedBranches list site deployed branches API
+*/
+func (a *Client) ListSiteDeployedBranches(params *ListSiteDeployedBranchesParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteDeployedBranchesOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewListSiteDeployedBranchesParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "listSiteDeployedBranches",
+		Method:             "GET",
+		PathPattern:        "/sites/{site_id}/deployed-branches",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &ListSiteDeployedBranchesReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*ListSiteDeployedBranchesOK), nil
+
+}
+
+/*
 ListSiteDeploys list site deploys API
 */
 func (a *Client) ListSiteDeploys(params *ListSiteDeploysParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteDeploysOK, error) {
