@@ -1,6 +1,8 @@
 package http
 
 import (
+	"crypto/tls"
+	"net"
 	"net/http"
 	"strconv"
 	"time"
@@ -8,6 +10,8 @@ import (
 	"github.com/Azure/go-autorest/autorest"
 	"github.com/go-openapi/runtime"
 )
+
+var DefaultTransport = httpTransport()
 
 type RetryableTransport struct {
 	tr       runtime.ClientTransport
@@ -35,7 +39,7 @@ func (t *RetryableTransport) Submit(op *runtime.ClientOperation) (interface{}, e
 
 	transport := client.Transport
 	if transport == nil {
-		transport = http.DefaultTransport
+		transport = DefaultTransport
 	}
 	client.Transport = &retryableRoundTripper{
 		tr:       transport,
@@ -93,5 +97,24 @@ func delayWithRateLimit(resp *http.Response, cancel <-chan struct{}) bool {
 		return true
 	case <-cancel:
 		return false
+	}
+}
+
+func httpTransport() *http.Transport {
+	protoUpgrade := map[string]func(string, *tls.Conn) http.RoundTripper{
+		"ignore-h2": func(string, *tls.Conn) http.RoundTripper { return nil },
+	}
+
+	return &http.Transport{
+		Proxy: http.ProxyFromEnvironment,
+		DialContext: (&net.Dialer{
+			Timeout:   30 * time.Second,
+			KeepAlive: 30 * time.Second,
+		}).DialContext,
+		MaxIdleConns:          100,
+		IdleConnTimeout:       90 * time.Second,
+		TLSHandshakeTimeout:   10 * time.Second,
+		ExpectContinueTimeout: 1 * time.Second,
+		TLSNextProto:          protoUpgrade,
 	}
 }
