@@ -25,10 +25,10 @@ func TestRetryableTransport(t *testing.T) {
 			reset := fmt.Sprintf("%d", time.Now().Add(1*time.Second).Unix())
 			rw.Header().Set("X-RateLimit-Reset", reset)
 			rw.WriteHeader(http.StatusTooManyRequests)
-			_, _ = rw.Write([]byte("rate limited"))
+			rw.Write([]byte("rate limited"))
 		} else {
 			rw.WriteHeader(http.StatusOK)
-			_, _ = rw.Write([]byte("ok"))
+			rw.Write([]byte("ok"))
 		}
 	}))
 	defer server.Close()
@@ -72,7 +72,7 @@ func TestRetryableTransportExceedsMaxAttempts(t *testing.T) {
 		reset := fmt.Sprintf("%d", time.Now().Add(1*time.Second).Unix())
 		rw.Header().Set("X-RateLimit-Reset", reset)
 		rw.WriteHeader(http.StatusTooManyRequests)
-		_, _ = rw.Write([]byte("rate limited"))
+		rw.Write([]byte("rate limited"))
 	}))
 	defer server.Close()
 
@@ -111,7 +111,7 @@ func TestRetryableWithDifferentError(t *testing.T) {
 		attempts++
 
 		rw.WriteHeader(http.StatusNotFound)
-		_, _ = rw.Write([]byte("not found"))
+		rw.Write([]byte("not found"))
 	}))
 	defer server.Close()
 
@@ -141,4 +141,40 @@ func TestRetryableWithDifferentError(t *testing.T) {
 
 	require.Error(t, err)
 	require.Equal(t, 1, attempts)
+}
+
+func TestRetryableTransport_POST(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		rw.WriteHeader(http.StatusCreated)
+		rw.Write([]byte("test result"))
+	}))
+	defer server.Close()
+
+	rwrtr := runtime.ClientRequestWriterFunc(func(req runtime.ClientRequest, _ strfmt.Registry) error {
+		return req.SetBodyParam("test result")
+	})
+
+	hu, _ := url.Parse(server.URL)
+	rt := NewRetryableTransport(httptransport.New(hu.Host, "/", []string{"http"}), 2)
+
+	result, err := rt.Submit(&runtime.ClientOperation{
+		ID:          "createSite",
+		Method:      "POST",
+		PathPattern: "/",
+		Params:      rwrtr,
+		Reader: runtime.ClientResponseReaderFunc(func(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
+			if response.Code() == 201 {
+				var result string
+				if err := consumer.Consume(response.Body(), &result); err != nil {
+					return nil, err
+				}
+				return result, nil
+			}
+			return nil, errors.New("Generic error")
+		}),
+	})
+
+	require.NoError(t, err)
+	actual := result.(string)
+	require.EqualValues(t, "test result", actual)
 }
