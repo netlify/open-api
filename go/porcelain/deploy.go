@@ -387,7 +387,8 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 
 		switch t {
 		case fileUpload:
-			body, operationError := os.Open(f.Path)
+			var body io.ReadCloser
+			body, operationError = os.Open(f.Path)
 			if operationError == nil {
 				defer body.Close()
 				params := operations.NewUploadDeployFileParams().WithDeployID(d.ID).WithPath(f.Name).WithFileBody(body)
