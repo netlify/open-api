@@ -7,7 +7,6 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
-	"hash"
 	"io"
 	"io/ioutil"
 	"os"
@@ -78,37 +77,23 @@ type uploadError struct {
 
 type FileBundle struct {
 	Name string
-	SHA  hash.Hash
+	Sum  string
 
+	// Path OR Buffer should be populated
+	Path   string
 	Buffer io.ReadSeeker
-}
-
-func (f *FileBundle) Sum() string {
-	return hex.EncodeToString(f.SHA.Sum(nil))
 }
 
 func (f *FileBundle) Read(p []byte) (n int, err error) {
 	return f.Buffer.Read(p)
 }
 
+func (f *FileBundle) Seek(offset int64, whence int) (int64, error) {
+	return f.Buffer.Seek(offset, whence)
+}
+
 func (f *FileBundle) Close() error {
 	return nil
-}
-
-// We're mocking up a closer, to make sure the underlying file handle
-// doesn't get closed during an upload, but can be rewinded for retries
-// This method closes the file handle for real.
-func (f *FileBundle) CloseForReal() error {
-	closer, ok := f.Buffer.(io.Closer)
-	if ok {
-		return closer.Close()
-	}
-	return nil
-}
-
-func (f *FileBundle) Rewind() error {
-	_, err := f.Buffer.Seek(0, 0)
-	return err
 }
 
 type deployFiles struct {
@@ -126,12 +111,10 @@ func newDeployFiles() *deployFiles {
 }
 
 func (d *deployFiles) Add(p string, f *FileBundle) {
-	sum := f.Sum()
-
 	d.Files[p] = f
-	d.Sums[p] = sum
-	list, _ := d.Hashed[sum]
-	d.Hashed[sum] = append(list, f)
+	d.Sums[p] = f.Sum
+	list, _ := d.Hashed[f.Sum]
+	d.Hashed[f.Sum] = append(list, f)
 }
 
 func (n *Netlify) overCommitted(d *deployFiles) bool {
@@ -374,7 +357,7 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 	context.GetLogger(ctx).WithFields(logrus.Fields{
 		"deploy_id": d.ID,
 		"file_path": f.Name,
-		"file_sum":  f.Sum(),
+		"file_sum":  f.Sum,
 	}).Debug("Uploading file")
 
 	b := backoff.NewExponentialBackOff()
@@ -404,21 +387,28 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 
 		switch t {
 		case fileUpload:
-			params := operations.NewUploadDeployFileParams().WithDeployID(d.ID).WithPath(f.Name).WithFileBody(f)
-			if timeout != 0 {
-				params.SetTimeout(timeout)
+			var body io.ReadCloser
+			body, operationError = os.Open(f.Path)
+			if operationError == nil {
+				defer body.Close()
+				params := operations.NewUploadDeployFileParams().WithDeployID(d.ID).WithPath(f.Name).WithFileBody(body)
+				if timeout != 0 {
+					params.SetTimeout(timeout)
+				}
+				_, operationError = n.Operations.UploadDeployFile(params, authInfo)
 			}
-			_, operationError = n.Operations.UploadDeployFile(params, authInfo)
 		case functionUpload:
 			params := operations.NewUploadDeployFunctionParams().WithDeployID(d.ID).WithName(f.Name).WithFileBody(f)
 			if timeout != 0 {
 				params.SetTimeout(timeout)
 			}
 			_, operationError = n.Operations.UploadDeployFunction(params, authInfo)
+			if operationError != nil {
+				f.Buffer.Seek(0, 0)
+			}
 		}
 
 		if operationError != nil {
-			f.Rewind()
 			context.GetLogger(ctx).WithError(operationError).Errorf("Failed to upload file %v", f.Name)
 			apiErr, ok := operationError.(errors.Error)
 
@@ -427,10 +417,7 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 				sharedErr.err = operationError
 				sharedErr.mutex.Unlock()
 			}
-		} else {
-			f.CloseForReal()
 		}
-
 		return operationError
 	}, b)
 
@@ -475,18 +462,19 @@ func walk(dir string, observer DeployObserver) (*deployFiles, error) {
 			if err != nil {
 				return err
 			}
+			defer o.Close()
 
 			file := &FileBundle{
 				Name: rel,
-				SHA:  sha1.New(),
+				Path: path,
 			}
 
-			if _, err := io.Copy(file.SHA, o); err != nil {
+			s := sha1.New()
+			if _, err := io.Copy(s, o); err != nil {
 				return err
 			}
+			file.Sum = hex.EncodeToString(s.Sum(nil))
 
-			o.Seek(0, 0)
-			file.Buffer = o
 			files.Add(rel, file)
 
 			if observer != nil {
@@ -517,9 +505,9 @@ func bundle(functionDir string, observer DeployObserver) (*deployFiles, error) {
 		case ".js":
 			file := &FileBundle{
 				Name: strings.TrimSuffix(i.Name(), filepath.Ext(i.Name())),
-				SHA:  sha256.New(),
 			}
 
+			s := sha256.New()
 			buf := new(bytes.Buffer)
 			archive := zip.NewWriter(buf)
 			fileHeader, err := archive.Create(i.Name())
@@ -530,6 +518,7 @@ func bundle(functionDir string, observer DeployObserver) (*deployFiles, error) {
 			if err != nil {
 				return nil, err
 			}
+			defer fileEntry.Close()
 			if _, err = io.Copy(fileHeader, fileEntry); err != nil {
 				return nil, err
 			}
@@ -539,13 +528,12 @@ func bundle(functionDir string, observer DeployObserver) (*deployFiles, error) {
 			}
 
 			fileBuffer := new(bytes.Buffer)
-			m := io.MultiWriter(file.SHA, fileBuffer)
+			m := io.MultiWriter(s, fileBuffer)
 
 			if _, err := io.Copy(m, buf); err != nil {
 				return nil, err
 			}
-
-			fileEntry.Seek(0, 0)
+			file.Sum = hex.EncodeToString(s.Sum(nil))
 			file.Buffer = bytes.NewReader(fileBuffer.Bytes())
 			functions.Add(file.Name, file)
 
