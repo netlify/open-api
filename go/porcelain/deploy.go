@@ -76,8 +76,9 @@ type uploadError struct {
 }
 
 type FileBundle struct {
-	Name string
-	Sum  string
+	Name    string
+	Sum     string
+	Runtime string
 
 	// Path OR Buffer should be populated
 	Path   string
@@ -501,40 +502,12 @@ func bundle(functionDir string, observer DeployObserver) (*deployFiles, error) {
 		return nil, err
 	}
 	for _, i := range info {
-		switch filepath.Ext(i.Name()) {
-		case ".js":
-			file := &FileBundle{
-				Name: strings.TrimSuffix(i.Name(), filepath.Ext(i.Name())),
-			}
-
-			s := sha256.New()
-			buf := new(bytes.Buffer)
-			archive := zip.NewWriter(buf)
-			fileHeader, err := archive.Create(i.Name())
+		switch {
+		case jsFile(i):
+			file, err := newFunctionFile(functionDir, i, "js")
 			if err != nil {
 				return nil, err
 			}
-			fileEntry, err := os.Open(filepath.Join(functionDir, i.Name()))
-			if err != nil {
-				return nil, err
-			}
-			defer fileEntry.Close()
-			if _, err = io.Copy(fileHeader, fileEntry); err != nil {
-				return nil, err
-			}
-
-			if err := archive.Close(); err != nil {
-				return nil, err
-			}
-
-			fileBuffer := new(bytes.Buffer)
-			m := io.MultiWriter(s, fileBuffer)
-
-			if _, err := io.Copy(m, buf); err != nil {
-				return nil, err
-			}
-			file.Sum = hex.EncodeToString(s.Sum(nil))
-			file.Buffer = bytes.NewReader(fileBuffer.Bytes())
 			functions.Add(file.Name, file)
 
 			if observer != nil {
@@ -542,12 +515,80 @@ func bundle(functionDir string, observer DeployObserver) (*deployFiles, error) {
 					return nil, err
 				}
 			}
-		default:
-			// Ignore this file
+		case goDir(i):
+			wkg := filepath.Join(functionDir, i.Name())
+			goInfo, err := ioutil.ReadDir(wkg)
+			if err != nil {
+				return nil, err
+			}
+
+			for _, gi := range goInfo {
+				if m := gi.Mode(); m&0111 != 0 {
+					{
+						file, err := newFunctionFile(wkg, gi, "go")
+						if err != nil {
+							return nil, err
+						}
+						functions.Add(file.Name, file)
+
+						if observer != nil {
+							if err := observer.OnSuccessfulStep(file); err != nil {
+								return nil, err
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 
 	return functions, nil
+}
+
+func newFunctionFile(dir string, i os.FileInfo, tp string) (*FileBundle, error) {
+	file := &FileBundle{
+		Name:    strings.TrimSuffix(i.Name(), filepath.Ext(i.Name())),
+		Runtime: tp,
+	}
+
+	s := sha256.New()
+	buf := new(bytes.Buffer)
+	archive := zip.NewWriter(buf)
+	fileHeader, err := archive.Create(i.Name())
+	if err != nil {
+		return nil, err
+	}
+	fileEntry, err := os.Open(filepath.Join(dir, i.Name()))
+	if err != nil {
+		return nil, err
+	}
+	defer fileEntry.Close()
+	if _, err = io.Copy(fileHeader, fileEntry); err != nil {
+		return nil, err
+	}
+
+	if err := archive.Close(); err != nil {
+		return nil, err
+	}
+
+	fileBuffer := new(bytes.Buffer)
+	m := io.MultiWriter(s, fileBuffer)
+
+	if _, err := io.Copy(m, buf); err != nil {
+		return nil, err
+	}
+	file.Sum = hex.EncodeToString(s.Sum(nil))
+	file.Buffer = bytes.NewReader(fileBuffer.Bytes())
+
+	return file, nil
+}
+
+func jsFile(i os.FileInfo) bool {
+	return filepath.Ext(i.Name()) == ".js"
+}
+
+func goDir(i os.FileInfo) bool {
+	return i.IsDir() && i.Name() == "well-known-go"
 }
 
 func ignoreFile(rel string) bool {
