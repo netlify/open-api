@@ -29,6 +29,8 @@ import (
 
 const (
 	preProcessingTimeout = time.Minute * 5
+	jsRuntime            = "js"
+	goRuntime            = "go"
 )
 
 type uploadType int
@@ -509,13 +511,13 @@ func bundle(functionDir string, observer DeployObserver) (*deployFiles, error) {
 
 		switch {
 		case jsFile(i):
-			file, err := newFunctionFile(filePath, i, "js")
+			file, err := newFunctionFile(filePath, i, jsRuntime, observer)
 			if err != nil {
 				return nil, err
 			}
 			functions.Add(file.Name, file)
 		case goFile(filePath, i):
-			file, err := newFunctionFile(filePath, i, "go")
+			file, err := newFunctionFile(filePath, i, goRuntime, observer)
 			if err != nil {
 				return nil, err
 			}
