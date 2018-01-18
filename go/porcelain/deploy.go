@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"crypto/sha1"
 	"crypto/sha256"
+	"debug/elf"
 	"encoding/hex"
 	"fmt"
 	"io"
@@ -23,6 +24,7 @@ import (
 	"github.com/netlify/open-api/go/porcelain/context"
 
 	"github.com/go-openapi/errors"
+	"github.com/rsc/goversion/version"
 )
 
 const (
@@ -501,51 +503,30 @@ func bundle(functionDir string, observer DeployObserver) (*deployFiles, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	for _, i := range info {
+		filePath := filepath.Join(functionDir, i.Name())
+
 		switch {
 		case jsFile(i):
-			file, err := newFunctionFile(functionDir, i, "js")
+			file, err := newFunctionFile(filePath, i, "js")
 			if err != nil {
 				return nil, err
 			}
 			functions.Add(file.Name, file)
-
-			if observer != nil {
-				if err := observer.OnSuccessfulStep(file); err != nil {
-					return nil, err
-				}
-			}
-		case goDir(i):
-			wkg := filepath.Join(functionDir, i.Name())
-			goInfo, err := ioutil.ReadDir(wkg)
+		case goFile(filePath, i):
+			file, err := newFunctionFile(filePath, i, "go")
 			if err != nil {
 				return nil, err
 			}
-
-			for _, gi := range goInfo {
-				if m := gi.Mode(); m&0111 != 0 {
-					{
-						file, err := newFunctionFile(wkg, gi, "go")
-						if err != nil {
-							return nil, err
-						}
-						functions.Add(file.Name, file)
-
-						if observer != nil {
-							if err := observer.OnSuccessfulStep(file); err != nil {
-								return nil, err
-							}
-						}
-					}
-				}
-			}
+			functions.Add(file.Name, file)
 		}
 	}
 
 	return functions, nil
 }
 
-func newFunctionFile(dir string, i os.FileInfo, tp string) (*FileBundle, error) {
+func newFunctionFile(filePath string, i os.FileInfo, tp string, observer DeployObserver) (*FileBundle, error) {
 	file := &FileBundle{
 		Name:    strings.TrimSuffix(i.Name(), filepath.Ext(i.Name())),
 		Runtime: tp,
@@ -558,7 +539,7 @@ func newFunctionFile(dir string, i os.FileInfo, tp string) (*FileBundle, error) 
 	if err != nil {
 		return nil, err
 	}
-	fileEntry, err := os.Open(filepath.Join(dir, i.Name()))
+	fileEntry, err := os.Open(filePath)
 	if err != nil {
 		return nil, err
 	}
@@ -580,6 +561,12 @@ func newFunctionFile(dir string, i os.FileInfo, tp string) (*FileBundle, error) 
 	file.Sum = hex.EncodeToString(s.Sum(nil))
 	file.Buffer = bytes.NewReader(fileBuffer.Bytes())
 
+	if observer != nil {
+		if err := observer.OnSuccessfulStep(file); err != nil {
+			return nil, err
+		}
+	}
+
 	return file, nil
 }
 
@@ -587,8 +574,17 @@ func jsFile(i os.FileInfo) bool {
 	return filepath.Ext(i.Name()) == ".js"
 }
 
-func goDir(i os.FileInfo) bool {
-	return i.IsDir() && i.Name() == "well-known-go"
+func goFile(filePath string, i os.FileInfo) bool {
+	if m := i.Mode(); m&0111 == 0 { // check if it's an executable file
+		return false
+	}
+
+	if _, err := elf.Open(filePath); err != nil { // check if it's a linux executable
+		return false
+	}
+
+	v, err := version.ReadExe(filePath)
+	return err == nil && strings.HasPrefix(v.Release, "1.")
 }
 
 func ignoreFile(rel string) bool {
