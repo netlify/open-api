@@ -586,7 +586,7 @@ func goFile(filePath string, i os.FileInfo) bool {
 	}
 
 	v, err := version.ReadExe(filePath)
-	return err == nil && strings.HasPrefix(v.Release, "1.")
+	return err == nil && strings.HasPrefix(v.Release, "go1.")
 }
 
 func ignoreFile(rel string) bool {
