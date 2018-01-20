@@ -69,6 +69,8 @@ type UploadDeployFunctionParams struct {
 	FileBody io.ReadCloser
 	/*Name*/
 	Name string
+	/*Runtime*/
+	Runtime *string
 
 	timeout    time.Duration
 	Context    context.Context
@@ -141,6 +143,17 @@ func (o *UploadDeployFunctionParams) SetName(name string) {
 	o.Name = name
 }
 
+// WithRuntime adds the runtime to the upload deploy function params
+func (o *UploadDeployFunctionParams) WithRuntime(runtime *string) *UploadDeployFunctionParams {
+	o.SetRuntime(runtime)
+	return o
+}
+
+// SetRuntime adds the runtime to the upload deploy function params
+func (o *UploadDeployFunctionParams) SetRuntime(runtime *string) {
+	o.Runtime = runtime
+}
+
 // WriteToRequest writes these params to a swagger request
 func (o *UploadDeployFunctionParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -161,6 +174,22 @@ func (o *UploadDeployFunctionParams) WriteToRequest(r runtime.ClientRequest, reg
 	// path param name
 	if err := r.SetPathParam("name", o.Name); err != nil {
 		return err
+	}
+
+	if o.Runtime != nil {
+
+		// query param runtime
+		var qrRuntime string
+		if o.Runtime != nil {
+			qrRuntime = *o.Runtime
+		}
+		qRuntime := qrRuntime
+		if qRuntime != "" {
+			if err := r.SetQueryParam("runtime", qRuntime); err != nil {
+				return err
+			}
+		}
+
 	}
 
 	if len(res) > 0 {

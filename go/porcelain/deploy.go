@@ -403,7 +403,7 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 				_, operationError = n.Operations.UploadDeployFile(params, authInfo)
 			}
 		case functionUpload:
-			params := operations.NewUploadDeployFunctionParams().WithDeployID(d.ID).WithName(f.Name).WithFileBody(f)
+			params := operations.NewUploadDeployFunctionParams().WithDeployID(d.ID).WithName(f.Name).WithFileBody(f).WithRuntime(&f.Runtime)
 			if timeout != 0 {
 				params.SetTimeout(timeout)
 			}
@@ -528,24 +528,28 @@ func bundle(functionDir string, observer DeployObserver) (*deployFiles, error) {
 	return functions, nil
 }
 
-func newFunctionFile(filePath string, i os.FileInfo, tp string, observer DeployObserver) (*FileBundle, error) {
+func newFunctionFile(filePath string, i os.FileInfo, runtime string, observer DeployObserver) (*FileBundle, error) {
 	file := &FileBundle{
 		Name:    strings.TrimSuffix(i.Name(), filepath.Ext(i.Name())),
-		Runtime: tp,
+		Runtime: runtime,
 	}
 
 	s := sha256.New()
-	buf := new(bytes.Buffer)
-	archive := zip.NewWriter(buf)
-	fileHeader, err := archive.Create(i.Name())
-	if err != nil {
-		return nil, err
-	}
+
 	fileEntry, err := os.Open(filePath)
 	if err != nil {
 		return nil, err
 	}
 	defer fileEntry.Close()
+
+	buf := new(bytes.Buffer)
+	archive := zip.NewWriter(buf)
+
+	fileHeader, err := createHeader(archive, i, runtime)
+	if err != nil {
+		return nil, err
+	}
+
 	if _, err = io.Copy(fileHeader, fileEntry); err != nil {
 		return nil, err
 	}
@@ -594,4 +598,16 @@ func ignoreFile(rel string) bool {
 		return !strings.HasPrefix(rel, ".well-known/")
 	}
 	return false
+}
+
+func createHeader(archive *zip.Writer, i os.FileInfo, runtime string) (io.Writer, error) {
+	if runtime == goRuntime {
+		return archive.CreateHeader(&zip.FileHeader{
+			CreatorVersion: 3 << 8,     // indicates Unix
+			ExternalAttrs:  0777 << 16, // -rwxrwxrwx file permissions
+			Name:           i.Name(),
+			Method:         zip.Deflate,
+		})
+	}
+	return archive.Create(i.Name())
 }
