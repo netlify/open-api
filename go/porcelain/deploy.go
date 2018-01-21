@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"crypto/sha1"
 	"crypto/sha256"
+	"debug/elf"
 	"encoding/hex"
 	"fmt"
 	"io"
@@ -23,10 +24,13 @@ import (
 	"github.com/netlify/open-api/go/porcelain/context"
 
 	"github.com/go-openapi/errors"
+	"github.com/rsc/goversion/version"
 )
 
 const (
 	preProcessingTimeout = time.Minute * 5
+	jsRuntime            = "js"
+	goRuntime            = "go"
 )
 
 type uploadType int
@@ -76,8 +80,9 @@ type uploadError struct {
 }
 
 type FileBundle struct {
-	Name string
-	Sum  string
+	Name    string
+	Sum     string
+	Runtime string
 
 	// Path OR Buffer should be populated
 	Path   string
@@ -398,7 +403,7 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 				_, operationError = n.Operations.UploadDeployFile(params, authInfo)
 			}
 		case functionUpload:
-			params := operations.NewUploadDeployFunctionParams().WithDeployID(d.ID).WithName(f.Name).WithFileBody(f)
+			params := operations.NewUploadDeployFunctionParams().WithDeployID(d.ID).WithName(f.Name).WithFileBody(f).WithRuntime(&f.Runtime)
 			if timeout != 0 {
 				params.SetTimeout(timeout)
 			}
@@ -500,54 +505,92 @@ func bundle(functionDir string, observer DeployObserver) (*deployFiles, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	for _, i := range info {
-		switch filepath.Ext(i.Name()) {
-		case ".js":
-			file := &FileBundle{
-				Name: strings.TrimSuffix(i.Name(), filepath.Ext(i.Name())),
-			}
+		filePath := filepath.Join(functionDir, i.Name())
 
-			s := sha256.New()
-			buf := new(bytes.Buffer)
-			archive := zip.NewWriter(buf)
-			fileHeader, err := archive.Create(i.Name())
+		switch {
+		case jsFile(i):
+			file, err := newFunctionFile(filePath, i, jsRuntime, observer)
 			if err != nil {
 				return nil, err
 			}
-			fileEntry, err := os.Open(filepath.Join(functionDir, i.Name()))
-			if err != nil {
-				return nil, err
-			}
-			defer fileEntry.Close()
-			if _, err = io.Copy(fileHeader, fileEntry); err != nil {
-				return nil, err
-			}
-
-			if err := archive.Close(); err != nil {
-				return nil, err
-			}
-
-			fileBuffer := new(bytes.Buffer)
-			m := io.MultiWriter(s, fileBuffer)
-
-			if _, err := io.Copy(m, buf); err != nil {
-				return nil, err
-			}
-			file.Sum = hex.EncodeToString(s.Sum(nil))
-			file.Buffer = bytes.NewReader(fileBuffer.Bytes())
 			functions.Add(file.Name, file)
-
-			if observer != nil {
-				if err := observer.OnSuccessfulStep(file); err != nil {
-					return nil, err
-				}
+		case goFile(filePath, i):
+			file, err := newFunctionFile(filePath, i, goRuntime, observer)
+			if err != nil {
+				return nil, err
 			}
-		default:
-			// Ignore this file
+			functions.Add(file.Name, file)
 		}
 	}
 
 	return functions, nil
+}
+
+func newFunctionFile(filePath string, i os.FileInfo, runtime string, observer DeployObserver) (*FileBundle, error) {
+	file := &FileBundle{
+		Name:    strings.TrimSuffix(i.Name(), filepath.Ext(i.Name())),
+		Runtime: runtime,
+	}
+
+	s := sha256.New()
+
+	fileEntry, err := os.Open(filePath)
+	if err != nil {
+		return nil, err
+	}
+	defer fileEntry.Close()
+
+	buf := new(bytes.Buffer)
+	archive := zip.NewWriter(buf)
+
+	fileHeader, err := createHeader(archive, i, runtime)
+	if err != nil {
+		return nil, err
+	}
+
+	if _, err = io.Copy(fileHeader, fileEntry); err != nil {
+		return nil, err
+	}
+
+	if err := archive.Close(); err != nil {
+		return nil, err
+	}
+
+	fileBuffer := new(bytes.Buffer)
+	m := io.MultiWriter(s, fileBuffer)
+
+	if _, err := io.Copy(m, buf); err != nil {
+		return nil, err
+	}
+	file.Sum = hex.EncodeToString(s.Sum(nil))
+	file.Buffer = bytes.NewReader(fileBuffer.Bytes())
+
+	if observer != nil {
+		if err := observer.OnSuccessfulStep(file); err != nil {
+			return nil, err
+		}
+	}
+
+	return file, nil
+}
+
+func jsFile(i os.FileInfo) bool {
+	return filepath.Ext(i.Name()) == ".js"
+}
+
+func goFile(filePath string, i os.FileInfo) bool {
+	if m := i.Mode(); m&0111 == 0 { // check if it's an executable file
+		return false
+	}
+
+	if _, err := elf.Open(filePath); err != nil { // check if it's a linux executable
+		return false
+	}
+
+	v, err := version.ReadExe(filePath)
+	return err == nil && strings.HasPrefix(v.Release, "go1.")
 }
 
 func ignoreFile(rel string) bool {
@@ -555,4 +598,16 @@ func ignoreFile(rel string) bool {
 		return !strings.HasPrefix(rel, ".well-known/")
 	}
 	return false
+}
+
+func createHeader(archive *zip.Writer, i os.FileInfo, runtime string) (io.Writer, error) {
+	if runtime == goRuntime {
+		return archive.CreateHeader(&zip.FileHeader{
+			CreatorVersion: 3 << 8,     // indicates Unix
+			ExternalAttrs:  0777 << 16, // -rwxrwxrwx file permissions
+			Name:           i.Name(),
+			Method:         zip.Deflate,
+		})
+	}
+	return archive.Create(i.Name())
 }

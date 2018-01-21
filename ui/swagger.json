@@ -390,6 +390,11 @@
             "required": true
           },
           {
+            "type": "string",
+            "name": "runtime",
+            "in": "query"
+          },
+          {
             "name": "file_body",
             "in": "body",
             "required": true,
