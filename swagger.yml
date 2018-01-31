@@ -699,6 +699,19 @@ paths:
           description: No content
         default:
           $ref: "#/responses/error"
+  /builds/{build_id}/start:
+    parameters:
+      - name: build_id
+        type: string
+        in: path
+        required: true
+    post:
+      operationId: notifyBuildStart
+      responses:
+        '204':
+          description: No content
+        default:
+          $ref: "#/responses/error"
   /sites/{site_id}/dns:
     parameters:
       - name: site_id

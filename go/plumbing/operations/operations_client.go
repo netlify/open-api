@@ -1620,6 +1620,35 @@ func (a *Client) LockDeploy(params *LockDeployParams, authInfo runtime.ClientAut
 }
 
 /*
+NotifyBuildStart notify build start API
+*/
+func (a *Client) NotifyBuildStart(params *NotifyBuildStartParams, authInfo runtime.ClientAuthInfoWriter) (*NotifyBuildStartNoContent, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewNotifyBuildStartParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "notifyBuildStart",
+		Method:             "POST",
+		PathPattern:        "/builds/{build_id}/start",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &NotifyBuildStartReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*NotifyBuildStartNoContent), nil
+
+}
+
+/*
 ProvisionSiteTLSCertificate provision site TLS certificate API
 */
 func (a *Client) ProvisionSiteTLSCertificate(params *ProvisionSiteTLSCertificateParams, authInfo runtime.ClientAuthInfoWriter) (*ProvisionSiteTLSCertificateOK, error) {

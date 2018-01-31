@@ -233,6 +233,27 @@
         }
       ]
     },
+    "/builds/{build_id}/start": {
+      "post": {
+        "operationId": "notifyBuildStart",
+        "responses": {
+          "204": {
+            "description": "No content"
+          },
+          "default": {
+            "$ref": "#/responses/error"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "build_id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
     "/deploy_keys": {
       "get": {
         "operationId": "listDeployKeys",
