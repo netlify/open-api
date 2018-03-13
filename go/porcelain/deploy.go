@@ -28,9 +28,8 @@ import (
 )
 
 const (
-	preProcessingTimeout = time.Minute * 5
-	jsRuntime            = "js"
-	goRuntime            = "go"
+	jsRuntime = "js"
+	goRuntime = "go"
 )
 
 type uploadType int
@@ -296,7 +295,7 @@ func (n *Netlify) WaitUntilDeployReady(ctx context.Context, d *models.Deploy) (*
 			return nil, fmt.Errorf("Error: preprocessing deploy failed")
 		}
 
-		if t.Sub(start) > preProcessingTimeout {
+		if t.Sub(start) > n.preProcessingTimeout {
 			return nil, fmt.Errorf("Error: preprocessing deploy timed out")
 		}
 	}
