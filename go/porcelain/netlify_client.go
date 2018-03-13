@@ -1,8 +1,6 @@
 package porcelain
 
 import (
-	"time"
-
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
@@ -13,7 +11,6 @@ import (
 const DefaultSyncFileLimit = 7000
 const DefaultConcurrentUploadLimit = 10
 const DefaultRetryAttempts = 3
-const DefaultPreProcessingTimeout = time.Minute * 5
 
 // Default netlify HTTP client.
 var Default = NewHTTPClient(nil)
@@ -44,19 +41,17 @@ func NewRetryable(transport runtime.ClientTransport, formats strfmt.Registry, at
 func New(transport runtime.ClientTransport, formats strfmt.Registry) *Netlify {
 	n := plumbing.New(transport, formats)
 	return &Netlify{
-		Netlify:              n,
-		syncFileLimit:        DefaultSyncFileLimit,
-		uploadLimit:          DefaultConcurrentUploadLimit,
-		preProcessingTimeout: DefaultPreProcessingTimeout,
+		Netlify:       n,
+		syncFileLimit: DefaultSyncFileLimit,
+		uploadLimit:   DefaultConcurrentUploadLimit,
 	}
 }
 
 // Netlify is a client for netlify
 type Netlify struct {
 	*plumbing.Netlify
-	syncFileLimit        int
-	uploadLimit          int
-	preProcessingTimeout time.Duration
+	syncFileLimit int
+	uploadLimit   int
 }
 
 func (n *Netlify) SetSyncFileLimit(limit int) {
@@ -66,11 +61,5 @@ func (n *Netlify) SetSyncFileLimit(limit int) {
 func (n *Netlify) SetConcurrentUploadLimit(limit int) {
 	if limit > 0 {
 		n.uploadLimit = limit
-	}
-}
-
-func (n *Netlify) SetPreProcessingTimeout(dur time.Duration) {
-	if dur > 0 {
-		n.preProcessingTimeout = dur
 	}
 }

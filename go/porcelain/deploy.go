@@ -30,6 +30,8 @@ import (
 const (
 	jsRuntime = "js"
 	goRuntime = "go"
+
+	preProcessingTimeout = time.Minute * 5
 )
 
 type uploadType int
@@ -62,10 +64,11 @@ type DeployOptions struct {
 
 	IsDraft bool
 
-	Title         string
-	Branch        string
-	CommitRef     string
-	UploadTimeout time.Duration
+	Title             string
+	Branch            string
+	CommitRef         string
+	UploadTimeout     time.Duration
+	PreProcessTimeout time.Duration
 
 	Observer DeployObserver
 
@@ -237,7 +240,7 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 
 	if n.overCommitted(options.files) {
 		var err error
-		deploy, err = n.WaitUntilDeployReady(ctx, deploy)
+		deploy, err = n.WaitUntilDeployReady(ctx, deploy, options.PreProcessTimeout)
 		if err != nil {
 			if options.Observer != nil {
 				options.Observer.OnFailedDelta(deployFiles)
@@ -269,10 +272,14 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 	return deploy, nil
 }
 
-func (n *Netlify) WaitUntilDeployReady(ctx context.Context, d *models.Deploy) (*models.Deploy, error) {
+func (n *Netlify) WaitUntilDeployReady(ctx context.Context, d *models.Deploy, timeout time.Duration) (*models.Deploy, error) {
 	authInfo := context.GetAuthInfo(ctx)
 	ticker := time.NewTicker(2 * time.Second)
 	defer ticker.Stop()
+
+	if timeout <= 0 {
+		timeout = preProcessingTimeout
+	}
 
 	params := operations.NewGetSiteDeployParams().WithSiteID(d.SiteID).WithDeployID(d.ID)
 	start := time.Now()
@@ -295,7 +302,7 @@ func (n *Netlify) WaitUntilDeployReady(ctx context.Context, d *models.Deploy) (*
 			return nil, fmt.Errorf("Error: preprocessing deploy failed")
 		}
 
-		if t.Sub(start) > n.preProcessingTimeout {
+		if t.Sub(start) > timeout {
 			return nil, fmt.Errorf("Error: preprocessing deploy timed out")
 		}
 	}
