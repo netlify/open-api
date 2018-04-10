@@ -19,7 +19,7 @@ func (n *Netlify) ListForms(ctx context.Context, params *operations.ListFormsPar
 // ListFormsBySiteId lists the forms of a particular site
 func (n *Netlify) ListFormsBySiteId(ctx context.Context, siteID string) ([]*models.Form, error) {
 	authInfo := context.GetAuthInfo(ctx)
-	resp, err := n.Netlify.Operations.ListForms(operations.NewListFormsParams().WithSiteID(siteID))
+	resp, err := n.Netlify.Operations.ListForms(operations.NewListFormsParams().WithSiteID(siteID), authInfo)
 	if err != nil {
 		return nil, err
 	}
