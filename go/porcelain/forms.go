@@ -16,6 +16,17 @@ func (n *Netlify) ListForms(ctx context.Context, params *operations.ListFormsPar
 	return resp.Payload, nil
 }
 
+// ListFormsBySiteId lists the forms of a particular site
+func (n *Netlify) ListFormsBySiteId(ctx context.Context, siteID string) ([]*models.Form, error) {
+	authInfo := context.GetAuthInfo(ctx)
+	resp, err := n.Netlify.Operations.ListForms(operations.NewListFormsParams().WithSiteID(siteID))
+	if err != nil {
+		return nil, err
+	}
+
+	return resp.Payload, nil
+}
+
 // ListFormSubmissions lists the forms submissions of a particular form
 func (n *Netlify) ListFormSubmissions(ctx context.Context, formID string) ([]*models.Submission, error) {
 	authInfo := context.GetAuthInfo(ctx)
