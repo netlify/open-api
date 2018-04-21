@@ -1765,6 +1765,51 @@
         }
       }
     },
+    "/submissions/{submission_id}": {
+      "get": {
+        "operationId": "listFormSubmission",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "query",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/submission"
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/responses/error"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteSubmission",
+        "responses": {
+          "204": {
+            "description": "Deleted"
+          },
+          "default": {
+            "$ref": "#/responses/error"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "submission_id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
     "/{account_slug}/members": {
       "get": {
         "operationId": "listMembersForAccount",
