@@ -21,7 +21,7 @@ import (
 // NewListFormsParams creates a new ListFormsParams object
 // with the default values initialized.
 func NewListFormsParams() *ListFormsParams {
-
+	var ()
 	return &ListFormsParams{
 
 		timeout: cr.DefaultTimeout,
@@ -31,7 +31,7 @@ func NewListFormsParams() *ListFormsParams {
 // NewListFormsParamsWithTimeout creates a new ListFormsParams object
 // with the default values initialized, and the ability to set a timeout on a request
 func NewListFormsParamsWithTimeout(timeout time.Duration) *ListFormsParams {
-
+	var ()
 	return &ListFormsParams{
 
 		timeout: timeout,
@@ -41,7 +41,7 @@ func NewListFormsParamsWithTimeout(timeout time.Duration) *ListFormsParams {
 // NewListFormsParamsWithContext creates a new ListFormsParams object
 // with the default values initialized, and the ability to set a context for a request
 func NewListFormsParamsWithContext(ctx context.Context) *ListFormsParams {
-
+	var ()
 	return &ListFormsParams{
 
 		Context: ctx,
@@ -51,7 +51,7 @@ func NewListFormsParamsWithContext(ctx context.Context) *ListFormsParams {
 // NewListFormsParamsWithHTTPClient creates a new ListFormsParams object
 // with the default values initialized, and the ability to set a custom HTTPClient for a request
 func NewListFormsParamsWithHTTPClient(client *http.Client) *ListFormsParams {
-
+	var ()
 	return &ListFormsParams{
 		HTTPClient: client,
 	}
@@ -61,6 +61,10 @@ func NewListFormsParamsWithHTTPClient(client *http.Client) *ListFormsParams {
 for the list forms operation typically these are written to a http.Request
 */
 type ListFormsParams struct {
+
+	/*SiteID*/
+	SiteID *string
+
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
@@ -99,6 +103,17 @@ func (o *ListFormsParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
+// WithSiteID adds the siteID to the list forms params
+func (o *ListFormsParams) WithSiteID(siteID *string) *ListFormsParams {
+	o.SetSiteID(siteID)
+	return o
+}
+
+// SetSiteID adds the siteId to the list forms params
+func (o *ListFormsParams) SetSiteID(siteID *string) {
+	o.SiteID = siteID
+}
+
 // WriteToRequest writes these params to a swagger request
 func (o *ListFormsParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -106,6 +121,22 @@ func (o *ListFormsParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Reg
 		return err
 	}
 	var res []error
+
+	if o.SiteID != nil {
+
+		// query param site_id
+		var qrSiteID string
+		if o.SiteID != nil {
+			qrSiteID = *o.SiteID
+		}
+		qSiteID := qrSiteID
+		if qSiteID != "" {
+			if err := r.SetQueryParam("site_id", qSiteID); err != nil {
+				return err
+			}
+		}
+
+	}
 
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)

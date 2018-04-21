@@ -489,6 +489,13 @@
     "/forms": {
       "get": {
         "operationId": "listForms",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "site_id",
+            "in": "query"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",

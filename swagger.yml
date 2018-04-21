@@ -494,48 +494,6 @@ paths:
           description: No content
         default:
           $ref: "#/responses/error"
-  /sites/{site_id}/deploys/{deploy_id}:
-    get:
-      operationId: getSiteDeploy
-      parameters:
-        - name: site_id
-          type: string
-          in: path
-          required: true
-        - name: deploy_id
-          type: string
-          in: path
-          required: true
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: "#/definitions/deploy"
-        default:
-          $ref: "#/responses/error"
-    put:
-      operationId: updateSiteDeploy
-      parameters:
-        - name: site_id
-          type: string
-          in: path
-          required: true
-        - name: deploy_id
-          type: string
-          in: path
-          required: true
-        - name: deploy
-          in: body
-          schema:
-            $ref: "#/definitions/deployFiles"
-          required: true
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: "#/definitions/deploy"
-        default:
-          $ref: "#/responses/error"
   /sites/{site_id}/deploys:
     parameters:
       - name: site_id
@@ -845,6 +803,10 @@ paths:
   /forms:
     get:
       operationId: listForms
+      parameters:
+        - name: site_id
+          in: query
+          type: string
       responses:
         '200':
           description: OK
