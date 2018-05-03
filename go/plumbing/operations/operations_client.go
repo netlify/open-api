@@ -547,6 +547,35 @@ func (a *Client) DeleteSiteSnippet(params *DeleteSiteSnippetParams, authInfo run
 }
 
 /*
+DeleteSubmission delete submission API
+*/
+func (a *Client) DeleteSubmission(params *DeleteSubmissionParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSubmissionNoContent, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewDeleteSubmissionParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "deleteSubmission",
+		Method:             "DELETE",
+		PathPattern:        "/submissions/{submission_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &DeleteSubmissionReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*DeleteSubmissionNoContent), nil
+
+}
+
+/*
 EnableHook enable hook API
 */
 func (a *Client) EnableHook(params *EnableHookParams, authInfo runtime.ClientAuthInfoWriter) (*EnableHookOK, error) {
@@ -1094,6 +1123,35 @@ func (a *Client) ListDeployKeys(params *ListDeployKeysParams, authInfo runtime.C
 		return nil, err
 	}
 	return result.(*ListDeployKeysOK), nil
+
+}
+
+/*
+ListFormSubmission list form submission API
+*/
+func (a *Client) ListFormSubmission(params *ListFormSubmissionParams, authInfo runtime.ClientAuthInfoWriter) (*ListFormSubmissionOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewListFormSubmissionParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "listFormSubmission",
+		Method:             "GET",
+		PathPattern:        "/submissions/{submission_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &ListFormSubmissionReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*ListFormSubmissionOK), nil
 
 }
 

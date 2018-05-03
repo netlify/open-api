@@ -1182,6 +1182,37 @@ paths:
               $ref: "#/definitions/auditLog"
         default:
           $ref: "#/responses/error"
+ 
+ # begin submission
+  /submissions/{submission_id}:
+      parameters:
+        - name: submission_id
+          type: string
+          in: path
+          required: true
+      get:
+        operationId: listFormSubmission
+        parameters:
+          - name: query
+            type: string
+            in: query
+        responses:
+          '200':
+            description: OK
+            schema:
+              type: array
+              items:
+                $ref: "#/definitions/submission"
+          default:
+            $ref: "#/responses/error"
+      delete:
+        operationId: deleteSubmission
+        responses:
+          '204':
+            description: Deleted
+          default:
+            $ref: "#/responses/error"
+ # end submission
 definitions:
     site:
       type: object
