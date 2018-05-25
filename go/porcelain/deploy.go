@@ -460,10 +460,11 @@ func walk(dir string, observer DeployObserver) (*deployFiles, error) {
 		}
 
 		if !info.IsDir() && info.Mode().IsRegular() {
-			rel, err := filepath.Rel(dir, path)
+			osRel, err := filepath.Rel(dir, path)
 			if err != nil {
 				return err
 			}
+			rel := forceSlashSeparators(osRel)
 
 			if ignoreFile(rel) {
 				return nil
