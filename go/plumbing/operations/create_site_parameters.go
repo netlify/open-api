@@ -18,7 +18,7 @@ import (
 
 	strfmt "github.com/go-openapi/strfmt"
 
-	"github.com/netlify/open-api/go/models"
+	models "github.com/netlify/open-api/go/models"
 )
 
 // NewCreateSiteParams creates a new CreateSiteParams object
@@ -154,12 +154,10 @@ func (o *CreateSiteParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Re
 
 	}
 
-	if o.Site == nil {
-		o.Site = new(models.SiteSetup)
-	}
-
-	if err := r.SetBodyParam(o.Site); err != nil {
-		return err
+	if o.Site != nil {
+		if err := r.SetBodyParam(o.Site); err != nil {
+			return err
+		}
 	}
 
 	if len(res) > 0 {

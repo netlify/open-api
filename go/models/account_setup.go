@@ -17,7 +17,6 @@ import (
 
 // AccountSetup account setup
 // swagger:model accountSetup
-
 type AccountSetup struct {
 
 	// extra seats block
@@ -37,16 +36,6 @@ type AccountSetup struct {
 	// Required: true
 	TypeID *string `json:"type_id"`
 }
-
-/* polymorph accountSetup extra_seats_block false */
-
-/* polymorph accountSetup name false */
-
-/* polymorph accountSetup payment_method_id false */
-
-/* polymorph accountSetup period false */
-
-/* polymorph accountSetup type_id false */
 
 // Validate validates this account setup
 func (m *AccountSetup) Validate(formats strfmt.Registry) error {
@@ -95,8 +84,10 @@ func init() {
 }
 
 const (
+
 	// AccountSetupPeriodMonthly captures enum value "monthly"
 	AccountSetupPeriodMonthly string = "monthly"
+
 	// AccountSetupPeriodYearly captures enum value "yearly"
 	AccountSetupPeriodYearly string = "yearly"
 )

@@ -14,7 +14,6 @@ import (
 
 // Site site
 // swagger:model site
-
 type Site struct {
 
 	// account name
@@ -102,62 +101,6 @@ type Site struct {
 	UserID string `json:"user_id,omitempty"`
 }
 
-/* polymorph site account_name false */
-
-/* polymorph site account_slug false */
-
-/* polymorph site admin_url false */
-
-/* polymorph site build_settings false */
-
-/* polymorph site capabilities false */
-
-/* polymorph site created_at false */
-
-/* polymorph site custom_domain false */
-
-/* polymorph site deploy_hook false */
-
-/* polymorph site deploy_url false */
-
-/* polymorph site domain_aliases false */
-
-/* polymorph site force_ssl false */
-
-/* polymorph site git_provider false */
-
-/* polymorph site id false */
-
-/* polymorph site managed_dns false */
-
-/* polymorph site name false */
-
-/* polymorph site notification_email false */
-
-/* polymorph site password false */
-
-/* polymorph site plan false */
-
-/* polymorph site processing_settings false */
-
-/* polymorph site published_deploy false */
-
-/* polymorph site screenshot_url false */
-
-/* polymorph site session_id false */
-
-/* polymorph site ssl false */
-
-/* polymorph site ssl_url false */
-
-/* polymorph site state false */
-
-/* polymorph site updated_at false */
-
-/* polymorph site url false */
-
-/* polymorph site user_id false */
-
 // Validate validates this site
 func (m *Site) Validate(formats strfmt.Registry) error {
 	var res []error
@@ -202,6 +145,7 @@ func (m *Site) validateBuildSettings(formats strfmt.Registry) error {
 			}
 			return err
 		}
+
 	}
 
 	return nil
@@ -230,6 +174,7 @@ func (m *Site) validateProcessingSettings(formats strfmt.Registry) error {
 			}
 			return err
 		}
+
 	}
 
 	return nil
@@ -249,6 +194,7 @@ func (m *Site) validatePublishedDeploy(formats strfmt.Registry) error {
 			}
 			return err
 		}
+
 	}
 
 	return nil
@@ -265,239 +211,6 @@ func (m *Site) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *Site) UnmarshalBinary(b []byte) error {
 	var res Site
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*m = res
-	return nil
-}
-
-// SiteProcessingSettings site processing settings
-// swagger:model SiteProcessingSettings
-
-type SiteProcessingSettings struct {
-
-	// css
-	CSS *MinifyOptions `json:"css,omitempty"`
-
-	// html
-	HTML *SiteProcessingSettingsHTML `json:"html,omitempty"`
-
-	// images
-	Images *SiteProcessingSettingsImages `json:"images,omitempty"`
-
-	// js
-	Js *MinifyOptions `json:"js,omitempty"`
-
-	// skip
-	Skip bool `json:"skip,omitempty"`
-}
-
-/* polymorph SiteProcessingSettings css false */
-
-/* polymorph SiteProcessingSettings html false */
-
-/* polymorph SiteProcessingSettings images false */
-
-/* polymorph SiteProcessingSettings js false */
-
-/* polymorph SiteProcessingSettings skip false */
-
-// Validate validates this site processing settings
-func (m *SiteProcessingSettings) Validate(formats strfmt.Registry) error {
-	var res []error
-
-	if err := m.validateCSS(formats); err != nil {
-		// prop
-		res = append(res, err)
-	}
-
-	if err := m.validateHTML(formats); err != nil {
-		// prop
-		res = append(res, err)
-	}
-
-	if err := m.validateImages(formats); err != nil {
-		// prop
-		res = append(res, err)
-	}
-
-	if err := m.validateJs(formats); err != nil {
-		// prop
-		res = append(res, err)
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-func (m *SiteProcessingSettings) validateCSS(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.CSS) { // not required
-		return nil
-	}
-
-	if m.CSS != nil {
-
-		if err := m.CSS.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("processing_settings" + "." + "css")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *SiteProcessingSettings) validateHTML(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.HTML) { // not required
-		return nil
-	}
-
-	if m.HTML != nil {
-
-		if err := m.HTML.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("processing_settings" + "." + "html")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *SiteProcessingSettings) validateImages(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.Images) { // not required
-		return nil
-	}
-
-	if m.Images != nil {
-
-		if err := m.Images.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("processing_settings" + "." + "images")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *SiteProcessingSettings) validateJs(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.Js) { // not required
-		return nil
-	}
-
-	if m.Js != nil {
-
-		if err := m.Js.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("processing_settings" + "." + "js")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (m *SiteProcessingSettings) MarshalBinary() ([]byte, error) {
-	if m == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(m)
-}
-
-// UnmarshalBinary interface implementation
-func (m *SiteProcessingSettings) UnmarshalBinary(b []byte) error {
-	var res SiteProcessingSettings
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*m = res
-	return nil
-}
-
-// SiteProcessingSettingsHTML site processing settings HTML
-// swagger:model SiteProcessingSettingsHTML
-
-type SiteProcessingSettingsHTML struct {
-
-	// pretty urls
-	PrettyUrls bool `json:"pretty_urls,omitempty"`
-}
-
-/* polymorph SiteProcessingSettingsHTML pretty_urls false */
-
-// Validate validates this site processing settings HTML
-func (m *SiteProcessingSettingsHTML) Validate(formats strfmt.Registry) error {
-	var res []error
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (m *SiteProcessingSettingsHTML) MarshalBinary() ([]byte, error) {
-	if m == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(m)
-}
-
-// UnmarshalBinary interface implementation
-func (m *SiteProcessingSettingsHTML) UnmarshalBinary(b []byte) error {
-	var res SiteProcessingSettingsHTML
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*m = res
-	return nil
-}
-
-// SiteProcessingSettingsImages site processing settings images
-// swagger:model SiteProcessingSettingsImages
-
-type SiteProcessingSettingsImages struct {
-
-	// optimize
-	Optimize bool `json:"optimize,omitempty"`
-}
-
-/* polymorph SiteProcessingSettingsImages optimize false */
-
-// Validate validates this site processing settings images
-func (m *SiteProcessingSettingsImages) Validate(formats strfmt.Registry) error {
-	var res []error
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (m *SiteProcessingSettingsImages) MarshalBinary() ([]byte, error) {
-	if m == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(m)
-}
-
-// UnmarshalBinary interface implementation
-func (m *SiteProcessingSettingsImages) UnmarshalBinary(b []byte) error {
-	var res SiteProcessingSettingsImages
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

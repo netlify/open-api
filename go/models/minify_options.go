@@ -14,7 +14,6 @@ import (
 
 // MinifyOptions minify options
 // swagger:model minifyOptions
-
 type MinifyOptions struct {
 
 	// bundle
@@ -23,10 +22,6 @@ type MinifyOptions struct {
 	// minify
 	Minify bool `json:"minify,omitempty"`
 }
-
-/* polymorph minifyOptions bundle false */
-
-/* polymorph minifyOptions minify false */
 
 // Validate validates this minify options
 func (m *MinifyOptions) Validate(formats strfmt.Registry) error {

@@ -14,7 +14,6 @@ import (
 
 // DeployKey deploy key
 // swagger:model deployKey
-
 type DeployKey struct {
 
 	// created at
@@ -26,12 +25,6 @@ type DeployKey struct {
 	// public key
 	PublicKey string `json:"public_key,omitempty"`
 }
-
-/* polymorph deployKey created_at false */
-
-/* polymorph deployKey id false */
-
-/* polymorph deployKey public_key false */
 
 // Validate validates this deploy key
 func (m *DeployKey) Validate(formats strfmt.Registry) error {

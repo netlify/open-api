@@ -14,7 +14,6 @@ import (
 
 // PaymentMethod payment method
 // swagger:model paymentMethod
-
 type PaymentMethod struct {
 
 	// created at
@@ -38,20 +37,6 @@ type PaymentMethod struct {
 	// updated at
 	UpdatedAt string `json:"updated_at,omitempty"`
 }
-
-/* polymorph paymentMethod created_at false */
-
-/* polymorph paymentMethod data false */
-
-/* polymorph paymentMethod id false */
-
-/* polymorph paymentMethod method_name false */
-
-/* polymorph paymentMethod state false */
-
-/* polymorph paymentMethod type false */
-
-/* polymorph paymentMethod updated_at false */
 
 // Validate validates this payment method
 func (m *PaymentMethod) Validate(formats strfmt.Registry) error {
@@ -82,6 +67,7 @@ func (m *PaymentMethod) validateData(formats strfmt.Registry) error {
 			}
 			return err
 		}
+
 	}
 
 	return nil
@@ -98,55 +84,6 @@ func (m *PaymentMethod) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *PaymentMethod) UnmarshalBinary(b []byte) error {
 	var res PaymentMethod
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*m = res
-	return nil
-}
-
-// PaymentMethodData payment method data
-// swagger:model PaymentMethodData
-
-type PaymentMethodData struct {
-
-	// card type
-	CardType string `json:"card_type,omitempty"`
-
-	// email
-	Email string `json:"email,omitempty"`
-
-	// last4
-	Last4 string `json:"last4,omitempty"`
-}
-
-/* polymorph PaymentMethodData card_type false */
-
-/* polymorph PaymentMethodData email false */
-
-/* polymorph PaymentMethodData last4 false */
-
-// Validate validates this payment method data
-func (m *PaymentMethodData) Validate(formats strfmt.Registry) error {
-	var res []error
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (m *PaymentMethodData) MarshalBinary() ([]byte, error) {
-	if m == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(m)
-}
-
-// UnmarshalBinary interface implementation
-func (m *PaymentMethodData) UnmarshalBinary(b []byte) error {
-	var res PaymentMethodData
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

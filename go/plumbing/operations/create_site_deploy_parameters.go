@@ -17,7 +17,7 @@ import (
 
 	strfmt "github.com/go-openapi/strfmt"
 
-	"github.com/netlify/open-api/go/models"
+	models "github.com/netlify/open-api/go/models"
 )
 
 // NewCreateSiteDeployParams creates a new CreateSiteDeployParams object
@@ -150,12 +150,10 @@ func (o *CreateSiteDeployParams) WriteToRequest(r runtime.ClientRequest, reg str
 	}
 	var res []error
 
-	if o.Deploy == nil {
-		o.Deploy = new(models.DeployFiles)
-	}
-
-	if err := r.SetBodyParam(o.Deploy); err != nil {
-		return err
+	if o.Deploy != nil {
+		if err := r.SetBodyParam(o.Deploy); err != nil {
+			return err
+		}
 	}
 
 	// path param site_id

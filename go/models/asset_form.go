@@ -14,7 +14,6 @@ import (
 
 // AssetForm asset form
 // swagger:model assetForm
-
 type AssetForm struct {
 
 	// fields
@@ -23,10 +22,6 @@ type AssetForm struct {
 	// url
 	URL string `json:"url,omitempty"`
 }
-
-/* polymorph assetForm fields false */
-
-/* polymorph assetForm url false */
 
 // Validate validates this asset form
 func (m *AssetForm) Validate(formats strfmt.Registry) error {

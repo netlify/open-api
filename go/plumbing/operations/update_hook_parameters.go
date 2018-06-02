@@ -17,7 +17,7 @@ import (
 
 	strfmt "github.com/go-openapi/strfmt"
 
-	"github.com/netlify/open-api/go/models"
+	models "github.com/netlify/open-api/go/models"
 )
 
 // NewUpdateHookParams creates a new UpdateHookParams object
@@ -137,12 +137,10 @@ func (o *UpdateHookParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Re
 	}
 	var res []error
 
-	if o.Hook == nil {
-		o.Hook = new(models.Hook)
-	}
-
-	if err := r.SetBodyParam(o.Hook); err != nil {
-		return err
+	if o.Hook != nil {
+		if err := r.SetBodyParam(o.Hook); err != nil {
+			return err
+		}
 	}
 
 	// path param hook_id

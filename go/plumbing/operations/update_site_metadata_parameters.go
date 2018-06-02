@@ -17,7 +17,7 @@ import (
 
 	strfmt "github.com/go-openapi/strfmt"
 
-	"github.com/netlify/open-api/go/models"
+	models "github.com/netlify/open-api/go/models"
 )
 
 // NewUpdateSiteMetadataParams creates a new UpdateSiteMetadataParams object
@@ -137,8 +137,10 @@ func (o *UpdateSiteMetadataParams) WriteToRequest(r runtime.ClientRequest, reg s
 	}
 	var res []error
 
-	if err := r.SetBodyParam(o.Metadata); err != nil {
-		return err
+	if o.Metadata != nil {
+		if err := r.SetBodyParam(o.Metadata); err != nil {
+			return err
+		}
 	}
 
 	// path param site_id

@@ -315,6 +315,35 @@ func (a *Client) CreateSiteDeploy(params *CreateSiteDeployParams, authInfo runti
 }
 
 /*
+CreateSiteInTeam create site in team API
+*/
+func (a *Client) CreateSiteInTeam(params *CreateSiteInTeamParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteInTeamCreated, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewCreateSiteInTeamParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "createSiteInTeam",
+		Method:             "POST",
+		PathPattern:        "/{account_slug}/sites",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &CreateSiteInTeamReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*CreateSiteInTeamCreated), nil
+
+}
+
+/*
 CreateSiteSnippet create site snippet API
 */
 func (a *Client) CreateSiteSnippet(params *CreateSiteSnippetParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteSnippetCreated, error) {

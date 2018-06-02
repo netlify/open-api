@@ -14,7 +14,6 @@ import (
 
 // Ticket ticket
 // swagger:model ticket
-
 type Ticket struct {
 
 	// authorized
@@ -29,14 +28,6 @@ type Ticket struct {
 	// id
 	ID string `json:"id,omitempty"`
 }
-
-/* polymorph ticket authorized false */
-
-/* polymorph ticket client_id false */
-
-/* polymorph ticket created_at false */
-
-/* polymorph ticket id false */
 
 // Validate validates this ticket
 func (m *Ticket) Validate(formats strfmt.Registry) error {

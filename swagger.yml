@@ -1024,6 +1024,31 @@ paths:
         default:
           $ref: "#/responses/error"
   /{account_slug}/sites:
+    post:
+      operationId: createSiteInTeam
+      consumes:
+        - application/json
+      parameters:
+        - name: site
+          in: body
+          schema:
+            $ref: "#/definitions/siteSetup"
+          required: false
+        - name: configure_dns
+          type: boolean
+          in: query
+          required: false
+        - name: account_slug
+          in: path
+          type: string
+          required: true
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: "#/definitions/site"
+        default:
+          $ref: "#/responses/error"
     get:
       operationId: listSitesForAccount # an account represents a team or a user
       parameters:

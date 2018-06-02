@@ -14,7 +14,6 @@ import (
 
 // Form form
 // swagger:model form
-
 type Form struct {
 
 	// created at
@@ -38,20 +37,6 @@ type Form struct {
 	// submission count
 	SubmissionCount int32 `json:"submission_count,omitempty"`
 }
-
-/* polymorph form created_at false */
-
-/* polymorph form fields false */
-
-/* polymorph form id false */
-
-/* polymorph form name false */
-
-/* polymorph form paths false */
-
-/* polymorph form site_id false */
-
-/* polymorph form submission_count false */
 
 // Validate validates this form
 func (m *Form) Validate(formats strfmt.Registry) error {

@@ -17,7 +17,7 @@ import (
 
 	strfmt "github.com/go-openapi/strfmt"
 
-	"github.com/netlify/open-api/go/models"
+	models "github.com/netlify/open-api/go/models"
 )
 
 // NewUpdateSiteBuildLogParams creates a new UpdateSiteBuildLogParams object
@@ -142,12 +142,10 @@ func (o *UpdateSiteBuildLogParams) WriteToRequest(r runtime.ClientRequest, reg s
 		return err
 	}
 
-	if o.Msg == nil {
-		o.Msg = new(models.BuildLogMsg)
-	}
-
-	if err := r.SetBodyParam(o.Msg); err != nil {
-		return err
+	if o.Msg != nil {
+		if err := r.SetBodyParam(o.Msg); err != nil {
+			return err
+		}
 	}
 
 	if len(res) > 0 {

@@ -17,7 +17,7 @@ import (
 
 	strfmt "github.com/go-openapi/strfmt"
 
-	"github.com/netlify/open-api/go/models"
+	models "github.com/netlify/open-api/go/models"
 )
 
 // NewCreateAccountParams creates a new CreateAccountParams object
@@ -124,12 +124,10 @@ func (o *CreateAccountParams) WriteToRequest(r runtime.ClientRequest, reg strfmt
 	}
 	var res []error
 
-	if o.AccountSetup == nil {
-		o.AccountSetup = new(models.AccountSetup)
-	}
-
-	if err := r.SetBodyParam(o.AccountSetup); err != nil {
-		return err
+	if o.AccountSetup != nil {
+		if err := r.SetBodyParam(o.AccountSetup); err != nil {
+			return err
+		}
 	}
 
 	if len(res) > 0 {

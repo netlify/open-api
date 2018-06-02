@@ -14,7 +14,6 @@ import (
 
 // Function function
 // swagger:model function
-
 type Function struct {
 
 	// id
@@ -26,12 +25,6 @@ type Function struct {
 	// sha
 	Sha string `json:"sha,omitempty"`
 }
-
-/* polymorph function id false */
-
-/* polymorph function name false */
-
-/* polymorph function sha false */
 
 // Validate validates this function
 func (m *Function) Validate(formats strfmt.Registry) error {

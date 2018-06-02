@@ -14,7 +14,6 @@ import (
 
 // HookType hook type
 // swagger:model hookType
-
 type HookType struct {
 
 	// events
@@ -26,12 +25,6 @@ type HookType struct {
 	// name
 	Name string `json:"name,omitempty"`
 }
-
-/* polymorph hookType events false */
-
-/* polymorph hookType fields false */
-
-/* polymorph hookType name false */
 
 // Validate validates this hook type
 func (m *HookType) Validate(formats strfmt.Registry) error {

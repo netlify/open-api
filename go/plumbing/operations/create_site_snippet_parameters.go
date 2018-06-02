@@ -17,7 +17,7 @@ import (
 
 	strfmt "github.com/go-openapi/strfmt"
 
-	"github.com/netlify/open-api/go/models"
+	models "github.com/netlify/open-api/go/models"
 )
 
 // NewCreateSiteSnippetParams creates a new CreateSiteSnippetParams object
@@ -142,12 +142,10 @@ func (o *CreateSiteSnippetParams) WriteToRequest(r runtime.ClientRequest, reg st
 		return err
 	}
 
-	if o.Snippet == nil {
-		o.Snippet = new(models.Snippet)
-	}
-
-	if err := r.SetBodyParam(o.Snippet); err != nil {
-		return err
+	if o.Snippet != nil {
+		if err := r.SetBodyParam(o.Snippet); err != nil {
+			return err
+		}
 	}
 
 	if len(res) > 0 {
