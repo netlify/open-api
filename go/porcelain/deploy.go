@@ -517,6 +517,12 @@ func bundle(functionDir string, observer DeployObserver) (*deployFiles, error) {
 		filePath := filepath.Join(functionDir, i.Name())
 
 		switch {
+		case zipFile(i):
+			file, err := newFunctionFile(filePath, i, jsRuntime, observer)
+			if err != nil {
+				return nil, err
+			}
+			functions.Add(file.Name, file)
 		case jsFile(i):
 			file, err := newFunctionFile(filePath, i, jsRuntime, observer)
 			if err != nil {
@@ -549,20 +555,26 @@ func newFunctionFile(filePath string, i os.FileInfo, runtime string, observer De
 	}
 	defer fileEntry.Close()
 
-	buf := new(bytes.Buffer)
-	archive := zip.NewWriter(buf)
+	var buf io.ReadWriter
 
-	fileHeader, err := createHeader(archive, i, runtime)
-	if err != nil {
-		return nil, err
-	}
+	if zipFile(i) {
+		buf = fileEntry
+	} else {
+		buf = new(bytes.Buffer)
+		archive := zip.NewWriter(buf)
 
-	if _, err = io.Copy(fileHeader, fileEntry); err != nil {
-		return nil, err
-	}
+		fileHeader, err := createHeader(archive, i, runtime)
+		if err != nil {
+			return nil, err
+		}
 
-	if err := archive.Close(); err != nil {
-		return nil, err
+		if _, err = io.Copy(fileHeader, fileEntry); err != nil {
+			return nil, err
+		}
+
+		if err := archive.Close(); err != nil {
+			return nil, err
+		}
 	}
 
 	fileBuffer := new(bytes.Buffer)
@@ -581,6 +593,10 @@ func newFunctionFile(filePath string, i os.FileInfo, runtime string, observer De
 	}
 
 	return file, nil
+}
+
+func zipFile(i os.FileInfo) bool {
+	return filepath.Ext(i.Name()) == ".zip"
 }
 
 func jsFile(i os.FileInfo) bool {
