@@ -53,7 +53,7 @@ In order to generate the Node client, you must install Java 8 and the swagger-co
 	$ make node
 	```
 
-The `swagger-codegen` generates an entire module in the `node` folder.  You can publish ne versions of this client from that folder with `npm publish`.
+The `swagger-codegen` generates an entire module in the `node` folder.  You can publish new versions of the client from that folder with `npm publish`.
 
 ## Explore API
 
