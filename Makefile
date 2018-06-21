@@ -2,6 +2,8 @@
 CHECK_FILES?=$$(go list ./... | grep -v /vendor/)
 
 
+
+
 help: ## Show this help.
 		@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {sub("\\\\n",sprintf("\n%22c"," "), $$2);printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
@@ -22,3 +24,6 @@ test: ## Test the go code.
 
 validate: ## Check that the swagger spec is valid.
 	swagger validate swagger.yml
+
+node: ## Generate the node module.
+	swagger-codegen generate -i ./swagger.yml -l javascript -o ./node/
