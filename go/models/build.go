@@ -14,7 +14,6 @@ import (
 
 // Build build
 // swagger:model build
-
 type Build struct {
 
 	// created at
@@ -35,18 +34,6 @@ type Build struct {
 	// sha
 	Sha string `json:"sha,omitempty"`
 }
-
-/* polymorph build created_at false */
-
-/* polymorph build deploy_id false */
-
-/* polymorph build done false */
-
-/* polymorph build error false */
-
-/* polymorph build id false */
-
-/* polymorph build sha false */
 
 // Validate validates this build
 func (m *Build) Validate(formats strfmt.Registry) error {

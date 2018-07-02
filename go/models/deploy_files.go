@@ -14,7 +14,6 @@ import (
 
 // DeployFiles deploy files
 // swagger:model deployFiles
-
 type DeployFiles struct {
 
 	// async
@@ -29,14 +28,6 @@ type DeployFiles struct {
 	// functions
 	Functions interface{} `json:"functions,omitempty"`
 }
-
-/* polymorph deployFiles async false */
-
-/* polymorph deployFiles draft false */
-
-/* polymorph deployFiles files false */
-
-/* polymorph deployFiles functions false */
 
 // Validate validates this deploy files
 func (m *DeployFiles) Validate(formats strfmt.Registry) error {

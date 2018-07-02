@@ -13,7 +13,7 @@ import (
 
 	strfmt "github.com/go-openapi/strfmt"
 
-	"github.com/netlify/open-api/go/models"
+	models "github.com/netlify/open-api/go/models"
 )
 
 // ProvisionSiteTLSCertificateReader is a Reader for the ProvisionSiteTLSCertificate structure.

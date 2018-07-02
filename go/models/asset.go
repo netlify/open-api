@@ -14,7 +14,6 @@ import (
 
 // Asset asset
 // swagger:model asset
-
 type Asset struct {
 
 	// content type
@@ -53,30 +52,6 @@ type Asset struct {
 	// visibility
 	Visibility string `json:"visibility,omitempty"`
 }
-
-/* polymorph asset content_type false */
-
-/* polymorph asset created_at false */
-
-/* polymorph asset creator_id false */
-
-/* polymorph asset id false */
-
-/* polymorph asset key false */
-
-/* polymorph asset name false */
-
-/* polymorph asset site_id false */
-
-/* polymorph asset size false */
-
-/* polymorph asset state false */
-
-/* polymorph asset updated_at false */
-
-/* polymorph asset url false */
-
-/* polymorph asset visibility false */
 
 // Validate validates this asset
 func (m *Asset) Validate(formats strfmt.Registry) error {

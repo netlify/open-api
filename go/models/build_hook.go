@@ -14,7 +14,6 @@ import (
 
 // BuildHook build hook
 // swagger:model buildHook
-
 type BuildHook struct {
 
 	// branch
@@ -35,18 +34,6 @@ type BuildHook struct {
 	// url
 	URL string `json:"url,omitempty"`
 }
-
-/* polymorph buildHook branch false */
-
-/* polymorph buildHook created_at false */
-
-/* polymorph buildHook id false */
-
-/* polymorph buildHook site_id false */
-
-/* polymorph buildHook title false */
-
-/* polymorph buildHook url false */
 
 // Validate validates this build hook
 func (m *BuildHook) Validate(formats strfmt.Registry) error {

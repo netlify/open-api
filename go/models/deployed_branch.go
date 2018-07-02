@@ -14,7 +14,6 @@ import (
 
 // DeployedBranch deployed branch
 // swagger:model deployedBranch
-
 type DeployedBranch struct {
 
 	// deploy id
@@ -35,18 +34,6 @@ type DeployedBranch struct {
 	// url
 	URL string `json:"url,omitempty"`
 }
-
-/* polymorph deployedBranch deploy_id false */
-
-/* polymorph deployedBranch id false */
-
-/* polymorph deployedBranch name false */
-
-/* polymorph deployedBranch slug false */
-
-/* polymorph deployedBranch ssl_url false */
-
-/* polymorph deployedBranch url false */
 
 // Validate validates this deployed branch
 func (m *DeployedBranch) Validate(formats strfmt.Registry) error {

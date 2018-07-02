@@ -17,7 +17,7 @@ import (
 
 	strfmt "github.com/go-openapi/strfmt"
 
-	"github.com/netlify/open-api/go/models"
+	models "github.com/netlify/open-api/go/models"
 )
 
 // NewCreateSiteBuildHookParams creates a new CreateSiteBuildHookParams object
@@ -137,12 +137,10 @@ func (o *CreateSiteBuildHookParams) WriteToRequest(r runtime.ClientRequest, reg 
 	}
 	var res []error
 
-	if o.BuildHook == nil {
-		o.BuildHook = new(models.BuildHook)
-	}
-
-	if err := r.SetBodyParam(o.BuildHook); err != nil {
-		return err
+	if o.BuildHook != nil {
+		if err := r.SetBodyParam(o.BuildHook); err != nil {
+			return err
+		}
 	}
 
 	// path param site_id

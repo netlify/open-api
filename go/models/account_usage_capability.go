@@ -14,7 +14,6 @@ import (
 
 // AccountUsageCapability account usage capability
 // swagger:model accountUsageCapability
-
 type AccountUsageCapability struct {
 
 	// included
@@ -23,10 +22,6 @@ type AccountUsageCapability struct {
 	// used
 	Used int64 `json:"used,omitempty"`
 }
-
-/* polymorph accountUsageCapability included false */
-
-/* polymorph accountUsageCapability used false */
 
 // Validate validates this account usage capability
 func (m *AccountUsageCapability) Validate(formats strfmt.Registry) error {

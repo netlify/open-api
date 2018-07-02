@@ -14,7 +14,6 @@ import (
 
 // AssetSignature asset signature
 // swagger:model assetSignature
-
 type AssetSignature struct {
 
 	// asset
@@ -23,10 +22,6 @@ type AssetSignature struct {
 	// form
 	Form *AssetForm `json:"form,omitempty"`
 }
-
-/* polymorph assetSignature asset false */
-
-/* polymorph assetSignature form false */
 
 // Validate validates this asset signature
 func (m *AssetSignature) Validate(formats strfmt.Registry) error {
@@ -62,6 +57,7 @@ func (m *AssetSignature) validateAsset(formats strfmt.Registry) error {
 			}
 			return err
 		}
+
 	}
 
 	return nil
@@ -81,6 +77,7 @@ func (m *AssetSignature) validateForm(formats strfmt.Registry) error {
 			}
 			return err
 		}
+
 	}
 
 	return nil

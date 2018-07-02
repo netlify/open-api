@@ -14,7 +14,6 @@ import (
 
 // RepoInfo repo info
 // swagger:model repoInfo
-
 type RepoInfo struct {
 
 	// allowed branches
@@ -53,30 +52,6 @@ type RepoInfo struct {
 	// repo url
 	RepoURL string `json:"repo_url,omitempty"`
 }
-
-/* polymorph repoInfo allowed_branches false */
-
-/* polymorph repoInfo cmd false */
-
-/* polymorph repoInfo deploy_key_id false */
-
-/* polymorph repoInfo dir false */
-
-/* polymorph repoInfo env false */
-
-/* polymorph repoInfo id false */
-
-/* polymorph repoInfo private_logs false */
-
-/* polymorph repoInfo provider false */
-
-/* polymorph repoInfo public_repo false */
-
-/* polymorph repoInfo repo_branch false */
-
-/* polymorph repoInfo repo_path false */
-
-/* polymorph repoInfo repo_url false */
 
 // Validate validates this repo info
 func (m *RepoInfo) Validate(formats strfmt.Registry) error {

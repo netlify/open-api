@@ -17,7 +17,7 @@ import (
 
 	strfmt "github.com/go-openapi/strfmt"
 
-	"github.com/netlify/open-api/go/models"
+	models "github.com/netlify/open-api/go/models"
 )
 
 // NewUpdateAccountParams creates a new UpdateAccountParams object
@@ -137,12 +137,10 @@ func (o *UpdateAccountParams) WriteToRequest(r runtime.ClientRequest, reg strfmt
 	}
 	var res []error
 
-	if o.AccountUpdateSetup == nil {
-		o.AccountUpdateSetup = new(models.AccountUpdateSetup)
-	}
-
-	if err := r.SetBodyParam(o.AccountUpdateSetup); err != nil {
-		return err
+	if o.AccountUpdateSetup != nil {
+		if err := r.SetBodyParam(o.AccountUpdateSetup); err != nil {
+			return err
+		}
 	}
 
 	// path param account_id

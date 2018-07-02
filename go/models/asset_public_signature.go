@@ -14,14 +14,11 @@ import (
 
 // AssetPublicSignature asset public signature
 // swagger:model assetPublicSignature
-
 type AssetPublicSignature struct {
 
 	// url
 	URL string `json:"url,omitempty"`
 }
-
-/* polymorph assetPublicSignature url false */
 
 // Validate validates this asset public signature
 func (m *AssetPublicSignature) Validate(formats strfmt.Registry) error {

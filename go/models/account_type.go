@@ -14,7 +14,6 @@ import (
 
 // AccountType account type
 // swagger:model accountType
-
 type AccountType struct {
 
 	// capabilities
@@ -41,22 +40,6 @@ type AccountType struct {
 	// yearly seats addon dollar price
 	YearlySeatsAddonDollarPrice int64 `json:"yearly_seats_addon_dollar_price,omitempty"`
 }
-
-/* polymorph accountType capabilities false */
-
-/* polymorph accountType description false */
-
-/* polymorph accountType id false */
-
-/* polymorph accountType monthly_dollar_price false */
-
-/* polymorph accountType monthly_seats_addon_dollar_price false */
-
-/* polymorph accountType name false */
-
-/* polymorph accountType yearly_dollar_price false */
-
-/* polymorph accountType yearly_seats_addon_dollar_price false */
 
 // Validate validates this account type
 func (m *AccountType) Validate(formats strfmt.Registry) error {

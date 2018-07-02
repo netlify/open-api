@@ -16,7 +16,6 @@ import (
 
 // DNSZone dns zone
 // swagger:model dnsZone
-
 type DNSZone struct {
 
 	// id
@@ -28,12 +27,6 @@ type DNSZone struct {
 	// records
 	Records []*DNSRecord `json:"records"`
 }
-
-/* polymorph dnsZone id false */
-
-/* polymorph dnsZone name false */
-
-/* polymorph dnsZone records false */
 
 // Validate validates this dns zone
 func (m *DNSZone) Validate(formats strfmt.Registry) error {
@@ -70,6 +63,7 @@ func (m *DNSZone) validateRecords(formats strfmt.Registry) error {
 				}
 				return err
 			}
+
 		}
 
 	}

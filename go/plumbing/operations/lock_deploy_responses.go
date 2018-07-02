@@ -13,7 +13,7 @@ import (
 
 	strfmt "github.com/go-openapi/strfmt"
 
-	"github.com/netlify/open-api/go/models"
+	models "github.com/netlify/open-api/go/models"
 )
 
 // LockDeployReader is a Reader for the LockDeploy structure.

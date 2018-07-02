@@ -14,7 +14,6 @@ import (
 
 // AccountUpdateSetup account update setup
 // swagger:model accountUpdateSetup
-
 type AccountUpdateSetup struct {
 
 	// billing details
@@ -41,22 +40,6 @@ type AccountUpdateSetup struct {
 	// type id
 	TypeID string `json:"type_id,omitempty"`
 }
-
-/* polymorph accountUpdateSetup billing_details false */
-
-/* polymorph accountUpdateSetup billing_email false */
-
-/* polymorph accountUpdateSetup billing_name false */
-
-/* polymorph accountUpdateSetup extra_seats_block false */
-
-/* polymorph accountUpdateSetup name false */
-
-/* polymorph accountUpdateSetup payment_method_id false */
-
-/* polymorph accountUpdateSetup slug false */
-
-/* polymorph accountUpdateSetup type_id false */
 
 // Validate validates this account update setup
 func (m *AccountUpdateSetup) Validate(formats strfmt.Registry) error {

@@ -7,5 +7,4 @@ package models
 
 // Metadata metadata
 // swagger:model metadata
-
 type Metadata interface{}

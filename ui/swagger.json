@@ -1902,6 +1902,43 @@
             "$ref": "#/responses/error"
           }
         }
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "createSiteInTeam",
+        "parameters": [
+          {
+            "name": "site",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/siteSetup"
+            }
+          },
+          {
+            "type": "boolean",
+            "name": "configure_dns",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "name": "account_slug",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/site"
+            }
+          },
+          "default": {
+            "$ref": "#/responses/error"
+          }
+        }
       }
     }
   },
