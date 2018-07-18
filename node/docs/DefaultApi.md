@@ -14,6 +14,7 @@ Method | HTTP request | Description
 [**createSiteAsset**](DefaultApi.md#createSiteAsset) | **POST** /sites/{site_id}/assets | 
 [**createSiteBuildHook**](DefaultApi.md#createSiteBuildHook) | **POST** /sites/{site_id}/build_hooks | 
 [**createSiteDeploy**](DefaultApi.md#createSiteDeploy) | **POST** /sites/{site_id}/deploys | 
+[**createSiteInTeam**](DefaultApi.md#createSiteInTeam) | **POST** /{account_slug}/sites | 
 [**createSiteSnippet**](DefaultApi.md#createSiteSnippet) | **POST** /sites/{site_id}/snippets | 
 [**createTicket**](DefaultApi.md#createTicket) | **POST** /oauth/tickets | 
 [**deleteDeployKey**](DefaultApi.md#deleteDeployKey) | **DELETE** /deploy_keys/{key_id} | 
@@ -25,6 +26,7 @@ Method | HTTP request | Description
 [**deleteSubmission**](DefaultApi.md#deleteSubmission) | **DELETE** /submissions/{submission_id} | 
 [**enableHook**](DefaultApi.md#enableHook) | **POST** /hooks/{hook_id}/enable | 
 [**exchangeTicket**](DefaultApi.md#exchangeTicket) | **POST** /oauth/tickets/{ticket_id}/exchange | 
+[**getCurrentUser**](DefaultApi.md#getCurrentUser) | **GET** /user | 
 [**getDNSForSite**](DefaultApi.md#getDNSForSite) | **GET** /sites/{site_id}/dns | 
 [**getDeploy**](DefaultApi.md#getDeploy) | **GET** /deploys/{deploy_id} | 
 [**getDeployKey**](DefaultApi.md#getDeployKey) | **GET** /deploy_keys/{key_id} | 
@@ -601,6 +603,61 @@ Name | Type | Description  | Notes
  - **Content-Type**: application/json
  - **Accept**: application/json
 
+<a name="createSiteInTeam"></a>
+# **createSiteInTeam**
+> Site createSiteInTeam(accountSlug, opts)
+
+
+
+### Example
+```javascript
+var NetlifysApiDefinition = require('netlifys_api_definition');
+var defaultClient = NetlifysApiDefinition.ApiClient.instance;
+
+// Configure OAuth2 access token for authorization: netlifyAuth
+var netlifyAuth = defaultClient.authentications['netlifyAuth'];
+netlifyAuth.accessToken = 'YOUR ACCESS TOKEN';
+
+var apiInstance = new NetlifysApiDefinition.DefaultApi();
+
+var accountSlug = "accountSlug_example"; // String | 
+
+var opts = { 
+  'site': new NetlifysApiDefinition.SiteSetup(), // SiteSetup | 
+  'configureDns': true // Boolean | 
+};
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+apiInstance.createSiteInTeam(accountSlug, opts, callback);
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **accountSlug** | **String**|  | 
+ **site** | [**SiteSetup**](SiteSetup.md)|  | [optional] 
+ **configureDns** | **Boolean**|  | [optional] 
+
+### Return type
+
+[**Site**](Site.md)
+
+### Authorization
+
+[netlifyAuth](../README.md#netlifyAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
 <a name="createSiteSnippet"></a>
 # **createSiteSnippet**
 > Snippet createSiteSnippet(siteId, snippet)
@@ -1142,6 +1199,49 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**AccessToken**](AccessToken.md)
+
+### Authorization
+
+[netlifyAuth](../README.md#netlifyAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+<a name="getCurrentUser"></a>
+# **getCurrentUser**
+> [User] getCurrentUser()
+
+
+
+### Example
+```javascript
+var NetlifysApiDefinition = require('netlifys_api_definition');
+var defaultClient = NetlifysApiDefinition.ApiClient.instance;
+
+// Configure OAuth2 access token for authorization: netlifyAuth
+var netlifyAuth = defaultClient.authentications['netlifyAuth'];
+netlifyAuth.accessToken = 'YOUR ACCESS TOKEN';
+
+var apiInstance = new NetlifysApiDefinition.DefaultApi();
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+apiInstance.getCurrentUser(callback);
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**[User]**](User.md)
 
 ### Authorization
 
