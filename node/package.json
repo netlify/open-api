@@ -1,6 +1,6 @@
 {
   "name": "netlifys_api_definition",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "ERROR_UNKNOWN",
   "license": "Unlicense",
   "main": "src/index.js",

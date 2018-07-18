@@ -30,7 +30,7 @@
   var instance;
 
   beforeEach(function() {
-    instance = new NetlifysApiDefinition.SiteSetup();
+    instance = new NetlifysApiDefinition.UserOnboardingProgress();
   });
 
   var getProperty = function(object, getter, property) {
@@ -49,16 +49,16 @@
       object[property] = value;
   }
 
-  describe('SiteSetup', function() {
-    it('should create an instance of SiteSetup', function() {
-      // uncomment below and update the code to test SiteSetup
-      //var instane = new NetlifysApiDefinition.SiteSetup();
-      //expect(instance).to.be.a(NetlifysApiDefinition.SiteSetup);
+  describe('UserOnboardingProgress', function() {
+    it('should create an instance of UserOnboardingProgress', function() {
+      // uncomment below and update the code to test UserOnboardingProgress
+      //var instane = new NetlifysApiDefinition.UserOnboardingProgress();
+      //expect(instance).to.be.a(NetlifysApiDefinition.UserOnboardingProgress);
     });
 
-    it('should have the property repo (base name: "repo")', function() {
-      // uncomment below and update the code to test the property repo
-      //var instane = new NetlifysApiDefinition.SiteSetup();
+    it('should have the property slides (base name: "slides")', function() {
+      // uncomment below and update the code to test the property slides
+      //var instane = new NetlifysApiDefinition.UserOnboardingProgress();
       //expect(instance).to.be();
     });
 

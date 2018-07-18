@@ -25,7 +25,7 @@
     if (!root.NetlifysApiDefinition) {
       root.NetlifysApiDefinition = {};
     }
-    root.NetlifysApiDefinition.SiteProcessingSettingsImages = factory(root.NetlifysApiDefinition.ApiClient);
+    root.NetlifysApiDefinition.UserOnboardingProgress = factory(root.NetlifysApiDefinition.ApiClient);
   }
 }(this, function(ApiClient) {
   'use strict';
@@ -34,14 +34,14 @@
 
 
   /**
-   * The SiteProcessingSettingsImages model module.
-   * @module model/SiteProcessingSettingsImages
+   * The UserOnboardingProgress model module.
+   * @module model/UserOnboardingProgress
    * @version 0.2.0
    */
 
   /**
-   * Constructs a new <code>SiteProcessingSettingsImages</code>.
-   * @alias module:model/SiteProcessingSettingsImages
+   * Constructs a new <code>UserOnboardingProgress</code>.
+   * @alias module:model/UserOnboardingProgress
    * @class
    */
   var exports = function() {
@@ -51,27 +51,27 @@
   };
 
   /**
-   * Constructs a <code>SiteProcessingSettingsImages</code> from a plain JavaScript object, optionally creating a new instance.
+   * Constructs a <code>UserOnboardingProgress</code> from a plain JavaScript object, optionally creating a new instance.
    * Copies all relevant properties from <code>data</code> to <code>obj</code> if supplied or a new instance if not.
    * @param {Object} data The plain JavaScript object bearing properties of interest.
-   * @param {module:model/SiteProcessingSettingsImages} obj Optional instance to populate.
-   * @return {module:model/SiteProcessingSettingsImages} The populated <code>SiteProcessingSettingsImages</code> instance.
+   * @param {module:model/UserOnboardingProgress} obj Optional instance to populate.
+   * @return {module:model/UserOnboardingProgress} The populated <code>UserOnboardingProgress</code> instance.
    */
   exports.constructFromObject = function(data, obj) {
     if (data) {
       obj = obj || new exports();
 
-      if (data.hasOwnProperty('optimize')) {
-        obj['optimize'] = ApiClient.convertToType(data['optimize'], 'Boolean');
+      if (data.hasOwnProperty('slides')) {
+        obj['slides'] = ApiClient.convertToType(data['slides'], 'String');
       }
     }
     return obj;
   }
 
   /**
-   * @member {Boolean} optimize
+   * @member {String} slides
    */
-  exports.prototype['optimize'] = undefined;
+  exports.prototype['slides'] = undefined;
 
 
 

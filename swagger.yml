@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  version: 0.1.0
+  version: 0.2.0
   title: Netlify's API definition
 securityDefinitions:
   netlifyAuth:
@@ -1242,7 +1242,7 @@ paths:
  # begin users
   /user:
       get:
-        operationId: listFormSubmission
+        operationId: getCurrentUser
         responses:
           '200':
             description: OK
