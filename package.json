@@ -1,0 +1,29 @@
+{
+  "name": "@netlify/open-api",
+  "version": "0.1.0",
+  "description": "Netlify's open-api definition as a module",
+  "main": "js/swagger.json",
+  "dependencies": {
+    "netlify-s-api-definition": "^0.1.0",
+    "request": "^2.87.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/netlify/open-api.git"
+  },
+  "keywords": [
+    "netlify",
+    "swagger",
+    "open-api"
+  ],
+  "author": "Netlify",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/netlify/open-api/issues"
+  },
+  "homepage": "https://github.com/netlify/open-api#readme"
+}
