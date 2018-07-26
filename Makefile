@@ -1,4 +1,4 @@
-.PHONY: all build deps generate help test validate js
+.PHONY: all build deps generate help test validate
 CHECK_FILES?=$$(go list ./... | grep -v /vendor/)
 
 
@@ -23,6 +23,3 @@ test: ## Test the go code.
 
 validate: ## Check that the swagger spec is valid.
 	swagger validate swagger.yml
-
-js: ## Generate the node module.
-	npm i

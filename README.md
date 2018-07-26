@@ -28,32 +28,34 @@ You can use this command to generate the Go client:
 	
 You may first want to edit swagger.yml to add your field or endpoint definitions.
 
-## Node Client
+## JS Client
 
-In order to generate the Node client, you must install Java 8 and the swagger-codegen tool.
+Swagger's JS client can dynamically create a client from a spec either from a URL or spec object.
 
-1. You will need java8 (or 7) to run the code-gen
-
-    ```bash
-    # install java 8 via homebrew
-    brew cask install homebrew/cask-versions/java8
-    ```
+See [swagger-js](https://github.com/swagger-api/swagger-js)
 
 
-2. Then install swagger codegen
+### Usage
+```js
+<script src='browser/swagger-client.js' type='text/javascript'></script>
+<script>
+var swaggerClient = new SwaggerClient('https://open-api.netlify.com/swagger.json');
+</script>
+```
 
-    ```bash
-    # install code-gen via homebrew
-    brew install swagger-codegen
-    ```
+You can also consume the swagger spec as an npm module:
 
-3. Generate the library
+```console
+$ npm install @netlify/open-api
+# or
+$ yarn add @netlify/open-api
+```
 
-	```console
-	$ make node
-	```
+```js
+import spec from '@netlify/open-api' // import the spec object into your project
+```
 
-The `swagger-codegen` generates an entire module in the `node` folder.  You can publish new versions of the client from that folder with `npm publish`.
+The module also ships a copy of the original `yml` spec file at `@netlify/open-api/swagger.yml`.
 
 ## Explore API
 
