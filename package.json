@@ -1,11 +1,9 @@
 {
   "name": "@netlify/open-api",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Netlify's open-api definition as a module",
   "main": "js/swagger.json",
-  "dependencies": {
-    "swagger-ui": "^3.17.5"
-  },
+  "dependencies": {},
   "devDependencies": {
     "autoprefixer": "^9.0.0",
     "browserify": "^16.0.0",
@@ -20,7 +18,8 @@
     "postcss-import": "^11.0.0",
     "postcss-reporter": "^5.0.0",
     "postcss-url": "^7.3.1",
-    "rimraf": "^2.6.2"
+    "rimraf": "^2.6.2",
+    "swagger-ui": "^3.17.5"
   },
   "scripts": {
     "clean": "rimraf js ui && mkdirp js ui",
