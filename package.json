@@ -24,7 +24,7 @@
   },
   "scripts": {
     "clean": "rimraf js ui && mkdirp js ui",
-    "prepublishOnly": "run-s build",
+    "prepare": "run-s build",
     "build": "run-s clean js site",
     "js": "node ./src/generate-js-module.js",
     "site": "run-p site:*",
