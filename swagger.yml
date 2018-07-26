@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  version: 0.1.0
+  version: 0.2.0
   title: Netlify's API definition
 securityDefinitions:
   netlifyAuth:
@@ -1238,6 +1238,21 @@ paths:
           default:
             $ref: "#/responses/error"
  # end submission
+
+ # begin users
+  /user:
+      get:
+        operationId: getCurrentUser
+        responses:
+          '200':
+            description: OK
+            schema:
+              type: array
+              items:
+                $ref: "#/definitions/user"
+          default:
+            $ref: "#/responses/error"
+ # end users
 definitions:
     site:
       type: object
@@ -1934,6 +1949,42 @@ definitions:
           type: string
         ssl_url:
           type: string
+    user:
+      type: object
+      properties:
+        id:
+          type: string
+        uid:
+          type: string
+        full_name:
+          type: string
+        avatar_url:
+          type: string
+        email:
+          type: string
+        affiliate_id:
+          type: string
+        site_count:
+          type: integer
+          format: int64
+        created_at:
+          type: string
+          format: dateTime
+        last_login:
+          type: string
+          format: dateTime
+        login_providers:
+          type: array
+          items:
+            type: string
+        onboarding_progress:
+          type: object
+          properties:
+            slides:
+              type: string
+        support_priority:
+          type: integer
+          format: int64
     error:
       type: object
       required:
