@@ -8,6 +8,7 @@ package models
 import (
 	strfmt "github.com/go-openapi/strfmt"
 
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/swag"
 )
 
@@ -75,6 +76,9 @@ type Deploy struct {
 	// screenshot url
 	ScreenshotURL string `json:"screenshot_url,omitempty"`
 
+	// site capabilities
+	SiteCapabilities *DeploySiteCapabilities `json:"site_capabilities,omitempty"`
+
 	// site id
 	SiteID string `json:"site_id,omitempty"`
 
@@ -102,6 +106,33 @@ type Deploy struct {
 
 // Validate validates this deploy
 func (m *Deploy) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateSiteCapabilities(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *Deploy) validateSiteCapabilities(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SiteCapabilities) { // not required
+		return nil
+	}
+
+	if m.SiteCapabilities != nil {
+		if err := m.SiteCapabilities.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("site_capabilities")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 

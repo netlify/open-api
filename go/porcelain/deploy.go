@@ -12,6 +12,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"sync"
 	"time"
@@ -161,7 +162,7 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 		}
 	}
 
-	files, err := walk(options.Dir, options.Observer)
+	files, err := walk(options.Dir, options.Observer, deploy.SiteCapabilities.AssetManagement)
 	if err != nil {
 		if options.Observer != nil {
 			options.Observer.OnFailedWalk()
@@ -451,7 +452,7 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 	}
 }
 
-func walk(dir string, observer DeployObserver) (*deployFiles, error) {
+func walk(dir string, observer DeployObserver, useAssetManagement bool) (*deployFiles, error) {
 	files := newDeployFiles()
 
 	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
@@ -486,6 +487,13 @@ func walk(dir string, observer DeployObserver) (*deployFiles, error) {
 				return err
 			}
 			file.Sum = hex.EncodeToString(s.Sum(nil))
+
+			if useAssetManagement {
+				originalSha := getAssetManagementSha(o)
+				if originalSha != "" {
+					file.Sum += ":" + string(originalSha)
+				}
+			}
 
 			files.Add(rel, file)
 
@@ -633,4 +641,20 @@ func createHeader(archive *zip.Writer, i os.FileInfo, runtime string) (io.Writer
 		})
 	}
 	return archive.Create(i.Name())
+}
+
+func getAssetManagementSha(file io.Reader) string {
+	// currently this only supports certain type of git lfs pointer files
+	// version [version]\noid sha256:[oid]\nsize [size]
+	data := make([]byte, 150)
+	if count, err := file.Read(data); err == nil {
+		r, _ := regexp.Compile(`^version \S+\noid sha256:(\S+)\n`)
+		res := r.FindSubmatch(data[:count])
+		if len(res) == 2 {
+			if originalSha := res[1]; len(originalSha) == 64 {
+				return string(originalSha)
+			}
+		}
+	}
+	return ""
 }

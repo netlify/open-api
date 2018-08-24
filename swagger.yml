@@ -1566,6 +1566,11 @@ definitions:
           type: boolean
         review_url:
           type: string
+        site_capabilities:
+          type: object
+          properties:
+            asset_management:
+              type: boolean
     deployFiles:
       type: object
       properties:
