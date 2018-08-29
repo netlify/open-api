@@ -17,13 +17,9 @@ deps: ## Download dependencies.
 
 generate: validate ## Generate the API Go client and the JSON document for the UI.
 	swagger generate client -A netlify -f swagger.yml -t go -c plumbing
-	swagger generate spec -i swagger.yml -o ui/swagger.json
 
 test: ## Test the go code.
 	cd ./go && go test -v $(CHECK_FILES)
 
 validate: ## Check that the swagger spec is valid.
 	swagger validate swagger.yml
-
-node: ## Generate the node module.
-	swagger-codegen generate -i ./swagger.yml -l javascript -o ./node/
