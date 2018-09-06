@@ -30,6 +30,7 @@ type AccountSetup struct {
 	PaymentMethodID string `json:"payment_method_id,omitempty"`
 
 	// period
+	// Enum: [monthly yearly]
 	Period string `json:"period,omitempty"`
 
 	// type id
@@ -42,17 +43,14 @@ func (m *AccountSetup) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateName(formats); err != nil {
-		// prop
 		res = append(res, err)
 	}
 
 	if err := m.validatePeriod(formats); err != nil {
-		// prop
 		res = append(res, err)
 	}
 
 	if err := m.validateTypeID(formats); err != nil {
-		// prop
 		res = append(res, err)
 	}
 

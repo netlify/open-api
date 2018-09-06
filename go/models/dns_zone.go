@@ -33,7 +33,6 @@ func (m *DNSZone) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateRecords(formats); err != nil {
-		// prop
 		res = append(res, err)
 	}
 
@@ -50,20 +49,17 @@ func (m *DNSZone) validateRecords(formats strfmt.Registry) error {
 	}
 
 	for i := 0; i < len(m.Records); i++ {
-
 		if swag.IsZero(m.Records[i]) { // not required
 			continue
 		}
 
 		if m.Records[i] != nil {
-
 			if err := m.Records[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("records" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
-
 		}
 
 	}

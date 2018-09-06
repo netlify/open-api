@@ -70,17 +70,6 @@ func (m *AccountMembership) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateCapabilities(formats); err != nil {
-		// prop
-		res = append(res, err)
-	}
-
-	if err := m.validateOwnerIds(formats); err != nil {
-		// prop
-		res = append(res, err)
-	}
-
-	if err := m.validateRolesAllowed(formats); err != nil {
-		// prop
 		res = append(res, err)
 	}
 
@@ -97,32 +86,12 @@ func (m *AccountMembership) validateCapabilities(formats strfmt.Registry) error 
 	}
 
 	if m.Capabilities != nil {
-
 		if err := m.Capabilities.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("capabilities")
 			}
 			return err
 		}
-
-	}
-
-	return nil
-}
-
-func (m *AccountMembership) validateOwnerIds(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.OwnerIds) { // not required
-		return nil
-	}
-
-	return nil
-}
-
-func (m *AccountMembership) validateRolesAllowed(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.RolesAllowed) { // not required
-		return nil
 	}
 
 	return nil
@@ -139,6 +108,89 @@ func (m *AccountMembership) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *AccountMembership) UnmarshalBinary(b []byte) error {
 	var res AccountMembership
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*m = res
+	return nil
+}
+
+// AccountMembershipCapabilities account membership capabilities
+// swagger:model AccountMembershipCapabilities
+type AccountMembershipCapabilities struct {
+
+	// collaborators
+	Collaborators *AccountUsageCapability `json:"collaborators,omitempty"`
+
+	// sites
+	Sites *AccountUsageCapability `json:"sites,omitempty"`
+}
+
+// Validate validates this account membership capabilities
+func (m *AccountMembershipCapabilities) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateCollaborators(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSites(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *AccountMembershipCapabilities) validateCollaborators(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Collaborators) { // not required
+		return nil
+	}
+
+	if m.Collaborators != nil {
+		if err := m.Collaborators.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("capabilities" + "." + "collaborators")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *AccountMembershipCapabilities) validateSites(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Sites) { // not required
+		return nil
+	}
+
+	if m.Sites != nil {
+		if err := m.Sites.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("capabilities" + "." + "sites")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (m *AccountMembershipCapabilities) MarshalBinary() ([]byte, error) {
+	if m == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(m)
+}
+
+// UnmarshalBinary interface implementation
+func (m *AccountMembershipCapabilities) UnmarshalBinary(b []byte) error {
+	var res AccountMembershipCapabilities
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

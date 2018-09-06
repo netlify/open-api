@@ -17,30 +17,35 @@ import (
 type SiteSetup struct {
 	Site
 
-	SiteSetupAllOf1
+	// repo
+	Repo *RepoInfo `json:"repo,omitempty"`
 }
 
 // UnmarshalJSON unmarshals this object from a JSON structure
 func (m *SiteSetup) UnmarshalJSON(raw []byte) error {
-
+	// AO0
 	var aO0 Site
 	if err := swag.ReadJSON(raw, &aO0); err != nil {
 		return err
 	}
 	m.Site = aO0
 
-	var aO1 SiteSetupAllOf1
-	if err := swag.ReadJSON(raw, &aO1); err != nil {
+	// AO1
+	var dataAO1 struct {
+		Repo *RepoInfo `json:"repo,omitempty"`
+	}
+	if err := swag.ReadJSON(raw, &dataAO1); err != nil {
 		return err
 	}
-	m.SiteSetupAllOf1 = aO1
+
+	m.Repo = dataAO1.Repo
 
 	return nil
 }
 
 // MarshalJSON marshals this object to a JSON structure
 func (m SiteSetup) MarshalJSON() ([]byte, error) {
-	var _parts [][]byte
+	_parts := make([][]byte, 0, 2)
 
 	aO0, err := swag.WriteJSON(m.Site)
 	if err != nil {
@@ -48,11 +53,17 @@ func (m SiteSetup) MarshalJSON() ([]byte, error) {
 	}
 	_parts = append(_parts, aO0)
 
-	aO1, err := swag.WriteJSON(m.SiteSetupAllOf1)
-	if err != nil {
-		return nil, err
+	var dataAO1 struct {
+		Repo *RepoInfo `json:"repo,omitempty"`
 	}
-	_parts = append(_parts, aO1)
+
+	dataAO1.Repo = m.Repo
+
+	jsonDataAO1, errAO1 := swag.WriteJSON(dataAO1)
+	if errAO1 != nil {
+		return nil, errAO1
+	}
+	_parts = append(_parts, jsonDataAO1)
 
 	return swag.ConcatJSON(_parts...), nil
 }
@@ -61,17 +72,36 @@ func (m SiteSetup) MarshalJSON() ([]byte, error) {
 func (m *SiteSetup) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	// validation for a type composition with Site
 	if err := m.Site.Validate(formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.SiteSetupAllOf1.Validate(formats); err != nil {
+	if err := m.validateRepo(formats); err != nil {
 		res = append(res, err)
 	}
 
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *SiteSetup) validateRepo(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Repo) { // not required
+		return nil
+	}
+
+	if m.Repo != nil {
+		if err := m.Repo.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("repo")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 

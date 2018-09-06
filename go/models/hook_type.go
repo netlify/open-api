@@ -8,7 +8,6 @@ package models
 import (
 	strfmt "github.com/go-openapi/strfmt"
 
-	"github.com/go-openapi/errors"
 	"github.com/go-openapi/swag"
 )
 
@@ -28,43 +27,6 @@ type HookType struct {
 
 // Validate validates this hook type
 func (m *HookType) Validate(formats strfmt.Registry) error {
-	var res []error
-
-	if err := m.validateEvents(formats); err != nil {
-		// prop
-		res = append(res, err)
-	}
-
-	if err := m.validateFields(formats); err != nil {
-		// prop
-		res = append(res, err)
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-func (m *HookType) validateEvents(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.Events) { // not required
-		return nil
-	}
-
-	return nil
-}
-
-func (m *HookType) validateFields(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.Fields) { // not required
-		return nil
-	}
-
-	for i := 0; i < len(m.Fields); i++ {
-
-	}
-
 	return nil
 }
 
