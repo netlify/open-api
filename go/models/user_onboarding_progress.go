@@ -11,21 +11,21 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// SiteProcessingSettingsHTML site processing settings Html
-// swagger:model siteProcessingSettingsHtml
-type SiteProcessingSettingsHTML struct {
+// UserOnboardingProgress user onboarding progress
+// swagger:model userOnboardingProgress
+type UserOnboardingProgress struct {
 
-	// pretty urls
-	PrettyUrls bool `json:"pretty_urls,omitempty"`
+	// slides
+	Slides string `json:"slides,omitempty"`
 }
 
-// Validate validates this site processing settings Html
-func (m *SiteProcessingSettingsHTML) Validate(formats strfmt.Registry) error {
+// Validate validates this user onboarding progress
+func (m *UserOnboardingProgress) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
 // MarshalBinary interface implementation
-func (m *SiteProcessingSettingsHTML) MarshalBinary() ([]byte, error) {
+func (m *UserOnboardingProgress) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -33,8 +33,8 @@ func (m *SiteProcessingSettingsHTML) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *SiteProcessingSettingsHTML) UnmarshalBinary(b []byte) error {
-	var res SiteProcessingSettingsHTML
+func (m *UserOnboardingProgress) UnmarshalBinary(b []byte) error {
+	var res UserOnboardingProgress
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

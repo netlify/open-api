@@ -37,22 +37,18 @@ func (m *SiteProcessingSettings) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateCSS(formats); err != nil {
-		// prop
 		res = append(res, err)
 	}
 
 	if err := m.validateHTML(formats); err != nil {
-		// prop
 		res = append(res, err)
 	}
 
 	if err := m.validateImages(formats); err != nil {
-		// prop
 		res = append(res, err)
 	}
 
 	if err := m.validateJs(formats); err != nil {
-		// prop
 		res = append(res, err)
 	}
 
@@ -69,14 +65,12 @@ func (m *SiteProcessingSettings) validateCSS(formats strfmt.Registry) error {
 	}
 
 	if m.CSS != nil {
-
 		if err := m.CSS.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("css")
 			}
 			return err
 		}
-
 	}
 
 	return nil
@@ -89,14 +83,12 @@ func (m *SiteProcessingSettings) validateHTML(formats strfmt.Registry) error {
 	}
 
 	if m.HTML != nil {
-
 		if err := m.HTML.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("html")
 			}
 			return err
 		}
-
 	}
 
 	return nil
@@ -109,14 +101,12 @@ func (m *SiteProcessingSettings) validateImages(formats strfmt.Registry) error {
 	}
 
 	if m.Images != nil {
-
 		if err := m.Images.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("images")
 			}
 			return err
 		}
-
 	}
 
 	return nil
@@ -129,14 +119,12 @@ func (m *SiteProcessingSettings) validateJs(formats strfmt.Registry) error {
 	}
 
 	if m.Js != nil {
-
 		if err := m.Js.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("js")
 			}
 			return err
 		}
-
 	}
 
 	return nil

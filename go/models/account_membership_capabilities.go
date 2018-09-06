@@ -28,12 +28,10 @@ func (m *AccountMembershipCapabilities) Validate(formats strfmt.Registry) error 
 	var res []error
 
 	if err := m.validateCollaborators(formats); err != nil {
-		// prop
 		res = append(res, err)
 	}
 
 	if err := m.validateSites(formats); err != nil {
-		// prop
 		res = append(res, err)
 	}
 
@@ -50,14 +48,12 @@ func (m *AccountMembershipCapabilities) validateCollaborators(formats strfmt.Reg
 	}
 
 	if m.Collaborators != nil {
-
 		if err := m.Collaborators.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("collaborators")
 			}
 			return err
 		}
-
 	}
 
 	return nil
@@ -70,14 +66,12 @@ func (m *AccountMembershipCapabilities) validateSites(formats strfmt.Registry) e
 	}
 
 	if m.Sites != nil {
-
 		if err := m.Sites.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("sites")
 			}
 			return err
 		}
-
 	}
 
 	return nil

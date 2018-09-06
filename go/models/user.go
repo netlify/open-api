@@ -102,34 +102,3 @@ func (m *User) UnmarshalBinary(b []byte) error {
 	*m = res
 	return nil
 }
-
-// UserOnboardingProgress user onboarding progress
-// swagger:model UserOnboardingProgress
-type UserOnboardingProgress struct {
-
-	// slides
-	Slides string `json:"slides,omitempty"`
-}
-
-// Validate validates this user onboarding progress
-func (m *UserOnboardingProgress) Validate(formats strfmt.Registry) error {
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (m *UserOnboardingProgress) MarshalBinary() ([]byte, error) {
-	if m == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(m)
-}
-
-// UnmarshalBinary interface implementation
-func (m *UserOnboardingProgress) UnmarshalBinary(b []byte) error {
-	var res UserOnboardingProgress
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*m = res
-	return nil
-}

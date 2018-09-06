@@ -8,7 +8,6 @@ package models
 import (
 	strfmt "github.com/go-openapi/strfmt"
 
-	"github.com/go-openapi/errors"
 	"github.com/go-openapi/swag"
 )
 
@@ -22,11 +21,6 @@ type SiteProcessingSettingsImages struct {
 
 // Validate validates this site processing settings images
 func (m *SiteProcessingSettingsImages) Validate(formats strfmt.Registry) error {
-	var res []error
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
 	return nil
 }
 
