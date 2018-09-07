@@ -57,6 +57,16 @@ import spec from '@netlify/open-api' // import the spec object into your project
 
 The module also ships a copy of the original `yml` spec file at `@netlify/open-api/swagger.yml`.
 
+## Making a new release
+
+1. bump the version of swagger.yml file
+2. regenarate go client (if you haven't)
+3. bump a JS package version with `npm version [major|minor|patch]` (updates package.json, create a git tag)
+4. make sure everything is committed and `git push && git push --tags` to push to the origin
+5. write a release note for the tag in [Releases](https://github.com/netlify/open-api/releases) page
+6. publish to npm (`npm install && npm publish`)
+
+
 ## Explore API
 
 Go to https://open-api.netlify.com to explore the spec definitions using Open-Api's UI.
