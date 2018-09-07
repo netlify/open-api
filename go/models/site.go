@@ -106,22 +106,14 @@ func (m *Site) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateBuildSettings(formats); err != nil {
-		// prop
-		res = append(res, err)
-	}
-
-	if err := m.validateDomainAliases(formats); err != nil {
-		// prop
 		res = append(res, err)
 	}
 
 	if err := m.validateProcessingSettings(formats); err != nil {
-		// prop
 		res = append(res, err)
 	}
 
 	if err := m.validatePublishedDeploy(formats); err != nil {
-		// prop
 		res = append(res, err)
 	}
 
@@ -138,23 +130,12 @@ func (m *Site) validateBuildSettings(formats strfmt.Registry) error {
 	}
 
 	if m.BuildSettings != nil {
-
 		if err := m.BuildSettings.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("build_settings")
 			}
 			return err
 		}
-
-	}
-
-	return nil
-}
-
-func (m *Site) validateDomainAliases(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.DomainAliases) { // not required
-		return nil
 	}
 
 	return nil
@@ -167,14 +148,12 @@ func (m *Site) validateProcessingSettings(formats strfmt.Registry) error {
 	}
 
 	if m.ProcessingSettings != nil {
-
 		if err := m.ProcessingSettings.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("processing_settings")
 			}
 			return err
 		}
-
 	}
 
 	return nil
@@ -187,14 +166,12 @@ func (m *Site) validatePublishedDeploy(formats strfmt.Registry) error {
 	}
 
 	if m.PublishedDeploy != nil {
-
 		if err := m.PublishedDeploy.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("published_deploy")
 			}
 			return err
 		}
-
 	}
 
 	return nil

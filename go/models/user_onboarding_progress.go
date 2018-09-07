@@ -11,33 +11,21 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// Member member
-// swagger:model member
-type Member struct {
+// UserOnboardingProgress user onboarding progress
+// swagger:model userOnboardingProgress
+type UserOnboardingProgress struct {
 
-	// avatar
-	Avatar string `json:"avatar,omitempty"`
-
-	// email
-	Email string `json:"email,omitempty"`
-
-	// full name
-	FullName string `json:"full_name,omitempty"`
-
-	// id
-	ID string `json:"id,omitempty"`
-
-	// role
-	Role string `json:"role,omitempty"`
+	// slides
+	Slides string `json:"slides,omitempty"`
 }
 
-// Validate validates this member
-func (m *Member) Validate(formats strfmt.Registry) error {
+// Validate validates this user onboarding progress
+func (m *UserOnboardingProgress) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
 // MarshalBinary interface implementation
-func (m *Member) MarshalBinary() ([]byte, error) {
+func (m *UserOnboardingProgress) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -45,8 +33,8 @@ func (m *Member) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *Member) UnmarshalBinary(b []byte) error {
-	var res Member
+func (m *UserOnboardingProgress) UnmarshalBinary(b []byte) error {
+	var res UserOnboardingProgress
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

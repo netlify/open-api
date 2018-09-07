@@ -16,7 +16,7 @@ deps: ## Download dependencies.
 	go get -u github.com/golang/dep/cmd/dep && cd ./go && dep ensure
 
 generate: validate ## Generate the API Go client and the JSON document for the UI.
-	swagger generate client -A netlify -f swagger.yml -t go -c plumbing
+	swagger generate client -A netlify -f swagger.yml -t go -c plumbing --with-flatten=full
 
 test: ## Test the go code.
 	cd ./go && go test -v $(CHECK_FILES)

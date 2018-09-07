@@ -70,17 +70,6 @@ func (m *AccountMembership) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateCapabilities(formats); err != nil {
-		// prop
-		res = append(res, err)
-	}
-
-	if err := m.validateOwnerIds(formats); err != nil {
-		// prop
-		res = append(res, err)
-	}
-
-	if err := m.validateRolesAllowed(formats); err != nil {
-		// prop
 		res = append(res, err)
 	}
 
@@ -97,32 +86,12 @@ func (m *AccountMembership) validateCapabilities(formats strfmt.Registry) error 
 	}
 
 	if m.Capabilities != nil {
-
 		if err := m.Capabilities.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("capabilities")
 			}
 			return err
 		}
-
-	}
-
-	return nil
-}
-
-func (m *AccountMembership) validateOwnerIds(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.OwnerIds) { // not required
-		return nil
-	}
-
-	return nil
-}
-
-func (m *AccountMembership) validateRolesAllowed(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.RolesAllowed) { // not required
-		return nil
 	}
 
 	return nil

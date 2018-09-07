@@ -8,9 +8,9 @@ It's still a work in progress and we welcome feedback and contributions.
 
 We use [go-swagger](https://github.com/go-swagger/go-swagger) to validate our spec against the 2.0 spec of Open API.
 
-We currently depend on version 0.12.0 of the swagger toolchain. You can download the binary for your platform from this release page:
+We currently depend on version 0.16.0 of the swagger toolchain. You can download the binary for your platform from this release page:
 
-https://github.com/go-swagger/go-swagger/releases/tag/0.12.0
+https://github.com/go-swagger/go-swagger/releases/tag/0.16.0
 
 ### Spec validation
 

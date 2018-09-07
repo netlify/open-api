@@ -31,7 +31,6 @@ func (m *AuditLog) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validatePayload(formats); err != nil {
-		// prop
 		res = append(res, err)
 	}
 
@@ -48,14 +47,12 @@ func (m *AuditLog) validatePayload(formats strfmt.Registry) error {
 	}
 
 	if m.Payload != nil {
-
 		if err := m.Payload.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("payload")
 			}
 			return err
 		}
-
 	}
 
 	return nil

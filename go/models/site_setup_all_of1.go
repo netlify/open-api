@@ -25,7 +25,6 @@ func (m *SiteSetupAllOf1) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateRepo(formats); err != nil {
-		// prop
 		res = append(res, err)
 	}
 
@@ -42,14 +41,12 @@ func (m *SiteSetupAllOf1) validateRepo(formats strfmt.Registry) error {
 	}
 
 	if m.Repo != nil {
-
 		if err := m.Repo.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("repo")
 			}
 			return err
 		}
-
 	}
 
 	return nil

@@ -28,12 +28,10 @@ func (m *AssetSignature) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateAsset(formats); err != nil {
-		// prop
 		res = append(res, err)
 	}
 
 	if err := m.validateForm(formats); err != nil {
-		// prop
 		res = append(res, err)
 	}
 
@@ -50,14 +48,12 @@ func (m *AssetSignature) validateAsset(formats strfmt.Registry) error {
 	}
 
 	if m.Asset != nil {
-
 		if err := m.Asset.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("asset")
 			}
 			return err
 		}
-
 	}
 
 	return nil
@@ -70,14 +66,12 @@ func (m *AssetSignature) validateForm(formats strfmt.Registry) error {
 	}
 
 	if m.Form != nil {
-
 		if err := m.Form.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("form")
 			}
 			return err
 		}
-
 	}
 
 	return nil

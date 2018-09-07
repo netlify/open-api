@@ -22,13 +22,14 @@ type SiteSetup struct {
 
 // UnmarshalJSON unmarshals this object from a JSON structure
 func (m *SiteSetup) UnmarshalJSON(raw []byte) error {
-
+	// AO0
 	var aO0 Site
 	if err := swag.ReadJSON(raw, &aO0); err != nil {
 		return err
 	}
 	m.Site = aO0
 
+	// AO1
 	var aO1 SiteSetupAllOf1
 	if err := swag.ReadJSON(raw, &aO1); err != nil {
 		return err
@@ -40,7 +41,7 @@ func (m *SiteSetup) UnmarshalJSON(raw []byte) error {
 
 // MarshalJSON marshals this object to a JSON structure
 func (m SiteSetup) MarshalJSON() ([]byte, error) {
-	var _parts [][]byte
+	_parts := make([][]byte, 0, 2)
 
 	aO0, err := swag.WriteJSON(m.Site)
 	if err != nil {
@@ -61,10 +62,11 @@ func (m SiteSetup) MarshalJSON() ([]byte, error) {
 func (m *SiteSetup) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	// validation for a type composition with Site
 	if err := m.Site.Validate(formats); err != nil {
 		res = append(res, err)
 	}
-
+	// validation for a type composition with SiteSetupAllOf1
 	if err := m.SiteSetupAllOf1.Validate(formats); err != nil {
 		res = append(res, err)
 	}
