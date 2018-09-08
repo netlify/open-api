@@ -15,7 +15,7 @@ The spec is published and versioned for various ecosystems:
 
 You can view the definition using [Swagger UI](https://swagger.io/tools/swagger-ui/) by visiting [open-api.netlify.com](http://open-api.netlify.com) which provides limited interaction with the API from the browser.
 
-[![screenshot of netlify swagger ui](ui/screenshot.png)](https://open-api.netlify.org)
+[![screenshot of netlify swagger ui](ui/screenshot.png)](https://open-api.netlify.com)
 
 ### Go Client
 
