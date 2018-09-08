@@ -19,7 +19,7 @@ You can view the definition using [Swagger UI](https://swagger.io/tools/swagger-
 
 ### Go Client
 
-[![GoDoc](https://godoc.org/github.com/netlify/open-api/go?status.svg)](https://godoc.org/github.com/netlify/open-api/go) [![Go Report Card](https://goreportcard.com/badge/github.com/netlify/open-api)](https://goreportcard.com/report/github.com/netlify/open-api) [![Github release](https://img.shields.io/github/release/qubyte/rubidium.svg)](https://github.com/netlify/open-api/releases/latest)
+[![GoDoc](https://godoc.org/github.com/netlify/open-api/go?status.svg)](https://godoc.org/github.com/netlify/open-api/go) [![Go Report Card](https://goreportcard.com/badge/github.com/netlify/open-api)](https://goreportcard.com/report/github.com/netlify/open-api) [![Github release](https://img.shields.io/github/release/netlify/open-api.svg)](https://github.com/netlify/open-api/releases/latest)
 
 ```console
 $ go get github.com/netlify/open-api/...
