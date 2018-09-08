@@ -47,16 +47,16 @@ $ yarn add @netlify/open-api
 import spec from '@netlify/open-api' // import the spec object into your project
 ```
 
-The module also ships a copy of the original `yml` spec file at `@netlify/open-api/swagger.yml`.
+The module also ships a copy of the original `yml` spec file at `@netlify/open-api/swagger.yml`.  You can use these with generic swagger/open-api clients:
 
-### JS Clients
+#### swagger-js
 
 Swagger's JS client can dynamically create a client from a spec either from a URL or spec object.
 
 See [swagger-js](https://github.com/swagger-api/swagger-js)
 
 
-### Usage
+##### Usage
 ```js
 <script src='browser/swagger-client.js' type='text/javascript'></script>
 <script>
