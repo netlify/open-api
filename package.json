@@ -2,7 +2,7 @@
   "name": "@netlify/open-api",
   "version": "0.3.0",
   "description": "Netlify's open-api definition as a module",
-  "main": "js/swagger.json",
+  "main": "js/dist/swagger.json",
   "dependencies": {},
   "devDependencies": {
     "autoprefixer": "^9.0.0",
@@ -22,17 +22,17 @@
     "swagger-ui": "^3.17.5"
   },
   "scripts": {
-    "clean": "rimraf js ui && mkdirp js ui",
+    "clean": "rimraf js/dist ui/dist && mkdirp js/dist ui/dist",
     "prepare": "run-s build",
     "build": "run-s clean js site",
-    "js": "node ./src/generate-js-module.js",
+    "js": "node ./js/generate-module.js",
     "site": "run-p site:*",
-    "site:static": "cpx 'src/site/{index.html,static/**}' ui",
-    "site:swagger": "cpx 'js/swagger.{json,yml}' ui",
-    "site:css": "postcss src/site/index.css -o ui/bundle.css",
-    "site:js": "browserify src/site/index.js -o ui/bundle.js",
+    "site:swagger": "node ./ui/include-swagger.js",
+    "site:static": "cpx 'ui/{index.html,static/**}' ui/dist",
+    "site:css": "postcss ui/index.css -o ui/dist/bundle.css",
+    "site:js": "browserify ui/index.js -o ui/dist/bundle.js",
     "start": "run-s build serve",
-    "serve": "budo --dir ui"
+    "serve": "budo --dir ui/dist"
   },
   "files": [
     "js/**/*"

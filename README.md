@@ -1,8 +1,30 @@
 # Netlify open-api
 
-This repository contains Netlify's API definition in the [Open API format](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md), formerly known as Swagger.
+This repository contains Netlify's API definition in the [Open API format](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md) (AKA Swagger). 
 
-It's still a work in progress and we welcome feedback and contributions.
+## Usage
+
+The `swagger.yml` file is the master copy of the Open API 2.0 definition.  Additional context on using the API can be found on our [Docs site](https://www.netlify.com/docs/api/).
+
+The spec is published and versioned for various ecosystems:
+
+### SwaggerUI (Web UI)
+
+You can view the definition using [Swagger UI](https://swagger.io/tools/swagger-ui/) by visiting [open-api.netlify.com](http://open-api.netlify.com) which provides limited interaction with the API from the browser.
+
+![screenshot of netlify swagger ui](ui/screenshot.png)
+
+### Go Client
+
+[![GoDoc](https://godoc.org/github.com/netlify/open-api/go?status.svg)](https://godoc.org/github.com/netlify/open-api/go) [![Go Report Card](https://goreportcard.com/badge/github.com/netlify/open-api)](https://goreportcard.com/report/github.com/netlify/open-api) [![Github release](https://img.shields.io/github/release/qubyte/rubidium.svg)](https://github.com/netlify/open-api/releases/latest)
+
+```console
+$ go get github.com/netlify/open-api/...
+```
+
+### npm module
+
+### JS Clients
 
 ## Go Client
 
