@@ -1,4 +1,4 @@
-# Netlify open-api
+# open-api
 [![Build Status](https://travis-ci.org/netlify/open-api.svg?branch=master)](https://travis-ci.org/netlify/open-api) [![Build status](https://ci.appveyor.com/api/projects/status/qrmvxk957ou2yrd9/branch/master?svg=true)](https://ci.appveyor.com/project/netlify/open-api/branch/master)
 
 This repository contains Netlify's API definition in the [Open API format](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md) (AKA Swagger).
