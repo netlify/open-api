@@ -22,7 +22,7 @@ You can view the definition using [Swagger UI](https://swagger.io/tools/swagger-
 
 [![GoDoc][godoc-img]][godoc]
 [![Go Report Card][goreport-img]][goreport]
-[![Github release][github-img]][github]
+[![Github release][git-img]][git]
 
 ```console
 $ go get github.com/netlify/open-api/...
