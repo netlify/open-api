@@ -1,6 +1,5 @@
 *.iml
 vendor
 *node_modules
-ui
-js
 yarn.lock
+dist
