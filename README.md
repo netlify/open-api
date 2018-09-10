@@ -84,7 +84,7 @@ MIT. See [LICENSE](LICENSE) for more details.
 [godoc-img]: https://godoc.org/github.com/netlify/open-api/go?status.svg
 [godoc]: https://godoc.org/github.com/netlify/open-api/go
 [goreport-img]: https://goreportcard.com/badge/github.com/netlify/open-api
-[gorepot]: https://goreportcard.com/report/github.com/netlify/open-api
+[goreport]: https://goreportcard.com/report/github.com/netlify/open-api
 [git-img]: https://img.shields.io/github/release/netlify/open-api.svg
 [git]: https://github.com/netlify/open-api/releases/latest
 
