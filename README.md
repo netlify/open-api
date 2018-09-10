@@ -1,6 +1,6 @@
 # open-api
 [![Build Status][travis-img]][travis]
-[![Build status]([av-img])][av]
+[![Build status][av-img]][av]
 
 This repository contains Netlify's API definition in the [Open API format][open-api-2], formerly known as Swagger.
 
@@ -76,8 +76,8 @@ MIT. See [LICENSE](LICENSE) for more details.
 
 [travis-img]: https://travis-ci.org/netlify/open-api.svg?branch=master
 [travis]: https://travis-ci.org/netlify/open-api
-[av-img]: https://ci.appveyor.com/api/projects/status/qrmvxk957ou2yrd9/branch/master?svg=true
 [av]: https://ci.appveyor.com/project/netlify/open-api/branch/master
+[av-img]: https://ci.appveyor.com/api/projects/status/qrmvxk957ou2yrd9/branch/master?svg=true
 [npm-img]: https://img.shields.io/npm/v/@netlify/open-api.svg
 [npm]: https://npmjs.org/package/@netlify/open-api
 
