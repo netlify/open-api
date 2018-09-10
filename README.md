@@ -1,9 +1,10 @@
 # open-api
-[![Build Status](https://travis-ci.org/netlify/open-api.svg?branch=master)](https://travis-ci.org/netlify/open-api) [![Build status](https://ci.appveyor.com/api/projects/status/qrmvxk957ou2yrd9/branch/master?svg=true)](https://ci.appveyor.com/project/netlify/open-api/branch/master)
+[![Build Status][travis-img]][travis]
+[![Build status]([av-img])][av]
 
-This repository contains Netlify's API definition in the [Open API format](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md) (AKA Swagger).
+This repository contains Netlify's API definition in the [Open API format][open-api-2], formerly known as Swagger.
 
-The spec is currently incomplete but includes many common endpoints.
+It's still a work in progress and we welcome feedback and contributions.
 
 ## Usage
 
@@ -19,7 +20,9 @@ You can view the definition using [Swagger UI](https://swagger.io/tools/swagger-
 
 ### Go Client
 
-[![GoDoc](https://godoc.org/github.com/netlify/open-api/go?status.svg)](https://godoc.org/github.com/netlify/open-api/go) [![Go Report Card](https://goreportcard.com/badge/github.com/netlify/open-api)](https://goreportcard.com/report/github.com/netlify/open-api) [![Github release](https://img.shields.io/github/release/netlify/open-api.svg)](https://github.com/netlify/open-api/releases/latest)
+[![GoDoc][godoc-img]][godoc]
+[![Go Report Card][goreport-img]][goreport]
+[![Github release][github-img]][github]
 
 ```console
 $ go get github.com/netlify/open-api/...
@@ -33,7 +36,7 @@ See [CONTRIBUTING.md#go-client](CONTRIBUTING.md) for details on how this client 
 
 ### npm module
 
-[![npm version][2]][3]
+[![npm version][npm-img]][npm]
 
 You can also consume the swagger spec as an npm module:
 
@@ -53,8 +56,7 @@ The module also ships a copy of the original `yml` spec file at `@netlify/open-a
 
 Swagger's JS client can dynamically create a client from a spec either from a URL or spec object.
 
-See [swagger-js](https://github.com/swagger-api/swagger-js)
-
+See the [swagger-js](https://github.com/swagger-api/swagger-js) client:
 
 ##### Usage
 ```js
@@ -72,5 +74,18 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for more info on how to make contribution
 
 MIT. See [LICENSE](LICENSE) for more details.
 
-[2]: https://img.shields.io/npm/v/@netlify/open-api.svg
-[3]: https://npmjs.org/package/@netlify/open-api
+[travis-img]: https://travis-ci.org/netlify/open-api.svg?branch=master
+[travis]: https://travis-ci.org/netlify/open-api
+[av-img]: https://ci.appveyor.com/api/projects/status/qrmvxk957ou2yrd9/branch/master?svg=true
+[av]: https://ci.appveyor.com/project/netlify/open-api/branch/master
+[npm-img]: https://img.shields.io/npm/v/@netlify/open-api.svg
+[npm]: https://npmjs.org/package/@netlify/open-api
+
+[godoc-img]: https://godoc.org/github.com/netlify/open-api/go?status.svg
+[godoc]: https://godoc.org/github.com/netlify/open-api/go
+[goreport-img]: https://goreportcard.com/badge/github.com/netlify/open-api
+[gorepot]: https://goreportcard.com/report/github.com/netlify/open-api
+[git-img]: https://img.shields.io/github/release/netlify/open-api.svg
+[git]: https://github.com/netlify/open-api/releases/latest
+
+[open-api-2]: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md
