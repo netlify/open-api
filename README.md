@@ -8,7 +8,7 @@ It's still a work in progress and we welcome feedback and contributions.
 
 ## Usage
 
-The `swagger.yml` file is the master copy of the Open API 2.0 definition.  Additional context on using the API can be found on our [docs site](https://www.netlify.com/docs/api/).
+The [`swagger.yml`](swagger.yml) file is the master copy of the Open API 2.0 definition.  Additional context on using the API can be found on our [docs site](https://www.netlify.com/docs/api/).
 
 The spec is published and versioned for various ecosystems:
 
