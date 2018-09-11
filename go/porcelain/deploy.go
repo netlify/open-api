@@ -162,6 +162,7 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 		}
 	}
 
+	context.GetLogger(ctx).Infof("Getting files info with asset management flag: %v", deploy.SiteCapabilities.AssetManagement)
 	files, err := walk(options.Dir, options.Observer, deploy.SiteCapabilities.AssetManagement)
 	if err != nil {
 		if options.Observer != nil {
@@ -489,6 +490,11 @@ func walk(dir string, observer DeployObserver, useAssetManagement bool) (*deploy
 			file.Sum = hex.EncodeToString(s.Sum(nil))
 
 			if useAssetManagement {
+				o, err := os.Open(path)
+				if err != nil {
+					return err
+				}
+				defer o.Close()
 				originalSha := getAssetManagementSha(o)
 				if originalSha != "" {
 					file.Sum += ":" + string(originalSha)
