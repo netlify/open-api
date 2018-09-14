@@ -121,8 +121,13 @@ func newDeployFiles() *deployFiles {
 func (d *deployFiles) Add(p string, f *FileBundle) {
 	d.Files[p] = f
 	d.Sums[p] = f.Sum
-	list, _ := d.Hashed[f.Sum]
-	d.Hashed[f.Sum] = append(list, f)
+	// Remove ":original_sha" part when to save in Hashed (asset management)
+	sum := f.Sum
+	if strings.Contains(sum, ":") {
+		sum = strings.Split(sum, ":")[0]
+	}
+	list, _ := d.Hashed[sum]
+	d.Hashed[sum] = append(list, f)
 }
 
 func (n *Netlify) overCommitted(d *deployFiles) bool {
