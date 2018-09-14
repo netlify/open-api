@@ -24,3 +24,30 @@ func TestGetAssetManagementSha(t *testing.T) {
 		}
 	}
 }
+
+func TestAddWithAssetManagement(t *testing.T) {
+	files := newDeployFiles()
+	tests := []struct {
+		rel string
+		sum string
+	}{
+		{"foo.jpg", "sum1"},
+		{"bar.jpg", "sum2"},
+		{"baz.jpg", "sum3:originalsha"},
+	}
+
+	for _, test := range tests {
+		file := &FileBundle{}
+		file.Sum = test.sum
+		files.Add(test.rel, file)
+	}
+
+	out := files.Hashed["sum3"]
+	if len(out) != 1 {
+		t.Fatalf("expected `%d`, got `%d`", 1, len(out))
+	}
+	out2 := files.Sums["baz.jpg"]
+	if out2 != "sum3:originalsha" {
+		t.Fatalf("expected `%v`, got `%v`", "sum3:originalsha", out2)
+	}
+}
