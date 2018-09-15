@@ -712,10 +712,10 @@ paths:
       operationId: createAddon
       parameters:
         - name: config
-          type: object
           in: body
-          required: true
-      response:
+          schema:
+            $ref: "#/definitions/addon_config"
+      responses:
         '200':
           description: OK
         default:
@@ -758,10 +758,10 @@ paths:
       operationId: updateAddon
       parameters:
         - name: config
-          type: object
           in: body
-          required: true
-      response:
+          schema:
+            $ref: "#/definitions/addon_config"
+      responses:
         '200':
           description: OK
         default:
@@ -2058,6 +2058,8 @@ definitions:
         support_priority:
           type: integer
           format: int64
+    addon_config:
+      type: object
     error:
       type: object
       required:
