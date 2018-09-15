@@ -698,6 +698,74 @@ paths:
               $ref: "#/definitions/dnsZone"
         default:
           $ref: "#/responses/error"
+  /sites/{site_id}/services/{addon}/instances:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+      - name: addon
+        type: string
+        in: path
+        required: true
+    post:
+      operationId: createAddon
+      parameters:
+        - name: config
+          type: object
+          in: body
+          required: true
+      response:
+        '200':
+          description: OK
+        default:
+          $ref: "#/responses/error"
+  /sites/{site_id}/service-instances:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+    get:
+      operationId: getAddons
+      responses:
+        '200':
+          description: OK
+        default:
+          $ref: "#/responses/error"
+  /sites/{site_id}/services/{addon}/instances/{instance_id}:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+      - name: addon
+        type: string
+        in: path
+        required: true
+      - name: instance_id
+        type: string
+        in: path
+        required: true
+    delete:
+      operationId: deleteAddon
+      responses:
+        '200':
+          description: OK
+        default:
+          $ref: "#/responses/error"
+    put:
+      operationId: updateAddon
+      parameters:
+        - name: config
+          type: object
+          in: body
+          required: true
+      response:
+        '200':
+          description: OK
+        default:
+          $ref: "#/responses/error"
   /deploys/{deploy_id}:
     get:
       operationId: getDeploy
