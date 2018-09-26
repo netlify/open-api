@@ -36,7 +36,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for details on how this client is develop
 
 ### JS Client
 
-[![npm version][npm-js-img]][npm-js] [![downloads][dl-img]][dl]
+[![npm version][npm-js-img]][npm-js] [![downloads][dl-js-img]][dl-js]
 
 We have a fully featured JS/Node.js client that implements some of the same 'porcelain' methods that the go client does in addition to the open-api methods.
 
