@@ -34,7 +34,15 @@ $ go get github.com/netlify/open-api/...
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for details on how this client is developed and generated.
 
-### npm module
+### JS Client
+
+[![npm version][npm-js-img]][npm-js] [![downloads][dl-img]][dl]
+
+We have a fully featured JS/Node.js client that implements some of the same 'porcelain' methods that the go client does in addition to the open-api methods.
+
+See [github.com/netlify/js-client](https://github.com/netlify/js-client) for more details.
+
+#### npm module
 
 [![npm version][npm-img]][npm]
 
@@ -52,7 +60,7 @@ import spec from '@netlify/open-api' // import the spec object into your project
 
 The module also ships a copy of the original `yml` spec file at `@netlify/open-api/js/dist/swagger.yml`.  You can use these with generic swagger/open-api clients:
 
-#### swagger-js
+##### swagger-js
 
 Swagger's JS client can dynamically create a client from a spec either from a URL or spec object.
 
@@ -80,6 +88,10 @@ MIT. See [LICENSE](LICENSE) for more details.
 [av-img]: https://ci.appveyor.com/api/projects/status/1g0m72jqhspar6q9/branch/master?svg=true
 [npm-img]: https://img.shields.io/npm/v/@netlify/open-api.svg
 [npm]: https://npmjs.org/package/@netlify/open-api
+[npm-js-img]: https://img.shields.io/npm/v/netlify.svg
+[npm-js]: https://npmjs.org/package/netlify
+[dl-js-img]: https://img.shields.io/npm/dm/netlify.svg
+[dl-js]: https://npmjs.org/package/netlify
 
 [godoc-img]: https://godoc.org/github.com/netlify/open-api/go?status.svg
 [godoc]: https://godoc.org/github.com/netlify/open-api/go
