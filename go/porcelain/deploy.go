@@ -26,6 +26,7 @@ import (
 
 	"github.com/go-openapi/errors"
 	"github.com/rsc/goversion/version"
+	"net/url"
 )
 
 const (
@@ -409,14 +410,16 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 			body, operationError = os.Open(f.Path)
 			if operationError == nil {
 				defer body.Close()
-				params := operations.NewUploadDeployFileParams().WithDeployID(d.ID).WithPath(f.Name).WithFileBody(body)
+				// We need to escape the filepaths so they are URL safe
+				params := operations.NewUploadDeployFileParams().WithDeployID(d.ID).WithPath(url.QueryEscape(f.Name)).WithFileBody(body)
 				if timeout != 0 {
 					params.SetTimeout(timeout)
 				}
 				_, operationError = n.Operations.UploadDeployFile(params, authInfo)
 			}
 		case functionUpload:
-			params := operations.NewUploadDeployFunctionParams().WithDeployID(d.ID).WithName(f.Name).WithFileBody(f).WithRuntime(&f.Runtime)
+			// We need to escape the filepaths so they are URL safe
+			params := operations.NewUploadDeployFunctionParams().WithDeployID(d.ID).WithName(url.QueryEscape(f.Name)).WithFileBody(f).WithRuntime(&f.Runtime)
 			if timeout != 0 {
 				params.SetTimeout(timeout)
 			}
