@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  version: 0.4.2
+  version: 0.5.0
   title: Netlify's API definition
 securityDefinitions:
   netlifyAuth:
@@ -1162,6 +1162,17 @@ paths:
         type: string
         in: path
         required: true
+    get:
+      operationId: getAccount
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/accountMembership"
+        default:
+          $ref: "#/responses/error"
     put:
       operationId: updateAccount
       parameters:

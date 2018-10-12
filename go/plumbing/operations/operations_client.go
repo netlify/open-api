@@ -663,6 +663,35 @@ func (a *Client) ExchangeTicket(params *ExchangeTicketParams, authInfo runtime.C
 }
 
 /*
+GetAccount get account API
+*/
+func (a *Client) GetAccount(params *GetAccountParams, authInfo runtime.ClientAuthInfoWriter) (*GetAccountOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetAccountParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "getAccount",
+		Method:             "GET",
+		PathPattern:        "/accounts/{account_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &GetAccountReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*GetAccountOK), nil
+
+}
+
+/*
 GetCurrentUser get current user API
 */
 func (a *Client) GetCurrentUser(params *GetCurrentUserParams, authInfo runtime.ClientAuthInfoWriter) (*GetCurrentUserOK, error) {
