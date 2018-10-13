@@ -1,6 +1,6 @@
 {
   "name": "@netlify/open-api",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "description": "Netlify's open-api definition as a module",
   "main": "js/dist/swagger.json",
   "dependencies": {},
