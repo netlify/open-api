@@ -607,6 +607,15 @@ paths:
               $ref: "#/definitions/build"
         default:
           $ref: "#/responses/error"
+    post:
+      operationId: createSiteBuild
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: "#/definitions/build"
+        default:
+          $ref: "#/responses/error"
   /sites/{site_id}/deployed-branches:
     parameters:
       - name: site_id
@@ -1218,7 +1227,7 @@ paths:
               $ref: "#/definitions/auditLog"
         default:
           $ref: "#/responses/error"
- 
+
  # begin submission
   /submissions/{submission_id}:
       parameters:
