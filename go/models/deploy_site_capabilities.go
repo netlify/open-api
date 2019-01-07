@@ -15,8 +15,8 @@ import (
 // swagger:model deploySiteCapabilities
 type DeploySiteCapabilities struct {
 
-	// asset management
-	AssetManagement bool `json:"asset_management,omitempty"`
+	// large media
+	LargeMedia bool `json:"large_media,omitempty"`
 }
 
 // Validate validates this deploy site capabilities
