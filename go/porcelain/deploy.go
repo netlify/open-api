@@ -121,7 +121,7 @@ func newDeployFiles() *deployFiles {
 func (d *deployFiles) Add(p string, f *FileBundle) {
 	d.Files[p] = f
 	d.Sums[p] = f.Sum
-	// Remove ":original_sha" part when to save in Hashed (asset management)
+	// Remove ":original_sha" part when to save in Hashed (large media)
 	sum := f.Sum
 	if strings.Contains(sum, ":") {
 		sum = strings.Split(sum, ":")[0]
@@ -167,8 +167,8 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 		}
 	}
 
-	context.GetLogger(ctx).Infof("Getting files info with asset management flag: %v", deploy.SiteCapabilities.AssetManagement)
-	files, err := walk(options.Dir, options.Observer, deploy.SiteCapabilities.AssetManagement)
+	context.GetLogger(ctx).Infof("Getting files info with large media flag: %v", deploy.SiteCapabilities.LargeMedia)
+	files, err := walk(options.Dir, options.Observer, deploy.SiteCapabilities.LargeMedia)
 	if err != nil {
 		if options.Observer != nil {
 			options.Observer.OnFailedWalk()
@@ -458,7 +458,7 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 	}
 }
 
-func walk(dir string, observer DeployObserver, useAssetManagement bool) (*deployFiles, error) {
+func walk(dir string, observer DeployObserver, useLargeMedia bool) (*deployFiles, error) {
 	files := newDeployFiles()
 
 	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
@@ -494,13 +494,13 @@ func walk(dir string, observer DeployObserver, useAssetManagement bool) (*deploy
 			}
 			file.Sum = hex.EncodeToString(s.Sum(nil))
 
-			if useAssetManagement {
+			if useLargeMedia {
 				o, err := os.Open(path)
 				if err != nil {
 					return err
 				}
 				defer o.Close()
-				originalSha := getAssetManagementSha(o)
+				originalSha := getLFSSha(o)
 				if originalSha != "" {
 					file.Sum += ":" + string(originalSha)
 				}
@@ -654,7 +654,7 @@ func createHeader(archive *zip.Writer, i os.FileInfo, runtime string) (io.Writer
 	return archive.Create(i.Name())
 }
 
-func getAssetManagementSha(file io.Reader) string {
+func getLFSSha(file io.Reader) string {
 	// currently this only supports certain type of git lfs pointer files
 	// version [version]\noid sha256:[oid]\nsize [size]
 	data := make([]byte, 150)

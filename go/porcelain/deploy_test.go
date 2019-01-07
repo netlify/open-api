@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestGetAssetManagementSha(t *testing.T) {
+func TestGetLFSSha(t *testing.T) {
 	tests := []struct {
 		contents string
 		length   int
@@ -18,14 +18,14 @@ func TestGetAssetManagementSha(t *testing.T) {
 
 	for _, test := range tests {
 		file := strings.NewReader(test.contents)
-		out := getAssetManagementSha(file)
+		out := getLFSSha(file)
 		if len(out) != test.length {
 			t.Fatalf("expected `%d`, got `%d`", test.length, len(out))
 		}
 	}
 }
 
-func TestAddWithAssetManagement(t *testing.T) {
+func TestAddWithLargeMedia(t *testing.T) {
 	files := newDeployFiles()
 	tests := []struct {
 		rel string

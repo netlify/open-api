@@ -1580,7 +1580,7 @@ definitions:
         site_capabilities:
           type: object
           properties:
-            asset_management:
+            large_media:
               type: boolean
     deployFiles:
       type: object
