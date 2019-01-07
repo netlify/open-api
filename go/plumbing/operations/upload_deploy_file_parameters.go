@@ -15,6 +15,7 @@ import (
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	cr "github.com/go-openapi/runtime/client"
+	"github.com/go-openapi/swag"
 
 	strfmt "github.com/go-openapi/strfmt"
 )
@@ -69,6 +70,8 @@ type UploadDeployFileParams struct {
 	FileBody io.ReadCloser
 	/*Path*/
 	Path string
+	/*Size*/
+	Size *int64
 
 	timeout    time.Duration
 	Context    context.Context
@@ -141,6 +144,17 @@ func (o *UploadDeployFileParams) SetPath(path string) {
 	o.Path = path
 }
 
+// WithSize adds the size to the upload deploy file params
+func (o *UploadDeployFileParams) WithSize(size *int64) *UploadDeployFileParams {
+	o.SetSize(size)
+	return o
+}
+
+// SetSize adds the size to the upload deploy file params
+func (o *UploadDeployFileParams) SetSize(size *int64) {
+	o.Size = size
+}
+
 // WriteToRequest writes these params to a swagger request
 func (o *UploadDeployFileParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -163,6 +177,22 @@ func (o *UploadDeployFileParams) WriteToRequest(r runtime.ClientRequest, reg str
 	// path param path
 	if err := r.SetPathParam("path", o.Path); err != nil {
 		return err
+	}
+
+	if o.Size != nil {
+
+		// query param size
+		var qrSize int64
+		if o.Size != nil {
+			qrSize = *o.Size
+		}
+		qSize := swag.FormatInt64(qrSize)
+		if qSize != "" {
+			if err := r.SetQueryParam("size", qSize); err != nil {
+				return err
+			}
+		}
+
 	}
 
 	if len(res) > 0 {

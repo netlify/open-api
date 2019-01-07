@@ -757,6 +757,9 @@ paths:
           type: string
           in: path
           required: true
+        - name: size
+          type: integer
+          in: query
         - name: file_body
           in: body
           schema:
@@ -786,6 +789,9 @@ paths:
           required: true
         - name: runtime
           type: string
+          in: query
+        - name: size
+          type: integer
           in: query
         - name: file_body
           in: body

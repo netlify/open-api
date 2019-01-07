@@ -44,7 +44,7 @@ const (
 type uploadType int
 type pointerData struct {
 	SHA  string
-	Size int
+	Size int64
 }
 
 type DeployObserver interface {
@@ -91,7 +91,7 @@ type FileBundle struct {
 	Name    string
 	Sum     string
 	Runtime string
-	Size    *int `json:"size,omitempty"`
+	Size    *int64 `json:"size,omitempty"`
 
 	// Path OR Buffer should be populated
 	Path   string
@@ -416,6 +416,9 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 			if operationError == nil {
 				defer body.Close()
 				params := operations.NewUploadDeployFileParams().WithDeployID(d.ID).WithPath(f.Name).WithFileBody(body)
+				if f.Size != nil {
+					params.WithSize(f.Size)
+				}
 				if timeout != 0 {
 					params.SetTimeout(timeout)
 				}
@@ -701,7 +704,7 @@ func readLFSData(file io.Reader) (*pointerData, error) {
 
 	sha = strings.SplitN(oid, ":", 2)[1]
 
-	size, err := strconv.Atoi(values["size"])
+	size, err := strconv.ParseInt(values["size"], 10, 0)
 	if err != nil {
 		return nil, err
 	}
