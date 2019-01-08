@@ -2,6 +2,7 @@ package porcelain
 
 import (
 	"archive/zip"
+	"bufio"
 	"bytes"
 	"crypto/sha1"
 	"crypto/sha256"
@@ -12,7 +13,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
-	"regexp"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -33,14 +34,18 @@ const (
 	goRuntime = "go"
 
 	preProcessingTimeout = time.Minute * 5
+
+	fileUpload uploadType = iota
+	functionUpload
+
+	lfsVersionString = "version https://git-lfs.github.com/spec/v1"
 )
 
 type uploadType int
-
-const (
-	fileUpload uploadType = iota
-	functionUpload
-)
+type pointerData struct {
+	SHA  string
+	Size int64
+}
 
 type DeployObserver interface {
 	OnSetupWalk() error
@@ -86,6 +91,7 @@ type FileBundle struct {
 	Name    string
 	Sum     string
 	Runtime string
+	Size    *int64 `json:"size,omitempty"`
 
 	// Path OR Buffer should be populated
 	Path   string
@@ -410,6 +416,9 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 			if operationError == nil {
 				defer body.Close()
 				params := operations.NewUploadDeployFileParams().WithDeployID(d.ID).WithPath(f.Name).WithFileBody(body)
+				if f.Size != nil {
+					params.WithSize(f.Size)
+				}
 				if timeout != 0 {
 					params.SetTimeout(timeout)
 				}
@@ -500,9 +509,19 @@ func walk(dir string, observer DeployObserver, useLargeMedia bool) (*deployFiles
 					return err
 				}
 				defer o.Close()
-				originalSha := getLFSSha(o)
-				if originalSha != "" {
-					file.Sum += ":" + string(originalSha)
+
+				data, err := readLFSData(o)
+				if err != nil {
+					return err
+				}
+
+				if data != nil {
+					if data.SHA != "" {
+						file.Sum += ":" + data.SHA
+					}
+					if data.Size > 0 {
+						file.Size = &data.Size
+					}
 				}
 			}
 
@@ -654,18 +673,44 @@ func createHeader(archive *zip.Writer, i os.FileInfo, runtime string) (io.Writer
 	return archive.Create(i.Name())
 }
 
-func getLFSSha(file io.Reader) string {
+func readLFSData(file io.Reader) (*pointerData, error) {
 	// currently this only supports certain type of git lfs pointer files
 	// version [version]\noid sha256:[oid]\nsize [size]
-	data := make([]byte, 150)
-	if count, err := file.Read(data); err == nil {
-		r, _ := regexp.Compile(`^version \S+\noid sha256:(\S+)\n`)
-		res := r.FindSubmatch(data[:count])
-		if len(res) == 2 {
-			if originalSha := res[1]; len(originalSha) == 64 {
-				return string(originalSha)
-			}
+	data := make([]byte, len(lfsVersionString))
+	count, err := file.Read(data)
+	if err != nil {
+		// ignore file if it's not an LFS pointer with the expected header
+		return nil, nil
+	}
+	if count != len(lfsVersionString) || string(data) != lfsVersionString {
+		// ignore file if it's not an LFS pointer with the expected header
+		return nil, nil
+	}
+
+	scanner := bufio.NewScanner(file)
+	values := map[string]string{}
+	for scanner.Scan() {
+		keyAndValue := bytes.SplitN(scanner.Bytes(), []byte(" "), 2)
+		if len(keyAndValue) > 1 {
+			values[string(keyAndValue[0])] = string(keyAndValue[1])
 		}
 	}
-	return ""
+
+	var sha string
+	oid, ok := values["oid"]
+	if !ok {
+		return nil, fmt.Errorf("missing LFS OID")
+	}
+
+	sha = strings.SplitN(oid, ":", 2)[1]
+
+	size, err := strconv.ParseInt(values["size"], 10, 0)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pointerData{
+		SHA:  sha,
+		Size: size,
+	}, nil
 }

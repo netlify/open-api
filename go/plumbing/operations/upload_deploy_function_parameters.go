@@ -10,11 +10,11 @@ import (
 	"net/http"
 	"time"
 
-	"golang.org/x/net/context"
-
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	cr "github.com/go-openapi/runtime/client"
+	"github.com/go-openapi/swag"
+	"golang.org/x/net/context"
 
 	strfmt "github.com/go-openapi/strfmt"
 )
@@ -71,6 +71,8 @@ type UploadDeployFunctionParams struct {
 	Name string
 	/*Runtime*/
 	Runtime *string
+	/*Size*/
+	Size *int64
 
 	timeout    time.Duration
 	Context    context.Context
@@ -154,6 +156,17 @@ func (o *UploadDeployFunctionParams) SetRuntime(runtime *string) {
 	o.Runtime = runtime
 }
 
+// WithSize adds the size to the upload deploy function params
+func (o *UploadDeployFunctionParams) WithSize(size *int64) *UploadDeployFunctionParams {
+	o.SetSize(size)
+	return o
+}
+
+// SetSize adds the size to the upload deploy function params
+func (o *UploadDeployFunctionParams) SetSize(size *int64) {
+	o.Size = size
+}
+
 // WriteToRequest writes these params to a swagger request
 func (o *UploadDeployFunctionParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -188,6 +201,22 @@ func (o *UploadDeployFunctionParams) WriteToRequest(r runtime.ClientRequest, reg
 		qRuntime := qrRuntime
 		if qRuntime != "" {
 			if err := r.SetQueryParam("runtime", qRuntime); err != nil {
+				return err
+			}
+		}
+
+	}
+
+	if o.Size != nil {
+
+		// query param size
+		var qrSize int64
+		if o.Size != nil {
+			qrSize = *o.Size
+		}
+		qSize := swag.FormatInt64(qrSize)
+		if qSize != "" {
+			if err := r.SetQueryParam("size", qSize); err != nil {
 				return err
 			}
 		}
