@@ -682,7 +682,7 @@ func readLFSData(file io.Reader) (*pointerData, error) {
 		// ignore file if it's not an LFS pointer with the expected header
 		return nil, nil
 	}
-	if count != len(lfsVersionString) {
+	if count != len(lfsVersionString) || string(data) != lfsVersionString {
 		// ignore file if it's not an LFS pointer with the expected header
 		return nil, nil
 	}
