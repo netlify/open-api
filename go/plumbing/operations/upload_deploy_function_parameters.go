@@ -6,6 +6,7 @@ package operations
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
 	"io"
 	"net/http"
 	"time"
@@ -14,7 +15,6 @@ import (
 	"github.com/go-openapi/runtime"
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/swag"
-	"golang.org/x/net/context"
 
 	strfmt "github.com/go-openapi/strfmt"
 )
