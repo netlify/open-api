@@ -257,6 +257,35 @@ func (a *Client) CreateSiteAsset(params *CreateSiteAssetParams, authInfo runtime
 }
 
 /*
+CreateSiteBuild create site build API
+*/
+func (a *Client) CreateSiteBuild(params *CreateSiteBuildParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteBuildOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewCreateSiteBuildParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "createSiteBuild",
+		Method:             "POST",
+		PathPattern:        "/sites/{site_id}/builds",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &CreateSiteBuildReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*CreateSiteBuildOK), nil
+
+}
+
+/*
 CreateSiteBuildHook create site build hook API
 */
 func (a *Client) CreateSiteBuildHook(params *CreateSiteBuildHookParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteBuildHookCreated, error) {
