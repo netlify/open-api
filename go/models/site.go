@@ -55,6 +55,9 @@ type Site struct {
 	// id
 	ID string `json:"id,omitempty"`
 
+	// id domain
+	IDDomain string `json:"id_domain,omitempty"`
+
 	// managed dns
 	ManagedDNS bool `json:"managed_dns,omitempty"`
 
