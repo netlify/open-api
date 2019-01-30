@@ -1362,6 +1362,8 @@ definitions:
                   type: boolean
         build_settings:
           $ref: "#/definitions/repoInfo"
+        id_domain:
+          type: string
     siteSetup:
       allOf:
         - $ref: "#/definitions/site"
