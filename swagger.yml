@@ -19,7 +19,7 @@ responses:
   error:
     description: error
     schema:
-      $ref: '#/definitions/error'
+      $ref: "#/definitions/error"
 host: api.netlify.com
 basePath: /api/v1
 paths:
