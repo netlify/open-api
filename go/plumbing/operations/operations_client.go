@@ -199,6 +199,35 @@ func (a *Client) CreateHookBySiteID(params *CreateHookBySiteIDParams, authInfo r
 }
 
 /*
+CreateServiceInstance create service instance API
+*/
+func (a *Client) CreateServiceInstance(params *CreateServiceInstanceParams, authInfo runtime.ClientAuthInfoWriter) (*CreateServiceInstanceCreated, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewCreateServiceInstanceParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "createServiceInstance",
+		Method:             "POST",
+		PathPattern:        "/sites/{site_id}/services/{addon}/instances",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &CreateServiceInstanceReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*CreateServiceInstanceCreated), nil
+
+}
+
+/*
 CreateSite create site API
 */
 func (a *Client) CreateSite(params *CreateSiteParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteCreated, error) {
@@ -485,6 +514,35 @@ func (a *Client) DeleteHookBySiteID(params *DeleteHookBySiteIDParams, authInfo r
 		return nil, err
 	}
 	return result.(*DeleteHookBySiteIDNoContent), nil
+
+}
+
+/*
+DeleteServiceInstance delete service instance API
+*/
+func (a *Client) DeleteServiceInstance(params *DeleteServiceInstanceParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteServiceInstanceNoContent, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewDeleteServiceInstanceParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "deleteServiceInstance",
+		Method:             "DELETE",
+		PathPattern:        "/sites/{site_id}/services/{addon}/instances",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &DeleteServiceInstanceReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*DeleteServiceInstanceNoContent), nil
 
 }
 
@@ -1881,6 +1939,64 @@ func (a *Client) RestoreSiteDeploy(params *RestoreSiteDeployParams, authInfo run
 }
 
 /*
+ShowServiceInstance show service instance API
+*/
+func (a *Client) ShowServiceInstance(params *ShowServiceInstanceParams, authInfo runtime.ClientAuthInfoWriter) (*ShowServiceInstanceCreated, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewShowServiceInstanceParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "showServiceInstance",
+		Method:             "GET",
+		PathPattern:        "/sites/{site_id}/services/{addon}/instances",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &ShowServiceInstanceReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*ShowServiceInstanceCreated), nil
+
+}
+
+/*
+ShowServiceManifest show service manifest API
+*/
+func (a *Client) ShowServiceManifest(params *ShowServiceManifestParams, authInfo runtime.ClientAuthInfoWriter) (*ShowServiceManifestCreated, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewShowServiceManifestParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "showServiceManifest",
+		Method:             "GET",
+		PathPattern:        "/services/{addonName}/manifest",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &ShowServiceManifestReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*ShowServiceManifestCreated), nil
+
+}
+
+/*
 ShowSiteTLSCertificate show site TLS certificate API
 */
 func (a *Client) ShowSiteTLSCertificate(params *ShowSiteTLSCertificateParams, authInfo runtime.ClientAuthInfoWriter) (*ShowSiteTLSCertificateOK, error) {
@@ -2022,6 +2138,35 @@ func (a *Client) UpdateHook(params *UpdateHookParams, authInfo runtime.ClientAut
 		return nil, err
 	}
 	return result.(*UpdateHookOK), nil
+
+}
+
+/*
+UpdateServiceInstance update service instance API
+*/
+func (a *Client) UpdateServiceInstance(params *UpdateServiceInstanceParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateServiceInstanceNoContent, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewUpdateServiceInstanceParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "updateServiceInstance",
+		Method:             "PUT",
+		PathPattern:        "/sites/{site_id}/services/{addon}/instances",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &UpdateServiceInstanceReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*UpdateServiceInstanceNoContent), nil
 
 }
 
