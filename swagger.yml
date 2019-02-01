@@ -1264,7 +1264,6 @@ paths:
         default:
           $ref: '#/responses/error'
   # end submission
-
   # begin service instances
   /sites/{site_id}/services/{addon}/instances:
     parameters:
@@ -1325,6 +1324,42 @@ paths:
         default:
           $ref: '#/responses/error'
   # end service instances
+  # begin services
+  /services/:
+    parameters:
+      - name: search
+        type: string
+        in: query
+        required: false
+    get:
+      operationId: getServices
+      responses:
+        '200':
+          description: services
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/service'
+        default:
+          $ref: '#/responses/error'
+  /services/{addonName}:
+    parameters:
+      - name: addonName
+        type: string
+        in: path
+        required: true
+    get:
+      operationId: showService
+      responses:
+        '200':
+          description: services
+          schema:
+            type: object
+            $ref: '#/definitions/serviceInstance'
+        default:
+          $ref: '#/responses/error'
+
+  # end services
   # begin services manifest
   /services/{addonName}/manifest:
     parameters:
@@ -1343,7 +1378,6 @@ paths:
           $ref: '#/responses/error'
 
   # end services manifest
-
   # begin users
   /user:
     get:
@@ -1391,7 +1425,7 @@ definitions:
         type: string
         format: dateTime
   # the services definition is for the new definitions that still need to be added. currently unused
-  services:
+  service:
     type: object
     properties:
       id:
@@ -1419,7 +1453,9 @@ definitions:
       manifest_url:
         type: string
       environments:
-        type: object
+        type: array
+        items:
+          type: string
       created_at:
         type: string
         format: dateTime

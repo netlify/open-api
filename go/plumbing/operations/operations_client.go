@@ -924,6 +924,35 @@ func (a *Client) GetHook(params *GetHookParams, authInfo runtime.ClientAuthInfoW
 }
 
 /*
+GetServices get services API
+*/
+func (a *Client) GetServices(params *GetServicesParams, authInfo runtime.ClientAuthInfoWriter) (*GetServicesOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetServicesParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "getServices",
+		Method:             "GET",
+		PathPattern:        "/services/",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &GetServicesReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*GetServicesOK), nil
+
+}
+
+/*
 GetSite get site API
 */
 func (a *Client) GetSite(params *GetSiteParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteOK, error) {
@@ -1935,6 +1964,35 @@ func (a *Client) RestoreSiteDeploy(params *RestoreSiteDeployParams, authInfo run
 		return nil, err
 	}
 	return result.(*RestoreSiteDeployCreated), nil
+
+}
+
+/*
+ShowService show service API
+*/
+func (a *Client) ShowService(params *ShowServiceParams, authInfo runtime.ClientAuthInfoWriter) (*ShowServiceOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewShowServiceParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "showService",
+		Method:             "GET",
+		PathPattern:        "/services/{addonName}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &ShowServiceReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*ShowServiceOK), nil
 
 }
 
