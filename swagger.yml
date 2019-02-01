@@ -1264,6 +1264,120 @@ paths:
           default:
             $ref: "#/responses/error"
  # end submission
+  # begin service instances
+  /sites/{site_id}/services/{addon}/instances:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+      - name: addon
+        type: string
+        in: path
+        required: true
+    post:
+      operationId: createServiceInstance
+      consumes:
+        - application/json
+      parameters:
+        - name: config
+          in: body
+          required: true
+          schema:
+            type: object
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/serviceInstance'
+        default:
+          $ref: '#/responses/error'
+    get:
+      operationId: showServiceInstance
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/serviceInstance'
+        default:
+          $ref: '#/responses/error'
+    put:
+      operationId: updateServiceInstance
+      consumes:
+        - application/json
+      parameters:
+        - name: config
+          in: body
+          required: true
+          schema:
+            type: object
+      responses:
+        '204':
+          description: Created
+        default:
+          $ref: '#/responses/error'
+    delete:
+      operationId: deleteServiceInstance
+      responses:
+        '204':
+          description: Deleted
+        default:
+          $ref: '#/responses/error'
+  # end service instances
+  # begin services
+  /services/:
+    parameters:
+      - name: search
+        type: string
+        in: query
+        required: false
+    get:
+      operationId: getServices
+      responses:
+        '200':
+          description: services
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/service'
+        default:
+          $ref: '#/responses/error'
+  /services/{addonName}:
+    parameters:
+      - name: addonName
+        type: string
+        in: path
+        required: true
+    get:
+      operationId: showService
+      responses:
+        '200':
+          description: services
+          schema:
+            type: object
+            $ref: '#/definitions/serviceInstance'
+        default:
+          $ref: '#/responses/error'
+
+  # end services
+  # begin services manifest
+  /services/{addonName}/manifest:
+    parameters:
+      - name: addonName
+        type: string
+        in: path
+        required: true
+    get:
+      operationId: showServiceManifest
+      responses:
+        '201':
+          description: retrieving from provider
+          schema:
+            type: object
+        default:
+          $ref: '#/responses/error'
+
+  # end services manifest
 
  # begin users
   /user:
@@ -1280,6 +1394,75 @@ paths:
             $ref: "#/responses/error"
  # end users
 definitions:
+    serviceInstance:
+      type: object
+      properties:
+        id:
+          type: string
+        url:
+          type: string
+        config:
+          type: object
+        external_attributes:
+          type: object
+        service_slug:
+          type: string
+        service_path:
+          type: string
+        service_name:
+          type: string
+        env:
+          type: object
+        snippets:
+          type: array
+          items:
+            type: object
+        auth_url:
+          type: string
+        created_at:
+          type: string
+          format: dateTime
+        updated_at:
+          type: string
+          format: dateTime
+    # the services definition is for the new definitions that still need to be added. currently unused
+    service:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        slug:
+          type: string
+        service_path:
+          type: string
+        long_description:
+          type: string
+        description:
+          type: string
+        events:
+          type: array
+          items:
+            type: object
+        tags:
+          type: array
+          items:
+            type: string
+        icon:
+          type: string
+        manifest_url:
+          type: string
+        environments:
+          type: array
+          items:
+            type: string
+        created_at:
+          type: string
+          format: dateTime
+        updated_at:
+          type: string
+          format: dateTime
     site:
       type: object
       properties:
