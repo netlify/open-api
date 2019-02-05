@@ -1780,7 +1780,7 @@ definitions:
       site_capabilities:
         type: object
         properties:
-          large_media:
+          large_media_enabled:
             type: boolean
   deployFiles:
     type: object

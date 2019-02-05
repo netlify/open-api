@@ -15,8 +15,8 @@ import (
 // swagger:model deploySiteCapabilities
 type DeploySiteCapabilities struct {
 
-	// large media
-	LargeMedia bool `json:"large_media,omitempty"`
+	// large media enabled
+	LargeMediaEnabled bool `json:"large_media_enabled,omitempty"`
 }
 
 // Validate validates this deploy site capabilities

@@ -173,8 +173,8 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 		}
 	}
 
-	context.GetLogger(ctx).Infof("Getting files info with large media flag: %v", deploy.SiteCapabilities.LargeMedia)
-	files, err := walk(options.Dir, options.Observer, deploy.SiteCapabilities.LargeMedia)
+	context.GetLogger(ctx).Infof("Getting files info with large media flag: %v", deploy.SiteCapabilities.LargeMediaEnabled)
+	files, err := walk(options.Dir, options.Observer, deploy.SiteCapabilities.LargeMediaEnabled)
 	if err != nil {
 		if options.Observer != nil {
 			options.Observer.OnFailedWalk()
