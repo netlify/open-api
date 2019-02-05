@@ -37,6 +37,9 @@ type Site struct {
 	// custom domain
 	CustomDomain string `json:"custom_domain,omitempty"`
 
+	// default hooks data
+	DefaultHooksData *SiteDefaultHooksData `json:"default_hooks_data,omitempty"`
+
 	// deploy hook
 	DeployHook string `json:"deploy_hook,omitempty"`
 
@@ -112,6 +115,10 @@ func (m *Site) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateDefaultHooksData(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateProcessingSettings(formats); err != nil {
 		res = append(res, err)
 	}
@@ -136,6 +143,24 @@ func (m *Site) validateBuildSettings(formats strfmt.Registry) error {
 		if err := m.BuildSettings.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("build_settings")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Site) validateDefaultHooksData(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.DefaultHooksData) { // not required
+		return nil
+	}
+
+	if m.DefaultHooksData != nil {
+		if err := m.DefaultHooksData.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("default_hooks_data")
 			}
 			return err
 		}
