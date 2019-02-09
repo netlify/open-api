@@ -1552,6 +1552,8 @@ definitions:
         properties:
           access_token:
             type: string
+      build_image:
+        type: string
   siteSetup:
     allOf:
       - $ref: "#/definitions/site"
