@@ -1591,7 +1591,7 @@ definitions:
         type: object
         additionalProperties:
           type: string
-      instalation_id:
+      installation_id:
         type: string
   submission:
     type: object
