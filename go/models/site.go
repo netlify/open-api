@@ -25,6 +25,9 @@ type Site struct {
 	// admin url
 	AdminURL string `json:"admin_url,omitempty"`
 
+	// build image
+	BuildImage string `json:"build_image,omitempty"`
+
 	// build settings
 	BuildSettings *RepoInfo `json:"build_settings,omitempty"`
 
