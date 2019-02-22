@@ -64,9 +64,10 @@ type DeployObserver interface {
 
 // DeployOptions holds the option for creating a new deploy
 type DeployOptions struct {
-	SiteID       string
-	Dir          string
-	FunctionsDir string
+	SiteID            string
+	Dir               string
+	FunctionsDir      string
+	LargeMediaEnabled bool
 
 	IsDraft bool
 
@@ -173,8 +174,13 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 		}
 	}
 
-	context.GetLogger(ctx).Infof("Getting files info with large media flag: %v", deploy.SiteCapabilities.LargeMediaEnabled)
-	files, err := walk(options.Dir, options.Observer, deploy.SiteCapabilities.LargeMediaEnabled)
+	largeMediaEnabled := options.LargeMediaEnabled
+	if !largeMediaEnabled && deploy != nil {
+		largeMediaEnabled = deploy.SiteCapabilities.LargeMediaEnabled
+	}
+
+	context.GetLogger(ctx).Infof("Getting files info with large media flag: %v", largeMediaEnabled)
+	files, err := walk(options.Dir, options.Observer, largeMediaEnabled)
 	if err != nil {
 		if options.Observer != nil {
 			options.Observer.OnFailedWalk()
