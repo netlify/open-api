@@ -2,9 +2,9 @@
 
 We use [go-swagger](https://github.com/go-swagger/go-swagger) to validate our spec against the 2.0 spec of Open API.
 
-We currently depend on version 0.18.0 of the go swagger toolchain. You can download the binary for your platform from this release page:
+[We currently depend on version 0.18.0 of the go swagger toolchain. You can download the binary for your platform from this release page:
 
-https://github.com/go-swagger/go-swagger/releases/tag/0.18.0
+https://github.com/go-swagger/go-swagger/releases/tag/0.18.0](The go-client is an [netlify/open-api][open-api] derived http client generated using [go-swagger][go-swagger].  Starting with version [`2.0.0`](https://github.com/netlify/go-client/releases/tag/v2.0.0) it is managed with [Go 1.11 modules][go-modules], and all external tools used for generation are managed with [gobin][gobin] + Go modules.  The [`swagger.yml`][swagger] is consumed as a vendored build-time asset via a [git submodule](https://git-scm.com/book/en/v2/Git-Tools-Submodules).  See [GMBE:Tools as dependencies](https://github.com/go-modules-by-example/index/tree/master/010_tools) and [GMBE:Using `gobin` to install/run tools](https://github.com/go-modules-by-example/index/tree/master/017_using_gobin) for a deeper explanation.)
 
 ## Spec validation
 
@@ -21,7 +21,7 @@ The Go client must be regenerated after every change to the `swagger.yml`.
 You can use this command to generate the Go client:
 
 	make generate
-	
+
 You may first want to edit swagger.yml to add your field or endpoint definitions.
 
 ## Making PRs

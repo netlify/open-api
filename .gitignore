@@ -3,3 +3,5 @@ vendor
 *node_modules
 yarn.lock
 dist
+.vscode
+.gobincache
