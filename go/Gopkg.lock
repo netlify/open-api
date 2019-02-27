@@ -84,12 +84,12 @@
   version = "v0.18.0"
 
 [[projects]]
-  branch = "master"
   digest = "1:90d75a4ad18e82be220162df5f551537c917ef2c0bfa4f04b3bde61130b6286a"
   name = "github.com/go-openapi/errors"
   packages = ["."]
   pruneopts = ""
   revision = "7a7ff1b7b8020f22574411a32f28b4d168d69237"
+  version = "v0.18.0"
 
 [[projects]]
   digest = "1:c8052dcf3ec378a9a6bc4f00ecc10d6d5eb3cc1f8faaf6b2f70f047e8881d446"
@@ -116,7 +116,6 @@
   version = "v0.18.0"
 
 [[projects]]
-  branch = "master"
   digest = "1:708923386755f46d63d254e484c77c70ceb1706bf3cb58a45426b3e1469376a1"
   name = "github.com/go-openapi/runtime"
   packages = [
@@ -131,6 +130,7 @@
   ]
   pruneopts = ""
   revision = "41e24cc66d7af6af39eb9b5a6418e901bcdd333c"
+  version = "v0.18.0"
 
 [[projects]]
   digest = "1:54af405aae840f810418f3d25211012af1c4bfd56d07d3de6482a7a3b762528a"
@@ -141,28 +141,28 @@
   version = "v0.18.0"
 
 [[projects]]
-  branch = "master"
-  digest = "1:9e8875fc3e10e582af819c208b140a4c798ec70d6f44d2ff531b738c104d3ab9"
+  digest = "1:8673b4ec9f67eda2cdf08386179ab0bc232b9bda4671c585aa71ed684d3d48fb"
   name = "github.com/go-openapi/strfmt"
   packages = ["."]
   pruneopts = ""
-  revision = "bb512950308460a5584a64228c227807cea1e4bd"
+  revision = "e471370ae57ac74eaf0afe816a66e4ddd7f1b027"
+  version = "v0.18.0"
 
 [[projects]]
-  branch = "master"
-  digest = "1:154350506936b5f3cb77da3998fc41766a755cf71eef8e792ae1bb86afefd731"
+  digest = "1:417789264f7cc44cbb3431ac997473e085018b01bdd98df57e6039981428aca4"
   name = "github.com/go-openapi/swag"
   packages = ["."]
   pruneopts = ""
-  revision = "b28747f5c7f9eb6b0b82d2f87f365fff72b535c9"
+  revision = "1d29f06aebd59ccdf11ae04aa0334ded96e2d909"
+  version = "v0.18.0"
 
 [[projects]]
-  branch = "master"
   digest = "1:3e3802ad256a6bc362935373649a355abe1d1e419bb920f65507abfac3675ae4"
   name = "github.com/go-openapi/validate"
   packages = ["."]
   pruneopts = ""
   revision = "d2eab7d93009e9215fc85b2faa2c2f2a98c2af48"
+  version = "v0.18.0"
 
 [[projects]]
   digest = "1:0f51cee70b0d254dbc93c22666ea2abf211af81c1701a96d04e2284b408621db"
