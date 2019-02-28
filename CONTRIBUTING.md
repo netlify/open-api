@@ -1,10 +1,6 @@
 # CONTRIBUTING
 
-We use [go-swagger](https://github.com/go-swagger/go-swagger) to validate our spec against the 2.0 spec of Open API.
-
-We currently depend on version 0.18.0 of the go swagger toolchain. You can download the binary for your platform from this release page:
-
-https://github.com/go-swagger/go-swagger/releases/tag/0.18.0
+The go-client is an [netlify/open-api][open-api] derived http client generated using [go-swagger][go-swagger].  Starting with version [`2.0.0`](https://github.com/netlify/go-client/releases/tag/v2.0.0) it is managed with [Go 1.11 modules][go-modules], and all external tools used for generation are managed with [gobin][gobin] + Go modules.  The [`swagger.yml`][swagger] is consumed as a vendored build-time asset via a [git submodule](https://git-scm.com/book/en/v2/Git-Tools-Submodules).  See [GMBE:Tools as dependencies](https://github.com/go-modules-by-example/index/tree/master/010_tools) and [GMBE:Using `gobin` to install/run tools](https://github.com/go-modules-by-example/index/tree/master/017_using_gobin) for a deeper explanation.)
 
 ## Spec validation
 
@@ -21,7 +17,7 @@ The Go client must be regenerated after every change to the `swagger.yml`.
 You can use this command to generate the Go client:
 
 	make generate
-	
+
 You may first want to edit swagger.yml to add your field or endpoint definitions.
 
 ## Making PRs
@@ -44,3 +40,19 @@ You may first want to edit swagger.yml to add your field or endpoint definitions
 
 By contributing to Netlify Node Client, you agree that your contributions will be licensed
 under its [MIT license](LICENSE).
+
+
+
+[godoc-img]: https://godoc.org/github.com/netlify/go-client/?status.svg
+[godoc]: https://godoc.org/github.com/netlify/go-client
+[goreport-img]: https://goreportcard.com/badge/github.com/netlify/go-client
+[goreport]: https://goreportcard.com/report/github.com/netlify/go-client
+[git-img]: https://img.shields.io/github/release/netlify/go-client.svg
+[git]: https://github.com/netlify/go-client/releases/latest
+[gobin]: https://github.com/myitcv/gobin
+[modules]: https://github.com/golang/go/wiki/Modules
+[open-api]: https://github.com/netlify/open-api
+[go-swagger]: https://github.com/go-swagger/go-swagger
+[go-modules]: https://github.com/golang/go/wiki/Modules
+[swagger]: https://github.com/netlify/open-api/blob/master/swagger.yml
+
