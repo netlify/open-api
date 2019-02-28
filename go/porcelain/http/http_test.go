@@ -235,3 +235,52 @@ func TestRetryableTransportWithRetry_POST(t *testing.T) {
 	actual := res.(string)
 	require.EqualValues(t, "ok", actual)
 }
+
+func TestRetryableTransportHTMLReply(t *testing.T) {
+	responseBody := `<!DOCTYPE html>
+	<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>Some random HTML response</title>
+	</head>
+	<body>
+
+	</body>
+	</html>`
+	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		rw.WriteHeader(500)
+		rw.Header().Set("Content-Type", "text/html; charset=utf-8")
+		rw.Write([]byte(responseBody))
+	}))
+	defer server.Close()
+
+	rwrtr := runtime.ClientRequestWriterFunc(func(req runtime.ClientRequest, _ strfmt.Registry) error {
+		return nil
+	})
+
+	hu, _ := url.Parse(server.URL)
+	rt := NewRetryableTransport(httptransport.New(hu.Host, "/", []string{"http"}), 2)
+
+	result, err := rt.Submit(&runtime.ClientOperation{
+		ID:          "getSite",
+		Method:      "GET",
+		PathPattern: "/",
+		Params:      rwrtr,
+		Reader: runtime.ClientResponseReaderFunc(func(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
+			if response.Code() == 500 {
+				var result string
+				if err := consumer.Consume(response.Body(), &result); err != nil {
+					return nil, err
+				}
+				return result, nil
+			}
+			return nil, errors.New("Generic error")
+		}),
+	})
+
+	require.NoError(t, err)
+	actual := result.(string)
+	require.EqualValues(t, responseBody, actual)
+}
