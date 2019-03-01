@@ -3,7 +3,8 @@ module github.com/netlify/open-api
 go 1.12
 
 require (
-	github.com/Azure/go-autorest v8.1.0+incompatible
+	contrib.go.opencensus.io/exporter/ocagent v0.4.6 // indirect
+	github.com/Azure/go-autorest v11.5.0+incompatible
 	github.com/BurntSushi/toml v0.3.1 // indirect
 	github.com/PuerkitoBio/purell v1.1.1 // indirect
 	github.com/cenkalti/backoff v2.1.1+incompatible
@@ -14,7 +15,7 @@ require (
 	github.com/go-openapi/jsonpointer v0.18.0 // indirect
 	github.com/go-openapi/jsonreference v0.18.0 // indirect
 	github.com/go-openapi/loads v0.18.0 // indirect
-	github.com/go-openapi/runtime v0.18.0
+	github.com/go-openapi/runtime v0.0.0-20180920151709-cdfa0fc2fd5 // TODO: temporarily floating  https://github.com/go-openapi/runtime/pull/131 update to > 0.18.0 once it is released
 	github.com/go-openapi/spec v0.18.0 // indirect
 	github.com/go-openapi/strfmt v0.18.0
 	github.com/go-openapi/swag v0.18.0
@@ -36,6 +37,7 @@ require (
 	github.com/spf13/viper v1.3.1 // indirect
 	github.com/stretchr/testify v1.3.0
 	github.com/toqueteos/webbrowser v1.1.0 // indirect
+	go.opencensus.io v0.19.0 // indirect
 	golang.org/x/crypto v0.0.0-20190225124518-7f87c0fbb88b // indirect
 	golang.org/x/net v0.0.0-20190226215741-afe646ca25a4
 	golang.org/x/sys v0.0.0-20190226215855-775f8194d0f9 // indirect
