@@ -4,7 +4,9 @@ language: go
 go:
   - "1.12"
 env:
-  - GO111MODULE=on
+  global:
+    - GO111MODULE=on
+    - GOPROXY=https://microsoftgoproxy.azurewebsites.net/
 install: make deps
 script: make test
 notifications:
