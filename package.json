@@ -14,6 +14,7 @@
     "budo": "^11.3.2",
     "cpx": "^1.5.0",
     "from2-string": "^1.1.0",
+    "gh-release": "^3.5.0",
     "js-yaml": "^3.12.0",
     "mkdirp": "^0.5.1",
     "npm-run-all": "^4.1.3",
@@ -49,6 +50,7 @@
     "clean": "rimraf js/dist ui/dist && mkdirp js/dist ui/dist",
     "js": "node ./js/generate-module.js",
     "prepare": "run-s build",
+    "prepublishOnly": "git push && git push --tags && gh-release",
     "serve": "budo --dir ui/dist",
     "site": "run-p site:*",
     "site:css": "postcss ui/index.css -o ui/dist/bundle.css",
@@ -57,8 +59,8 @@
     "site:swagger": "node ./ui/include-swagger.js",
     "start": "run-s build serve",
     "version": "run-s version:*",
-    "version:swagger": "node js/bump-swagger.js",
-    "version:changelog": "auto-changelog -p --template keepachangelog --breaking-pattern breaking",
-    "version:git": "git add CHANGELOG.md swagger.yml"
+    "version:1-swagger": "node js/bump-swagger.js",
+    "version:2-changelog": "auto-changelog -p --template keepachangelog --breaking-pattern breaking",
+    "version:3-git": "git add CHANGELOG.md swagger.yml"
   }
 }
