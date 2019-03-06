@@ -33,7 +33,8 @@ const (
 	jsRuntime = "js"
 	goRuntime = "go"
 
-	preProcessingTimeout = time.Minute * 5
+	preProcessingTimeout  = time.Minute * 5
+	doneProcessingTimeout = time.Minute * 5
 
 	fileUpload uploadType = iota
 	functionUpload
@@ -71,11 +72,12 @@ type DeployOptions struct {
 
 	IsDraft bool
 
-	Title             string
-	Branch            string
-	CommitRef         string
-	UploadTimeout     time.Duration
-	PreProcessTimeout time.Duration
+	Title                 string
+	Branch                string
+	CommitRef             string
+	UploadTimeout         time.Duration
+	PreProcessTimeout     time.Duration
+	DoneProcessingTimeout time.Duration
 
 	Observer DeployObserver
 
@@ -288,17 +290,13 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 		}
 	}
 
-	return deploy, nil
+	return n.WaitForDeployComplete(ctx, deploy, options.DoneProcessingTimeout)
 }
 
-func (n *Netlify) WaitUntilDeployReady(ctx context.Context, d *models.Deploy, timeout time.Duration) (*models.Deploy, error) {
+func (n *Netlify) waitForState(ctx context.Context, d *models.Deploy, timeout time.Duration, states ...string) (*models.Deploy, error) {
 	authInfo := context.GetAuthInfo(ctx)
 	ticker := time.NewTicker(2 * time.Second)
 	defer ticker.Stop()
-
-	if timeout <= 0 {
-		timeout = preProcessingTimeout
-	}
 
 	params := operations.NewGetSiteDeployParams().WithSiteID(d.SiteID).WithDeployID(d.ID)
 	start := time.Now()
@@ -313,20 +311,37 @@ func (n *Netlify) WaitUntilDeployReady(ctx context.Context, d *models.Deploy, ti
 			"state":     resp.Payload.State,
 		}).Debug("Waiting until deploy ready")
 
-		if resp.Payload.State == "prepared" || resp.Payload.State == "ready" {
-			return resp.Payload, nil
+		for _, state := range states {
+			if resp.Payload.State == state {
+				return resp.Payload, nil
+			}
 		}
 
 		if resp.Payload.State == "error" {
-			return nil, fmt.Errorf("Error: preprocessing deploy failed")
+			return nil, fmt.Errorf("Error: entered errors state while waiting to enter states: %s", strings.Join(states, ","))
 		}
 
 		if t.Sub(start) > timeout {
-			return nil, fmt.Errorf("Error: preprocessing deploy timed out")
+			return nil, fmt.Errorf("Error: deploy timed out while waiting to enter states: %s", strings.Join(states, ","))
 		}
 	}
 
 	return d, nil
+}
+
+func (n *Netlify) WaitUntilDeployReady(ctx context.Context, d *models.Deploy, timeout time.Duration) (*models.Deploy, error) {
+	if timeout <= 0 {
+		timeout = preProcessingTimeout
+	}
+
+	return n.waitForState(ctx, d, timeout, "prepared", "ready")
+}
+
+func (n *Netlify) WaitForDeployComplete(ctx context.Context, d *models.Deploy, timeout time.Duration) (*models.Deploy, error) {
+	if timeout <= 0 {
+		timeout = doneProcessingTimeout
+	}
+	return n.waitForState(ctx, d, timeout, "ready")
 }
 
 func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *deployFiles, observer DeployObserver, t uploadType, timeout time.Duration) error {
