@@ -290,7 +290,7 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 		}
 	}
 
-	return n.WaitForDeployComplete(ctx, deploy, options.DoneProcessingTimeout)
+	return deploy, nil
 }
 
 func (n *Netlify) waitForState(ctx context.Context, d *models.Deploy, timeout time.Duration, states ...string) (*models.Deploy, error) {
