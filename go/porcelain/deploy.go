@@ -61,6 +61,8 @@ type DeployObserver interface {
 	OnSetupUpload(*FileBundle) error
 	OnSuccessfulUpload(*FileBundle) error
 	OnFailedUpload(*FileBundle)
+
+	OnPollForDeployStatus() error
 }
 
 // DeployOptions holds the option for creating a new deploy
@@ -290,6 +292,12 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 		}
 	}
 
+	// wait for deploy status
+	if options.Observer != nil {
+		if err := options.Observer.OnPollForDeployStatus(); err != nil {
+			return nil, err
+		}
+	}
 	return n.WaitForDeployComplete(ctx, deploy, options.DoneProcessingTimeout)
 }
 
