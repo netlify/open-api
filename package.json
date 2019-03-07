@@ -1,7 +1,7 @@
 {
   "name": "@netlify/open-api",
   "description": "Netlify's open-api definition as a module",
-  "version": "0.11.1",
+  "version": "0.11.2",
   "author": "Netlify",
   "bugs": {
     "url": "https://github.com/netlify/open-api/issues"
