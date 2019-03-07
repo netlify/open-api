@@ -8,7 +8,7 @@ import (
 	"github.com/netlify/open-api/go/porcelain/http"
 )
 
-const DefaultSyncFileLimit = 7000
+const DefaultSyncFileLimit = 500
 const DefaultConcurrentUploadLimit = 10
 const DefaultRetryAttempts = 3
 
@@ -55,7 +55,9 @@ type Netlify struct {
 }
 
 func (n *Netlify) SetSyncFileLimit(limit int) {
-	n.syncFileLimit = limit
+	if limit > 0 {
+		n.syncFileLimit = limit
+	}
 }
 
 func (n *Netlify) SetConcurrentUploadLimit(limit int) {
