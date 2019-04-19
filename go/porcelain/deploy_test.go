@@ -87,8 +87,8 @@ func TestOpenAPIClientWithWeirdResponse(t *testing.T) {
 
 	httpClient := http.DefaultClient
 	authInfo := runtime.ClientAuthInfoWriterFunc(func(r runtime.ClientRequest, _ strfmt.Registry) error {
-		_ = r.SetHeaderParam("User-Agent", "buildbot")
-		_ = r.SetHeaderParam("Authorization", "Bearer 1234")
+		r.SetHeaderParam("User-Agent", "buildbot")
+		r.SetHeaderParam("Authorization", "Bearer 1234")
 		return nil
 	})
 
