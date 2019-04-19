@@ -62,7 +62,7 @@ func (n *Netlify) UpdateSite(ctx context.Context, site *models.SiteSetup) (*mode
 	return resp.Payload, nil
 }
 
-// ConfigureSiteTLS provisions a TLS certificate for a site with a custom domain.
+// ConfigureSiteTLSCertificate provisions a TLS certificate for a site with a custom domain.
 // It uses Let's Encrypt if the certificate is empty.
 func (n *Netlify) ConfigureSiteTLSCertificate(ctx context.Context, siteID string, cert *CustomTLSCertificate) (*models.SniCertificate, error) {
 	authInfo := context.GetAuthInfo(ctx)
