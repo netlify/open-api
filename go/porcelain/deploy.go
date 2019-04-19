@@ -33,8 +33,7 @@ const (
 	jsRuntime = "js"
 	goRuntime = "go"
 
-	preProcessingTimeout  = time.Minute * 5
-	doneProcessingTimeout = time.Minute * 5
+	preProcessingTimeout = time.Minute * 5
 
 	fileUpload uploadType = iota
 	functionUpload
@@ -72,12 +71,11 @@ type DeployOptions struct {
 
 	IsDraft bool
 
-	Title                 string
-	Branch                string
-	CommitRef             string
-	UploadTimeout         time.Duration
-	PreProcessTimeout     time.Duration
-	DoneProcessingTimeout time.Duration
+	Title             string
+	Branch            string
+	CommitRef         string
+	UploadTimeout     time.Duration
+	PreProcessTimeout time.Duration
 
 	Observer DeployObserver
 
@@ -335,13 +333,6 @@ func (n *Netlify) WaitUntilDeployReady(ctx context.Context, d *models.Deploy, ti
 	}
 
 	return n.waitForState(ctx, d, timeout, "prepared", "ready")
-}
-
-func (n *Netlify) WaitForDeployComplete(ctx context.Context, d *models.Deploy, timeout time.Duration) (*models.Deploy, error) {
-	if timeout <= 0 {
-		timeout = doneProcessingTimeout
-	}
-	return n.waitForState(ctx, d, timeout, "ready")
 }
 
 func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *deployFiles, observer DeployObserver, t uploadType, timeout time.Duration) error {

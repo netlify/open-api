@@ -1,8 +1,19 @@
 package porcelain
 
 import (
+	"bytes"
+	"io/ioutil"
+	"net/http"
+	"net/http/httptest"
+	"net/url"
 	"strings"
 	"testing"
+
+	"github.com/go-openapi/runtime"
+	apiClient "github.com/go-openapi/runtime/client"
+	"github.com/go-openapi/strfmt"
+	"github.com/netlify/open-api/go/plumbing/operations"
+	"github.com/stretchr/testify/require"
 )
 
 func TestGetLFSSha(t *testing.T) {
@@ -64,4 +75,30 @@ func TestAddWithLargeMedia(t *testing.T) {
 	if out2 != "sum3:originalsha" {
 		t.Fatalf("expected `%v`, got `%v`", "sum3:originalsha", out2)
 	}
+}
+
+func TestOpenAPIClientWithWeirdResponse(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+		rw.WriteHeader(408)
+		rw.Write([]byte(`{ "foo": "bar", "message": "a message", "code": 408 }`))
+	}))
+	defer server.Close()
+
+	httpClient := http.DefaultClient
+	authInfo := runtime.ClientAuthInfoWriterFunc(func(r runtime.ClientRequest, _ strfmt.Registry) error {
+		_ = r.SetHeaderParam("User-Agent", "buildbot")
+		_ = r.SetHeaderParam("Authorization", "Bearer 1234")
+		return nil
+	})
+
+	hu, _ := url.Parse(server.URL)
+	tr := apiClient.NewWithClient(hu.Host, "/api/v1", []string{"http"}, httpClient)
+	client := NewRetryable(tr, strfmt.Default, 1)
+
+	body := ioutil.NopCloser(bytes.NewReader([]byte("hello world")))
+	params := operations.NewUploadDeployFileParams().WithDeployID("1234").WithPath("foo/bar/biz").WithFileBody(body)
+	_, operationError := client.Operations.UploadDeployFile(params, authInfo)
+	require.Error(t, operationError)
+	require.Equal(t, "[PUT /deploys/{deploy_id}/files/{path}][408] uploadDeployFile default  &{Code:408 Message:a message}", operationError.Error())
 }
