@@ -1,8 +1,18 @@
 # CONTRIBUTING
 
-The go-client is an [netlify/open-api][open-api] derived http client generated using [go-swagger][go-swagger].  Starting with version [`2.0.0`](https://github.com/netlify/go-client/releases/tag/v2.0.0) it is managed with [Go 1.11 modules][go-modules], and all external tools used for generation are managed with [gobin][gobin] + Go modules.  The [`swagger.yml`][swagger] is consumed as a vendored build-time asset via a [git submodule](https://git-scm.com/book/en/v2/Git-Tools-Submodules).  See [GMBE:Tools as dependencies](https://github.com/go-modules-by-example/index/tree/master/010_tools) and [GMBE:Using `gobin` to install/run tools](https://github.com/go-modules-by-example/index/tree/master/017_using_gobin) for a deeper explanation.)
+Contributions are welcome!
+
+The go-client is an [netlify/open-api][open-api] derived http client generated using [go-swagger][go-swagger].  It uses go modules.  To work on it please ensure the following:
+
+- You are running at least Go 1.12
+- You have cloned this repo OUTSIDE of the go path.  (So go modules work).
+- You have a $GOPATH set up and $GOPATH/bin is added to your $PATH
+
+See [GMBE:Tools as dependencies](https://github.com/go-modules-by-example/index/tree/master/010_tools) and [GMBE:Using `gobin` to install/run tools](https://github.com/go-modules-by-example/index/tree/master/017_using_gobin) for a deeper explanation of how a tools.go file works.
 
 ## Spec validation
+
+All spec changes must pass go-swagger spec validation. 
 
 You can run this command to validate the spec:
 
@@ -29,12 +39,10 @@ You may first want to edit swagger.yml to add your field or endpoint definitions
 
 ## Making a new release
 
-1. bump the version of swagger.yml file (after making changes to it)
-2. regenarate go client (if you haven't)
-3. bump a JS package version with `npm version [major|minor|patch]` (updates package.json, create a git tag)
-4. make sure everything is committed and `git push && git push --tags` to push to the origin
-5. write a release note for the tag in [Releases](https://github.com/netlify/open-api/releases) page
-6. publish to npm (`npm install && npm publish`)
+1. Make sure you are on the HEAD of the master branch.
+2. regenarate go client (if you haven't) (Make all and commit the results)
+3. bump a JS package version with `npm version [major|minor|patch]` (updates package.json, swagger.yaml and create a git tag)
+4. Run `npm publish` which will as `git push && git push --tags` to push to the origin, create a github release and publish the spec to npm.
 
 ## License
 
