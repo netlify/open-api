@@ -6,7 +6,7 @@ go:
 env:
   global:
     - GO111MODULE=on
-    - GOPROXY=https://microsoftgoproxy.azurewebsites.net/
+    - GOPROXY=proxy.golang.org
 install: make deps
 script: make test
 notifications:
