@@ -14,12 +14,12 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// SplitTests split tests
-// swagger:model splitTests
-type SplitTests []*SplitTest
+// DNSZones dns zones
+// swagger:model dnsZones
+type DNSZones []*DNSZone
 
-// Validate validates this split tests
-func (m SplitTests) Validate(formats strfmt.Registry) error {
+// Validate validates this dns zones
+func (m DNSZones) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	for i := 0; i < len(m); i++ {

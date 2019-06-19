@@ -54,7 +54,7 @@ func NewGetSplitTestsOK() *GetSplitTestsOK {
 split_tests
 */
 type GetSplitTestsOK struct {
-	Payload *models.SplitTests
+	Payload models.SplitTests
 }
 
 func (o *GetSplitTestsOK) Error() string {
@@ -63,10 +63,8 @@ func (o *GetSplitTestsOK) Error() string {
 
 func (o *GetSplitTestsOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.SplitTests)
-
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && err != io.EOF {
 		return err
 	}
 

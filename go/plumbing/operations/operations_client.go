@@ -170,6 +170,35 @@ func (a *Client) CreateDeployKey(params *CreateDeployKeyParams, authInfo runtime
 }
 
 /*
+CreateDNSZone create Dns zone API
+*/
+func (a *Client) CreateDNSZone(params *CreateDNSZoneParams, authInfo runtime.ClientAuthInfoWriter) (*CreateDNSZoneCreated, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewCreateDNSZoneParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "createDnsZone",
+		Method:             "POST",
+		PathPattern:        "/dns_zones",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &CreateDNSZoneReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*CreateDNSZoneCreated), nil
+
+}
+
+/*
 CreateHookBySiteID create hook by site Id API
 */
 func (a *Client) CreateHookBySiteID(params *CreateHookBySiteIDParams, authInfo runtime.ClientAuthInfoWriter) (*CreateHookBySiteIDCreated, error) {
@@ -514,6 +543,35 @@ func (a *Client) DeleteDeployKey(params *DeleteDeployKeyParams, authInfo runtime
 		return nil, err
 	}
 	return result.(*DeleteDeployKeyNoContent), nil
+
+}
+
+/*
+DeleteDNSZone delete Dns zone API
+*/
+func (a *Client) DeleteDNSZone(params *DeleteDNSZoneParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteDNSZoneNoContent, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewDeleteDNSZoneParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "deleteDnsZone",
+		Method:             "DELETE",
+		PathPattern:        "/dns_zones/{zone_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &DeleteDNSZoneReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*DeleteDNSZoneNoContent), nil
 
 }
 
@@ -978,6 +1036,64 @@ func (a *Client) GetDeployKey(params *GetDeployKeyParams, authInfo runtime.Clien
 		return nil, err
 	}
 	return result.(*GetDeployKeyOK), nil
+
+}
+
+/*
+GetDNSZone get Dns zone API
+*/
+func (a *Client) GetDNSZone(params *GetDNSZoneParams, authInfo runtime.ClientAuthInfoWriter) (*GetDNSZoneOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetDNSZoneParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "getDnsZone",
+		Method:             "GET",
+		PathPattern:        "/dns_zones/{zone_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &GetDNSZoneReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*GetDNSZoneOK), nil
+
+}
+
+/*
+GetDNSZones get Dns zones API
+*/
+func (a *Client) GetDNSZones(params *GetDNSZonesParams, authInfo runtime.ClientAuthInfoWriter) (*GetDNSZonesOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetDNSZonesParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "getDnsZones",
+		Method:             "GET",
+		PathPattern:        "/dns_zones",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &GetDNSZonesReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*GetDNSZonesOK), nil
 
 }
 
@@ -2254,6 +2370,35 @@ func (a *Client) ShowTicket(params *ShowTicketParams, authInfo runtime.ClientAut
 		return nil, err
 	}
 	return result.(*ShowTicketOK), nil
+
+}
+
+/*
+TransferDNSZone transfer Dns zone API
+*/
+func (a *Client) TransferDNSZone(params *TransferDNSZoneParams, authInfo runtime.ClientAuthInfoWriter) (*TransferDNSZoneOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewTransferDNSZoneParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "transferDnsZone",
+		Method:             "PUT",
+		PathPattern:        "/dns_zones/{zone_id}/transfer",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &TransferDNSZoneReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*TransferDNSZoneOK), nil
 
 }
 
