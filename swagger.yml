@@ -1354,7 +1354,6 @@ paths:
         '200':
           description: services
           schema:
-            type: object
             $ref: '#/definitions/serviceInstance'
         default:
           $ref: '#/responses/error'
@@ -1501,6 +1500,81 @@ paths:
         default:
           $ref: '#/responses/error'
   # end site/split_testing/{split_test_id/unpublish}
+  # begin /dns_zones/
+  /dns_zones:
+    post:
+      operationId: createDnsZone
+      consumes:
+        - application/json
+      parameters:
+        - name: DnsZoneParams
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/dnsZoneSetup'
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/dnsZone'
+        default:
+          $ref: '#/responses/error'
+    get:
+      operationId: getDnsZones
+      responses:
+        '200':
+          description: 'get all DNS zones your user account has access to'
+          schema:
+            $ref: '#/definitions/dnsZones'
+        default:
+          $ref: '#/responses/error'
+  # end /dns_zones
+  # begin dns_zones/{zone_id or name}
+  /dns_zones/{zone_id}:
+    parameters:
+      - name: zone_id
+        type: string
+        in: path
+        required: true
+    get:
+      operationId: getDnsZone
+      responses:
+        '200':
+          description: 'get a single DNS zone'
+          schema:
+            $ref: '#/definitions/dnsZone'
+        default:
+          $ref: '#/responses/error'
+    delete:
+      operationId: deleteDnsZone
+      responses:
+        '204':
+          description: 'delete a single DNS zone'
+        default:
+          $ref: '#/responses/error'
+  # end dns_zones/{zone_id or zone name}
+  # begin dns_zones/{zone_id or name}/transfer
+  /dns_zones/{zone_id}/transfer:
+    parameters:
+      - name: zone_id
+        type: string
+        in: path
+        required: true
+      - name: account_id
+        type: string
+        in: query
+        description: 'the account you want to transfer the dns zone to'
+        required: true
+    put:
+      operationId: transferDnsZone
+      responses:
+        '200':
+          description: 'transfer a DNS zone to another account'
+          schema:
+            $ref: '#/definitions/dnsZone'
+        default:
+          $ref: '#/responses/error'
+  # end dns_zones/{zone_id or zone name}/transfer
 definitions:
   splitTestSetup:
     type: object
@@ -1510,7 +1584,7 @@ definitions:
   splitTests:
     type: array
     items:
-    $ref: '#/definitions/splitTest'
+      $ref: '#/definitions/splitTest'
   splitTest:
     type: object
     properties:
@@ -1970,6 +2044,19 @@ definitions:
         type: boolean
   metadata:
     type: object
+  dnsZoneSetup:
+    type: object
+    properties:
+      account_slug:
+        type: string
+      site_id:
+        type: string
+      name:
+        type: string
+  dnsZones:
+    type: array
+    items:
+      $ref: '#/definitions/dnsZone'
   dnsZone:
     type: object
     properties:
@@ -1977,10 +2064,44 @@ definitions:
         type: string
       name:
         type: string
+      errors:
+        type: array
+        items:
+          type: string
+      supported_record_types:
+        type: array
+        items:
+          type: string
+      user_id:
+        type: string
+      created_at:
+        type: string
+        format: dateTime
+      updated_at:
+        type: string
+        format: dateTime
       records:
         type: array
         items:
           $ref: '#/definitions/dnsRecord'
+      dns_servers:
+        type: array
+        items:
+          type: string
+      account_id:
+        type: string
+      site_id:
+        type: string
+      account_slug:
+        type: string
+      account_name:
+        type: string
+      domain:
+        type: string
+      ipv6_enabled:
+        type: boolean
+      dedicated:
+        type: string
   dnsRecord:
     type: object
     properties:
