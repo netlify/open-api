@@ -1152,6 +1152,7 @@ paths:
           in: body
           schema:
             $ref: '#/definitions/siteSetup'
+          required: false
         - name: configure_dns
           type: boolean
           in: query
@@ -1629,6 +1630,143 @@ paths:
         default:
           $ref: '#/responses/error'
   # end site/split_testing/{split_test_id/unpublish}
+  # begin /dns_zones/
+  /dns_zones:
+    post:
+      operationId: createDnsZone
+      consumes:
+        - application/json
+      parameters:
+        - name: DnsZoneParams
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/dnsZoneSetup'
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/dnsZone'
+        default:
+          $ref: '#/responses/error'
+    get:
+      operationId: getDnsZones
+      responses:
+        '200':
+          description: 'get all DNS zones your user account has access to'
+          schema:
+            $ref: '#/definitions/dnsZones'
+        default:
+          $ref: '#/responses/error'
+  # end /dns_zones
+  # begin dns_zones/{zone_id or name}
+  /dns_zones/{zone_id}:
+    parameters:
+      - name: zone_id
+        type: string
+        in: path
+        required: true
+    get:
+      operationId: getDnsZone
+      responses:
+        '200':
+          description: 'get a single DNS zone'
+          schema:
+            $ref: '#/definitions/dnsZone'
+        default:
+          $ref: '#/responses/error'
+    delete:
+      operationId: deleteDnsZone
+      responses:
+        '204':
+          description: 'delete a single DNS zone'
+        default:
+          $ref: '#/responses/error'
+  # end dns_zones/{zone_id or zone name}
+  # begin dns_zones/{zone_id or name}/transfer
+  /dns_zones/{zone_id}/transfer:
+    parameters:
+      - name: zone_id
+        type: string
+        in: path
+        required: true
+      - name: account_id
+        type: string
+        in: query
+        description: 'the account you want to transfer the dns zone to'
+        required: true
+    put:
+      operationId: transferDnsZone
+      responses:
+        '200':
+          description: 'transfer a DNS zone to another account'
+          schema:
+            $ref: '#/definitions/dnsZone'
+        default:
+          $ref: '#/responses/error'
+  # end dns_zones/{zone_id or zone name}/transfer
+  # begin dns_zones/{zone_id or name}/dns_records
+  /dns_zones/{zone_id}/dns_records:
+    parameters:
+      - name: zone_id
+        type: string
+        in: path
+        required: true
+    get:
+      operationId: getDnsRecords
+      responses:
+        '200':
+          description: 'get all DNS records for a single DNS zone'
+          schema:
+            $ref: '#/definitions/dnsRecords'
+        default:
+          $ref: '#/responses/error'
+    post:
+      operationId: createDnsRecord
+      consumes:
+        - application/json
+      parameters:
+        - name: dns_record
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/dnsRecordCreate'
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/dnsRecord'
+        default:
+          $ref: '#/responses/error'
+  # end dns_zones/{zone_id or zone name}/dns_records
+  # begin dns_zones/{zone_id or name}/dns_records/{dns_record_id}
+  /dns_zones/{zone_id}/dns_records/{dns_record_id}:
+    parameters:
+      - name: zone_id
+        type: string
+        in: path
+        required: true
+      - name: dns_record_id
+        type: string
+        in: path
+        required: true
+    get:
+      operationId: getIndividualDnsRecord
+      responses:
+        '200':
+          description: 'get a single DNS record'
+          schema:
+            $ref: '#/definitions/dnsRecord'
+        default:
+          $ref: '#/responses/error'
+    delete:
+      operationId: deleteDnsRecord
+      responses:
+        '204':
+          description: 'record deleted'
+        default:
+          $ref: '#/responses/error'
+  # end dns_zones/{zone_id or zone name}/dns_records/{dns_record_id}
 definitions:
   splitTestSetup:
     type: object
@@ -2100,6 +2238,19 @@ definitions:
         type: boolean
   metadata:
     type: object
+  dnsZoneSetup:
+    type: object
+    properties:
+      account_slug:
+        type: string
+      site_id:
+        type: string
+      name:
+        type: string
+  dnsZones:
+    type: array
+    items:
+      $ref: '#/definitions/dnsZone'
   dnsZone:
     type: object
     properties:
@@ -2107,10 +2258,60 @@ definitions:
         type: string
       name:
         type: string
+      errors:
+        type: array
+        items:
+          type: string
+      supported_record_types:
+        type: array
+        items:
+          type: string
+      user_id:
+        type: string
+      created_at:
+        type: string
+        format: dateTime
+      updated_at:
+        type: string
+        format: dateTime
       records:
         type: array
         items:
           $ref: '#/definitions/dnsRecord'
+      dns_servers:
+        type: array
+        items:
+          type: string
+      account_id:
+        type: string
+      site_id:
+        type: string
+      account_slug:
+        type: string
+      account_name:
+        type: string
+      domain:
+        type: string
+      ipv6_enabled:
+        type: boolean
+      dedicated:
+        type: string
+  dnsRecordCreate:
+    type: object
+    properties:
+      type:
+        type: string
+      hostname:
+        type: string
+      value:
+        type: string
+      ttl:
+        type: integer
+        format: int64
+  dnsRecords:
+    type: array
+    items:
+      $ref: '#/definitions/dnsRecord'
   dnsRecord:
     type: object
     properties:
@@ -2128,6 +2329,16 @@ definitions:
       priority:
         type: integer
         format: int64
+      dns_zone_id:
+        type: string
+      site_id:
+        type: string
+      flag:
+        type: string
+      tag:
+        type: string
+      managed:
+        type: boolean
   sniCertificate:
     type: object
     properties:
