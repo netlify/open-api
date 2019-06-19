@@ -431,6 +431,35 @@ func (a *Client) CreateSiteSnippet(params *CreateSiteSnippetParams, authInfo run
 }
 
 /*
+CreateSplitTest create split test API
+*/
+func (a *Client) CreateSplitTest(params *CreateSplitTestParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSplitTestCreated, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewCreateSplitTestParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "createSplitTest",
+		Method:             "POST",
+		PathPattern:        "/site/{site_id}/traffic_splits",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &CreateSplitTestReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*CreateSplitTestCreated), nil
+
+}
+
+/*
 CreateTicket create ticket API
 */
 func (a *Client) CreateTicket(params *CreateTicketParams, authInfo runtime.ClientAuthInfoWriter) (*CreateTicketCreated, error) {
@@ -692,6 +721,35 @@ func (a *Client) DeleteSubmission(params *DeleteSubmissionParams, authInfo runti
 }
 
 /*
+DisableSplitTest disable split test API
+*/
+func (a *Client) DisableSplitTest(params *DisableSplitTestParams, authInfo runtime.ClientAuthInfoWriter) (*DisableSplitTestNoContent, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewDisableSplitTestParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "disableSplitTest",
+		Method:             "POST",
+		PathPattern:        "/site/{site_id}/traffic_splits/{split_test_id}/unpublish",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &DisableSplitTestReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*DisableSplitTestNoContent), nil
+
+}
+
+/*
 EnableHook enable hook API
 */
 func (a *Client) EnableHook(params *EnableHookParams, authInfo runtime.ClientAuthInfoWriter) (*EnableHookOK, error) {
@@ -717,6 +775,35 @@ func (a *Client) EnableHook(params *EnableHookParams, authInfo runtime.ClientAut
 		return nil, err
 	}
 	return result.(*EnableHookOK), nil
+
+}
+
+/*
+EnableSplitTest enable split test API
+*/
+func (a *Client) EnableSplitTest(params *EnableSplitTestParams, authInfo runtime.ClientAuthInfoWriter) (*EnableSplitTestNoContent, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewEnableSplitTestParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "enableSplitTest",
+		Method:             "POST",
+		PathPattern:        "/site/{site_id}/traffic_splits/{split_test_id}/publish",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &EnableSplitTestReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*EnableSplitTestNoContent), nil
 
 }
 
@@ -1210,6 +1297,64 @@ func (a *Client) GetSiteSnippet(params *GetSiteSnippetParams, authInfo runtime.C
 		return nil, err
 	}
 	return result.(*GetSiteSnippetOK), nil
+
+}
+
+/*
+GetSplitTest get split test API
+*/
+func (a *Client) GetSplitTest(params *GetSplitTestParams, authInfo runtime.ClientAuthInfoWriter) (*GetSplitTestOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetSplitTestParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "getSplitTest",
+		Method:             "GET",
+		PathPattern:        "/site/{site_id}/traffic_splits/{split_test_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &GetSplitTestReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*GetSplitTestOK), nil
+
+}
+
+/*
+GetSplitTests get split tests API
+*/
+func (a *Client) GetSplitTests(params *GetSplitTestsParams, authInfo runtime.ClientAuthInfoWriter) (*GetSplitTestsOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetSplitTestsParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "getSplitTests",
+		Method:             "GET",
+		PathPattern:        "/site/{site_id}/traffic_splits",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &GetSplitTestsReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*GetSplitTestsOK), nil
 
 }
 
@@ -2428,6 +2573,35 @@ func (a *Client) UpdateSiteSnippet(params *UpdateSiteSnippetParams, authInfo run
 		return nil, err
 	}
 	return result.(*UpdateSiteSnippetNoContent), nil
+
+}
+
+/*
+UpdateSplitTest update split test API
+*/
+func (a *Client) UpdateSplitTest(params *UpdateSplitTestParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateSplitTestCreated, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewUpdateSplitTestParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "updateSplitTest",
+		Method:             "PUT",
+		PathPattern:        "/site/{site_id}/traffic_splits/{split_test_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &UpdateSplitTestReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*UpdateSplitTestCreated), nil
 
 }
 
