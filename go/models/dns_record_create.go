@@ -11,33 +11,12 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// DNSRecord dns record
-// swagger:model dnsRecord
-type DNSRecord struct {
-
-	// dns zone id
-	DNSZoneID string `json:"dns_zone_id,omitempty"`
-
-	// flag
-	Flag string `json:"flag,omitempty"`
+// DNSRecordCreate dns record create
+// swagger:model dnsRecordCreate
+type DNSRecordCreate struct {
 
 	// hostname
 	Hostname string `json:"hostname,omitempty"`
-
-	// id
-	ID string `json:"id,omitempty"`
-
-	// managed
-	Managed bool `json:"managed,omitempty"`
-
-	// priority
-	Priority int64 `json:"priority,omitempty"`
-
-	// site id
-	SiteID string `json:"site_id,omitempty"`
-
-	// tag
-	Tag string `json:"tag,omitempty"`
 
 	// ttl
 	TTL int64 `json:"ttl,omitempty"`
@@ -49,13 +28,13 @@ type DNSRecord struct {
 	Value string `json:"value,omitempty"`
 }
 
-// Validate validates this dns record
-func (m *DNSRecord) Validate(formats strfmt.Registry) error {
+// Validate validates this dns record create
+func (m *DNSRecordCreate) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
 // MarshalBinary interface implementation
-func (m *DNSRecord) MarshalBinary() ([]byte, error) {
+func (m *DNSRecordCreate) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -63,8 +42,8 @@ func (m *DNSRecord) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *DNSRecord) UnmarshalBinary(b []byte) error {
-	var res DNSRecord
+func (m *DNSRecordCreate) UnmarshalBinary(b []byte) error {
+	var res DNSRecordCreate
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

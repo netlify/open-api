@@ -170,6 +170,64 @@ func (a *Client) CreateDeployKey(params *CreateDeployKeyParams, authInfo runtime
 }
 
 /*
+CreateDNSRecord create Dns record API
+*/
+func (a *Client) CreateDNSRecord(params *CreateDNSRecordParams, authInfo runtime.ClientAuthInfoWriter) (*CreateDNSRecordCreated, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewCreateDNSRecordParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "createDnsRecord",
+		Method:             "POST",
+		PathPattern:        "/dns_zones/{zone_id}/dns_records",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &CreateDNSRecordReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*CreateDNSRecordCreated), nil
+
+}
+
+/*
+CreateDNSZone create Dns zone API
+*/
+func (a *Client) CreateDNSZone(params *CreateDNSZoneParams, authInfo runtime.ClientAuthInfoWriter) (*CreateDNSZoneCreated, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewCreateDNSZoneParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "createDnsZone",
+		Method:             "POST",
+		PathPattern:        "/dns_zones",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &CreateDNSZoneReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*CreateDNSZoneCreated), nil
+
+}
+
+/*
 CreateHookBySiteID create hook by site Id API
 */
 func (a *Client) CreateHookBySiteID(params *CreateHookBySiteIDParams, authInfo runtime.ClientAuthInfoWriter) (*CreateHookBySiteIDCreated, error) {
@@ -431,6 +489,35 @@ func (a *Client) CreateSiteSnippet(params *CreateSiteSnippetParams, authInfo run
 }
 
 /*
+CreateSplitTest create split test API
+*/
+func (a *Client) CreateSplitTest(params *CreateSplitTestParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSplitTestCreated, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewCreateSplitTestParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "createSplitTest",
+		Method:             "POST",
+		PathPattern:        "/site/{site_id}/traffic_splits",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &CreateSplitTestReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*CreateSplitTestCreated), nil
+
+}
+
+/*
 CreateTicket create ticket API
 */
 func (a *Client) CreateTicket(params *CreateTicketParams, authInfo runtime.ClientAuthInfoWriter) (*CreateTicketCreated, error) {
@@ -485,6 +572,64 @@ func (a *Client) DeleteDeployKey(params *DeleteDeployKeyParams, authInfo runtime
 		return nil, err
 	}
 	return result.(*DeleteDeployKeyNoContent), nil
+
+}
+
+/*
+DeleteDNSRecord delete Dns record API
+*/
+func (a *Client) DeleteDNSRecord(params *DeleteDNSRecordParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteDNSRecordNoContent, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewDeleteDNSRecordParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "deleteDnsRecord",
+		Method:             "DELETE",
+		PathPattern:        "/dns_zones/{zone_id}/dns_records/{dns_record_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &DeleteDNSRecordReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*DeleteDNSRecordNoContent), nil
+
+}
+
+/*
+DeleteDNSZone delete Dns zone API
+*/
+func (a *Client) DeleteDNSZone(params *DeleteDNSZoneParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteDNSZoneNoContent, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewDeleteDNSZoneParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "deleteDnsZone",
+		Method:             "DELETE",
+		PathPattern:        "/dns_zones/{zone_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &DeleteDNSZoneReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*DeleteDNSZoneNoContent), nil
 
 }
 
@@ -692,6 +837,35 @@ func (a *Client) DeleteSubmission(params *DeleteSubmissionParams, authInfo runti
 }
 
 /*
+DisableSplitTest disable split test API
+*/
+func (a *Client) DisableSplitTest(params *DisableSplitTestParams, authInfo runtime.ClientAuthInfoWriter) (*DisableSplitTestNoContent, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewDisableSplitTestParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "disableSplitTest",
+		Method:             "POST",
+		PathPattern:        "/site/{site_id}/traffic_splits/{split_test_id}/unpublish",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &DisableSplitTestReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*DisableSplitTestNoContent), nil
+
+}
+
+/*
 EnableHook enable hook API
 */
 func (a *Client) EnableHook(params *EnableHookParams, authInfo runtime.ClientAuthInfoWriter) (*EnableHookOK, error) {
@@ -717,6 +891,35 @@ func (a *Client) EnableHook(params *EnableHookParams, authInfo runtime.ClientAut
 		return nil, err
 	}
 	return result.(*EnableHookOK), nil
+
+}
+
+/*
+EnableSplitTest enable split test API
+*/
+func (a *Client) EnableSplitTest(params *EnableSplitTestParams, authInfo runtime.ClientAuthInfoWriter) (*EnableSplitTestNoContent, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewEnableSplitTestParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "enableSplitTest",
+		Method:             "POST",
+		PathPattern:        "/site/{site_id}/traffic_splits/{split_test_id}/publish",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &EnableSplitTestReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*EnableSplitTestNoContent), nil
 
 }
 
@@ -895,6 +1098,93 @@ func (a *Client) GetDeployKey(params *GetDeployKeyParams, authInfo runtime.Clien
 }
 
 /*
+GetDNSRecords get Dns records API
+*/
+func (a *Client) GetDNSRecords(params *GetDNSRecordsParams, authInfo runtime.ClientAuthInfoWriter) (*GetDNSRecordsOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetDNSRecordsParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "getDnsRecords",
+		Method:             "GET",
+		PathPattern:        "/dns_zones/{zone_id}/dns_records",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &GetDNSRecordsReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*GetDNSRecordsOK), nil
+
+}
+
+/*
+GetDNSZone get Dns zone API
+*/
+func (a *Client) GetDNSZone(params *GetDNSZoneParams, authInfo runtime.ClientAuthInfoWriter) (*GetDNSZoneOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetDNSZoneParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "getDnsZone",
+		Method:             "GET",
+		PathPattern:        "/dns_zones/{zone_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &GetDNSZoneReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*GetDNSZoneOK), nil
+
+}
+
+/*
+GetDNSZones get Dns zones API
+*/
+func (a *Client) GetDNSZones(params *GetDNSZonesParams, authInfo runtime.ClientAuthInfoWriter) (*GetDNSZonesOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetDNSZonesParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "getDnsZones",
+		Method:             "GET",
+		PathPattern:        "/dns_zones",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &GetDNSZonesReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*GetDNSZonesOK), nil
+
+}
+
+/*
 GetHook get hook API
 */
 func (a *Client) GetHook(params *GetHookParams, authInfo runtime.ClientAuthInfoWriter) (*GetHookOK, error) {
@@ -920,6 +1210,35 @@ func (a *Client) GetHook(params *GetHookParams, authInfo runtime.ClientAuthInfoW
 		return nil, err
 	}
 	return result.(*GetHookOK), nil
+
+}
+
+/*
+GetIndividualDNSRecord get individual Dns record API
+*/
+func (a *Client) GetIndividualDNSRecord(params *GetIndividualDNSRecordParams, authInfo runtime.ClientAuthInfoWriter) (*GetIndividualDNSRecordOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetIndividualDNSRecordParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "getIndividualDnsRecord",
+		Method:             "GET",
+		PathPattern:        "/dns_zones/{zone_id}/dns_records/{dns_record_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &GetIndividualDNSRecordReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*GetIndividualDNSRecordOK), nil
 
 }
 
@@ -1210,6 +1529,64 @@ func (a *Client) GetSiteSnippet(params *GetSiteSnippetParams, authInfo runtime.C
 		return nil, err
 	}
 	return result.(*GetSiteSnippetOK), nil
+
+}
+
+/*
+GetSplitTest get split test API
+*/
+func (a *Client) GetSplitTest(params *GetSplitTestParams, authInfo runtime.ClientAuthInfoWriter) (*GetSplitTestOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetSplitTestParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "getSplitTest",
+		Method:             "GET",
+		PathPattern:        "/site/{site_id}/traffic_splits/{split_test_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &GetSplitTestReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*GetSplitTestOK), nil
+
+}
+
+/*
+GetSplitTests get split tests API
+*/
+func (a *Client) GetSplitTests(params *GetSplitTestsParams, authInfo runtime.ClientAuthInfoWriter) (*GetSplitTestsOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetSplitTestsParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "getSplitTests",
+		Method:             "GET",
+		PathPattern:        "/site/{site_id}/traffic_splits",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &GetSplitTestsReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*GetSplitTestsOK), nil
 
 }
 
@@ -2113,6 +2490,35 @@ func (a *Client) ShowTicket(params *ShowTicketParams, authInfo runtime.ClientAut
 }
 
 /*
+TransferDNSZone transfer Dns zone API
+*/
+func (a *Client) TransferDNSZone(params *TransferDNSZoneParams, authInfo runtime.ClientAuthInfoWriter) (*TransferDNSZoneOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewTransferDNSZoneParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "transferDnsZone",
+		Method:             "PUT",
+		PathPattern:        "/dns_zones/{zone_id}/transfer",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &TransferDNSZoneReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*TransferDNSZoneOK), nil
+
+}
+
+/*
 UnlockDeploy unlock deploy API
 */
 func (a *Client) UnlockDeploy(params *UnlockDeployParams, authInfo runtime.ClientAuthInfoWriter) (*UnlockDeployOK, error) {
@@ -2428,6 +2834,35 @@ func (a *Client) UpdateSiteSnippet(params *UpdateSiteSnippetParams, authInfo run
 		return nil, err
 	}
 	return result.(*UpdateSiteSnippetNoContent), nil
+
+}
+
+/*
+UpdateSplitTest update split test API
+*/
+func (a *Client) UpdateSplitTest(params *UpdateSplitTestParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateSplitTestCreated, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewUpdateSplitTestParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "updateSplitTest",
+		Method:             "PUT",
+		PathPattern:        "/site/{site_id}/traffic_splits/{split_test_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &UpdateSplitTestReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*UpdateSplitTestCreated), nil
 
 }
 
