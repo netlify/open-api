@@ -1,4 +1,4 @@
-swagger: "2.0"
+swagger: '2.0'
 info:
   version: 0.11.4
   title: Netlify's API definition
@@ -19,7 +19,7 @@ responses:
   error:
     description: error
     schema:
-      $ref: "#/definitions/error"
+      $ref: '#/definitions/error'
 host: api.netlify.com
 basePath: /api/v1
 paths:
@@ -33,16 +33,16 @@ paths:
         - name: filter
           in: query
           type: string
-          enum: ["all", "owner", "guest"]
+          enum: ['all', 'owner', 'guest']
       responses:
-        "200":
+        '200':
           description: OK
           schema:
             type: array
             items:
-              $ref: "#/definitions/site"
+              $ref: '#/definitions/site'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
     post:
       operationId: createSite
       consumes:
@@ -51,19 +51,19 @@ paths:
         - name: site
           in: body
           schema:
-            $ref: "#/definitions/siteSetup"
+            $ref: '#/definitions/siteSetup'
           required: true
         - name: configure_dns
           type: boolean
           in: query
           required: false
       responses:
-        "201":
+        '201':
           description: Created
           schema:
-            $ref: "#/definitions/site"
+            $ref: '#/definitions/site'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /sites/{site_id}:
     parameters:
       - name: site_id
@@ -73,12 +73,12 @@ paths:
     get:
       operationId: getSite
       responses:
-        "200":
+        '200':
           description: OK
           schema:
-            $ref: "#/definitions/site"
+            $ref: '#/definitions/site'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
     patch:
       operationId: updateSite
       consumes:
@@ -87,22 +87,22 @@ paths:
         - name: site
           in: body
           schema:
-            $ref: "#/definitions/siteSetup"
+            $ref: '#/definitions/siteSetup'
           required: true
       responses:
-        "200":
+        '200':
           description: OK
           schema:
-            $ref: "#/definitions/site"
+            $ref: '#/definitions/site'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
     delete:
       operationId: deleteSite
       responses:
-        "204":
+        '204':
           description: Deleted
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /sites/{site_id}/ssl:
     post:
       operationId: provisionSiteTLSCertificate
@@ -124,12 +124,12 @@ paths:
           in: query
           required: false
       responses:
-        "200":
+        '200':
           description: OK
           schema:
-            $ref: "#/definitions/sniCertificate"
+            $ref: '#/definitions/sniCertificate'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
     get:
       operationId: showSiteTLSCertificate
       parameters:
@@ -138,12 +138,12 @@ paths:
           in: path
           required: true
       responses:
-        "200":
+        '200':
           description: OK
           schema:
-            $ref: "#/definitions/sniCertificate"
+            $ref: '#/definitions/sniCertificate'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /sites/{site_id}/forms:
     get:
       operationId: listSiteForms
@@ -153,14 +153,14 @@ paths:
           in: path
           required: true
       responses:
-        "200":
+        '200':
           description: OK
           schema:
             type: array
             items:
-              $ref: "#/definitions/form"
+              $ref: '#/definitions/form'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /sites/{site_id}/submissions:
     get:
       operationId: listSiteSubmissions
@@ -170,14 +170,14 @@ paths:
           in: path
           required: true
       responses:
-        "200":
+        '200':
           description: OK
           schema:
             type: array
             items:
-              $ref: "#/definitions/submission"
+              $ref: '#/definitions/submission'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /sites/{site_id}/files:
     get:
       operationId: listSiteFiles
@@ -187,14 +187,14 @@ paths:
           in: path
           required: true
       responses:
-        "200":
+        '200':
           description: OK
           schema:
             type: array
             items:
-              $ref: "#/definitions/file"
+              $ref: '#/definitions/file'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /sites/{site_id}/assets:
     parameters:
       - name: site_id
@@ -204,14 +204,14 @@ paths:
     get:
       operationId: listSiteAssets
       responses:
-        "200":
+        '200':
           description: OK
           schema:
             type: array
             items:
-              $ref: "#/definitions/asset"
+              $ref: '#/definitions/asset'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
     post:
       operationId: createSiteAsset
       parameters:
@@ -232,12 +232,12 @@ paths:
           type: string
           in: query
       responses:
-        "201":
+        '201':
           description: Created
           schema:
-            $ref: "#/definitions/assetSignature"
+            $ref: '#/definitions/assetSignature'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /sites/{site_id}/assets/{asset_id}:
     parameters:
       - name: site_id
@@ -251,12 +251,12 @@ paths:
     get:
       operationId: getSiteAssetInfo
       responses:
-        "200":
+        '200':
           description: OK
           schema:
-            $ref: "#/definitions/asset"
+            $ref: '#/definitions/asset'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
     put:
       operationId: updateSiteAsset
       parameters:
@@ -265,19 +265,19 @@ paths:
           in: query
           required: true
       responses:
-        "200":
+        '200':
           description: Updated
           schema:
-            $ref: "#/definitions/asset"
+            $ref: '#/definitions/asset'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
     delete:
       operationId: deleteSiteAsset
       responses:
-        "204":
+        '204':
           description: Deleted
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /sites/{site_id}/assets/{asset_id}/public_signature:
     parameters:
       - name: site_id
@@ -291,12 +291,12 @@ paths:
     get:
       operationId: getSiteAssetPublicSignature
       responses:
-        "200":
+        '200':
           description: OK
           schema:
-            $ref: "#/definitions/assetPublicSignature"
+            $ref: '#/definitions/assetPublicSignature'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /sites/{site_id}/files/{file_path}:
     get:
       operationId: getSiteFileByPathName
@@ -310,12 +310,12 @@ paths:
           in: path
           required: true
       responses:
-        "200":
+        '200':
           description: OK
           schema:
-            $ref: "#/definitions/file"
+            $ref: '#/definitions/file'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /sites/{site_id}/snippets:
     parameters:
       - name: site_id
@@ -325,14 +325,14 @@ paths:
     get:
       operationId: listSiteSnippets
       responses:
-        "200":
+        '200':
           description: OK
           schema:
             type: array
             items:
-              $ref: "#/definitions/snippet"
+              $ref: '#/definitions/snippet'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
     post:
       operationId: createSiteSnippet
       consumes:
@@ -341,15 +341,15 @@ paths:
         - name: snippet
           in: body
           schema:
-            $ref: "#/definitions/snippet"
+            $ref: '#/definitions/snippet'
           required: true
       responses:
-        "201":
+        '201':
           description: OK
           schema:
-            $ref: "#/definitions/snippet"
+            $ref: '#/definitions/snippet'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /sites/{site_id}/snippets/{snippet_id}:
     parameters:
       - name: site_id
@@ -363,12 +363,12 @@ paths:
     get:
       operationId: getSiteSnippet
       responses:
-        "200":
+        '200':
           description: OK
           schema:
-            $ref: "#/definitions/snippet"
+            $ref: '#/definitions/snippet'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
     put:
       operationId: updateSiteSnippet
       consumes:
@@ -377,20 +377,20 @@ paths:
         - name: snippet
           in: body
           schema:
-            $ref: "#/definitions/snippet"
+            $ref: '#/definitions/snippet'
           required: true
       responses:
-        "204":
+        '204':
           description: No content
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
     delete:
       operationId: deleteSiteSnippet
       responses:
-        "204":
+        '204':
           description: No content
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /sites/{site_id}/metadata:
     parameters:
       - name: site_id
@@ -400,25 +400,25 @@ paths:
     get:
       operationId: getSiteMetadata
       responses:
-        "200":
+        '200':
           description: OK
           schema:
-            $ref: "#/definitions/metadata"
+            $ref: '#/definitions/metadata'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
     put:
       operationId: updateSiteMetadata
       parameters:
         - name: metadata
           in: body
           schema:
-            $ref: "#/definitions/metadata"
+            $ref: '#/definitions/metadata'
           required: true
       responses:
-        "204":
+        '204':
           description: No content
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /sites/{site_id}/build_hooks:
     parameters:
       - name: site_id
@@ -428,14 +428,14 @@ paths:
     get:
       operationId: listSiteBuildHooks
       responses:
-        "200":
+        '200':
           description: OK
           schema:
             type: array
             items:
-              $ref: "#/definitions/buildHook"
+              $ref: '#/definitions/buildHook'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
     post:
       operationId: createSiteBuildHook
       consumes:
@@ -444,15 +444,15 @@ paths:
         - name: buildHook
           in: body
           schema:
-            $ref: "#/definitions/buildHook"
+            $ref: '#/definitions/buildHook'
           required: true
       responses:
-        "201":
+        '201':
           description: Created
           schema:
-            $ref: "#/definitions/buildHook"
+            $ref: '#/definitions/buildHook'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /sites/{site_id}/build_hooks/{id}:
     parameters:
       - name: site_id
@@ -466,12 +466,12 @@ paths:
     get:
       operationId: getSiteBuildHook
       responses:
-        "200":
+        '200':
           description: OK
           schema:
-            $ref: "#/definitions/buildHook"
+            $ref: '#/definitions/buildHook'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
     put:
       operationId: updateSiteBuildHook
       consumes:
@@ -480,20 +480,20 @@ paths:
         - name: buildHook
           in: body
           schema:
-            $ref: "#/definitions/buildHook"
+            $ref: '#/definitions/buildHook'
           required: true
       responses:
-        "204":
+        '204':
           description: No content
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
     delete:
       operationId: deleteSiteBuildHook
       responses:
-        "204":
+        '204':
           description: No content
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /sites/{site_id}/deploys:
     parameters:
       - name: site_id
@@ -503,14 +503,14 @@ paths:
     get:
       operationId: listSiteDeploys
       responses:
-        "200":
+        '200':
           description: OK
           schema:
             type: array
             items:
-              $ref: "#/definitions/deploy"
+              $ref: '#/definitions/deploy'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
     post:
       operationId: createSiteDeploy
       parameters:
@@ -520,15 +520,15 @@ paths:
         - name: deploy
           in: body
           schema:
-            $ref: "#/definitions/deployFiles"
+            $ref: '#/definitions/deployFiles'
           required: true
       responses:
-        "200":
+        '200':
           description: OK
           schema:
-            $ref: "#/definitions/deploy"
+            $ref: '#/definitions/deploy'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /sites/{site_id}/deploys/{deploy_id}:
     get:
       operationId: getSiteDeploy
@@ -542,12 +542,12 @@ paths:
           in: path
           required: true
       responses:
-        "200":
+        '200':
           description: OK
           schema:
-            $ref: "#/definitions/deploy"
+            $ref: '#/definitions/deploy'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
     put:
       operationId: updateSiteDeploy
       parameters:
@@ -562,15 +562,15 @@ paths:
         - name: deploy
           in: body
           schema:
-            $ref: "#/definitions/deployFiles"
+            $ref: '#/definitions/deployFiles'
           required: true
       responses:
-        "200":
+        '200':
           description: OK
           schema:
-            $ref: "#/definitions/deploy"
+            $ref: '#/definitions/deploy'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /sites/{site_id}/deploys/{deploy_id}/restore:
     post:
       operationId: restoreSiteDeploy
@@ -584,12 +584,12 @@ paths:
           in: path
           required: true
       responses:
-        "201":
+        '201':
           description: Created
           schema:
-            $ref: "#/definitions/deploy"
+            $ref: '#/definitions/deploy'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /sites/{site_id}/builds:
     parameters:
       - name: site_id
@@ -599,23 +599,23 @@ paths:
     get:
       operationId: listSiteBuilds
       responses:
-        "200":
+        '200':
           description: OK
           schema:
             type: array
             items:
-              $ref: "#/definitions/build"
+              $ref: '#/definitions/build'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
     post:
       operationId: createSiteBuild
       responses:
-        "200":
+        '200':
           description: OK
           schema:
-            $ref: "#/definitions/build"
+            $ref: '#/definitions/build'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /sites/{site_id}/deployed-branches:
     parameters:
       - name: site_id
@@ -625,14 +625,14 @@ paths:
     get:
       operationId: listSiteDeployedBranches
       responses:
-        "200":
+        '200':
           description: OK
           schema:
             type: array
             items:
-              $ref: "#/definitions/deployedBranch"
+              $ref: '#/definitions/deployedBranch'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /builds/{build_id}:
     parameters:
       - name: build_id
@@ -642,12 +642,12 @@ paths:
     get:
       operationId: getSiteBuild
       responses:
-        "200":
+        '200':
           description: OK
           schema:
-            $ref: "#/definitions/build"
+            $ref: '#/definitions/build'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /builds/{build_id}/log:
     parameters:
       - name: build_id
@@ -657,15 +657,15 @@ paths:
       - name: msg
         in: body
         schema:
-          $ref: "#/definitions/buildLogMsg"
+          $ref: '#/definitions/buildLogMsg'
         required: true
     post:
       operationId: updateSiteBuildLog
       responses:
-        "204":
+        '204':
           description: No content
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /builds/{build_id}/start:
     parameters:
       - name: build_id
@@ -675,10 +675,10 @@ paths:
     post:
       operationId: notifyBuildStart
       responses:
-        "204":
+        '204':
           description: No content
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /sites/{site_id}/dns:
     parameters:
       - name: site_id
@@ -688,25 +688,25 @@ paths:
     get:
       operationId: getDNSForSite
       responses:
-        "200":
+        '200':
           description: OK
           schema:
             type: array
             items:
-              $ref: "#/definitions/dnsZone"
+              $ref: '#/definitions/dnsZone'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
     put:
       operationId: configureDNSForSite
       responses:
-        "200":
+        '200':
           description: OK
           schema:
             type: array
             items:
-              $ref: "#/definitions/dnsZone"
+              $ref: '#/definitions/dnsZone'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /deploys/{deploy_id}:
     get:
       operationId: getDeploy
@@ -716,12 +716,12 @@ paths:
           in: path
           required: true
       responses:
-        "200":
+        '200':
           description: OK
           schema:
-            $ref: "#/definitions/deploy"
+            $ref: '#/definitions/deploy'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /deploys/{deploy_id}/lock:
     post:
       operationId: lockDeploy
@@ -731,12 +731,12 @@ paths:
           in: path
           required: true
       responses:
-        "200":
+        '200':
           description: OK
           schema:
-            $ref: "#/definitions/deploy"
+            $ref: '#/definitions/deploy'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /deploys/{deploy_id}/unlock:
     post:
       operationId: unlockDeploy
@@ -746,12 +746,12 @@ paths:
           in: path
           required: true
       responses:
-        "200":
+        '200':
           description: OK
           schema:
-            $ref: "#/definitions/deploy"
+            $ref: '#/definitions/deploy'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /deploys/{deploy_id}/files/{path}:
     put:
       operationId: uploadDeployFile
@@ -776,12 +776,12 @@ paths:
             format: binary
           required: true
       responses:
-        "200":
+        '200':
           description: OK
           schema:
-            $ref: "#/definitions/file"
+            $ref: '#/definitions/file'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /deploys/{deploy_id}/functions/{name}:
     put:
       operationId: uploadDeployFunction
@@ -809,12 +809,12 @@ paths:
             format: binary
           required: true
       responses:
-        "200":
+        '200':
           description: OK
           schema:
-            $ref: "#/definitions/function"
+            $ref: '#/definitions/function'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /forms:
     get:
       operationId: listForms
@@ -823,14 +823,14 @@ paths:
           in: query
           type: string
       responses:
-        "200":
+        '200':
           description: OK
           schema:
             type: array
             items:
-              $ref: "#/definitions/form"
+              $ref: '#/definitions/form'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /forms/{form_id}/submissions:
     get:
       operationId: listFormSubmissions
@@ -840,14 +840,14 @@ paths:
           in: path
           required: true
       responses:
-        "200":
+        '200':
           description: OK
           schema:
             type: array
             items:
-              $ref: "#/definitions/submission"
+              $ref: '#/definitions/submission'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /hooks:
     get:
       operationId: listHooksBySiteId
@@ -857,14 +857,14 @@ paths:
           type: string
           required: true
       responses:
-        "200":
+        '200':
           description: OK
           schema:
             type: array
             items:
-              $ref: "#/definitions/hook"
+              $ref: '#/definitions/hook'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
     post:
       operationId: createHookBySiteId
       consumes:
@@ -877,15 +877,15 @@ paths:
         - name: hook
           in: body
           schema:
-            $ref: "#/definitions/hook"
+            $ref: '#/definitions/hook'
           required: true
       responses:
-        "201":
+        '201':
           description: OK
           schema:
-            $ref: "#/definitions/hook"
+            $ref: '#/definitions/hook'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /hooks/{hook_id}:
     parameters:
       - name: hook_id
@@ -895,31 +895,31 @@ paths:
     get:
       operationId: getHook
       responses:
-        "200":
+        '200':
           description: OK
           schema:
-            $ref: "#/definitions/hook"
+            $ref: '#/definitions/hook'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
     put:
       operationId: updateHook
       parameters:
         - name: hook
           in: body
           schema:
-            $ref: "#/definitions/hook"
+            $ref: '#/definitions/hook'
           required: true
       responses:
-        "200":
+        '200':
           description: OK
           schema:
-            $ref: "#/definitions/hook"
+            $ref: '#/definitions/hook'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
     delete:
       operationId: deleteHookBySiteId
       responses:
-        "204":
+        '204':
           description: No content
   /hooks/{hook_id}/enable:
     parameters:
@@ -930,24 +930,24 @@ paths:
     post:
       operationId: enableHook
       responses:
-        "200":
+        '200':
           description: OK
           schema:
-            $ref: "#/definitions/hook"
+            $ref: '#/definitions/hook'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /hooks/types:
     get:
       operationId: listHookTypes
       responses:
-        "200":
+        '200':
           description: OK
           schema:
             type: array
             items:
-              $ref: "#/definitions/hookType"
+              $ref: '#/definitions/hookType'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /oauth/tickets:
     post:
       operationId: createTicket
@@ -957,12 +957,12 @@ paths:
           in: query
           required: true
       responses:
-        "201":
+        '201':
           description: ok
           schema:
-            $ref: "#/definitions/ticket"
+            $ref: '#/definitions/ticket'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /oauth/tickets/{ticket_id}:
     get:
       operationId: showTicket
@@ -972,12 +972,12 @@ paths:
           in: path
           required: true
       responses:
-        "200":
+        '200':
           description: ok
           schema:
-            $ref: "#/definitions/ticket"
+            $ref: '#/definitions/ticket'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /oauth/tickets/{ticket_id}/exchange:
     post:
       operationId: exchangeTicket
@@ -987,35 +987,35 @@ paths:
           in: path
           required: true
       responses:
-        "201":
+        '201':
           description: ok
           schema:
-            $ref: "#/definitions/accessToken"
+            $ref: '#/definitions/accessToken'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /deploy_keys:
     get:
       operationId: listDeployKeys
       responses:
-        "200":
+        '200':
           description: OK
           schema:
             type: array
             items:
-              $ref: "#/definitions/deployKey"
+              $ref: '#/definitions/deployKey'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
     post:
       operationId: createDeployKey
       consumes:
         - application/json
       responses:
-        "201":
+        '201':
           description: Created
           schema:
-            $ref: "#/definitions/deployKey"
+            $ref: '#/definitions/deployKey'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /deploy_keys/{key_id}:
     parameters:
       - name: key_id
@@ -1025,19 +1025,19 @@ paths:
     get:
       operationId: getDeployKey
       responses:
-        "200":
+        '200':
           description: OK
           schema:
-            $ref: "#/definitions/deployKey"
+            $ref: '#/definitions/deployKey'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
     delete:
       operationId: deleteDeployKey
       responses:
-        "204":
+        '204':
           description: Not Content
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /{account_slug}/sites:
     post:
       operationId: createSiteInTeam
@@ -1047,7 +1047,7 @@ paths:
         - name: site
           in: body
           schema:
-            $ref: "#/definitions/siteSetup"
+            $ref: '#/definitions/siteSetup'
           required: false
         - name: configure_dns
           type: boolean
@@ -1058,12 +1058,12 @@ paths:
           type: string
           required: true
       responses:
-        "201":
+        '201':
           description: Created
           schema:
-            $ref: "#/definitions/site"
+            $ref: '#/definitions/site'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
     get:
       operationId: listSitesForAccount # an account represents a team or a user
       parameters:
@@ -1075,14 +1075,14 @@ paths:
           type: string
           required: true
       responses:
-        "200":
+        '200':
           description: OK
           schema:
             type: array
             items:
-              $ref: "#/definitions/site"
+              $ref: '#/definitions/site'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /{account_slug}/members:
     parameters:
       - name: account_slug
@@ -1092,85 +1092,85 @@ paths:
     get:
       operationId: listMembersForAccount # an account represents a team or a user
       responses:
-        "200":
+        '200':
           description: OK
           schema:
             type: array
             items:
-              $ref: "#/definitions/member"
+              $ref: '#/definitions/member'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
     post:
       operationId: addMemberToAccount # an account represents a team or a user
       parameters:
         - name: role
           in: query
           type: string
-          enum: ["Owner", "Collaborator", "Controller"]
+          enum: ['Owner', 'Collaborator', 'Controller']
         - name: email
           in: query
           type: string
           required: true
       responses:
-        "200":
+        '200':
           description: OK
           schema:
             type: array
             items:
-              $ref: "#/definitions/member"
+              $ref: '#/definitions/member'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /billing/payment_methods:
     get:
       operationId: listPaymentMethodsForUser
       responses:
-        "200":
+        '200':
           description: OK
           schema:
             type: array
             items:
-              $ref: "#/definitions/paymentMethod"
+              $ref: '#/definitions/paymentMethod'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /accounts/types:
     get:
       operationId: listAccountTypesForUser
       responses:
-        "200":
+        '200':
           description: OK
           schema:
             type: array
             items:
-              $ref: "#/definitions/accountType"
+              $ref: '#/definitions/accountType'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /accounts:
     get:
       operationId: listAccountsForUser
       responses:
-        "200":
+        '200':
           description: OK
           schema:
             type: array
             items:
-              $ref: "#/definitions/accountMembership"
+              $ref: '#/definitions/accountMembership'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
     post:
       operationId: createAccount
       parameters:
         - name: accountSetup
           in: body
           schema:
-            $ref: "#/definitions/accountSetup"
+            $ref: '#/definitions/accountSetup'
           required: true
       responses:
-        "201":
+        '201':
           description: Created
           schema:
-            $ref: "#/definitions/accountMembership"
+            $ref: '#/definitions/accountMembership'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /accounts/{account_id}:
     parameters:
       - name: account_id
@@ -1180,35 +1180,35 @@ paths:
     get:
       operationId: getAccount
       responses:
-        "200":
+        '200':
           description: OK
           schema:
             type: array
             items:
-              $ref: "#/definitions/accountMembership"
+              $ref: '#/definitions/accountMembership'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
     put:
       operationId: updateAccount
       parameters:
         - name: accountUpdateSetup
           in: body
           schema:
-            $ref: "#/definitions/accountUpdateSetup"
+            $ref: '#/definitions/accountUpdateSetup'
       responses:
-        "200":
+        '200':
           description: OK
           schema:
-            $ref: "#/definitions/accountMembership"
+            $ref: '#/definitions/accountMembership'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
     delete:
       operationId: cancelAccount
       responses:
-        "204":
+        '204':
           description: Not Content
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /accounts/{account_id}/audit:
     parameters:
       - name: account_id
@@ -1225,14 +1225,14 @@ paths:
           type: string
           in: query
       responses:
-        "200":
+        '200':
           description: OK
           schema:
             type: array
             items:
-              $ref: "#/definitions/auditLog"
+              $ref: '#/definitions/auditLog'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
 
   # begin submission
   /submissions/{submission_id}:
@@ -1248,21 +1248,21 @@ paths:
           type: string
           in: query
       responses:
-        "200":
+        '200':
           description: OK
           schema:
             type: array
             items:
-              $ref: "#/definitions/submission"
+              $ref: '#/definitions/submission'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
     delete:
       operationId: deleteSubmission
       responses:
-        "204":
+        '204':
           description: Deleted
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   # end submission
   # begin service instances
   /sites/{site_id}/services/{addon}/instances:
@@ -1286,21 +1286,21 @@ paths:
           schema:
             type: object
       responses:
-        "201":
+        '201':
           description: Created
           schema:
-            $ref: "#/definitions/serviceInstance"
+            $ref: '#/definitions/serviceInstance'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
     get:
       operationId: showServiceInstance
       responses:
-        "201":
+        '201':
           description: Created
           schema:
-            $ref: "#/definitions/serviceInstance"
+            $ref: '#/definitions/serviceInstance'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
     put:
       operationId: updateServiceInstance
       consumes:
@@ -1312,17 +1312,17 @@ paths:
           schema:
             type: object
       responses:
-        "204":
+        '204':
           description: Created
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
     delete:
       operationId: deleteServiceInstance
       responses:
-        "204":
+        '204':
           description: Deleted
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   # end service instances
   # begin services
   /services/:
@@ -1334,14 +1334,14 @@ paths:
     get:
       operationId: getServices
       responses:
-        "200":
+        '200':
           description: services
           schema:
             type: array
             items:
-              $ref: "#/definitions/service"
+              $ref: '#/definitions/service'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   /services/{addonName}:
     parameters:
       - name: addonName
@@ -1351,13 +1351,13 @@ paths:
     get:
       operationId: showService
       responses:
-        "200":
+        '200':
           description: services
           schema:
             type: object
-            $ref: "#/definitions/serviceInstance"
+            $ref: '#/definitions/serviceInstance'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
 
   # end services
   # begin services manifest
@@ -1370,30 +1370,173 @@ paths:
     get:
       operationId: showServiceManifest
       responses:
-        "201":
+        '201':
           description: retrieving from provider
           schema:
             type: object
         default:
-          $ref: "#/responses/error"
-
+          $ref: '#/responses/error'
   # end services manifest
-
   # begin users
   /user:
     get:
       operationId: getCurrentUser
       responses:
-        "200":
+        '200':
           description: OK
           schema:
             type: array
             items:
-              $ref: "#/definitions/user"
+              $ref: '#/definitions/user'
         default:
-          $ref: "#/responses/error"
+          $ref: '#/responses/error'
   # end users
+  # begin site/split_testing/
+  /site/{site_id}/traffic_splits:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+    post:
+      operationId: createSplitTest
+      consumes:
+        - application/json
+      parameters:
+        - name: branch_tests
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/splitTestSetup'
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/splitTest'
+        default:
+          $ref: '#/responses/error'
+    get:
+      operationId: getSplitTests
+      responses:
+        '200':
+          description: split_tests
+          schema:
+            $ref: '#/definitions/splitTests'
+        default:
+          $ref: '#/responses/error'
+  # end site/split_testing/
+  # begin site/split_testing/{split_test_id}
+  /site/{site_id}/traffic_splits/{split_test_id}:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+      - name: split_test_id
+        type: string
+        in: path
+        required: true
+    put:
+      operationId: updateSplitTest
+      consumes:
+        - application/json
+      parameters:
+        - name: branch_tests
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/splitTestSetup'
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/splitTest'
+        default:
+          $ref: '#/responses/error'
+    get:
+      operationId: getSplitTest
+      responses:
+        '200':
+          description: split_test
+          schema:
+            $ref: '#/definitions/splitTest'
+        default:
+          $ref: '#/responses/error'
+  # end site/split_testing/{split_test_id}
+  # begin site/split_testing/{split_test_id/publish}
+  /site/{site_id}/traffic_splits/{split_test_id}/publish:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+      - name: split_test_id
+        type: string
+        in: path
+        required: true
+    post:
+      operationId: enableSplitTest
+      responses:
+        '204':
+          description: enable
+        default:
+          $ref: '#/responses/error'
+  # end site/split_testing/{split_test_id/publish}
+  # begin site/split_testing/{split_test_id/unpublish}
+  /site/{site_id}/traffic_splits/{split_test_id}/unpublish:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+      - name: split_test_id
+        type: string
+        in: path
+        required: true
+    post:
+      operationId: disableSplitTest
+      responses:
+        '204':
+          description: disabled
+        default:
+          $ref: '#/responses/error'
+  # end site/split_testing/{split_test_id/unpublish}
 definitions:
+  splitTestSetup:
+    type: object
+    properties:
+      branch_tests:
+        type: object
+  splitTests:
+    type: array
+    items:
+    $ref: '#/definitions/splitTest'
+  splitTest:
+    type: object
+    properties:
+      id:
+        type: string
+      site_id:
+        type: string
+      name:
+        type: string
+      path:
+        type: string
+      branches:
+        type: array
+        items:
+          type: object
+      active:
+        type: boolean
+      created_at:
+        type: string
+        format: dateTime
+      updated_at:
+        type: string
+        format: dateTime
+      unpublished_at:
+        type: string
+        format: dateTime
   serviceInstance:
     type: object
     properties:
@@ -1511,7 +1654,7 @@ definitions:
       deploy_url:
         type: string
       published_deploy:
-        $ref: "#/definitions/deploy"
+        $ref: '#/definitions/deploy'
       account_name:
         type: string
       account_slug:
@@ -1530,9 +1673,9 @@ definitions:
           skip:
             type: boolean
           css:
-            $ref: "#/definitions/minifyOptions"
+            $ref: '#/definitions/minifyOptions'
           js:
-            $ref: "#/definitions/minifyOptions"
+            $ref: '#/definitions/minifyOptions'
           images:
             type: object
             properties:
@@ -1544,7 +1687,7 @@ definitions:
               pretty_urls:
                 type: boolean
       build_settings:
-        $ref: "#/definitions/repoInfo"
+        $ref: '#/definitions/repoInfo'
       id_domain:
         type: string
       default_hooks_data:
@@ -1556,10 +1699,10 @@ definitions:
         type: string
   siteSetup:
     allOf:
-      - $ref: "#/definitions/site"
+      - $ref: '#/definitions/site'
       - properties:
           repo:
-            $ref: "#/definitions/repoInfo"
+            $ref: '#/definitions/repoInfo'
   repoInfo:
     type: object
     properties:
@@ -1837,7 +1980,7 @@ definitions:
       records:
         type: array
         items:
-          $ref: "#/definitions/dnsRecord"
+          $ref: '#/definitions/dnsRecord'
   dnsRecord:
     type: object
     properties:
@@ -1943,10 +2086,10 @@ definitions:
     properties:
       form:
         type: object
-        $ref: "#/definitions/assetForm"
+        $ref: '#/definitions/assetForm'
       asset:
         type: object
-        $ref: "#/definitions/asset"
+        $ref: '#/definitions/asset'
   assetPublicSignature:
     type: object
     properties:
@@ -2036,7 +2179,7 @@ definitions:
         type: string
       period:
         type: string
-        enum: ["monthly", "yearly"]
+        enum: ['monthly', 'yearly']
       extra_seats_block:
         type: integer
   accountUpdateSetup:
@@ -2073,9 +2216,9 @@ definitions:
         type: object
         properties:
           sites:
-            $ref: "#/definitions/accountUsageCapability"
+            $ref: '#/definitions/accountUsageCapability'
           collaborators:
-            $ref: "#/definitions/accountUsageCapability"
+            $ref: '#/definitions/accountUsageCapability'
       billing_name:
         type: string
       billing_email:
