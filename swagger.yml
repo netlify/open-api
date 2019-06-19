@@ -1475,7 +1475,6 @@ paths:
         '200':
           description: services
           schema:
-            type: object
             $ref: '#/definitions/serviceInstance'
         default:
           $ref: '#/responses/error'
