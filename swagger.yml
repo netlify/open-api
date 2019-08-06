@@ -2303,8 +2303,6 @@ definitions:
         type: string
       type_id:
         type: string
-      payment_method_id:
-        type: string
       extra_seats_block:
         type: integer
       billing_name:
