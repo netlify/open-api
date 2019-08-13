@@ -34,7 +34,7 @@ type RepoInfo struct {
 	ID int64 `json:"id,omitempty"`
 
 	// installation id
-	InstallationID string `json:"installation_id,omitempty"`
+	InstallationID int64 `json:"installation_id,omitempty"`
 
 	// private logs
 	PrivateLogs bool `json:"private_logs,omitempty"`
