@@ -5,7 +5,25 @@ info:
   termsOfService: https://www.netlify.com/legal/terms-of-use/
 externalDocs:
   url: https://www.netlify.com/docs/api/
-  description: Netlify API online documentation
+  description: >-
+    Netlify is a hosting service for the programmable web. It understands your
+    documents and provides an API to handle atomic deploys of websites, manage
+    form submissions, inject JavaScript snippets, and much more. This is a
+    REST-style API that uses JSON for serialization and OAuth 2 for
+    authentication.
+
+
+    This document describes common usage in some detail. There is also an
+    OpenAPI reference for the Netlify API that you can explore. Visit our
+    Community forum to join the conversation about understanding and using
+    Netlify’s API.
+
+
+    Additionally, we have two API clients for your convenience:
+
+    - [Go Client](https://github.com/netlify/open-api#go-client)
+
+    - [JS Client](https://github.com/netlify/js-client)
 securityDefinitions:
   netlifyAuth:
     type: oauth2
