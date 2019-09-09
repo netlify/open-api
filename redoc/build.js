@@ -1,14 +1,22 @@
 const { execFile } = require('child_process')
 const { promisify } = require('util')
 const { resolve } = require('path')
+const { copyFile } = require('fs')
 
 const SWAGGER_PATH = resolve(__dirname, '..', 'swagger.yml')
 const OUTPUT_PATH = resolve(__dirname, 'dist', 'index.html')
+const LOGO_PATH = resolve(__dirname, 'netlify-logo.png')
+const OUTPUT_LOGO_PATH = resolve(__dirname, 'dist', 'netlify-logo.png')
 
 const pExecFile = promisify(execFile)
+const pCopyFile = promisify(copyFile)
 
 // Build API documentation single self-contained HTML file using `redoc-cli`
 const buildDocs = async function() {
+  await Promise.all([redocCli(), copyAssets()])
+}
+
+const redocCli = async function() {
   await pExecFile('redoc-cli', [
     `--title=${TITLE}`,
     `--options.expandResponses=${SUCCESS_STATUS_CODES}`,
@@ -22,6 +30,10 @@ const buildDocs = async function() {
     'bundle',
     SWAGGER_PATH,
   ])
+}
+
+const copyAssets = async function() {
+  await pCopyFile(LOGO_PATH, OUTPUT_LOGO_PATH)
 }
 
 const TITLE = 'Netlify API documentation'
