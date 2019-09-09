@@ -62,5 +62,8 @@
     "version:1-swagger": "node js/bump-swagger.js",
     "version:2-changelog": "auto-changelog -p --template keepachangelog --breaking-pattern breaking",
     "version:3-git": "git add CHANGELOG.md swagger.yml"
+  },
+  "engines": {
+    "node": "10"
   }
 }
