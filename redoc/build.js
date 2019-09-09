@@ -30,15 +30,15 @@ const redocCli = async function() {
   ])
 }
 
-const copyAssets = async function() {
-  await cpFile(LOGO_PATH, OUTPUT_LOGO_PATH)
-}
-
 const TITLE = 'Netlify API documentation'
 const SUCCESS_STATUS_CODES = [200, 201, 204].join(',')
 const HEADINGS_TEXT_COLOR = '#00c2b2'
 const MENU_TEXT_COLOR = '#8b8b8b'
 const MENU_BACKGROUND_COLOR = '#ffffff'
 const FONT = 'Roboto, sans-serif'
+
+const copyAssets = async function() {
+  await cpFile(LOGO_PATH, OUTPUT_LOGO_PATH)
+}
 
 buildDocs()
