@@ -20,7 +20,6 @@ const redocCli = async function() {
     `--title=${TITLE}`,
     `--options.expandResponses=${SUCCESS_STATUS_CODES}`,
     '--options.requiredPropsFirst',
-    '--options.jsonSampleExpandLevel=1',
     `--options.theme.colors.primary.main=${HEADINGS_TEXT_COLOR}`,
     `--options.theme.menu.textColor=${MENU_TEXT_COLOR}`,
     `--options.theme.menu.backgroundColor=${MENU_BACKGROUND_COLOR}`,
