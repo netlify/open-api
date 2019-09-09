@@ -4,9 +4,10 @@ const { resolve } = require('path')
 const cpFile = require('cp-file')
 
 const SWAGGER_PATH = resolve(__dirname, '..', 'swagger.yml')
-const OUTPUT_PATH = resolve(__dirname, 'dist', 'index.html')
 const LOGO_PATH = resolve(__dirname, 'netlify-logo.png')
-const OUTPUT_LOGO_PATH = resolve(__dirname, 'dist', 'netlify-logo.png')
+const OUTPUT_DIR = resolve(__dirname, 'dist')
+const OUTPUT_PATH = resolve(OUTPUT_DIR, 'index.html')
+const OUTPUT_LOGO_PATH = resolve(OUTPUT_DIR, 'netlify-logo.png')
 
 const pExecFile = promisify(execFile)
 
