@@ -1,7 +1,7 @@
-module.exports = (ctx) => ({
+module.exports = ctx => ({
   map: { inline: false },
   plugins: {
-    'autoprefixer': {},
+    autoprefixer: {},
     'postcss-import': { root: ctx.file.dirname },
     'postcss-url': {
       url: 'copy',
