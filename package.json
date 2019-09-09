@@ -64,6 +64,6 @@
     "version:3-git": "git add CHANGELOG.md swagger.yml"
   },
   "engines": {
-    "node": "10"
+    "node": "12"
   }
 }
