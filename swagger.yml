@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   version: 0.11.4
-  title: Netlify's API definition
+  title: Netlify's API documentation
   termsOfService: https://www.netlify.com/legal/terms-of-use/
   description: >-
     Netlify is a hosting service for the programmable web. It understands your
