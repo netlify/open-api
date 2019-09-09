@@ -26,6 +26,7 @@ paths:
   /sites:
     get:
       operationId: listSites
+      tas: [site]
       parameters:
         - name: name
           in: query
@@ -45,6 +46,7 @@ paths:
           $ref: '#/responses/error'
     post:
       operationId: createSite
+      tags: [site]
       consumes:
         - application/json
       parameters:
@@ -72,6 +74,7 @@ paths:
         required: true
     get:
       operationId: getSite
+      tags: [site]
       responses:
         '200':
           description: OK
@@ -81,6 +84,7 @@ paths:
           $ref: '#/responses/error'
     patch:
       operationId: updateSite
+      tags: [site]
       consumes:
         - application/json
       parameters:
@@ -98,6 +102,7 @@ paths:
           $ref: '#/responses/error'
     delete:
       operationId: deleteSite
+      tags: [site]
       responses:
         '204':
           description: Deleted
@@ -106,6 +111,7 @@ paths:
   /sites/{site_id}/ssl:
     post:
       operationId: provisionSiteTLSCertificate
+      tags: [sniCertificate]
       parameters:
         - name: site_id
           type: string
@@ -132,6 +138,7 @@ paths:
           $ref: '#/responses/error'
     get:
       operationId: showSiteTLSCertificate
+      tags: [sniCertificate]
       parameters:
         - name: site_id
           type: string
@@ -147,6 +154,7 @@ paths:
   /sites/{site_id}/forms:
     get:
       operationId: listSiteForms
+      tags: [form]
       parameters:
         - name: site_id
           type: string
@@ -164,6 +172,7 @@ paths:
   /sites/{site_id}/submissions:
     get:
       operationId: listSiteSubmissions
+      tags: [submission]
       parameters:
         - name: site_id
           type: string
@@ -181,6 +190,7 @@ paths:
   /sites/{site_id}/files:
     get:
       operationId: listSiteFiles
+      tags: [file]
       parameters:
         - name: site_id
           type: string
@@ -203,6 +213,7 @@ paths:
         required: true
     get:
       operationId: listSiteAssets
+      tags: [asset]
       responses:
         '200':
           description: OK
@@ -214,6 +225,7 @@ paths:
           $ref: '#/responses/error'
     post:
       operationId: createSiteAsset
+      tags: [asset]
       parameters:
         - name: name
           type: string
@@ -250,6 +262,7 @@ paths:
         required: true
     get:
       operationId: getSiteAssetInfo
+      tags: [asset]
       responses:
         '200':
           description: OK
@@ -259,6 +272,7 @@ paths:
           $ref: '#/responses/error'
     put:
       operationId: updateSiteAsset
+      tags: [asset]
       parameters:
         - name: state
           type: string
@@ -273,6 +287,7 @@ paths:
           $ref: '#/responses/error'
     delete:
       operationId: deleteSiteAsset
+      tags: [asset]
       responses:
         '204':
           description: Deleted
@@ -290,6 +305,7 @@ paths:
         required: true
     get:
       operationId: getSiteAssetPublicSignature
+      tags: [assetPublicSignature]
       responses:
         '200':
           description: OK
@@ -300,6 +316,7 @@ paths:
   /sites/{site_id}/files/{file_path}:
     get:
       operationId: getSiteFileByPathName
+      tags: [file]
       parameters:
         - name: site_id
           type: string
@@ -324,6 +341,7 @@ paths:
         required: true
     get:
       operationId: listSiteSnippets
+      tags: [snippet]
       responses:
         '200':
           description: OK
@@ -335,6 +353,7 @@ paths:
           $ref: '#/responses/error'
     post:
       operationId: createSiteSnippet
+      tags: [snippet]
       consumes:
         - application/json
       parameters:
@@ -362,6 +381,7 @@ paths:
         required: true
     get:
       operationId: getSiteSnippet
+      tags: [snippet]
       responses:
         '200':
           description: OK
@@ -371,6 +391,7 @@ paths:
           $ref: '#/responses/error'
     put:
       operationId: updateSiteSnippet
+      tags: [snippet]
       consumes:
         - application/json
       parameters:
@@ -386,6 +407,7 @@ paths:
           $ref: '#/responses/error'
     delete:
       operationId: deleteSiteSnippet
+      tags: [snippet]
       responses:
         '204':
           description: No content
@@ -399,6 +421,7 @@ paths:
         required: true
     get:
       operationId: getSiteMetadata
+      tags: [metadata]
       responses:
         '200':
           description: OK
@@ -408,6 +431,7 @@ paths:
           $ref: '#/responses/error'
     put:
       operationId: updateSiteMetadata
+      tags: [metadata]
       parameters:
         - name: metadata
           in: body
@@ -427,6 +451,7 @@ paths:
         required: true
     get:
       operationId: listSiteBuildHooks
+      tags: [buildHook]
       responses:
         '200':
           description: OK
@@ -438,6 +463,7 @@ paths:
           $ref: '#/responses/error'
     post:
       operationId: createSiteBuildHook
+      tags: [buildHook]
       consumes:
         - application/json
       parameters:
@@ -465,6 +491,7 @@ paths:
         required: true
     get:
       operationId: getSiteBuildHook
+      tags: [buildHook]
       responses:
         '200':
           description: OK
@@ -474,6 +501,7 @@ paths:
           $ref: '#/responses/error'
     put:
       operationId: updateSiteBuildHook
+      tags: [buildHook]
       consumes:
         - application/json
       parameters:
@@ -489,6 +517,7 @@ paths:
           $ref: '#/responses/error'
     delete:
       operationId: deleteSiteBuildHook
+      tags: [buildHook]
       responses:
         '204':
           description: No content
@@ -502,6 +531,7 @@ paths:
         required: true
     get:
       operationId: listSiteDeploys
+      tags: [deploy]
       responses:
         '200':
           description: OK
@@ -513,6 +543,7 @@ paths:
           $ref: '#/responses/error'
     post:
       operationId: createSiteDeploy
+      tags: [deploy]
       parameters:
         - name: title
           type: string
@@ -532,6 +563,7 @@ paths:
   /sites/{site_id}/deploys/{deploy_id}:
     get:
       operationId: getSiteDeploy
+      tags: [deploy]
       parameters:
         - name: site_id
           type: string
@@ -550,6 +582,7 @@ paths:
           $ref: '#/responses/error'
     put:
       operationId: updateSiteDeploy
+      tags: [deploy]
       parameters:
         - name: site_id
           type: string
@@ -574,6 +607,7 @@ paths:
   /sites/{site_id}/deploys/{deploy_id}/restore:
     post:
       operationId: restoreSiteDeploy
+      tags: [deploy]
       parameters:
         - name: site_id
           type: string
@@ -598,6 +632,7 @@ paths:
         required: true
     get:
       operationId: listSiteBuilds
+      tags: [build]
       responses:
         '200':
           description: OK
@@ -609,6 +644,7 @@ paths:
           $ref: '#/responses/error'
     post:
       operationId: createSiteBuild
+      tags: [build]
       responses:
         '200':
           description: OK
@@ -624,6 +660,7 @@ paths:
         required: true
     get:
       operationId: listSiteDeployedBranches
+      tags: [deployedBranch]
       responses:
         '200':
           description: OK
@@ -641,6 +678,7 @@ paths:
         required: true
     get:
       operationId: getSiteBuild
+      tags: [build]
       responses:
         '200':
           description: OK
@@ -661,6 +699,7 @@ paths:
         required: true
     post:
       operationId: updateSiteBuildLog
+      tags: [buildLogMsg]
       responses:
         '204':
           description: No content
@@ -674,6 +713,7 @@ paths:
         required: true
     post:
       operationId: notifyBuildStart
+      tags: [build]
       responses:
         '204':
           description: No content
@@ -687,6 +727,7 @@ paths:
         required: true
     get:
       operationId: getDNSForSite
+      tags: [dnsZone]
       responses:
         '200':
           description: OK
@@ -698,6 +739,7 @@ paths:
           $ref: '#/responses/error'
     put:
       operationId: configureDNSForSite
+      tags: [dnsZone]
       responses:
         '200':
           description: OK
@@ -710,6 +752,7 @@ paths:
   /deploys/{deploy_id}:
     get:
       operationId: getDeploy
+      tags: [deploy]
       parameters:
         - name: deploy_id
           type: string
@@ -725,6 +768,7 @@ paths:
   /deploys/{deploy_id}/lock:
     post:
       operationId: lockDeploy
+      tags: [deploy]
       parameters:
         - name: deploy_id
           type: string
@@ -740,6 +784,7 @@ paths:
   /deploys/{deploy_id}/unlock:
     post:
       operationId: unlockDeploy
+      tags: [deploy]
       parameters:
         - name: deploy_id
           type: string
@@ -755,6 +800,7 @@ paths:
   /deploys/{deploy_id}/files/{path}:
     put:
       operationId: uploadDeployFile
+      tags: [file]
       consumes:
         - application/octet-stream
       parameters:
@@ -785,6 +831,7 @@ paths:
   /deploys/{deploy_id}/functions/{name}:
     put:
       operationId: uploadDeployFunction
+      tags: [function]
       consumes:
         - application/octet-stream
       parameters:
@@ -818,6 +865,7 @@ paths:
   /forms:
     get:
       operationId: listForms
+      tags: [form]
       parameters:
         - name: site_id
           in: query
@@ -834,6 +882,7 @@ paths:
   /forms/{form_id}/submissions:
     get:
       operationId: listFormSubmissions
+      tags: [submission]
       parameters:
         - name: form_id
           type: string
@@ -851,6 +900,7 @@ paths:
   /hooks:
     get:
       operationId: listHooksBySiteId
+      tags: [hook]
       parameters:
         - name: site_id
           in: query
@@ -867,6 +917,7 @@ paths:
           $ref: '#/responses/error'
     post:
       operationId: createHookBySiteId
+      tags: [hook]
       consumes:
         - application/json
       parameters:
@@ -894,6 +945,7 @@ paths:
         required: true
     get:
       operationId: getHook
+      tags: [hook]
       responses:
         '200':
           description: OK
@@ -903,6 +955,7 @@ paths:
           $ref: '#/responses/error'
     put:
       operationId: updateHook
+      tags: [hook]
       parameters:
         - name: hook
           in: body
@@ -918,6 +971,7 @@ paths:
           $ref: '#/responses/error'
     delete:
       operationId: deleteHookBySiteId
+      tags: [hook]
       responses:
         '204':
           description: No content
@@ -929,6 +983,7 @@ paths:
         required: true
     post:
       operationId: enableHook
+      tags: [hook]
       responses:
         '200':
           description: OK
@@ -939,6 +994,7 @@ paths:
   /hooks/types:
     get:
       operationId: listHookTypes
+      tags: [hookType]
       responses:
         '200':
           description: OK
@@ -951,6 +1007,7 @@ paths:
   /oauth/tickets:
     post:
       operationId: createTicket
+      tags: [ticket]
       parameters:
         - name: client_id
           type: string
@@ -966,6 +1023,7 @@ paths:
   /oauth/tickets/{ticket_id}:
     get:
       operationId: showTicket
+      tags: [ticket]
       parameters:
         - name: ticket_id
           type: string
@@ -981,6 +1039,7 @@ paths:
   /oauth/tickets/{ticket_id}/exchange:
     post:
       operationId: exchangeTicket
+      tags: [accessToken]
       parameters:
         - name: ticket_id
           type: string
@@ -996,6 +1055,7 @@ paths:
   /deploy_keys:
     get:
       operationId: listDeployKeys
+      tags: [deployKey]
       responses:
         '200':
           description: OK
@@ -1007,6 +1067,7 @@ paths:
           $ref: '#/responses/error'
     post:
       operationId: createDeployKey
+      tags: [deployKey]
       consumes:
         - application/json
       responses:
@@ -1024,6 +1085,7 @@ paths:
         required: true
     get:
       operationId: getDeployKey
+      tags: [deployKey]
       responses:
         '200':
           description: OK
@@ -1033,6 +1095,7 @@ paths:
           $ref: '#/responses/error'
     delete:
       operationId: deleteDeployKey
+      tags: [deployKey]
       responses:
         '204':
           description: Not Content
@@ -1041,6 +1104,7 @@ paths:
   /{account_slug}/sites:
     post:
       operationId: createSiteInTeam
+      tags: [site]
       consumes:
         - application/json
       parameters:
@@ -1066,6 +1130,7 @@ paths:
           $ref: '#/responses/error'
     get:
       operationId: listSitesForAccount # an account represents a team or a user
+      tags: [site]
       parameters:
         - name: name
           in: query
@@ -1091,6 +1156,7 @@ paths:
         required: true
     get:
       operationId: listMembersForAccount # an account represents a team or a user
+      tags: [member]
       responses:
         '200':
           description: OK
@@ -1102,6 +1168,7 @@ paths:
           $ref: '#/responses/error'
     post:
       operationId: addMemberToAccount # an account represents a team or a user
+      tags: [member]
       parameters:
         - name: role
           in: query
@@ -1123,6 +1190,7 @@ paths:
   /billing/payment_methods:
     get:
       operationId: listPaymentMethodsForUser
+      tags: [paymentMethod]
       responses:
         '200':
           description: OK
@@ -1135,6 +1203,7 @@ paths:
   /accounts/types:
     get:
       operationId: listAccountTypesForUser
+      tags: [accountType]
       responses:
         '200':
           description: OK
@@ -1147,6 +1216,7 @@ paths:
   /accounts:
     get:
       operationId: listAccountsForUser
+      tags: [accountMembership]
       responses:
         '200':
           description: OK
@@ -1158,6 +1228,7 @@ paths:
           $ref: '#/responses/error'
     post:
       operationId: createAccount
+      tags: [accountMembership]
       parameters:
         - name: accountSetup
           in: body
@@ -1179,6 +1250,7 @@ paths:
         required: true
     get:
       operationId: getAccount
+      tags: [accountMembership]
       responses:
         '200':
           description: OK
@@ -1190,6 +1262,7 @@ paths:
           $ref: '#/responses/error'
     put:
       operationId: updateAccount
+      tags: [accountMembership]
       parameters:
         - name: accountUpdateSetup
           in: body
@@ -1204,6 +1277,7 @@ paths:
           $ref: '#/responses/error'
     delete:
       operationId: cancelAccount
+      tags: [accountMembership]
       responses:
         '204':
           description: Not Content
@@ -1217,6 +1291,7 @@ paths:
         required: true
     get:
       operationId: listAccountAuditEvents
+      tags: [auditLog]
       parameters:
         - name: query
           type: string
@@ -1243,6 +1318,7 @@ paths:
         required: true
     get:
       operationId: listFormSubmission
+      tags: [submission]
       parameters:
         - name: query
           type: string
@@ -1258,6 +1334,7 @@ paths:
           $ref: '#/responses/error'
     delete:
       operationId: deleteSubmission
+      tags: [submission]
       responses:
         '204':
           description: Deleted
@@ -1277,6 +1354,7 @@ paths:
         required: true
     post:
       operationId: createServiceInstance
+      tags: [serviceInstance]
       consumes:
         - application/json
       parameters:
@@ -1294,6 +1372,7 @@ paths:
           $ref: '#/responses/error'
     get:
       operationId: showServiceInstance
+      tags: [serviceInstance]
       responses:
         '201':
           description: Created
@@ -1303,6 +1382,7 @@ paths:
           $ref: '#/responses/error'
     put:
       operationId: updateServiceInstance
+      tags: [serviceInstance]
       consumes:
         - application/json
       parameters:
@@ -1318,6 +1398,7 @@ paths:
           $ref: '#/responses/error'
     delete:
       operationId: deleteServiceInstance
+      tags: [serviceInstance]
       responses:
         '204':
           description: Deleted
@@ -1333,6 +1414,7 @@ paths:
         required: false
     get:
       operationId: getServices
+      tags: [service]
       responses:
         '200':
           description: services
@@ -1350,6 +1432,7 @@ paths:
         required: true
     get:
       operationId: showService
+      tags: [service]
       responses:
         '200':
           description: services
@@ -1369,6 +1452,7 @@ paths:
         required: true
     get:
       operationId: showServiceManifest
+      tags: [service]
       responses:
         '201':
           description: retrieving from provider
@@ -1381,6 +1465,7 @@ paths:
   /user:
     get:
       operationId: getCurrentUser
+      tags: [user]
       responses:
         '200':
           description: OK
@@ -1400,6 +1485,7 @@ paths:
         required: true
     post:
       operationId: createSplitTest
+      tags: [splitTest]
       consumes:
         - application/json
       parameters:
@@ -1417,6 +1503,7 @@ paths:
           $ref: '#/responses/error'
     get:
       operationId: getSplitTests
+      tags: [splitTest]
       responses:
         '200':
           description: split_tests
@@ -1438,6 +1525,7 @@ paths:
         required: true
     put:
       operationId: updateSplitTest
+      tags: [splitTest]
       consumes:
         - application/json
       parameters:
@@ -1455,6 +1543,7 @@ paths:
           $ref: '#/responses/error'
     get:
       operationId: getSplitTest
+      tags: [splitTest]
       responses:
         '200':
           description: split_test
@@ -1476,6 +1565,7 @@ paths:
         required: true
     post:
       operationId: enableSplitTest
+      tags: [splitTest]
       responses:
         '204':
           description: enable
@@ -1495,6 +1585,7 @@ paths:
         required: true
     post:
       operationId: disableSplitTest
+      tags: [splitTest]
       responses:
         '204':
           description: disabled
@@ -2364,3 +2455,34 @@ definitions:
       message:
         type: string
         x-nullable: false
+tags:
+  - name: accessToken
+  - name: accountMembership
+  - name: accountType
+  - name: asset
+  - name: assetPublicSignature
+  - name: auditLog
+  - name: build
+  - name: buildHook
+  - name: buildLogMsg
+  - name: deploy
+  - name: deployedBranch
+  - name: deployKey
+  - name: dnsZone
+  - name: file
+  - name: form
+  - name: function
+  - name: hook
+  - name: hookType
+  - name: member
+  - name: metadata
+  - name: paymentMethod
+  - name: service
+  - name: serviceInstance
+  - name: site
+  - name: sniCertificate
+  - name: snippet
+  - name: splitTest
+  - name: submission
+  - name: ticket
+  - name: user
