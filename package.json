@@ -30,9 +30,6 @@
     "split2": "^3.1.0",
     "swagger-ui": "^3.21.0"
   },
-  "files": [
-    "js/**/*"
-  ],
   "homepage": "https://github.com/netlify/open-api#readme",
   "keywords": [
     "netlify",
