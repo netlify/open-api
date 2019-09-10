@@ -56,7 +56,6 @@ paths:
         - name: configure_dns
           type: boolean
           in: query
-          required: false
       responses:
         '201':
           description: Created
@@ -114,15 +113,12 @@ paths:
         - name: certificate
           type: string
           in: query
-          required: false
         - name: key
           type: string
           in: query
-          required: false
         - name: ca_certificates
           type: string
           in: query
-          required: false
       responses:
         '200':
           description: OK
@@ -1048,11 +1044,9 @@ paths:
           in: body
           schema:
             $ref: '#/definitions/siteSetup'
-          required: false
         - name: configure_dns
           type: boolean
           in: query
-          required: false
         - name: account_slug
           in: path
           type: string
@@ -1330,7 +1324,6 @@ paths:
       - name: search
         type: string
         in: query
-        required: false
     get:
       operationId: getServices
       responses:
