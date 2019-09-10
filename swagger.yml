@@ -2,6 +2,9 @@ swagger: '2.0'
 info:
   version: 0.11.4
   title: Netlify's API definition
+externalDocs:
+  url: https://www.netlify.com/docs/api/
+  description: Netlify API online documentation
 securityDefinitions:
   netlifyAuth:
     type: oauth2
