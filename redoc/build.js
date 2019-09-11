@@ -25,6 +25,7 @@ const redocCli = async function() {
     `--options.theme.menu.textColor=${MENU_TEXT_COLOR}`,
     `--options.theme.menu.backgroundColor=${MENU_BACKGROUND_COLOR}`,
     `--options.theme.typography.headings.fontFamily=${FONT}`,
+    `--options.theme.logo.gutter=${LOGO_PADDING}`,
     `--output=${OUTPUT_PATH}`,
     'bundle',
     SWAGGER_PATH,
@@ -37,6 +38,7 @@ const HEADINGS_TEXT_COLOR = '#00c2b2'
 const MENU_TEXT_COLOR = '#8b8b8b'
 const MENU_BACKGROUND_COLOR = '#ffffff'
 const FONT = 'Roboto, sans-serif'
+const LOGO_PADDING = '15px'
 
 const copyAssets = async function() {
   await cpFile(LOGO_PATH, OUTPUT_LOGO_PATH)
