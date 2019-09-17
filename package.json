@@ -44,18 +44,21 @@
     "url": "git+https://github.com/netlify/open-api.git"
   },
   "scripts": {
+    "prepublishOnly": "git push && git push --tags && gh-release",
+    "prepare": "run-s build",
+    "start": "run-s build serve",
+
     "build": "run-s clean js site",
     "clean": "rimraf js/dist ui/dist && mkdirp js/dist ui/dist",
     "js": "node ./js/generate-module.js",
-    "prepare": "run-s build",
-    "prepublishOnly": "git push && git push --tags && gh-release",
-    "serve": "budo --dir ui/dist",
     "site": "run-p site:*",
     "site:css": "postcss ui/index.css -o ui/dist/bundle.css",
     "site:js": "browserify ui/index.js -o ui/dist/bundle.js",
     "site:static": "cpx 'ui/{index.html,static/**}' ui/dist",
     "site:swagger": "node ./ui/include-swagger.js",
-    "start": "run-s build serve",
+
+    "serve": "budo --dir ui/dist",
+
     "version": "run-s version:*",
     "version:1-swagger": "node js/bump-swagger.js",
     "version:2-changelog": "auto-changelog -p --template keepachangelog --breaking-pattern breaking",
