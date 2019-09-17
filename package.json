@@ -47,7 +47,7 @@
   "scripts": {
     "prepublishOnly": "git push && git push --tags && gh-release",
     "prepare": "run-s build test",
-    "start": "run-s build test serve",
+    "start": "run-s build serve",
 
     "build": "run-s clean js site",
     "clean": "rimraf js/dist ui/dist && mkdirp js/dist ui/dist",
