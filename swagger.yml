@@ -1595,7 +1595,7 @@ definitions:
   splitTests:
     type: array
     items:
-    $ref: '#/definitions/splitTest'
+      $ref: '#/definitions/splitTest'
   splitTest:
     type: object
     properties:
