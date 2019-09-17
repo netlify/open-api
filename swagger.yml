@@ -2,6 +2,7 @@ swagger: '2.0'
 info:
   version: 0.11.4
   title: Netlify's API definition
+  termsOfService: https://www.netlify.com/legal/terms-of-use/
 securityDefinitions:
   netlifyAuth:
     type: oauth2
