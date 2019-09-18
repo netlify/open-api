@@ -65,7 +65,7 @@
     "version:3-git": "git add CHANGELOG.md swagger.yml",
     "lint": "run-s eslint prettier",
     "eslint": "eslint --fix \"{js,ui}/*.js\"",
-    "prettier": "prettier --write --loglevel warn \"{js,ui}/*.js\"",
+    "prettier": "prettier --write --loglevel warn \"{js,ui}/*.js\" \"*.{js,md,yml,json}\"",
     "test": "ava"
   },
   "engines": {
