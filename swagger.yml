@@ -13,8 +13,9 @@ externalDocs:
     authentication.
 
 
-    This document describes common usage in some detail. There is also an
-    OpenAPI reference for the Netlify API that you can explore. Visit our
+    This document is an OpenAPI reference for the Netlify API that you can
+    explore. For more detailed instructions for common uses, please visit the
+    [online documentation](https://www.netlify.com/docs/api/). Visit our
     Community forum to join the conversation about
     [understanding and using Netlify’s API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).
 
