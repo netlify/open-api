@@ -21,7 +21,6 @@ const redocCli = async function() {
     `--title=${TITLE}`,
     '--options.requiredPropsFirst',
     `--options.theme.colors.primary.main=${HEADINGS_TEXT_COLOR}`,
-    `--options.theme.menu.textColor=${MENU_TEXT_COLOR}`,
     `--options.theme.menu.backgroundColor=${MENU_BACKGROUND_COLOR}`,
     `--options.theme.typography.headings.fontFamily=${FONT}`,
     `--options.theme.logo.gutter=${LOGO_PADDING}`,
@@ -34,7 +33,6 @@ const redocCli = async function() {
 
 const TITLE = 'Netlify API documentation'
 const HEADINGS_TEXT_COLOR = '#00c2b2'
-const MENU_TEXT_COLOR = '#8b8b8b'
 const MENU_BACKGROUND_COLOR = '#ffffff'
 const FONT = 'Roboto, sans-serif'
 const LOGO_PADDING = '15px'
