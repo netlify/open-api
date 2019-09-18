@@ -2601,9 +2601,11 @@ tags:
 
       The possible `rel` values are:
 
-      * `next` Shows the URL of the immediate next page of results.
-      * `last` Shows the URL of the last page of results.
-      * `prev` Shows the URL of the immediate previous page of results.
+      - `next` Shows the URL of the immediate next page of results.
+
+      - `last` Shows the URL of the last page of results.
+
+      - `prev` Shows the URL of the immediate previous page of results.
     x-traitTag: true
   - name: Site IDs
     description: >-
