@@ -2609,7 +2609,7 @@ tags:
     x-traitTag: true
   - name: Site IDs
     description: >-
-      Whenever the API requires a `:site_id`, you can either use the UUID of a site obtained through the API, or the domain of the site (`mysite.netlify.com`/`www.example.com`). These two are interchangeable whenever they’re used in API paths.
+      Whenever the API requires a `{site_id}`, you can either use the UUID of a site obtained through the API, or the domain of the site (`mysite.netlify.com`/`www.example.com`). These two are interchangeable whenever they’re used in API paths.
     x-traitTag: true
   - name: ticket
     x-displayName: Ticket
