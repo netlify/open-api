@@ -11,7 +11,7 @@ const OUTPUT_DIR = `${__dirname}/dist`
 const JSON_OUTPUT = `${OUTPUT_DIR}/swagger.json`
 
 const convertOpenApi = async function() {
-  const openapiDef = await Promise.all([
+  const [openapiDef] = await Promise.all([
     SwaggerParser.validate(YAML_INPUT, { dereference: { circular: false } }),
     makeDir(OUTPUT_DIR)
   ])
