@@ -6,7 +6,7 @@ const { version } = require('../package.json')
 const pReadFile = promisify(readFile)
 const pWriteFile = promisify(writeFile)
 
-const SWAGGER_PATH = `${__dirname}/swagger.yml`
+const SWAGGER_PATH = `${__dirname}/../swagger.yml`
 
 // Modify the `info.version` field inside `swagger.yml` so it matches the
 // `package.json` `version`
