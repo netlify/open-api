@@ -2499,7 +2499,11 @@ definitions:
 x-tagGroups:
   - name: General
     tags:
+      - Making a request
+      - Authenticating
+      - Rate limiting
       - Pagination
+      - Site IDs
   - name: OAuth
     tags:
       - ticket
@@ -2555,7 +2559,23 @@ x-tagGroups:
       - asset
       - assetPublicSignature
 tags:
+  - name: Making a request
+    description: >-
+      TODO
+    x-traitTag: true
+  - name: Authenticating
+    description: >-
+      TODO
+    x-traitTag: true
+  - name: Rate limiting
+    description: >-
+      TODO
+    x-traitTag: true
   - name: Pagination
+    description: >-
+      TODO
+    x-traitTag: true
+  - name: Site IDs
     description: >-
       TODO
     x-traitTag: true
