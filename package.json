@@ -3,6 +3,13 @@
   "description": "Netlify's open-api definition as a module",
   "version": "0.11.4",
   "author": "Netlify",
+  "ava": {
+    "files": [
+      "src/**/*.test.js"
+    ],
+    "compileEnhancements": false,
+    "babel": false
+  },
   "bugs": {
     "url": "https://github.com/netlify/open-api/issues"
   },
