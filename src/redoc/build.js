@@ -1,6 +1,6 @@
-const { execFile } = require('child_process')
-const { promisify } = require('util')
 const { normalize } = require('path')
+
+const execa = require('execa')
 
 const { copyAssets } = require('./assets')
 const { injectContent } = require('./inject')
@@ -9,25 +9,27 @@ const SWAGGER_PATH = `${__dirname}/../../swagger.yml`
 const OUTPUT_DIR = `${__dirname}/../../dist`
 const OUTPUT_PATH = `${OUTPUT_DIR}/index.html`
 
-const pExecFile = promisify(execFile)
-
 // Build API documentation single self-contained HTML file using `redoc-cli`
 const buildDocs = async function() {
   await Promise.all([redocCli(), copyAssets(OUTPUT_DIR)])
 }
 
 const redocCli = async function() {
-  await pExecFile('redoc-cli', [
-    `--title=${TITLE}`,
-    '--options.requiredPropsFirst',
-    `--options.theme.colors.primary.main=${HEADINGS_TEXT_COLOR}`,
-    `--options.theme.menu.backgroundColor=${MENU_BACKGROUND_COLOR}`,
-    `--options.theme.typography.headings.fontFamily=${FONT}`,
-    `--options.theme.logo.gutter=${LOGO_PADDING}`,
-    `--output=${normalize(OUTPUT_PATH)}`,
-    'bundle',
-    SWAGGER_PATH
-  ])
+  await execa(
+    'redoc-cli',
+    [
+      `--title=${TITLE}`,
+      '--options.requiredPropsFirst',
+      `--options.theme.colors.primary.main=${HEADINGS_TEXT_COLOR}`,
+      `--options.theme.menu.backgroundColor=${MENU_BACKGROUND_COLOR}`,
+      `--options.theme.typography.headings.fontFamily=${FONT}`,
+      `--options.theme.logo.gutter=${LOGO_PADDING}`,
+      `--output=${normalize(OUTPUT_PATH)}`,
+      'bundle',
+      SWAGGER_PATH
+    ],
+    { stdio: 'inherit' }
+  )
   await injectContent(OUTPUT_PATH)
 }
 
