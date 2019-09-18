@@ -23,12 +23,13 @@ info:
     - [Go Client](https://github.com/netlify/open-api#go-client)
 
     - [JS Client](https://github.com/netlify/js-client)
-externalDocs:
-  url: https://www.netlify.com/docs/api/
   x-logo:
     url: netlify-logo.png
     href: https://www.netlify.com/docs/
     altText: Netlify
+externalDocs:
+  url: https://www.netlify.com/docs/api/
+  description: Online documentation
 securityDefinitions:
   netlifyAuth:
     type: oauth2
