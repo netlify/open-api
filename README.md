@@ -1,4 +1,5 @@
 # open-api
+
 [![Build Status][travis-img]][travis]
 [![Build status][av-img]][av]
 
@@ -58,7 +59,7 @@ $ yarn add @netlify/open-api
 import spec from '@netlify/open-api' // import the spec object into your project
 ```
 
-The module also ships a copy of the original `yml` spec file at `@netlify/open-api/js/dist/swagger.yml`.  You can use these with generic swagger/open-api clients:
+The module also ships a copy of the original `yml` spec file at `@netlify/open-api/js/dist/swagger.yml`. You can use these with generic swagger/open-api clients:
 
 ##### swagger-js
 
@@ -67,6 +68,7 @@ Swagger's JS client can dynamically create a client from a spec either from a UR
 See the [swagger-js](https://github.com/swagger-api/swagger-js) client:
 
 ##### Usage
+
 ```js
 <script src='browser/swagger-client.js' type='text/javascript'></script>
 <script>
@@ -92,13 +94,11 @@ MIT. See [LICENSE](LICENSE) for more details.
 [npm-js]: https://npmjs.org/package/netlify
 [dl-js-img]: https://img.shields.io/npm/dm/netlify.svg
 [dl-js]: https://npmjs.org/package/netlify
-
 [godoc-img]: https://godoc.org/github.com/netlify/open-api/go?status.svg
 [godoc]: https://godoc.org/github.com/netlify/open-api/go
 [goreport-img]: https://goreportcard.com/badge/github.com/netlify/open-api
 [goreport]: https://goreportcard.com/report/github.com/netlify/open-api
 [git-img]: https://img.shields.io/github/release/netlify/open-api.svg
 [git]: https://github.com/netlify/open-api/releases/latest
-
 [open-api-2]: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md
 [go-swagger]: https://github.com/go-swagger/go-swagger
