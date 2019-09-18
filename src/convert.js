@@ -6,8 +6,8 @@ const makeDir = require('make-dir')
 
 const pWriteFile = promisify(writeFile)
 
-const YAML_INPUT = `${__dirname}/../swagger.yml`
-const OUTPUT_DIR = `${__dirname}/dist`
+const YAML_INPUT = `${__dirname}/swagger.yml`
+const OUTPUT_DIR = `${__dirname}/../dist`
 const JSON_OUTPUT = `${OUTPUT_DIR}/swagger.json`
 
 // Validate `swagger.yml`, dereference the JSON references then serialize to

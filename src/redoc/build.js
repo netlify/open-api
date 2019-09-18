@@ -6,7 +6,7 @@ const { copyAssets } = require('./assets')
 const { injectContent } = require('./inject')
 
 const SWAGGER_PATH = `${__dirname}/../swagger.yml`
-const OUTPUT_DIR = `${__dirname}/dist`
+const OUTPUT_DIR = `${__dirname}/../../dist`
 const OUTPUT_PATH = `${OUTPUT_DIR}/index.html`
 
 const pExecFile = promisify(execFile)

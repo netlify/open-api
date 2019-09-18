@@ -35,7 +35,7 @@
     "swagger"
   ],
   "license": "MIT",
-  "main": "js/dist/swagger.json",
+  "main": "dist/swagger.json",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/netlify/open-api.git"
@@ -45,15 +45,15 @@
     "prepare": "run-s lint build test",
     "start": "run-s lint build",
     "build": "run-s convert redoc",
-    "convert": "node ./js/convert.js",
+    "convert": "node src/convert.js",
     "version": "run-s version:*",
-    "version:1-swagger": "node js/bump-swagger.js",
+    "version:1-swagger": "node src/bump-swagger.js",
     "version:2-changelog": "auto-changelog -p --template keepachangelog --breaking-pattern breaking",
     "version:3-git": "git add CHANGELOG.md swagger.yml",
-    "redoc": "node redoc/build.js",
+    "redoc": "node src/redoc/build.js",
     "lint": "run-s eslint prettier",
-    "eslint": "eslint --fix \"{redoc,js}/*.js\"",
-    "prettier": "prettier --write --loglevel warn \"{redoc,js}/*.js\" \"*.{js,md,yml,json}\"",
+    "eslint": "eslint --fix \"src/**/*.js\"",
+    "prettier": "prettier --write --loglevel warn \"src/**/*.js\" \"*.{js,md,yml,json}\"",
     "test": "ava"
   },
   "engines": {

@@ -5,8 +5,8 @@ const cpFile = require('cp-file')
 const ASSETS = [
   `${__dirname}/netlify-logo.png`,
   `${__dirname}/assets.js`,
-  `${__dirname}/../node_modules/analytics/dist/analytics.min.js`,
-  `${__dirname}/../node_modules/analytics-plugin-ga/dist/analytics-plugin-ga.min.js`
+  `${__dirname}/../../node_modules/analytics/dist/analytics.min.js`,
+  `${__dirname}/../../node_modules/analytics-plugin-ga/dist/analytics-plugin-ga.min.js`
 ]
 
 // Copy files for static site to use (logo, JavaScript libraries)
