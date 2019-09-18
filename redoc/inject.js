@@ -10,7 +10,7 @@ const pWriteFile = promisify(writeFile)
 const injectContent = async function(outputPath) {
   const [siteContent, head] = await Promise.all([pReadFile(outputPath, 'utf8'), pReadFile(HEAD_PATH, 'utf8')])
 
-  const updatedContent = siteContent.replace(END_HEAD_REGEXP, head)
+  const updatedContent = siteContent.replace(END_HEAD_REGEXP, `${head}$1`)
 
   await pWriteFile(outputPath, updatedContent)
 }
