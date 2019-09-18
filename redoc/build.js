@@ -17,10 +17,7 @@ const pExecFile = promisify(execFile)
 
 // Build API documentation single self-contained HTML file using `redoc-cli`
 const buildDocs = async function() {
-  await Promise.all([
-    redocCli(),
-    copyAssets(),
-  ])
+  await Promise.all([redocCli(), copyAssets()])
   // Inject analytics
   await addAnalytics()
 }
@@ -37,7 +34,7 @@ const redocCli = async function() {
     `--options.theme.logo.gutter=${LOGO_PADDING}`,
     `--output=${OUTPUT_PATH}`,
     'bundle',
-    SWAGGER_PATH,
+    SWAGGER_PATH
   ])
 }
 

@@ -71,8 +71,8 @@
     "version:3-git": "git add CHANGELOG.md swagger.yml",
     "redoc": "node redoc/build.js",
     "lint": "run-s eslint prettier",
-    "eslint": "eslint --fix \"{js,ui}/*.js\"",
-    "prettier": "prettier --write --loglevel warn \"{js,ui}/*.js\" \"*.{js,md,yml,json}\"",
+    "eslint": "eslint --fix \"{redoc,js,ui}/*.js\"",
+    "prettier": "prettier --write --loglevel warn \"{redoc,js,ui}/*.js\" \"*.{js,md,yml,json}\"",
     "test": "ava"
   },
   "engines": {
