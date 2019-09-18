@@ -2478,32 +2478,62 @@ definitions:
         x-nullable: false
 tags:
   - name: accessToken
+    x-displayName: Access token
   - name: accountMembership
+    x-displayName: Access membership
   - name: accountType
+    x-displayName: Access type
   - name: asset
+    x-displayName: Asset
   - name: assetPublicSignature
+    x-displayName: Asset public signature
   - name: auditLog
+    x-displayName: Audit log
   - name: build
+    x-displayName: Build
   - name: buildHook
+    x-displayName: Build hook
   - name: buildLogMsg
+    x-displayName: Build log message
   - name: deploy
+    x-displayName: Deploy
   - name: deployedBranch
+    x-displayName: Deployed branch
   - name: deployKey
+    x-displayName: Deploy key
   - name: dnsZone
+    x-displayName: DNS zone
   - name: file
+    x-displayName: File
   - name: form
+    x-displayName: Form
   - name: function
+    x-displayName: Function
   - name: hook
+    x-displayName: Hook
   - name: hookType
+    x-displayName: Hook type
   - name: member
+    x-displayName: Member
   - name: metadata
+    x-displayName: Metadata
   - name: paymentMethod
+    x-displayName: Payment method
   - name: service
+    x-displayName: Service
   - name: serviceInstance
+    x-displayName: Service instance
   - name: site
+    x-displayName: Site
   - name: sniCertificate
+    x-displayName: SNI certificate
   - name: snippet
+    x-displayName: Snippet
   - name: splitTest
+    x-displayName: Split test
   - name: submission
+    x-displayName: Form submission
   - name: ticket
+    x-displayName: Ticket
   - name: user
+    x-displayName: User
