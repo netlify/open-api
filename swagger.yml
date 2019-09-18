@@ -15,8 +15,8 @@ externalDocs:
 
     This document describes common usage in some detail. There is also an
     OpenAPI reference for the Netlify API that you can explore. Visit our
-    Community forum to join the conversation about understanding and using
-    Netlify’s API.
+    Community forum to join the conversation about
+    [understanding and using Netlify’s API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).
 
 
     Additionally, we have two API clients for your convenience:
