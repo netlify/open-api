@@ -1,6 +1,6 @@
-import test from 'ava'
+const test = require('ava')
 
-import openApiDef from '..'
+const openApiDef = require('..')
 
 test('OpenAPI definition snapshot', async t => {
   t.snapshot(openApiDef)
