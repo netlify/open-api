@@ -15,6 +15,6 @@
     "prettier"
   ],
   "rules": {
-    "node/no-unpublished-require": 0
+    "import/order": [2, { "newlines-between": "always" }]
   }
 }
