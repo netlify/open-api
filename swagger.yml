@@ -1,8 +1,32 @@
 swagger: '2.0'
 info:
   version: 0.11.4
-  title: Netlify's API definition
+  title: Netlify's API documentation
+  description: >-
+    Netlify is a hosting service for the programmable web. It understands your
+    documents and provides an API to handle atomic deploys of websites, manage
+    form submissions, inject JavaScript snippets, and much more. This is a
+    REST-style API that uses JSON for serialization and OAuth 2 for
+    authentication.
+
+
+    This document is an OpenAPI reference for the Netlify API that you can
+    explore. For more detailed instructions for common uses, please visit the
+    [online documentation](https://www.netlify.com/docs/api/). Visit our
+    Community forum to join the conversation about
+    [understanding and using Netlify’s API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).
+
+
+    Additionally, we have two API clients for your convenience:
+
+    - [Go Client](https://github.com/netlify/open-api#go-client)
+
+    - [JS Client](https://github.com/netlify/js-client)
   termsOfService: https://www.netlify.com/legal/terms-of-use/
+  x-logo:
+    url: netlify-logo.png
+    href: https://www.netlify.com/docs/
+    altText: Netlify
 externalDocs:
   url: https://www.netlify.com/docs/api/
   description: Online documentation
@@ -2452,34 +2476,119 @@ definitions:
       message:
         type: string
         x-nullable: false
+x-tagGroups:
+  - name: OAuth
+    tags:
+      - ticket
+      - accessToken
+  - name: User accounts
+    tags:
+      - user
+      - accountMembership
+      - member
+      - accountType
+      - paymentMethod
+      - auditLog
+  - name: Site
+    tags:
+      - site
+      - file
+      - metadata
+      - snippet
+  - name: Domain names
+    tags:
+      - dnsZone
+      - sniCertificate
+  - name: Deploys
+    tags:
+      - deploy
+      - deployedBranch
+      - deployKey
+  - name: Builds
+    tags:
+      - build
+      - buildLogMsg
+  - name: Webhooks and notifications
+    tags:
+      - hook
+      - hookType
+      - buildHook
+  - name: Services
+    tags:
+      - service
+      - serviceInstance
+  - name: Functions
+    tags:
+      - function
+  - name: Forms
+    tags:
+      - form
+      - submission
+  - name: Split tests
+    tags:
+      - splitTest
+  - name: Large media
+    tags:
+      - asset
+      - assetPublicSignature
 tags:
-  - name: accessToken
-  - name: accountMembership
-  - name: accountType
-  - name: asset
-  - name: assetPublicSignature
-  - name: auditLog
-  - name: build
-  - name: buildHook
-  - name: buildLogMsg
-  - name: deploy
-  - name: deployedBranch
-  - name: deployKey
-  - name: dnsZone
-  - name: file
-  - name: form
-  - name: function
-  - name: hook
-  - name: hookType
-  - name: member
-  - name: metadata
-  - name: paymentMethod
-  - name: service
-  - name: serviceInstance
-  - name: site
-  - name: sniCertificate
-  - name: snippet
-  - name: splitTest
-  - name: submission
   - name: ticket
+    x-displayName: Ticket
+  - name: accessToken
+    x-displayName: Access token
   - name: user
+    x-displayName: User
+  - name: accountMembership
+    x-displayName: Accounts
+  - name: member
+    x-displayName: Member
+  - name: accountType
+    x-displayName: Access type
+  - name: paymentMethod
+    x-displayName: Payment method
+  - name: auditLog
+    x-displayName: Audit log
+  - name: site
+    x-displayName: Site
+  - name: file
+    x-displayName: File
+  - name: metadata
+    x-displayName: Metadata
+  - name: snippet
+    x-displayName: Snippet
+  - name: dnsZone
+    x-displayName: DNS zone
+  - name: sniCertificate
+    x-displayName: SNI certificate
+  - name: deploy
+    x-displayName: Deploy
+  - name: deployedBranch
+    x-displayName: Deployed branch
+  - name: deployKey
+    x-displayName: Deploy key
+  - name: build
+    x-displayName: Build
+  - name: buildLogMsg
+    x-displayName: Build log message
+  - name: hook
+    x-displayName: Hook
+  - name: hookType
+    x-displayName: Hook type
+  - name: buildHook
+    x-displayName: Build hook
+  - name: service
+    x-displayName: Service
+  - name: serviceInstance
+    x-displayName: Service instance
+  - name: function
+    x-displayName: Function
+  - name: form
+    x-displayName: Form
+  - name: submission
+    x-displayName: Form submission
+  - name: splitTest
+    x-displayName: Split test
+  - name: asset
+    x-displayName: Asset
+  - name: assetPublicSignature
+    x-displayName: Asset public signature

@@ -3,35 +3,37 @@
   "description": "Netlify's open-api definition as a module",
   "version": "0.11.4",
   "author": "Netlify",
+  "ava": {
+    "files": [
+      "src/**/*.test.js"
+    ],
+    "compileEnhancements": false,
+    "babel": false
+  },
   "bugs": {
     "url": "https://github.com/netlify/open-api/issues"
   },
   "dependencies": {},
   "devDependencies": {
+    "analytics": "^0.2.0",
+    "analytics-plugin-ga": "^0.1.5",
     "auto-changelog": "^1.16.1",
-    "autoprefixer": "^9.6.1",
     "ava": "^2.4.0",
-    "browserify": "^16.5.0",
-    "budo": "^11.6.3",
-    "cpx": "^1.5.0",
+    "cp-file": "^7.0.0",
     "eslint": "^6.3.0",
     "eslint-config-prettier": "^6.2.0",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-node": "^10.0.0",
     "eslint-plugin-prettier": "^3.1.0",
+    "execa": "^2.0.4",
     "gh-release": "^3.5.0",
-    "mkdirp": "^0.5.1",
+    "make-dir": "^3.0.0",
     "npm-run-all": "^4.1.5",
-    "postcss": "^7.0.18",
-    "postcss-browser-reporter": "^0.6.0",
-    "postcss-cli": "^6.1.3",
-    "postcss-import": "^12.0.1",
-    "postcss-reporter": "^6.0.1",
-    "postcss-url": "^8.0.0",
     "prettier": "^1.18.2",
-    "rimraf": "^3.0.0",
-    "swagger-parser": "^8.0.1",
-    "swagger-ui": "^3.23.8"
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
+    "redoc-cli": "^0.8.6",
+    "swagger-parser": "^8.0.1"
   },
   "files": [],
   "homepage": "https://github.com/netlify/open-api#readme",
@@ -41,7 +43,7 @@
     "swagger"
   ],
   "license": "MIT",
-  "main": "js/dist/swagger.json",
+  "main": "dist/swagger.json",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/netlify/open-api.git"
@@ -49,23 +51,17 @@
   "scripts": {
     "prepublishOnly": "git push && git push --tags && gh-release",
     "prepare": "run-s lint build test",
-    "start": "run-s lint build serve",
-    "build": "run-s clean convert site",
-    "clean": "rimraf js/dist ui/dist && mkdirp js/dist ui/dist",
-    "convert": "node ./js/convert.js",
-    "site": "run-p site:*",
-    "site:css": "postcss ui/index.css -o ui/dist/bundle.css",
-    "site:js": "browserify ui/index.js -o ui/dist/bundle.js",
-    "site:static": "cpx \"ui/{index.html,static/**}\" ui/dist",
-    "site:swagger": "node ./ui/convert.js",
-    "serve": "budo --dir ui/dist",
+    "start": "run-s lint build",
+    "build": "run-s convert redoc",
+    "convert": "node src/convert.js",
     "version": "run-s version:*",
-    "version:1-swagger": "node js/bump-swagger.js",
+    "version:1-swagger": "node src/bump-swagger.js",
     "version:2-changelog": "auto-changelog -p --template keepachangelog --breaking-pattern breaking",
     "version:3-git": "git add CHANGELOG.md swagger.yml",
+    "redoc": "node src/docs/build.js",
     "lint": "run-s eslint prettier",
-    "eslint": "eslint --fix \"{js,ui}/*.js\"",
-    "prettier": "prettier --write --loglevel warn \"{js,ui}/*.js\" \"*.{js,md,yml,json}\"",
+    "eslint": "eslint --fix \"src/**/*.js\"",
+    "prettier": "prettier --write --loglevel warn \"src/**/*.js\" \"*.{js,md,yml,json}\"",
     "test": "ava"
   },
   "engines": {
