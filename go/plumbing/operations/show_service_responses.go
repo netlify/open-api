@@ -24,14 +24,12 @@ type ShowServiceReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *ShowServiceReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 200:
 		result := NewShowServiceOK()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		result := NewShowServiceDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -59,6 +57,10 @@ type ShowServiceOK struct {
 
 func (o *ShowServiceOK) Error() string {
 	return fmt.Sprintf("[GET /services/{addonName}][%d] showServiceOK  %+v", 200, o.Payload)
+}
+
+func (o *ShowServiceOK) GetPayload() *models.ServiceInstance {
+	return o.Payload
 }
 
 func (o *ShowServiceOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -97,6 +99,10 @@ func (o *ShowServiceDefault) Code() int {
 
 func (o *ShowServiceDefault) Error() string {
 	return fmt.Sprintf("[GET /services/{addonName}][%d] showService default  %+v", o._statusCode, o.Payload)
+}
+
+func (o *ShowServiceDefault) GetPayload() *models.Error {
+	return o.Payload
 }
 
 func (o *ShowServiceDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

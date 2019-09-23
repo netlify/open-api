@@ -24,14 +24,12 @@ type ListAccountTypesForUserReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *ListAccountTypesForUserReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 200:
 		result := NewListAccountTypesForUserOK()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		result := NewListAccountTypesForUserDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -59,6 +57,10 @@ type ListAccountTypesForUserOK struct {
 
 func (o *ListAccountTypesForUserOK) Error() string {
 	return fmt.Sprintf("[GET /accounts/types][%d] listAccountTypesForUserOK  %+v", 200, o.Payload)
+}
+
+func (o *ListAccountTypesForUserOK) GetPayload() []*models.AccountType {
+	return o.Payload
 }
 
 func (o *ListAccountTypesForUserOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -95,6 +97,10 @@ func (o *ListAccountTypesForUserDefault) Code() int {
 
 func (o *ListAccountTypesForUserDefault) Error() string {
 	return fmt.Sprintf("[GET /accounts/types][%d] listAccountTypesForUser default  %+v", o._statusCode, o.Payload)
+}
+
+func (o *ListAccountTypesForUserDefault) GetPayload() *models.Error {
+	return o.Payload
 }
 
 func (o *ListAccountTypesForUserDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

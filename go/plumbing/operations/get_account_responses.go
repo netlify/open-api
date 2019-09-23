@@ -24,14 +24,12 @@ type GetAccountReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *GetAccountReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 200:
 		result := NewGetAccountOK()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		result := NewGetAccountDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -59,6 +57,10 @@ type GetAccountOK struct {
 
 func (o *GetAccountOK) Error() string {
 	return fmt.Sprintf("[GET /accounts/{account_id}][%d] getAccountOK  %+v", 200, o.Payload)
+}
+
+func (o *GetAccountOK) GetPayload() []*models.AccountMembership {
+	return o.Payload
 }
 
 func (o *GetAccountOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -95,6 +97,10 @@ func (o *GetAccountDefault) Code() int {
 
 func (o *GetAccountDefault) Error() string {
 	return fmt.Sprintf("[GET /accounts/{account_id}][%d] getAccount default  %+v", o._statusCode, o.Payload)
+}
+
+func (o *GetAccountDefault) GetPayload() *models.Error {
+	return o.Payload
 }
 
 func (o *GetAccountDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

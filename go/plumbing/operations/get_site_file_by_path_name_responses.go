@@ -24,14 +24,12 @@ type GetSiteFileByPathNameReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *GetSiteFileByPathNameReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 200:
 		result := NewGetSiteFileByPathNameOK()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		result := NewGetSiteFileByPathNameDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -59,6 +57,10 @@ type GetSiteFileByPathNameOK struct {
 
 func (o *GetSiteFileByPathNameOK) Error() string {
 	return fmt.Sprintf("[GET /sites/{site_id}/files/{file_path}][%d] getSiteFileByPathNameOK  %+v", 200, o.Payload)
+}
+
+func (o *GetSiteFileByPathNameOK) GetPayload() *models.File {
+	return o.Payload
 }
 
 func (o *GetSiteFileByPathNameOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -97,6 +99,10 @@ func (o *GetSiteFileByPathNameDefault) Code() int {
 
 func (o *GetSiteFileByPathNameDefault) Error() string {
 	return fmt.Sprintf("[GET /sites/{site_id}/files/{file_path}][%d] getSiteFileByPathName default  %+v", o._statusCode, o.Payload)
+}
+
+func (o *GetSiteFileByPathNameDefault) GetPayload() *models.Error {
+	return o.Payload
 }
 
 func (o *GetSiteFileByPathNameDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

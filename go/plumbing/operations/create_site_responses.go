@@ -24,14 +24,12 @@ type CreateSiteReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *CreateSiteReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 201:
 		result := NewCreateSiteCreated()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		result := NewCreateSiteDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -59,6 +57,10 @@ type CreateSiteCreated struct {
 
 func (o *CreateSiteCreated) Error() string {
 	return fmt.Sprintf("[POST /sites][%d] createSiteCreated  %+v", 201, o.Payload)
+}
+
+func (o *CreateSiteCreated) GetPayload() *models.Site {
+	return o.Payload
 }
 
 func (o *CreateSiteCreated) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -97,6 +99,10 @@ func (o *CreateSiteDefault) Code() int {
 
 func (o *CreateSiteDefault) Error() string {
 	return fmt.Sprintf("[POST /sites][%d] createSite default  %+v", o._statusCode, o.Payload)
+}
+
+func (o *CreateSiteDefault) GetPayload() *models.Error {
+	return o.Payload
 }
 
 func (o *CreateSiteDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

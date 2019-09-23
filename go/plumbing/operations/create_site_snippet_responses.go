@@ -24,14 +24,12 @@ type CreateSiteSnippetReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *CreateSiteSnippetReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 201:
 		result := NewCreateSiteSnippetCreated()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		result := NewCreateSiteSnippetDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -59,6 +57,10 @@ type CreateSiteSnippetCreated struct {
 
 func (o *CreateSiteSnippetCreated) Error() string {
 	return fmt.Sprintf("[POST /sites/{site_id}/snippets][%d] createSiteSnippetCreated  %+v", 201, o.Payload)
+}
+
+func (o *CreateSiteSnippetCreated) GetPayload() *models.Snippet {
+	return o.Payload
 }
 
 func (o *CreateSiteSnippetCreated) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -97,6 +99,10 @@ func (o *CreateSiteSnippetDefault) Code() int {
 
 func (o *CreateSiteSnippetDefault) Error() string {
 	return fmt.Sprintf("[POST /sites/{site_id}/snippets][%d] createSiteSnippet default  %+v", o._statusCode, o.Payload)
+}
+
+func (o *CreateSiteSnippetDefault) GetPayload() *models.Error {
+	return o.Payload
 }
 
 func (o *CreateSiteSnippetDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

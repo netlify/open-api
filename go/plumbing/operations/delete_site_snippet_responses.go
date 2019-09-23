@@ -24,14 +24,12 @@ type DeleteSiteSnippetReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *DeleteSiteSnippetReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 204:
 		result := NewDeleteSiteSnippetNoContent()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		result := NewDeleteSiteSnippetDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -89,6 +87,10 @@ func (o *DeleteSiteSnippetDefault) Code() int {
 
 func (o *DeleteSiteSnippetDefault) Error() string {
 	return fmt.Sprintf("[DELETE /sites/{site_id}/snippets/{snippet_id}][%d] deleteSiteSnippet default  %+v", o._statusCode, o.Payload)
+}
+
+func (o *DeleteSiteSnippetDefault) GetPayload() *models.Error {
+	return o.Payload
 }
 
 func (o *DeleteSiteSnippetDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

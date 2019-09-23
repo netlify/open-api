@@ -24,14 +24,12 @@ type ListSiteSnippetsReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *ListSiteSnippetsReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 200:
 		result := NewListSiteSnippetsOK()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		result := NewListSiteSnippetsDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -59,6 +57,10 @@ type ListSiteSnippetsOK struct {
 
 func (o *ListSiteSnippetsOK) Error() string {
 	return fmt.Sprintf("[GET /sites/{site_id}/snippets][%d] listSiteSnippetsOK  %+v", 200, o.Payload)
+}
+
+func (o *ListSiteSnippetsOK) GetPayload() []*models.Snippet {
+	return o.Payload
 }
 
 func (o *ListSiteSnippetsOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -95,6 +97,10 @@ func (o *ListSiteSnippetsDefault) Code() int {
 
 func (o *ListSiteSnippetsDefault) Error() string {
 	return fmt.Sprintf("[GET /sites/{site_id}/snippets][%d] listSiteSnippets default  %+v", o._statusCode, o.Payload)
+}
+
+func (o *ListSiteSnippetsDefault) GetPayload() *models.Error {
+	return o.Payload
 }
 
 func (o *ListSiteSnippetsDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

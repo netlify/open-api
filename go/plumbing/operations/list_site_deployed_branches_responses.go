@@ -24,14 +24,12 @@ type ListSiteDeployedBranchesReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *ListSiteDeployedBranchesReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 200:
 		result := NewListSiteDeployedBranchesOK()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		result := NewListSiteDeployedBranchesDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -59,6 +57,10 @@ type ListSiteDeployedBranchesOK struct {
 
 func (o *ListSiteDeployedBranchesOK) Error() string {
 	return fmt.Sprintf("[GET /sites/{site_id}/deployed-branches][%d] listSiteDeployedBranchesOK  %+v", 200, o.Payload)
+}
+
+func (o *ListSiteDeployedBranchesOK) GetPayload() []*models.DeployedBranch {
+	return o.Payload
 }
 
 func (o *ListSiteDeployedBranchesOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -95,6 +97,10 @@ func (o *ListSiteDeployedBranchesDefault) Code() int {
 
 func (o *ListSiteDeployedBranchesDefault) Error() string {
 	return fmt.Sprintf("[GET /sites/{site_id}/deployed-branches][%d] listSiteDeployedBranches default  %+v", o._statusCode, o.Payload)
+}
+
+func (o *ListSiteDeployedBranchesDefault) GetPayload() *models.Error {
+	return o.Payload
 }
 
 func (o *ListSiteDeployedBranchesDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

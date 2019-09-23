@@ -24,14 +24,12 @@ type CreateDeployKeyReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *CreateDeployKeyReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 201:
 		result := NewCreateDeployKeyCreated()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		result := NewCreateDeployKeyDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -59,6 +57,10 @@ type CreateDeployKeyCreated struct {
 
 func (o *CreateDeployKeyCreated) Error() string {
 	return fmt.Sprintf("[POST /deploy_keys][%d] createDeployKeyCreated  %+v", 201, o.Payload)
+}
+
+func (o *CreateDeployKeyCreated) GetPayload() *models.DeployKey {
+	return o.Payload
 }
 
 func (o *CreateDeployKeyCreated) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -97,6 +99,10 @@ func (o *CreateDeployKeyDefault) Code() int {
 
 func (o *CreateDeployKeyDefault) Error() string {
 	return fmt.Sprintf("[POST /deploy_keys][%d] createDeployKey default  %+v", o._statusCode, o.Payload)
+}
+
+func (o *CreateDeployKeyDefault) GetPayload() *models.Error {
+	return o.Payload
 }
 
 func (o *CreateDeployKeyDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

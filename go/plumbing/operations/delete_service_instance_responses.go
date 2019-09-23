@@ -24,14 +24,12 @@ type DeleteServiceInstanceReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *DeleteServiceInstanceReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 204:
 		result := NewDeleteServiceInstanceNoContent()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		result := NewDeleteServiceInstanceDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -89,6 +87,10 @@ func (o *DeleteServiceInstanceDefault) Code() int {
 
 func (o *DeleteServiceInstanceDefault) Error() string {
 	return fmt.Sprintf("[DELETE /sites/{site_id}/services/{addon}/instances][%d] deleteServiceInstance default  %+v", o._statusCode, o.Payload)
+}
+
+func (o *DeleteServiceInstanceDefault) GetPayload() *models.Error {
+	return o.Payload
 }
 
 func (o *DeleteServiceInstanceDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

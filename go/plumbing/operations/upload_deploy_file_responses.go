@@ -24,14 +24,12 @@ type UploadDeployFileReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *UploadDeployFileReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 200:
 		result := NewUploadDeployFileOK()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		result := NewUploadDeployFileDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -59,6 +57,10 @@ type UploadDeployFileOK struct {
 
 func (o *UploadDeployFileOK) Error() string {
 	return fmt.Sprintf("[PUT /deploys/{deploy_id}/files/{path}][%d] uploadDeployFileOK  %+v", 200, o.Payload)
+}
+
+func (o *UploadDeployFileOK) GetPayload() *models.File {
+	return o.Payload
 }
 
 func (o *UploadDeployFileOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -97,6 +99,10 @@ func (o *UploadDeployFileDefault) Code() int {
 
 func (o *UploadDeployFileDefault) Error() string {
 	return fmt.Sprintf("[PUT /deploys/{deploy_id}/files/{path}][%d] uploadDeployFile default  %+v", o._statusCode, o.Payload)
+}
+
+func (o *UploadDeployFileDefault) GetPayload() *models.Error {
+	return o.Payload
 }
 
 func (o *UploadDeployFileDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

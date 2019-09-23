@@ -21,7 +21,6 @@ type DeleteHookBySiteIDReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *DeleteHookBySiteIDReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 204:
 		result := NewDeleteHookBySiteIDNoContent()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {

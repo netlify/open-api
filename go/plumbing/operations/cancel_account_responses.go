@@ -24,14 +24,12 @@ type CancelAccountReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *CancelAccountReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 204:
 		result := NewCancelAccountNoContent()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		result := NewCancelAccountDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -89,6 +87,10 @@ func (o *CancelAccountDefault) Code() int {
 
 func (o *CancelAccountDefault) Error() string {
 	return fmt.Sprintf("[DELETE /accounts/{account_id}][%d] cancelAccount default  %+v", o._statusCode, o.Payload)
+}
+
+func (o *CancelAccountDefault) GetPayload() *models.Error {
+	return o.Payload
 }
 
 func (o *CancelAccountDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

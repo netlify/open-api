@@ -24,14 +24,12 @@ type GetDNSForSiteReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *GetDNSForSiteReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 200:
 		result := NewGetDNSForSiteOK()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		result := NewGetDNSForSiteDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -59,6 +57,10 @@ type GetDNSForSiteOK struct {
 
 func (o *GetDNSForSiteOK) Error() string {
 	return fmt.Sprintf("[GET /sites/{site_id}/dns][%d] getDnsForSiteOK  %+v", 200, o.Payload)
+}
+
+func (o *GetDNSForSiteOK) GetPayload() []*models.DNSZone {
+	return o.Payload
 }
 
 func (o *GetDNSForSiteOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -95,6 +97,10 @@ func (o *GetDNSForSiteDefault) Code() int {
 
 func (o *GetDNSForSiteDefault) Error() string {
 	return fmt.Sprintf("[GET /sites/{site_id}/dns][%d] getDNSForSite default  %+v", o._statusCode, o.Payload)
+}
+
+func (o *GetDNSForSiteDefault) GetPayload() *models.Error {
+	return o.Payload
 }
 
 func (o *GetDNSForSiteDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

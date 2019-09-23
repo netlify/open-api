@@ -24,14 +24,12 @@ type UpdateSiteAssetReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *UpdateSiteAssetReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 200:
 		result := NewUpdateSiteAssetOK()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		result := NewUpdateSiteAssetDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -59,6 +57,10 @@ type UpdateSiteAssetOK struct {
 
 func (o *UpdateSiteAssetOK) Error() string {
 	return fmt.Sprintf("[PUT /sites/{site_id}/assets/{asset_id}][%d] updateSiteAssetOK  %+v", 200, o.Payload)
+}
+
+func (o *UpdateSiteAssetOK) GetPayload() *models.Asset {
+	return o.Payload
 }
 
 func (o *UpdateSiteAssetOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -97,6 +99,10 @@ func (o *UpdateSiteAssetDefault) Code() int {
 
 func (o *UpdateSiteAssetDefault) Error() string {
 	return fmt.Sprintf("[PUT /sites/{site_id}/assets/{asset_id}][%d] updateSiteAsset default  %+v", o._statusCode, o.Payload)
+}
+
+func (o *UpdateSiteAssetDefault) GetPayload() *models.Error {
+	return o.Payload
 }
 
 func (o *UpdateSiteAssetDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

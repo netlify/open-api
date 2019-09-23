@@ -24,14 +24,12 @@ type CreateSiteAssetReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *CreateSiteAssetReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 201:
 		result := NewCreateSiteAssetCreated()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		result := NewCreateSiteAssetDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -59,6 +57,10 @@ type CreateSiteAssetCreated struct {
 
 func (o *CreateSiteAssetCreated) Error() string {
 	return fmt.Sprintf("[POST /sites/{site_id}/assets][%d] createSiteAssetCreated  %+v", 201, o.Payload)
+}
+
+func (o *CreateSiteAssetCreated) GetPayload() *models.AssetSignature {
+	return o.Payload
 }
 
 func (o *CreateSiteAssetCreated) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -97,6 +99,10 @@ func (o *CreateSiteAssetDefault) Code() int {
 
 func (o *CreateSiteAssetDefault) Error() string {
 	return fmt.Sprintf("[POST /sites/{site_id}/assets][%d] createSiteAsset default  %+v", o._statusCode, o.Payload)
+}
+
+func (o *CreateSiteAssetDefault) GetPayload() *models.Error {
+	return o.Payload
 }
 
 func (o *CreateSiteAssetDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

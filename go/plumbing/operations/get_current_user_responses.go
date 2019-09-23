@@ -24,14 +24,12 @@ type GetCurrentUserReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *GetCurrentUserReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 200:
 		result := NewGetCurrentUserOK()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		result := NewGetCurrentUserDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -59,6 +57,10 @@ type GetCurrentUserOK struct {
 
 func (o *GetCurrentUserOK) Error() string {
 	return fmt.Sprintf("[GET /user][%d] getCurrentUserOK  %+v", 200, o.Payload)
+}
+
+func (o *GetCurrentUserOK) GetPayload() []*models.User {
+	return o.Payload
 }
 
 func (o *GetCurrentUserOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -95,6 +97,10 @@ func (o *GetCurrentUserDefault) Code() int {
 
 func (o *GetCurrentUserDefault) Error() string {
 	return fmt.Sprintf("[GET /user][%d] getCurrentUser default  %+v", o._statusCode, o.Payload)
+}
+
+func (o *GetCurrentUserDefault) GetPayload() *models.Error {
+	return o.Payload
 }
 
 func (o *GetCurrentUserDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

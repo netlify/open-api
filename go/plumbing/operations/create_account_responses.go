@@ -24,14 +24,12 @@ type CreateAccountReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *CreateAccountReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 201:
 		result := NewCreateAccountCreated()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		result := NewCreateAccountDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -59,6 +57,10 @@ type CreateAccountCreated struct {
 
 func (o *CreateAccountCreated) Error() string {
 	return fmt.Sprintf("[POST /accounts][%d] createAccountCreated  %+v", 201, o.Payload)
+}
+
+func (o *CreateAccountCreated) GetPayload() *models.AccountMembership {
+	return o.Payload
 }
 
 func (o *CreateAccountCreated) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -97,6 +99,10 @@ func (o *CreateAccountDefault) Code() int {
 
 func (o *CreateAccountDefault) Error() string {
 	return fmt.Sprintf("[POST /accounts][%d] createAccount default  %+v", o._statusCode, o.Payload)
+}
+
+func (o *CreateAccountDefault) GetPayload() *models.Error {
+	return o.Payload
 }
 
 func (o *CreateAccountDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
