@@ -16,6 +16,8 @@ require (
 	github.com/hashicorp/golang-lru v0.5.3 // indirect
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
 	github.com/kyoh86/richgo v0.3.1
+	github.com/myitcv/gobin v0.0.13 // indirect
+	github.com/rogpeppe/go-internal v1.3.2 // indirect
 	github.com/rsc/goversion v1.2.0
 	github.com/sirupsen/logrus v1.4.2
 	github.com/stretchr/testify v1.4.0
