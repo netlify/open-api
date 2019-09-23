@@ -24,14 +24,12 @@ type ProvisionSiteTLSCertificateReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *ProvisionSiteTLSCertificateReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 200:
 		result := NewProvisionSiteTLSCertificateOK()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		result := NewProvisionSiteTLSCertificateDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -59,6 +57,10 @@ type ProvisionSiteTLSCertificateOK struct {
 
 func (o *ProvisionSiteTLSCertificateOK) Error() string {
 	return fmt.Sprintf("[POST /sites/{site_id}/ssl][%d] provisionSiteTlsCertificateOK  %+v", 200, o.Payload)
+}
+
+func (o *ProvisionSiteTLSCertificateOK) GetPayload() *models.SniCertificate {
+	return o.Payload
 }
 
 func (o *ProvisionSiteTLSCertificateOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -97,6 +99,10 @@ func (o *ProvisionSiteTLSCertificateDefault) Code() int {
 
 func (o *ProvisionSiteTLSCertificateDefault) Error() string {
 	return fmt.Sprintf("[POST /sites/{site_id}/ssl][%d] provisionSiteTLSCertificate default  %+v", o._statusCode, o.Payload)
+}
+
+func (o *ProvisionSiteTLSCertificateDefault) GetPayload() *models.Error {
+	return o.Payload
 }
 
 func (o *ProvisionSiteTLSCertificateDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

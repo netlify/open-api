@@ -24,14 +24,12 @@ type EnableHookReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *EnableHookReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 200:
 		result := NewEnableHookOK()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		result := NewEnableHookDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -59,6 +57,10 @@ type EnableHookOK struct {
 
 func (o *EnableHookOK) Error() string {
 	return fmt.Sprintf("[POST /hooks/{hook_id}/enable][%d] enableHookOK  %+v", 200, o.Payload)
+}
+
+func (o *EnableHookOK) GetPayload() *models.Hook {
+	return o.Payload
 }
 
 func (o *EnableHookOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -97,6 +99,10 @@ func (o *EnableHookDefault) Code() int {
 
 func (o *EnableHookDefault) Error() string {
 	return fmt.Sprintf("[POST /hooks/{hook_id}/enable][%d] enableHook default  %+v", o._statusCode, o.Payload)
+}
+
+func (o *EnableHookDefault) GetPayload() *models.Error {
+	return o.Payload
 }
 
 func (o *EnableHookDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

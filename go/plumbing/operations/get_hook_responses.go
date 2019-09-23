@@ -24,14 +24,12 @@ type GetHookReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *GetHookReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 200:
 		result := NewGetHookOK()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		result := NewGetHookDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -59,6 +57,10 @@ type GetHookOK struct {
 
 func (o *GetHookOK) Error() string {
 	return fmt.Sprintf("[GET /hooks/{hook_id}][%d] getHookOK  %+v", 200, o.Payload)
+}
+
+func (o *GetHookOK) GetPayload() *models.Hook {
+	return o.Payload
 }
 
 func (o *GetHookOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -97,6 +99,10 @@ func (o *GetHookDefault) Code() int {
 
 func (o *GetHookDefault) Error() string {
 	return fmt.Sprintf("[GET /hooks/{hook_id}][%d] getHook default  %+v", o._statusCode, o.Payload)
+}
+
+func (o *GetHookDefault) GetPayload() *models.Error {
+	return o.Payload
 }
 
 func (o *GetHookDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

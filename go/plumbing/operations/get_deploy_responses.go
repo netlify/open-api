@@ -24,14 +24,12 @@ type GetDeployReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *GetDeployReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 200:
 		result := NewGetDeployOK()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		result := NewGetDeployDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -59,6 +57,10 @@ type GetDeployOK struct {
 
 func (o *GetDeployOK) Error() string {
 	return fmt.Sprintf("[GET /deploys/{deploy_id}][%d] getDeployOK  %+v", 200, o.Payload)
+}
+
+func (o *GetDeployOK) GetPayload() *models.Deploy {
+	return o.Payload
 }
 
 func (o *GetDeployOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -97,6 +99,10 @@ func (o *GetDeployDefault) Code() int {
 
 func (o *GetDeployDefault) Error() string {
 	return fmt.Sprintf("[GET /deploys/{deploy_id}][%d] getDeploy default  %+v", o._statusCode, o.Payload)
+}
+
+func (o *GetDeployDefault) GetPayload() *models.Error {
+	return o.Payload
 }
 
 func (o *GetDeployDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

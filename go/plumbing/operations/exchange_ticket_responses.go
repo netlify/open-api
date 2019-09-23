@@ -24,14 +24,12 @@ type ExchangeTicketReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *ExchangeTicketReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 201:
 		result := NewExchangeTicketCreated()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		result := NewExchangeTicketDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -59,6 +57,10 @@ type ExchangeTicketCreated struct {
 
 func (o *ExchangeTicketCreated) Error() string {
 	return fmt.Sprintf("[POST /oauth/tickets/{ticket_id}/exchange][%d] exchangeTicketCreated  %+v", 201, o.Payload)
+}
+
+func (o *ExchangeTicketCreated) GetPayload() *models.AccessToken {
+	return o.Payload
 }
 
 func (o *ExchangeTicketCreated) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -97,6 +99,10 @@ func (o *ExchangeTicketDefault) Code() int {
 
 func (o *ExchangeTicketDefault) Error() string {
 	return fmt.Sprintf("[POST /oauth/tickets/{ticket_id}/exchange][%d] exchangeTicket default  %+v", o._statusCode, o.Payload)
+}
+
+func (o *ExchangeTicketDefault) GetPayload() *models.Error {
+	return o.Payload
 }
 
 func (o *ExchangeTicketDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

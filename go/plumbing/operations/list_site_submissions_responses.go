@@ -24,14 +24,12 @@ type ListSiteSubmissionsReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *ListSiteSubmissionsReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 200:
 		result := NewListSiteSubmissionsOK()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		result := NewListSiteSubmissionsDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -59,6 +57,10 @@ type ListSiteSubmissionsOK struct {
 
 func (o *ListSiteSubmissionsOK) Error() string {
 	return fmt.Sprintf("[GET /sites/{site_id}/submissions][%d] listSiteSubmissionsOK  %+v", 200, o.Payload)
+}
+
+func (o *ListSiteSubmissionsOK) GetPayload() []*models.Submission {
+	return o.Payload
 }
 
 func (o *ListSiteSubmissionsOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -95,6 +97,10 @@ func (o *ListSiteSubmissionsDefault) Code() int {
 
 func (o *ListSiteSubmissionsDefault) Error() string {
 	return fmt.Sprintf("[GET /sites/{site_id}/submissions][%d] listSiteSubmissions default  %+v", o._statusCode, o.Payload)
+}
+
+func (o *ListSiteSubmissionsDefault) GetPayload() *models.Error {
+	return o.Payload
 }
 
 func (o *ListSiteSubmissionsDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

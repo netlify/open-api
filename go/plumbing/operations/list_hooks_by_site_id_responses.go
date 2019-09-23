@@ -24,14 +24,12 @@ type ListHooksBySiteIDReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *ListHooksBySiteIDReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 200:
 		result := NewListHooksBySiteIDOK()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		result := NewListHooksBySiteIDDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -59,6 +57,10 @@ type ListHooksBySiteIDOK struct {
 
 func (o *ListHooksBySiteIDOK) Error() string {
 	return fmt.Sprintf("[GET /hooks][%d] listHooksBySiteIdOK  %+v", 200, o.Payload)
+}
+
+func (o *ListHooksBySiteIDOK) GetPayload() []*models.Hook {
+	return o.Payload
 }
 
 func (o *ListHooksBySiteIDOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -95,6 +97,10 @@ func (o *ListHooksBySiteIDDefault) Code() int {
 
 func (o *ListHooksBySiteIDDefault) Error() string {
 	return fmt.Sprintf("[GET /hooks][%d] listHooksBySiteId default  %+v", o._statusCode, o.Payload)
+}
+
+func (o *ListHooksBySiteIDDefault) GetPayload() *models.Error {
+	return o.Payload
 }
 
 func (o *ListHooksBySiteIDDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

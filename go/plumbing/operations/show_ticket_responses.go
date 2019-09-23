@@ -24,14 +24,12 @@ type ShowTicketReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *ShowTicketReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 200:
 		result := NewShowTicketOK()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		result := NewShowTicketDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -59,6 +57,10 @@ type ShowTicketOK struct {
 
 func (o *ShowTicketOK) Error() string {
 	return fmt.Sprintf("[GET /oauth/tickets/{ticket_id}][%d] showTicketOK  %+v", 200, o.Payload)
+}
+
+func (o *ShowTicketOK) GetPayload() *models.Ticket {
+	return o.Payload
 }
 
 func (o *ShowTicketOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -97,6 +99,10 @@ func (o *ShowTicketDefault) Code() int {
 
 func (o *ShowTicketDefault) Error() string {
 	return fmt.Sprintf("[GET /oauth/tickets/{ticket_id}][%d] showTicket default  %+v", o._statusCode, o.Payload)
+}
+
+func (o *ShowTicketDefault) GetPayload() *models.Error {
+	return o.Payload
 }
 
 func (o *ShowTicketDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

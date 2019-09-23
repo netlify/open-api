@@ -24,14 +24,12 @@ type ListSitesForAccountReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *ListSitesForAccountReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 200:
 		result := NewListSitesForAccountOK()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		result := NewListSitesForAccountDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -59,6 +57,10 @@ type ListSitesForAccountOK struct {
 
 func (o *ListSitesForAccountOK) Error() string {
 	return fmt.Sprintf("[GET /{account_slug}/sites][%d] listSitesForAccountOK  %+v", 200, o.Payload)
+}
+
+func (o *ListSitesForAccountOK) GetPayload() []*models.Site {
+	return o.Payload
 }
 
 func (o *ListSitesForAccountOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -95,6 +97,10 @@ func (o *ListSitesForAccountDefault) Code() int {
 
 func (o *ListSitesForAccountDefault) Error() string {
 	return fmt.Sprintf("[GET /{account_slug}/sites][%d] listSitesForAccount default  %+v", o._statusCode, o.Payload)
+}
+
+func (o *ListSitesForAccountDefault) GetPayload() *models.Error {
+	return o.Payload
 }
 
 func (o *ListSitesForAccountDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

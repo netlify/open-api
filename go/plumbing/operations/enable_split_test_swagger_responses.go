@@ -24,14 +24,12 @@ type EnableSplitTestReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *EnableSplitTestReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 204:
 		result := NewEnableSplitTestNoContent()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		result := NewEnableSplitTestDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -89,6 +87,10 @@ func (o *EnableSplitTestDefault) Code() int {
 
 func (o *EnableSplitTestDefault) Error() string {
 	return fmt.Sprintf("[POST /site/{site_id}/traffic_splits/{split_test_id}/publish][%d] enableSplitTest default  %+v", o._statusCode, o.Payload)
+}
+
+func (o *EnableSplitTestDefault) GetPayload() *models.Error {
+	return o.Payload
 }
 
 func (o *EnableSplitTestDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

@@ -24,14 +24,12 @@ type GetSplitTestReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *GetSplitTestReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 200:
 		result := NewGetSplitTestOK()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		result := NewGetSplitTestDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -59,6 +57,10 @@ type GetSplitTestOK struct {
 
 func (o *GetSplitTestOK) Error() string {
 	return fmt.Sprintf("[GET /site/{site_id}/traffic_splits/{split_test_id}][%d] getSplitTestOK  %+v", 200, o.Payload)
+}
+
+func (o *GetSplitTestOK) GetPayload() *models.SplitTest {
+	return o.Payload
 }
 
 func (o *GetSplitTestOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -97,6 +99,10 @@ func (o *GetSplitTestDefault) Code() int {
 
 func (o *GetSplitTestDefault) Error() string {
 	return fmt.Sprintf("[GET /site/{site_id}/traffic_splits/{split_test_id}][%d] getSplitTest default  %+v", o._statusCode, o.Payload)
+}
+
+func (o *GetSplitTestDefault) GetPayload() *models.Error {
+	return o.Payload
 }
 
 func (o *GetSplitTestDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

@@ -24,14 +24,12 @@ type ListAccountAuditEventsReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *ListAccountAuditEventsReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 200:
 		result := NewListAccountAuditEventsOK()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		result := NewListAccountAuditEventsDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -59,6 +57,10 @@ type ListAccountAuditEventsOK struct {
 
 func (o *ListAccountAuditEventsOK) Error() string {
 	return fmt.Sprintf("[GET /accounts/{account_id}/audit][%d] listAccountAuditEventsOK  %+v", 200, o.Payload)
+}
+
+func (o *ListAccountAuditEventsOK) GetPayload() []*models.AuditLog {
+	return o.Payload
 }
 
 func (o *ListAccountAuditEventsOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -95,6 +97,10 @@ func (o *ListAccountAuditEventsDefault) Code() int {
 
 func (o *ListAccountAuditEventsDefault) Error() string {
 	return fmt.Sprintf("[GET /accounts/{account_id}/audit][%d] listAccountAuditEvents default  %+v", o._statusCode, o.Payload)
+}
+
+func (o *ListAccountAuditEventsDefault) GetPayload() *models.Error {
+	return o.Payload
 }
 
 func (o *ListAccountAuditEventsDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

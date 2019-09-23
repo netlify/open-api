@@ -24,14 +24,12 @@ type UpdateAccountReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *UpdateAccountReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 200:
 		result := NewUpdateAccountOK()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		result := NewUpdateAccountDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -59,6 +57,10 @@ type UpdateAccountOK struct {
 
 func (o *UpdateAccountOK) Error() string {
 	return fmt.Sprintf("[PUT /accounts/{account_id}][%d] updateAccountOK  %+v", 200, o.Payload)
+}
+
+func (o *UpdateAccountOK) GetPayload() *models.AccountMembership {
+	return o.Payload
 }
 
 func (o *UpdateAccountOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -97,6 +99,10 @@ func (o *UpdateAccountDefault) Code() int {
 
 func (o *UpdateAccountDefault) Error() string {
 	return fmt.Sprintf("[PUT /accounts/{account_id}][%d] updateAccount default  %+v", o._statusCode, o.Payload)
+}
+
+func (o *UpdateAccountDefault) GetPayload() *models.Error {
+	return o.Payload
 }
 
 func (o *UpdateAccountDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

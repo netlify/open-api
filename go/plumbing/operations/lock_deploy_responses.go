@@ -24,14 +24,12 @@ type LockDeployReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *LockDeployReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 200:
 		result := NewLockDeployOK()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		result := NewLockDeployDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -59,6 +57,10 @@ type LockDeployOK struct {
 
 func (o *LockDeployOK) Error() string {
 	return fmt.Sprintf("[POST /deploys/{deploy_id}/lock][%d] lockDeployOK  %+v", 200, o.Payload)
+}
+
+func (o *LockDeployOK) GetPayload() *models.Deploy {
+	return o.Payload
 }
 
 func (o *LockDeployOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -97,6 +99,10 @@ func (o *LockDeployDefault) Code() int {
 
 func (o *LockDeployDefault) Error() string {
 	return fmt.Sprintf("[POST /deploys/{deploy_id}/lock][%d] lockDeploy default  %+v", o._statusCode, o.Payload)
+}
+
+func (o *LockDeployDefault) GetPayload() *models.Error {
+	return o.Payload
 }
 
 func (o *LockDeployDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

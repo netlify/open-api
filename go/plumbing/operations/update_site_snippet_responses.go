@@ -24,14 +24,12 @@ type UpdateSiteSnippetReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *UpdateSiteSnippetReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 204:
 		result := NewUpdateSiteSnippetNoContent()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		result := NewUpdateSiteSnippetDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -89,6 +87,10 @@ func (o *UpdateSiteSnippetDefault) Code() int {
 
 func (o *UpdateSiteSnippetDefault) Error() string {
 	return fmt.Sprintf("[PUT /sites/{site_id}/snippets/{snippet_id}][%d] updateSiteSnippet default  %+v", o._statusCode, o.Payload)
+}
+
+func (o *UpdateSiteSnippetDefault) GetPayload() *models.Error {
+	return o.Payload
 }
 
 func (o *UpdateSiteSnippetDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

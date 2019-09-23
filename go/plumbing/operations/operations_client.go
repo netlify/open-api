@@ -6,6 +6,8 @@ package operations
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"fmt"
+
 	"github.com/go-openapi/runtime"
 
 	strfmt "github.com/go-openapi/strfmt"
@@ -49,8 +51,13 @@ func (a *Client) AddMemberToAccount(params *AddMemberToAccountParams, authInfo r
 	if err != nil {
 		return nil, err
 	}
-	return result.(*AddMemberToAccountOK), nil
-
+	success, ok := result.(*AddMemberToAccountOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*AddMemberToAccountDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -78,8 +85,13 @@ func (a *Client) CancelAccount(params *CancelAccountParams, authInfo runtime.Cli
 	if err != nil {
 		return nil, err
 	}
-	return result.(*CancelAccountNoContent), nil
-
+	success, ok := result.(*CancelAccountNoContent)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*CancelAccountDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -107,8 +119,13 @@ func (a *Client) ConfigureDNSForSite(params *ConfigureDNSForSiteParams, authInfo
 	if err != nil {
 		return nil, err
 	}
-	return result.(*ConfigureDNSForSiteOK), nil
-
+	success, ok := result.(*ConfigureDNSForSiteOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*ConfigureDNSForSiteDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -136,8 +153,13 @@ func (a *Client) CreateAccount(params *CreateAccountParams, authInfo runtime.Cli
 	if err != nil {
 		return nil, err
 	}
-	return result.(*CreateAccountCreated), nil
-
+	success, ok := result.(*CreateAccountCreated)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*CreateAccountDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -165,8 +187,13 @@ func (a *Client) CreateDeployKey(params *CreateDeployKeyParams, authInfo runtime
 	if err != nil {
 		return nil, err
 	}
-	return result.(*CreateDeployKeyCreated), nil
-
+	success, ok := result.(*CreateDeployKeyCreated)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*CreateDeployKeyDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -194,8 +221,13 @@ func (a *Client) CreateHookBySiteID(params *CreateHookBySiteIDParams, authInfo r
 	if err != nil {
 		return nil, err
 	}
-	return result.(*CreateHookBySiteIDCreated), nil
-
+	success, ok := result.(*CreateHookBySiteIDCreated)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*CreateHookBySiteIDDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -223,8 +255,13 @@ func (a *Client) CreateServiceInstance(params *CreateServiceInstanceParams, auth
 	if err != nil {
 		return nil, err
 	}
-	return result.(*CreateServiceInstanceCreated), nil
-
+	success, ok := result.(*CreateServiceInstanceCreated)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*CreateServiceInstanceDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -252,8 +289,13 @@ func (a *Client) CreateSite(params *CreateSiteParams, authInfo runtime.ClientAut
 	if err != nil {
 		return nil, err
 	}
-	return result.(*CreateSiteCreated), nil
-
+	success, ok := result.(*CreateSiteCreated)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*CreateSiteDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -281,8 +323,13 @@ func (a *Client) CreateSiteAsset(params *CreateSiteAssetParams, authInfo runtime
 	if err != nil {
 		return nil, err
 	}
-	return result.(*CreateSiteAssetCreated), nil
-
+	success, ok := result.(*CreateSiteAssetCreated)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*CreateSiteAssetDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -310,8 +357,13 @@ func (a *Client) CreateSiteBuild(params *CreateSiteBuildParams, authInfo runtime
 	if err != nil {
 		return nil, err
 	}
-	return result.(*CreateSiteBuildOK), nil
-
+	success, ok := result.(*CreateSiteBuildOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*CreateSiteBuildDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -339,8 +391,13 @@ func (a *Client) CreateSiteBuildHook(params *CreateSiteBuildHookParams, authInfo
 	if err != nil {
 		return nil, err
 	}
-	return result.(*CreateSiteBuildHookCreated), nil
-
+	success, ok := result.(*CreateSiteBuildHookCreated)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*CreateSiteBuildHookDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -368,8 +425,13 @@ func (a *Client) CreateSiteDeploy(params *CreateSiteDeployParams, authInfo runti
 	if err != nil {
 		return nil, err
 	}
-	return result.(*CreateSiteDeployOK), nil
-
+	success, ok := result.(*CreateSiteDeployOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*CreateSiteDeployDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -397,8 +459,13 @@ func (a *Client) CreateSiteInTeam(params *CreateSiteInTeamParams, authInfo runti
 	if err != nil {
 		return nil, err
 	}
-	return result.(*CreateSiteInTeamCreated), nil
-
+	success, ok := result.(*CreateSiteInTeamCreated)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*CreateSiteInTeamDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -426,8 +493,13 @@ func (a *Client) CreateSiteSnippet(params *CreateSiteSnippetParams, authInfo run
 	if err != nil {
 		return nil, err
 	}
-	return result.(*CreateSiteSnippetCreated), nil
-
+	success, ok := result.(*CreateSiteSnippetCreated)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*CreateSiteSnippetDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -455,8 +527,13 @@ func (a *Client) CreateSplitTest(params *CreateSplitTestParams, authInfo runtime
 	if err != nil {
 		return nil, err
 	}
-	return result.(*CreateSplitTestCreated), nil
-
+	success, ok := result.(*CreateSplitTestCreated)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*CreateSplitTestDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -484,8 +561,13 @@ func (a *Client) CreateTicket(params *CreateTicketParams, authInfo runtime.Clien
 	if err != nil {
 		return nil, err
 	}
-	return result.(*CreateTicketCreated), nil
-
+	success, ok := result.(*CreateTicketCreated)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*CreateTicketDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -513,8 +595,13 @@ func (a *Client) DeleteDeployKey(params *DeleteDeployKeyParams, authInfo runtime
 	if err != nil {
 		return nil, err
 	}
-	return result.(*DeleteDeployKeyNoContent), nil
-
+	success, ok := result.(*DeleteDeployKeyNoContent)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*DeleteDeployKeyDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -542,8 +629,14 @@ func (a *Client) DeleteHookBySiteID(params *DeleteHookBySiteIDParams, authInfo r
 	if err != nil {
 		return nil, err
 	}
-	return result.(*DeleteHookBySiteIDNoContent), nil
-
+	success, ok := result.(*DeleteHookBySiteIDNoContent)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for deleteHookBySiteId: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
 }
 
 /*
@@ -571,8 +664,13 @@ func (a *Client) DeleteServiceInstance(params *DeleteServiceInstanceParams, auth
 	if err != nil {
 		return nil, err
 	}
-	return result.(*DeleteServiceInstanceNoContent), nil
-
+	success, ok := result.(*DeleteServiceInstanceNoContent)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*DeleteServiceInstanceDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -600,8 +698,13 @@ func (a *Client) DeleteSite(params *DeleteSiteParams, authInfo runtime.ClientAut
 	if err != nil {
 		return nil, err
 	}
-	return result.(*DeleteSiteNoContent), nil
-
+	success, ok := result.(*DeleteSiteNoContent)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*DeleteSiteDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -629,8 +732,13 @@ func (a *Client) DeleteSiteAsset(params *DeleteSiteAssetParams, authInfo runtime
 	if err != nil {
 		return nil, err
 	}
-	return result.(*DeleteSiteAssetNoContent), nil
-
+	success, ok := result.(*DeleteSiteAssetNoContent)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*DeleteSiteAssetDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -658,8 +766,13 @@ func (a *Client) DeleteSiteBuildHook(params *DeleteSiteBuildHookParams, authInfo
 	if err != nil {
 		return nil, err
 	}
-	return result.(*DeleteSiteBuildHookNoContent), nil
-
+	success, ok := result.(*DeleteSiteBuildHookNoContent)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*DeleteSiteBuildHookDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -687,8 +800,13 @@ func (a *Client) DeleteSiteSnippet(params *DeleteSiteSnippetParams, authInfo run
 	if err != nil {
 		return nil, err
 	}
-	return result.(*DeleteSiteSnippetNoContent), nil
-
+	success, ok := result.(*DeleteSiteSnippetNoContent)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*DeleteSiteSnippetDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -716,8 +834,13 @@ func (a *Client) DeleteSubmission(params *DeleteSubmissionParams, authInfo runti
 	if err != nil {
 		return nil, err
 	}
-	return result.(*DeleteSubmissionNoContent), nil
-
+	success, ok := result.(*DeleteSubmissionNoContent)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*DeleteSubmissionDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -745,8 +868,13 @@ func (a *Client) DisableSplitTest(params *DisableSplitTestParams, authInfo runti
 	if err != nil {
 		return nil, err
 	}
-	return result.(*DisableSplitTestNoContent), nil
-
+	success, ok := result.(*DisableSplitTestNoContent)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*DisableSplitTestDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -774,8 +902,13 @@ func (a *Client) EnableHook(params *EnableHookParams, authInfo runtime.ClientAut
 	if err != nil {
 		return nil, err
 	}
-	return result.(*EnableHookOK), nil
-
+	success, ok := result.(*EnableHookOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*EnableHookDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -803,8 +936,13 @@ func (a *Client) EnableSplitTest(params *EnableSplitTestParams, authInfo runtime
 	if err != nil {
 		return nil, err
 	}
-	return result.(*EnableSplitTestNoContent), nil
-
+	success, ok := result.(*EnableSplitTestNoContent)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*EnableSplitTestDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -832,8 +970,13 @@ func (a *Client) ExchangeTicket(params *ExchangeTicketParams, authInfo runtime.C
 	if err != nil {
 		return nil, err
 	}
-	return result.(*ExchangeTicketCreated), nil
-
+	success, ok := result.(*ExchangeTicketCreated)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*ExchangeTicketDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -861,8 +1004,13 @@ func (a *Client) GetAccount(params *GetAccountParams, authInfo runtime.ClientAut
 	if err != nil {
 		return nil, err
 	}
-	return result.(*GetAccountOK), nil
-
+	success, ok := result.(*GetAccountOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*GetAccountDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -890,8 +1038,13 @@ func (a *Client) GetCurrentUser(params *GetCurrentUserParams, authInfo runtime.C
 	if err != nil {
 		return nil, err
 	}
-	return result.(*GetCurrentUserOK), nil
-
+	success, ok := result.(*GetCurrentUserOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*GetCurrentUserDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -919,8 +1072,13 @@ func (a *Client) GetDNSForSite(params *GetDNSForSiteParams, authInfo runtime.Cli
 	if err != nil {
 		return nil, err
 	}
-	return result.(*GetDNSForSiteOK), nil
-
+	success, ok := result.(*GetDNSForSiteOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*GetDNSForSiteDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -948,8 +1106,13 @@ func (a *Client) GetDeploy(params *GetDeployParams, authInfo runtime.ClientAuthI
 	if err != nil {
 		return nil, err
 	}
-	return result.(*GetDeployOK), nil
-
+	success, ok := result.(*GetDeployOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*GetDeployDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -977,8 +1140,13 @@ func (a *Client) GetDeployKey(params *GetDeployKeyParams, authInfo runtime.Clien
 	if err != nil {
 		return nil, err
 	}
-	return result.(*GetDeployKeyOK), nil
-
+	success, ok := result.(*GetDeployKeyOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*GetDeployKeyDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -1006,8 +1174,13 @@ func (a *Client) GetHook(params *GetHookParams, authInfo runtime.ClientAuthInfoW
 	if err != nil {
 		return nil, err
 	}
-	return result.(*GetHookOK), nil
-
+	success, ok := result.(*GetHookOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*GetHookDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -1035,8 +1208,13 @@ func (a *Client) GetServices(params *GetServicesParams, authInfo runtime.ClientA
 	if err != nil {
 		return nil, err
 	}
-	return result.(*GetServicesOK), nil
-
+	success, ok := result.(*GetServicesOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*GetServicesDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -1064,8 +1242,13 @@ func (a *Client) GetSite(params *GetSiteParams, authInfo runtime.ClientAuthInfoW
 	if err != nil {
 		return nil, err
 	}
-	return result.(*GetSiteOK), nil
-
+	success, ok := result.(*GetSiteOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*GetSiteDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -1093,8 +1276,13 @@ func (a *Client) GetSiteAssetInfo(params *GetSiteAssetInfoParams, authInfo runti
 	if err != nil {
 		return nil, err
 	}
-	return result.(*GetSiteAssetInfoOK), nil
-
+	success, ok := result.(*GetSiteAssetInfoOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*GetSiteAssetInfoDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -1122,8 +1310,13 @@ func (a *Client) GetSiteAssetPublicSignature(params *GetSiteAssetPublicSignature
 	if err != nil {
 		return nil, err
 	}
-	return result.(*GetSiteAssetPublicSignatureOK), nil
-
+	success, ok := result.(*GetSiteAssetPublicSignatureOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*GetSiteAssetPublicSignatureDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -1151,8 +1344,13 @@ func (a *Client) GetSiteBuild(params *GetSiteBuildParams, authInfo runtime.Clien
 	if err != nil {
 		return nil, err
 	}
-	return result.(*GetSiteBuildOK), nil
-
+	success, ok := result.(*GetSiteBuildOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*GetSiteBuildDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -1180,8 +1378,13 @@ func (a *Client) GetSiteBuildHook(params *GetSiteBuildHookParams, authInfo runti
 	if err != nil {
 		return nil, err
 	}
-	return result.(*GetSiteBuildHookOK), nil
-
+	success, ok := result.(*GetSiteBuildHookOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*GetSiteBuildHookDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -1209,8 +1412,13 @@ func (a *Client) GetSiteDeploy(params *GetSiteDeployParams, authInfo runtime.Cli
 	if err != nil {
 		return nil, err
 	}
-	return result.(*GetSiteDeployOK), nil
-
+	success, ok := result.(*GetSiteDeployOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*GetSiteDeployDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -1238,8 +1446,13 @@ func (a *Client) GetSiteFileByPathName(params *GetSiteFileByPathNameParams, auth
 	if err != nil {
 		return nil, err
 	}
-	return result.(*GetSiteFileByPathNameOK), nil
-
+	success, ok := result.(*GetSiteFileByPathNameOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*GetSiteFileByPathNameDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -1267,8 +1480,13 @@ func (a *Client) GetSiteMetadata(params *GetSiteMetadataParams, authInfo runtime
 	if err != nil {
 		return nil, err
 	}
-	return result.(*GetSiteMetadataOK), nil
-
+	success, ok := result.(*GetSiteMetadataOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*GetSiteMetadataDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -1296,8 +1514,13 @@ func (a *Client) GetSiteSnippet(params *GetSiteSnippetParams, authInfo runtime.C
 	if err != nil {
 		return nil, err
 	}
-	return result.(*GetSiteSnippetOK), nil
-
+	success, ok := result.(*GetSiteSnippetOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*GetSiteSnippetDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -1325,8 +1548,13 @@ func (a *Client) GetSplitTest(params *GetSplitTestParams, authInfo runtime.Clien
 	if err != nil {
 		return nil, err
 	}
-	return result.(*GetSplitTestOK), nil
-
+	success, ok := result.(*GetSplitTestOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*GetSplitTestDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -1354,8 +1582,13 @@ func (a *Client) GetSplitTests(params *GetSplitTestsParams, authInfo runtime.Cli
 	if err != nil {
 		return nil, err
 	}
-	return result.(*GetSplitTestsOK), nil
-
+	success, ok := result.(*GetSplitTestsOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*GetSplitTestsDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -1383,8 +1616,13 @@ func (a *Client) ListAccountAuditEvents(params *ListAccountAuditEventsParams, au
 	if err != nil {
 		return nil, err
 	}
-	return result.(*ListAccountAuditEventsOK), nil
-
+	success, ok := result.(*ListAccountAuditEventsOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*ListAccountAuditEventsDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -1412,8 +1650,13 @@ func (a *Client) ListAccountTypesForUser(params *ListAccountTypesForUserParams, 
 	if err != nil {
 		return nil, err
 	}
-	return result.(*ListAccountTypesForUserOK), nil
-
+	success, ok := result.(*ListAccountTypesForUserOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*ListAccountTypesForUserDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -1441,8 +1684,13 @@ func (a *Client) ListAccountsForUser(params *ListAccountsForUserParams, authInfo
 	if err != nil {
 		return nil, err
 	}
-	return result.(*ListAccountsForUserOK), nil
-
+	success, ok := result.(*ListAccountsForUserOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*ListAccountsForUserDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -1470,8 +1718,13 @@ func (a *Client) ListDeployKeys(params *ListDeployKeysParams, authInfo runtime.C
 	if err != nil {
 		return nil, err
 	}
-	return result.(*ListDeployKeysOK), nil
-
+	success, ok := result.(*ListDeployKeysOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*ListDeployKeysDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -1499,8 +1752,13 @@ func (a *Client) ListFormSubmission(params *ListFormSubmissionParams, authInfo r
 	if err != nil {
 		return nil, err
 	}
-	return result.(*ListFormSubmissionOK), nil
-
+	success, ok := result.(*ListFormSubmissionOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*ListFormSubmissionDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -1528,8 +1786,13 @@ func (a *Client) ListFormSubmissions(params *ListFormSubmissionsParams, authInfo
 	if err != nil {
 		return nil, err
 	}
-	return result.(*ListFormSubmissionsOK), nil
-
+	success, ok := result.(*ListFormSubmissionsOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*ListFormSubmissionsDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -1557,8 +1820,13 @@ func (a *Client) ListForms(params *ListFormsParams, authInfo runtime.ClientAuthI
 	if err != nil {
 		return nil, err
 	}
-	return result.(*ListFormsOK), nil
-
+	success, ok := result.(*ListFormsOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*ListFormsDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -1586,8 +1854,13 @@ func (a *Client) ListHookTypes(params *ListHookTypesParams, authInfo runtime.Cli
 	if err != nil {
 		return nil, err
 	}
-	return result.(*ListHookTypesOK), nil
-
+	success, ok := result.(*ListHookTypesOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*ListHookTypesDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -1615,8 +1888,13 @@ func (a *Client) ListHooksBySiteID(params *ListHooksBySiteIDParams, authInfo run
 	if err != nil {
 		return nil, err
 	}
-	return result.(*ListHooksBySiteIDOK), nil
-
+	success, ok := result.(*ListHooksBySiteIDOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*ListHooksBySiteIDDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -1644,8 +1922,13 @@ func (a *Client) ListMembersForAccount(params *ListMembersForAccountParams, auth
 	if err != nil {
 		return nil, err
 	}
-	return result.(*ListMembersForAccountOK), nil
-
+	success, ok := result.(*ListMembersForAccountOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*ListMembersForAccountDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -1673,8 +1956,13 @@ func (a *Client) ListPaymentMethodsForUser(params *ListPaymentMethodsForUserPara
 	if err != nil {
 		return nil, err
 	}
-	return result.(*ListPaymentMethodsForUserOK), nil
-
+	success, ok := result.(*ListPaymentMethodsForUserOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*ListPaymentMethodsForUserDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -1702,8 +1990,13 @@ func (a *Client) ListSiteAssets(params *ListSiteAssetsParams, authInfo runtime.C
 	if err != nil {
 		return nil, err
 	}
-	return result.(*ListSiteAssetsOK), nil
-
+	success, ok := result.(*ListSiteAssetsOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*ListSiteAssetsDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -1731,8 +2024,13 @@ func (a *Client) ListSiteBuildHooks(params *ListSiteBuildHooksParams, authInfo r
 	if err != nil {
 		return nil, err
 	}
-	return result.(*ListSiteBuildHooksOK), nil
-
+	success, ok := result.(*ListSiteBuildHooksOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*ListSiteBuildHooksDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -1760,8 +2058,13 @@ func (a *Client) ListSiteBuilds(params *ListSiteBuildsParams, authInfo runtime.C
 	if err != nil {
 		return nil, err
 	}
-	return result.(*ListSiteBuildsOK), nil
-
+	success, ok := result.(*ListSiteBuildsOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*ListSiteBuildsDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -1789,8 +2092,13 @@ func (a *Client) ListSiteDeployedBranches(params *ListSiteDeployedBranchesParams
 	if err != nil {
 		return nil, err
 	}
-	return result.(*ListSiteDeployedBranchesOK), nil
-
+	success, ok := result.(*ListSiteDeployedBranchesOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*ListSiteDeployedBranchesDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -1818,8 +2126,13 @@ func (a *Client) ListSiteDeploys(params *ListSiteDeploysParams, authInfo runtime
 	if err != nil {
 		return nil, err
 	}
-	return result.(*ListSiteDeploysOK), nil
-
+	success, ok := result.(*ListSiteDeploysOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*ListSiteDeploysDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -1847,8 +2160,13 @@ func (a *Client) ListSiteFiles(params *ListSiteFilesParams, authInfo runtime.Cli
 	if err != nil {
 		return nil, err
 	}
-	return result.(*ListSiteFilesOK), nil
-
+	success, ok := result.(*ListSiteFilesOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*ListSiteFilesDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -1876,8 +2194,13 @@ func (a *Client) ListSiteForms(params *ListSiteFormsParams, authInfo runtime.Cli
 	if err != nil {
 		return nil, err
 	}
-	return result.(*ListSiteFormsOK), nil
-
+	success, ok := result.(*ListSiteFormsOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*ListSiteFormsDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -1905,8 +2228,13 @@ func (a *Client) ListSiteSnippets(params *ListSiteSnippetsParams, authInfo runti
 	if err != nil {
 		return nil, err
 	}
-	return result.(*ListSiteSnippetsOK), nil
-
+	success, ok := result.(*ListSiteSnippetsOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*ListSiteSnippetsDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -1934,8 +2262,13 @@ func (a *Client) ListSiteSubmissions(params *ListSiteSubmissionsParams, authInfo
 	if err != nil {
 		return nil, err
 	}
-	return result.(*ListSiteSubmissionsOK), nil
-
+	success, ok := result.(*ListSiteSubmissionsOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*ListSiteSubmissionsDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -1963,8 +2296,13 @@ func (a *Client) ListSites(params *ListSitesParams, authInfo runtime.ClientAuthI
 	if err != nil {
 		return nil, err
 	}
-	return result.(*ListSitesOK), nil
-
+	success, ok := result.(*ListSitesOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*ListSitesDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -1992,8 +2330,13 @@ func (a *Client) ListSitesForAccount(params *ListSitesForAccountParams, authInfo
 	if err != nil {
 		return nil, err
 	}
-	return result.(*ListSitesForAccountOK), nil
-
+	success, ok := result.(*ListSitesForAccountOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*ListSitesForAccountDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -2021,8 +2364,13 @@ func (a *Client) LockDeploy(params *LockDeployParams, authInfo runtime.ClientAut
 	if err != nil {
 		return nil, err
 	}
-	return result.(*LockDeployOK), nil
-
+	success, ok := result.(*LockDeployOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*LockDeployDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -2050,8 +2398,13 @@ func (a *Client) NotifyBuildStart(params *NotifyBuildStartParams, authInfo runti
 	if err != nil {
 		return nil, err
 	}
-	return result.(*NotifyBuildStartNoContent), nil
-
+	success, ok := result.(*NotifyBuildStartNoContent)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*NotifyBuildStartDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -2079,8 +2432,13 @@ func (a *Client) ProvisionSiteTLSCertificate(params *ProvisionSiteTLSCertificate
 	if err != nil {
 		return nil, err
 	}
-	return result.(*ProvisionSiteTLSCertificateOK), nil
-
+	success, ok := result.(*ProvisionSiteTLSCertificateOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*ProvisionSiteTLSCertificateDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -2108,8 +2466,13 @@ func (a *Client) RestoreSiteDeploy(params *RestoreSiteDeployParams, authInfo run
 	if err != nil {
 		return nil, err
 	}
-	return result.(*RestoreSiteDeployCreated), nil
-
+	success, ok := result.(*RestoreSiteDeployCreated)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*RestoreSiteDeployDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -2137,8 +2500,13 @@ func (a *Client) ShowService(params *ShowServiceParams, authInfo runtime.ClientA
 	if err != nil {
 		return nil, err
 	}
-	return result.(*ShowServiceOK), nil
-
+	success, ok := result.(*ShowServiceOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*ShowServiceDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -2166,8 +2534,13 @@ func (a *Client) ShowServiceInstance(params *ShowServiceInstanceParams, authInfo
 	if err != nil {
 		return nil, err
 	}
-	return result.(*ShowServiceInstanceCreated), nil
-
+	success, ok := result.(*ShowServiceInstanceCreated)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*ShowServiceInstanceDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -2195,8 +2568,13 @@ func (a *Client) ShowServiceManifest(params *ShowServiceManifestParams, authInfo
 	if err != nil {
 		return nil, err
 	}
-	return result.(*ShowServiceManifestCreated), nil
-
+	success, ok := result.(*ShowServiceManifestCreated)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*ShowServiceManifestDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -2224,8 +2602,13 @@ func (a *Client) ShowSiteTLSCertificate(params *ShowSiteTLSCertificateParams, au
 	if err != nil {
 		return nil, err
 	}
-	return result.(*ShowSiteTLSCertificateOK), nil
-
+	success, ok := result.(*ShowSiteTLSCertificateOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*ShowSiteTLSCertificateDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -2253,8 +2636,13 @@ func (a *Client) ShowTicket(params *ShowTicketParams, authInfo runtime.ClientAut
 	if err != nil {
 		return nil, err
 	}
-	return result.(*ShowTicketOK), nil
-
+	success, ok := result.(*ShowTicketOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*ShowTicketDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -2282,8 +2670,13 @@ func (a *Client) UnlockDeploy(params *UnlockDeployParams, authInfo runtime.Clien
 	if err != nil {
 		return nil, err
 	}
-	return result.(*UnlockDeployOK), nil
-
+	success, ok := result.(*UnlockDeployOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*UnlockDeployDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -2311,8 +2704,13 @@ func (a *Client) UpdateAccount(params *UpdateAccountParams, authInfo runtime.Cli
 	if err != nil {
 		return nil, err
 	}
-	return result.(*UpdateAccountOK), nil
-
+	success, ok := result.(*UpdateAccountOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*UpdateAccountDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -2340,8 +2738,13 @@ func (a *Client) UpdateHook(params *UpdateHookParams, authInfo runtime.ClientAut
 	if err != nil {
 		return nil, err
 	}
-	return result.(*UpdateHookOK), nil
-
+	success, ok := result.(*UpdateHookOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*UpdateHookDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -2369,8 +2772,13 @@ func (a *Client) UpdateServiceInstance(params *UpdateServiceInstanceParams, auth
 	if err != nil {
 		return nil, err
 	}
-	return result.(*UpdateServiceInstanceNoContent), nil
-
+	success, ok := result.(*UpdateServiceInstanceNoContent)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*UpdateServiceInstanceDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -2398,8 +2806,13 @@ func (a *Client) UpdateSite(params *UpdateSiteParams, authInfo runtime.ClientAut
 	if err != nil {
 		return nil, err
 	}
-	return result.(*UpdateSiteOK), nil
-
+	success, ok := result.(*UpdateSiteOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*UpdateSiteDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -2427,8 +2840,13 @@ func (a *Client) UpdateSiteAsset(params *UpdateSiteAssetParams, authInfo runtime
 	if err != nil {
 		return nil, err
 	}
-	return result.(*UpdateSiteAssetOK), nil
-
+	success, ok := result.(*UpdateSiteAssetOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*UpdateSiteAssetDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -2456,8 +2874,13 @@ func (a *Client) UpdateSiteBuildHook(params *UpdateSiteBuildHookParams, authInfo
 	if err != nil {
 		return nil, err
 	}
-	return result.(*UpdateSiteBuildHookNoContent), nil
-
+	success, ok := result.(*UpdateSiteBuildHookNoContent)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*UpdateSiteBuildHookDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -2485,8 +2908,13 @@ func (a *Client) UpdateSiteBuildLog(params *UpdateSiteBuildLogParams, authInfo r
 	if err != nil {
 		return nil, err
 	}
-	return result.(*UpdateSiteBuildLogNoContent), nil
-
+	success, ok := result.(*UpdateSiteBuildLogNoContent)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*UpdateSiteBuildLogDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -2514,8 +2942,13 @@ func (a *Client) UpdateSiteDeploy(params *UpdateSiteDeployParams, authInfo runti
 	if err != nil {
 		return nil, err
 	}
-	return result.(*UpdateSiteDeployOK), nil
-
+	success, ok := result.(*UpdateSiteDeployOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*UpdateSiteDeployDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -2543,8 +2976,13 @@ func (a *Client) UpdateSiteMetadata(params *UpdateSiteMetadataParams, authInfo r
 	if err != nil {
 		return nil, err
 	}
-	return result.(*UpdateSiteMetadataNoContent), nil
-
+	success, ok := result.(*UpdateSiteMetadataNoContent)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*UpdateSiteMetadataDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -2572,8 +3010,13 @@ func (a *Client) UpdateSiteSnippet(params *UpdateSiteSnippetParams, authInfo run
 	if err != nil {
 		return nil, err
 	}
-	return result.(*UpdateSiteSnippetNoContent), nil
-
+	success, ok := result.(*UpdateSiteSnippetNoContent)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*UpdateSiteSnippetDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -2601,8 +3044,13 @@ func (a *Client) UpdateSplitTest(params *UpdateSplitTestParams, authInfo runtime
 	if err != nil {
 		return nil, err
 	}
-	return result.(*UpdateSplitTestCreated), nil
-
+	success, ok := result.(*UpdateSplitTestCreated)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*UpdateSplitTestDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -2630,8 +3078,13 @@ func (a *Client) UploadDeployFile(params *UploadDeployFileParams, authInfo runti
 	if err != nil {
 		return nil, err
 	}
-	return result.(*UploadDeployFileOK), nil
-
+	success, ok := result.(*UploadDeployFileOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*UploadDeployFileDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 /*
@@ -2659,8 +3112,13 @@ func (a *Client) UploadDeployFunction(params *UploadDeployFunctionParams, authIn
 	if err != nil {
 		return nil, err
 	}
-	return result.(*UploadDeployFunctionOK), nil
-
+	success, ok := result.(*UploadDeployFunctionOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*UploadDeployFunctionDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
 // SetTransport changes the transport on the client

@@ -24,14 +24,12 @@ type UpdateSiteDeployReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *UpdateSiteDeployReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 200:
 		result := NewUpdateSiteDeployOK()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		result := NewUpdateSiteDeployDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -59,6 +57,10 @@ type UpdateSiteDeployOK struct {
 
 func (o *UpdateSiteDeployOK) Error() string {
 	return fmt.Sprintf("[PUT /sites/{site_id}/deploys/{deploy_id}][%d] updateSiteDeployOK  %+v", 200, o.Payload)
+}
+
+func (o *UpdateSiteDeployOK) GetPayload() *models.Deploy {
+	return o.Payload
 }
 
 func (o *UpdateSiteDeployOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -97,6 +99,10 @@ func (o *UpdateSiteDeployDefault) Code() int {
 
 func (o *UpdateSiteDeployDefault) Error() string {
 	return fmt.Sprintf("[PUT /sites/{site_id}/deploys/{deploy_id}][%d] updateSiteDeploy default  %+v", o._statusCode, o.Payload)
+}
+
+func (o *UpdateSiteDeployDefault) GetPayload() *models.Error {
+	return o.Payload
 }
 
 func (o *UpdateSiteDeployDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

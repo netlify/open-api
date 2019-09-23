@@ -24,14 +24,12 @@ type GetSiteReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *GetSiteReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 200:
 		result := NewGetSiteOK()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		result := NewGetSiteDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -59,6 +57,10 @@ type GetSiteOK struct {
 
 func (o *GetSiteOK) Error() string {
 	return fmt.Sprintf("[GET /sites/{site_id}][%d] getSiteOK  %+v", 200, o.Payload)
+}
+
+func (o *GetSiteOK) GetPayload() *models.Site {
+	return o.Payload
 }
 
 func (o *GetSiteOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -97,6 +99,10 @@ func (o *GetSiteDefault) Code() int {
 
 func (o *GetSiteDefault) Error() string {
 	return fmt.Sprintf("[GET /sites/{site_id}][%d] getSite default  %+v", o._statusCode, o.Payload)
+}
+
+func (o *GetSiteDefault) GetPayload() *models.Error {
+	return o.Payload
 }
 
 func (o *GetSiteDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

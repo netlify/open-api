@@ -24,14 +24,12 @@ type ShowServiceInstanceReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *ShowServiceInstanceReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 201:
 		result := NewShowServiceInstanceCreated()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		result := NewShowServiceInstanceDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -59,6 +57,10 @@ type ShowServiceInstanceCreated struct {
 
 func (o *ShowServiceInstanceCreated) Error() string {
 	return fmt.Sprintf("[GET /sites/{site_id}/services/{addon}/instances][%d] showServiceInstanceCreated  %+v", 201, o.Payload)
+}
+
+func (o *ShowServiceInstanceCreated) GetPayload() *models.ServiceInstance {
+	return o.Payload
 }
 
 func (o *ShowServiceInstanceCreated) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -97,6 +99,10 @@ func (o *ShowServiceInstanceDefault) Code() int {
 
 func (o *ShowServiceInstanceDefault) Error() string {
 	return fmt.Sprintf("[GET /sites/{site_id}/services/{addon}/instances][%d] showServiceInstance default  %+v", o._statusCode, o.Payload)
+}
+
+func (o *ShowServiceInstanceDefault) GetPayload() *models.Error {
+	return o.Payload
 }
 
 func (o *ShowServiceInstanceDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

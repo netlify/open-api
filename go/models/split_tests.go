@@ -6,61 +6,40 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"strconv"
+
 	strfmt "github.com/go-openapi/strfmt"
 
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/swag"
 )
 
 // SplitTests split tests
 // swagger:model splitTests
-type SplitTests struct {
-	SplitTest
-}
-
-// UnmarshalJSON unmarshals this object from a JSON structure
-func (m *SplitTests) UnmarshalJSON(raw []byte) error {
-	// AO0
-	var aO0 SplitTest
-	if err := swag.ReadJSON(raw, &aO0); err != nil {
-		return err
-	}
-	m.SplitTest = aO0
-
-	return nil
-}
-
-// MarshalJSON marshals this object to a JSON structure
-func (m SplitTests) MarshalJSON() ([]byte, error) {
-	_parts := make([][]byte, 0, 1)
-
-	aO0, err := swag.WriteJSON(m.SplitTest)
-	if err != nil {
-		return nil, err
-	}
-	_parts = append(_parts, aO0)
-
-	return swag.ConcatJSON(_parts...), nil
-}
+type SplitTests []*SplitTest
 
 // Validate validates this split tests
-func (m *SplitTests) Validate(formats strfmt.Registry) error {
-	return nil
-}
+func (m SplitTests) Validate(formats strfmt.Registry) error {
+	var res []error
 
-// MarshalBinary interface implementation
-func (m *SplitTests) MarshalBinary() ([]byte, error) {
-	if m == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(m)
-}
+	for i := 0; i < len(m); i++ {
+		if swag.IsZero(m[i]) { // not required
+			continue
+		}
 
-// UnmarshalBinary interface implementation
-func (m *SplitTests) UnmarshalBinary(b []byte) error {
-	var res SplitTests
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
+		if m[i] != nil {
+			if err := m[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName(strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
 	}
-	*m = res
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
 	return nil
 }

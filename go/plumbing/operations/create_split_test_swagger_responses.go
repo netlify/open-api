@@ -24,14 +24,12 @@ type CreateSplitTestReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *CreateSplitTestReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 201:
 		result := NewCreateSplitTestCreated()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		result := NewCreateSplitTestDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -59,6 +57,10 @@ type CreateSplitTestCreated struct {
 
 func (o *CreateSplitTestCreated) Error() string {
 	return fmt.Sprintf("[POST /site/{site_id}/traffic_splits][%d] createSplitTestCreated  %+v", 201, o.Payload)
+}
+
+func (o *CreateSplitTestCreated) GetPayload() *models.SplitTest {
+	return o.Payload
 }
 
 func (o *CreateSplitTestCreated) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -97,6 +99,10 @@ func (o *CreateSplitTestDefault) Code() int {
 
 func (o *CreateSplitTestDefault) Error() string {
 	return fmt.Sprintf("[POST /site/{site_id}/traffic_splits][%d] createSplitTest default  %+v", o._statusCode, o.Payload)
+}
+
+func (o *CreateSplitTestDefault) GetPayload() *models.Error {
+	return o.Payload
 }
 
 func (o *CreateSplitTestDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

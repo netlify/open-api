@@ -24,14 +24,12 @@ type DeleteSiteBuildHookReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *DeleteSiteBuildHookReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 204:
 		result := NewDeleteSiteBuildHookNoContent()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		result := NewDeleteSiteBuildHookDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -89,6 +87,10 @@ func (o *DeleteSiteBuildHookDefault) Code() int {
 
 func (o *DeleteSiteBuildHookDefault) Error() string {
 	return fmt.Sprintf("[DELETE /sites/{site_id}/build_hooks/{id}][%d] deleteSiteBuildHook default  %+v", o._statusCode, o.Payload)
+}
+
+func (o *DeleteSiteBuildHookDefault) GetPayload() *models.Error {
+	return o.Payload
 }
 
 func (o *DeleteSiteBuildHookDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

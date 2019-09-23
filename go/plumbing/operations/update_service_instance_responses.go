@@ -24,14 +24,12 @@ type UpdateServiceInstanceReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *UpdateServiceInstanceReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-
 	case 204:
 		result := NewUpdateServiceInstanceNoContent()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		result := NewUpdateServiceInstanceDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -89,6 +87,10 @@ func (o *UpdateServiceInstanceDefault) Code() int {
 
 func (o *UpdateServiceInstanceDefault) Error() string {
 	return fmt.Sprintf("[PUT /sites/{site_id}/services/{addon}/instances][%d] updateServiceInstance default  %+v", o._statusCode, o.Payload)
+}
+
+func (o *UpdateServiceInstanceDefault) GetPayload() *models.Error {
+	return o.Payload
 }
 
 func (o *UpdateServiceInstanceDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
