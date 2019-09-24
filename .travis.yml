@@ -1,3 +1,4 @@
+language: go
 node_js: '12'
 go: '1.13'
 dist: bionic
