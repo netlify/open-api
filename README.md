@@ -86,8 +86,6 @@ MIT. See [LICENSE](LICENSE) for more details.
 
 [travis-img]: https://travis-ci.org/netlify/open-api.svg?branch=master
 [travis]: https://travis-ci.org/netlify/open-api
-[av]: https://ci.appveyor.com/project/netlify/open-api/branch/master
-[av-img]: https://ci.appveyor.com/api/projects/status/1g0m72jqhspar6q9/branch/master?svg=true
 [npm-img]: https://img.shields.io/npm/v/@netlify/open-api.svg
 [npm]: https://npmjs.org/package/@netlify/open-api
 [npm-js-img]: https://img.shields.io/npm/v/netlify.svg
