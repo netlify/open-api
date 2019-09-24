@@ -2,30 +2,30 @@ dist: bionic
 jobs:
   include:
     - language: go
-      go: "1.13"
+      go: '1.13'
       os: windows
       install:
         - choco install make
         - make deps
       script: make test
     - language: go
-      go: "1.13"
+      go: '1.13'
       os: osx
       install: make deps
       script: make test
     - language: go
-      go: "1.13"
+      go: '1.13'
       os: linux
       install: make deps
       script: make test
     - language: node_js
-      node_js: "12"
+      node_js: '12'
       os: windows
     - language: node_js
-      node_js: "12"
+      node_js: '12'
       os: osx
     - language: node_js
-      node_js: "12"
+      node_js: '12'
       os: linux
 cache: npm
 notifications:
