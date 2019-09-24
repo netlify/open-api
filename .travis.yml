@@ -5,10 +5,6 @@ dist: bionic
 jobs:
   include:
     - language: go
-      os: windows
-      install: make deps
-      script: make test
-    - language: go
       os: osx
       install: make deps
       script: make test
