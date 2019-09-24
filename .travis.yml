@@ -1,11 +1,19 @@
----
-language: go
-
-go:
-  - "1.13"
-
-install: make deps
-script: make test
-
+node_js: '12'
+go: '1.13'
+dist: bionic
+jobs:
+  include:
+    - language: go
+      install: make deps
+      script: make test
+    - language: node_js
+      os: windows
+    - language: node_js
+      os: osx
+    - language: node_js
+      node_js: '8.12.0'
+    - language: node_js
+      node_js: '12'
+cache: npm
 notifications:
   email: false
