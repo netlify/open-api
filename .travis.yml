@@ -15,6 +15,7 @@ jobs:
       install: make deps
       script: make test
     - language: go
+      os: linux
       install: make deps
       script: make test
     - language: node_js
@@ -22,6 +23,7 @@ jobs:
     - language: node_js
       os: osx
     - language: node_js
+      os: linux
 cache: npm
 notifications:
   email: false
