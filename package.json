@@ -50,7 +50,8 @@
   },
   "scripts": {
     "prepublishOnly": "git push && git push --tags && gh-release",
-    "prepare": "run-s lint build test",
+    "prepare": "run-s test",
+    "test": "run-s lint build unit",
     "start": "run-s lint build",
     "build": "run-s convert redoc",
     "convert": "node src/convert.js",
@@ -62,7 +63,7 @@
     "lint": "run-s eslint prettier",
     "eslint": "eslint --fix \"src/**/*.js\"",
     "prettier": "prettier --write --loglevel warn \"src/**/*.js\" \"*.{js,md,yml,json}\"",
-    "test": "ava"
+    "unit": "ava"
   },
   "engines": {
     "node": "12"
