@@ -30,9 +30,6 @@ type AccountUpdateSetup struct {
 	// name
 	Name string `json:"name,omitempty"`
 
-	// payment method id
-	PaymentMethodID string `json:"payment_method_id,omitempty"`
-
 	// slug
 	Slug string `json:"slug,omitempty"`
 
