@@ -257,14 +257,16 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 		deploy = resp.Payload
 	}
 
-	if n.overCommitted(options.files) {
-		var err error
-		deploy, err = n.WaitUntilDeployReady(ctx, deploy, options.PreProcessTimeout)
-		if err != nil {
-			if options.Observer != nil {
-				options.Observer.OnFailedDelta(deployFiles)
+	if (len(deploy.Required) == 0) {
+		if n.overCommitted(options.files) {
+			var err error
+			deploy, err = n.WaitUntilDeployReady(ctx, deploy, options.PreProcessTimeout)
+			if err != nil {
+				if options.Observer != nil {
+					options.Observer.OnFailedDelta(deployFiles)
+				}
+				return nil, err
 			}
-			return nil, err
 		}
 	}
 
