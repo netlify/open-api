@@ -257,7 +257,7 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 		deploy = resp.Payload
 	}
 
-	if (len(deploy.Required) == 0) {
+	if len(deploy.Required) == 0 {
 		if n.overCommitted(options.files) {
 			var err error
 			deploy, err = n.WaitUntilDeployReady(ctx, deploy, options.PreProcessTimeout)
