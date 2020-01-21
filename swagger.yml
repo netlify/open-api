@@ -1475,6 +1475,7 @@ paths:
         '200':
           description: services
           schema:
+            type: object
             $ref: '#/definitions/serviceInstance'
         default:
           $ref: '#/responses/error'
@@ -1692,7 +1693,17 @@ paths:
       - name: account_id
         type: string
         in: query
+        description: 'the account of the dns zone'
+        required: true
+      - name: transfer_account_id
+        type: string
+        in: query
         description: 'the account you want to transfer the dns zone to'
+        required: true
+      - name: transfer_user_id
+        type: string
+        in: query
+        description: 'the user you want to transfer the dns zone to'
         required: true
     put:
       operationId: transferDnsZone
