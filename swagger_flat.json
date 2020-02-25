@@ -1,0 +1,4454 @@
+{
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "schemes": [
+    "https"
+  ],
+  "swagger": "2.0",
+  "info": {
+    "description": "Netlify is a hosting service for the programmable web. It understands your documents and provides an API to handle atomic deploys of websites, manage form submissions, inject JavaScript snippets, and much more. This is a REST-style API that uses JSON for serialization and OAuth 2 for authentication.\n\nThis document is an OpenAPI reference for the Netlify API that you can explore. For more detailed instructions for common uses, please visit the [online documentation](https://www.netlify.com/docs/api/). Visit our Community forum to join the conversation about [understanding and using Netlify’s API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).\n\nAdditionally, we have two API clients for your convenience:\n- [Go Client](https://github.com/netlify/open-api#go-client)\n- [JS Client](https://github.com/netlify/js-client)",
+    "title": "Netlify's API documentation",
+    "termsOfService": "https://www.netlify.com/legal/terms-of-use/",
+    "version": "0.12.0",
+    "x-logo": {
+      "altText": "Netlify",
+      "href": "https://www.netlify.com/docs/",
+      "url": "netlify-logo.png"
+    }
+  },
+  "host": "api.netlify.com",
+  "basePath": "/api/v1",
+  "paths": {
+    "/accounts": {
+      "get": {
+        "tags": [
+          "accountMembership"
+        ],
+        "operationId": "listAccountsForUser",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/accountMembership"
+              }
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "accountMembership"
+        ],
+        "operationId": "createAccount",
+        "parameters": [
+          {
+            "name": "accountSetup",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/accountSetup"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/accountMembership"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/accounts/types": {
+      "get": {
+        "tags": [
+          "accountType"
+        ],
+        "operationId": "listAccountTypesForUser",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/accountType"
+              }
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/accounts/{account_id}": {
+      "get": {
+        "tags": [
+          "accountMembership"
+        ],
+        "operationId": "getAccount",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/accountMembership"
+              }
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "accountMembership"
+        ],
+        "operationId": "updateAccount",
+        "parameters": [
+          {
+            "name": "accountUpdateSetup",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/accountUpdateSetup"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/accountMembership"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "accountMembership"
+        ],
+        "operationId": "cancelAccount",
+        "responses": {
+          "204": {
+            "description": "Not Content"
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "account_id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/accounts/{account_id}/audit": {
+      "get": {
+        "tags": [
+          "auditLog"
+        ],
+        "operationId": "listAccountAuditEvents",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "query",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "name": "log_type",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/auditLog"
+              }
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "account_id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/billing/payment_methods": {
+      "get": {
+        "tags": [
+          "paymentMethod"
+        ],
+        "operationId": "listPaymentMethodsForUser",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/paymentMethod"
+              }
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/builds/{build_id}": {
+      "get": {
+        "tags": [
+          "build"
+        ],
+        "operationId": "getSiteBuild",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/build"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "build_id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/builds/{build_id}/log": {
+      "post": {
+        "tags": [
+          "buildLogMsg"
+        ],
+        "operationId": "updateSiteBuildLog",
+        "responses": {
+          "204": {
+            "description": "No content"
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "build_id",
+          "in": "path",
+          "required": true
+        },
+        {
+          "name": "msg",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/buildLogMsg"
+          }
+        }
+      ]
+    },
+    "/builds/{build_id}/start": {
+      "post": {
+        "tags": [
+          "build"
+        ],
+        "operationId": "notifyBuildStart",
+        "responses": {
+          "204": {
+            "description": "No content"
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "build_id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/deploy_keys": {
+      "get": {
+        "tags": [
+          "deployKey"
+        ],
+        "operationId": "listDeployKeys",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/deployKey"
+              }
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "tags": [
+          "deployKey"
+        ],
+        "operationId": "createDeployKey",
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/deployKey"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/deploy_keys/{key_id}": {
+      "get": {
+        "tags": [
+          "deployKey"
+        ],
+        "operationId": "getDeployKey",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/deployKey"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "deployKey"
+        ],
+        "operationId": "deleteDeployKey",
+        "responses": {
+          "204": {
+            "description": "Not Content"
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "key_id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/deploys/{deploy_id}": {
+      "get": {
+        "tags": [
+          "deploy"
+        ],
+        "operationId": "getDeploy",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "deploy_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/deploy"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/deploys/{deploy_id}/files/{path}": {
+      "put": {
+        "consumes": [
+          "application/octet-stream"
+        ],
+        "tags": [
+          "file"
+        ],
+        "operationId": "uploadDeployFile",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "deploy_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "name": "path",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "name": "size",
+            "in": "query"
+          },
+          {
+            "name": "file_body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "binary"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/file"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/deploys/{deploy_id}/functions/{name}": {
+      "put": {
+        "consumes": [
+          "application/octet-stream"
+        ],
+        "tags": [
+          "function"
+        ],
+        "operationId": "uploadDeployFunction",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "deploy_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "name": "name",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "name": "runtime",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "name": "size",
+            "in": "query"
+          },
+          {
+            "name": "file_body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "binary"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/function"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/deploys/{deploy_id}/lock": {
+      "post": {
+        "tags": [
+          "deploy"
+        ],
+        "operationId": "lockDeploy",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "deploy_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/deploy"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/deploys/{deploy_id}/unlock": {
+      "post": {
+        "tags": [
+          "deploy"
+        ],
+        "operationId": "unlockDeploy",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "deploy_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/deploy"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/forms": {
+      "get": {
+        "tags": [
+          "form"
+        ],
+        "operationId": "listForms",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "site_id",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/form"
+              }
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/forms/{form_id}/submissions": {
+      "get": {
+        "tags": [
+          "submission"
+        ],
+        "operationId": "listFormSubmissions",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "form_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/submission"
+              }
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/hooks": {
+      "get": {
+        "tags": [
+          "hook"
+        ],
+        "operationId": "listHooksBySiteId",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "site_id",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/hook"
+              }
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "tags": [
+          "hook"
+        ],
+        "operationId": "createHookBySiteId",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "site_id",
+            "in": "query",
+            "required": true
+          },
+          {
+            "name": "hook",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/hook"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/hook"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/hooks/types": {
+      "get": {
+        "tags": [
+          "hookType"
+        ],
+        "operationId": "listHookTypes",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/hookType"
+              }
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/hooks/{hook_id}": {
+      "get": {
+        "tags": [
+          "hook"
+        ],
+        "operationId": "getHook",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/hook"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "hook"
+        ],
+        "operationId": "updateHook",
+        "parameters": [
+          {
+            "name": "hook",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/hook"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/hook"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "hook"
+        ],
+        "operationId": "deleteHookBySiteId",
+        "responses": {
+          "204": {
+            "description": "No content"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "hook_id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/hooks/{hook_id}/enable": {
+      "post": {
+        "tags": [
+          "hook"
+        ],
+        "operationId": "enableHook",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/hook"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "hook_id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/oauth/tickets": {
+      "post": {
+        "tags": [
+          "ticket"
+        ],
+        "operationId": "createTicket",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "client_id",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "ok",
+            "schema": {
+              "$ref": "#/definitions/ticket"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/oauth/tickets/{ticket_id}": {
+      "get": {
+        "tags": [
+          "ticket"
+        ],
+        "operationId": "showTicket",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "ticket_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "$ref": "#/definitions/ticket"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/oauth/tickets/{ticket_id}/exchange": {
+      "post": {
+        "tags": [
+          "accessToken"
+        ],
+        "operationId": "exchangeTicket",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "ticket_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "ok",
+            "schema": {
+              "$ref": "#/definitions/accessToken"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/services/": {
+      "get": {
+        "tags": [
+          "service"
+        ],
+        "operationId": "getServices",
+        "responses": {
+          "200": {
+            "description": "services",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/service"
+              }
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "search",
+          "in": "query"
+        }
+      ]
+    },
+    "/services/{addonName}": {
+      "get": {
+        "tags": [
+          "service"
+        ],
+        "operationId": "showService",
+        "responses": {
+          "200": {
+            "description": "services",
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/serviceInstance"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "addonName",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/services/{addonName}/manifest": {
+      "get": {
+        "tags": [
+          "service"
+        ],
+        "operationId": "showServiceManifest",
+        "responses": {
+          "201": {
+            "description": "retrieving from provider",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "addonName",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/site/{site_id}/traffic_splits": {
+      "get": {
+        "tags": [
+          "splitTest"
+        ],
+        "operationId": "getSplitTests",
+        "responses": {
+          "200": {
+            "description": "split_tests",
+            "schema": {
+              "$ref": "#/definitions/splitTests"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "tags": [
+          "splitTest"
+        ],
+        "operationId": "createSplitTest",
+        "parameters": [
+          {
+            "name": "branch_tests",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/splitTestSetup"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/splitTest"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "site_id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/site/{site_id}/traffic_splits/{split_test_id}": {
+      "get": {
+        "tags": [
+          "splitTest"
+        ],
+        "operationId": "getSplitTest",
+        "responses": {
+          "200": {
+            "description": "split_test",
+            "schema": {
+              "$ref": "#/definitions/splitTest"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "tags": [
+          "splitTest"
+        ],
+        "operationId": "updateSplitTest",
+        "parameters": [
+          {
+            "name": "branch_tests",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/splitTestSetup"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/splitTest"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "site_id",
+          "in": "path",
+          "required": true
+        },
+        {
+          "type": "string",
+          "name": "split_test_id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/site/{site_id}/traffic_splits/{split_test_id}/publish": {
+      "post": {
+        "tags": [
+          "splitTest"
+        ],
+        "operationId": "enableSplitTest",
+        "responses": {
+          "204": {
+            "description": "enable"
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "site_id",
+          "in": "path",
+          "required": true
+        },
+        {
+          "type": "string",
+          "name": "split_test_id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/site/{site_id}/traffic_splits/{split_test_id}/unpublish": {
+      "post": {
+        "tags": [
+          "splitTest"
+        ],
+        "operationId": "disableSplitTest",
+        "responses": {
+          "204": {
+            "description": "disabled"
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "site_id",
+          "in": "path",
+          "required": true
+        },
+        {
+          "type": "string",
+          "name": "split_test_id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/sites": {
+      "get": {
+        "tags": [
+          "site"
+        ],
+        "operationId": "listSites",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "name",
+            "in": "query"
+          },
+          {
+            "enum": [
+              "all",
+              "owner",
+              "guest"
+            ],
+            "type": "string",
+            "name": "filter",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/site"
+              }
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "tags": [
+          "site"
+        ],
+        "operationId": "createSite",
+        "parameters": [
+          {
+            "name": "site",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/siteSetup"
+            }
+          },
+          {
+            "type": "boolean",
+            "name": "configure_dns",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/site"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/sites/{site_id}": {
+      "get": {
+        "tags": [
+          "site"
+        ],
+        "operationId": "getSite",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/site"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "site"
+        ],
+        "operationId": "deleteSite",
+        "responses": {
+          "204": {
+            "description": "Deleted"
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "patch": {
+        "consumes": [
+          "application/json"
+        ],
+        "tags": [
+          "site"
+        ],
+        "operationId": "updateSite",
+        "parameters": [
+          {
+            "name": "site",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/siteSetup"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/site"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "site_id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/sites/{site_id}/assets": {
+      "get": {
+        "tags": [
+          "asset"
+        ],
+        "operationId": "listSiteAssets",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/asset"
+              }
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "asset"
+        ],
+        "operationId": "createSiteAsset",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "name",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "name": "size",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "name": "content_type",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "name": "visibility",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/assetSignature"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "site_id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/sites/{site_id}/assets/{asset_id}": {
+      "get": {
+        "tags": [
+          "asset"
+        ],
+        "operationId": "getSiteAssetInfo",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/asset"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "asset"
+        ],
+        "operationId": "updateSiteAsset",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "state",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updated",
+            "schema": {
+              "$ref": "#/definitions/asset"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "asset"
+        ],
+        "operationId": "deleteSiteAsset",
+        "responses": {
+          "204": {
+            "description": "Deleted"
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "site_id",
+          "in": "path",
+          "required": true
+        },
+        {
+          "type": "string",
+          "name": "asset_id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/sites/{site_id}/assets/{asset_id}/public_signature": {
+      "get": {
+        "tags": [
+          "assetPublicSignature"
+        ],
+        "operationId": "getSiteAssetPublicSignature",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/assetPublicSignature"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "site_id",
+          "in": "path",
+          "required": true
+        },
+        {
+          "type": "string",
+          "name": "asset_id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/sites/{site_id}/build_hooks": {
+      "get": {
+        "tags": [
+          "buildHook"
+        ],
+        "operationId": "listSiteBuildHooks",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/buildHook"
+              }
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "tags": [
+          "buildHook"
+        ],
+        "operationId": "createSiteBuildHook",
+        "parameters": [
+          {
+            "name": "buildHook",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/buildHook"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/buildHook"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "site_id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/sites/{site_id}/build_hooks/{id}": {
+      "get": {
+        "tags": [
+          "buildHook"
+        ],
+        "operationId": "getSiteBuildHook",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/buildHook"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "tags": [
+          "buildHook"
+        ],
+        "operationId": "updateSiteBuildHook",
+        "parameters": [
+          {
+            "name": "buildHook",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/buildHook"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No content"
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "buildHook"
+        ],
+        "operationId": "deleteSiteBuildHook",
+        "responses": {
+          "204": {
+            "description": "No content"
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "site_id",
+          "in": "path",
+          "required": true
+        },
+        {
+          "type": "string",
+          "name": "id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/sites/{site_id}/builds": {
+      "get": {
+        "tags": [
+          "build"
+        ],
+        "operationId": "listSiteBuilds",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/build"
+              }
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "build"
+        ],
+        "operationId": "createSiteBuild",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/build"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "site_id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/sites/{site_id}/deployed-branches": {
+      "get": {
+        "tags": [
+          "deployedBranch"
+        ],
+        "operationId": "listSiteDeployedBranches",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/deployedBranch"
+              }
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "site_id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/sites/{site_id}/deploys": {
+      "get": {
+        "tags": [
+          "deploy"
+        ],
+        "operationId": "listSiteDeploys",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/deploy"
+              }
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "deploy"
+        ],
+        "operationId": "createSiteDeploy",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "title",
+            "in": "query"
+          },
+          {
+            "name": "deploy",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/deployFiles"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/deploy"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "site_id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/sites/{site_id}/deploys/{deploy_id}": {
+      "get": {
+        "tags": [
+          "deploy"
+        ],
+        "operationId": "getSiteDeploy",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "site_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "name": "deploy_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/deploy"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "deploy"
+        ],
+        "operationId": "updateSiteDeploy",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "site_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "name": "deploy_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "name": "deploy",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/deployFiles"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/deploy"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/sites/{site_id}/deploys/{deploy_id}/cancel": {
+      "post": {
+        "tags": [
+          "deploy"
+        ],
+        "operationId": "cancelSiteDeploy",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "site_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "name": "deploy_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Cancelled",
+            "schema": {
+              "$ref": "#/definitions/deploy"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/sites/{site_id}/deploys/{deploy_id}/restore": {
+      "post": {
+        "tags": [
+          "deploy"
+        ],
+        "operationId": "restoreSiteDeploy",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "site_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "name": "deploy_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/deploy"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/sites/{site_id}/dns": {
+      "get": {
+        "tags": [
+          "dnsZone"
+        ],
+        "operationId": "getDNSForSite",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/dnsZone"
+              }
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "dnsZone"
+        ],
+        "operationId": "configureDNSForSite",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/dnsZone"
+              }
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "site_id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/sites/{site_id}/files": {
+      "get": {
+        "tags": [
+          "file"
+        ],
+        "operationId": "listSiteFiles",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "site_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/file"
+              }
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/sites/{site_id}/files/{file_path}": {
+      "get": {
+        "tags": [
+          "file"
+        ],
+        "operationId": "getSiteFileByPathName",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "site_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "name": "file_path",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/file"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/sites/{site_id}/forms": {
+      "get": {
+        "tags": [
+          "form"
+        ],
+        "operationId": "listSiteForms",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "site_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/form"
+              }
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/sites/{site_id}/metadata": {
+      "get": {
+        "tags": [
+          "metadata"
+        ],
+        "operationId": "getSiteMetadata",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/metadata"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "metadata"
+        ],
+        "operationId": "updateSiteMetadata",
+        "parameters": [
+          {
+            "name": "metadata",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/metadata"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No content"
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "site_id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/sites/{site_id}/services/{addon}/instances": {
+      "get": {
+        "tags": [
+          "serviceInstance"
+        ],
+        "operationId": "showServiceInstance",
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/serviceInstance"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "tags": [
+          "serviceInstance"
+        ],
+        "operationId": "updateServiceInstance",
+        "parameters": [
+          {
+            "name": "config",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Created"
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "tags": [
+          "serviceInstance"
+        ],
+        "operationId": "createServiceInstance",
+        "parameters": [
+          {
+            "name": "config",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/serviceInstance"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "serviceInstance"
+        ],
+        "operationId": "deleteServiceInstance",
+        "responses": {
+          "204": {
+            "description": "Deleted"
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "site_id",
+          "in": "path",
+          "required": true
+        },
+        {
+          "type": "string",
+          "name": "addon",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/sites/{site_id}/snippets": {
+      "get": {
+        "tags": [
+          "snippet"
+        ],
+        "operationId": "listSiteSnippets",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/snippet"
+              }
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "tags": [
+          "snippet"
+        ],
+        "operationId": "createSiteSnippet",
+        "parameters": [
+          {
+            "name": "snippet",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/snippet"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/snippet"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "site_id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/sites/{site_id}/snippets/{snippet_id}": {
+      "get": {
+        "tags": [
+          "snippet"
+        ],
+        "operationId": "getSiteSnippet",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/snippet"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "tags": [
+          "snippet"
+        ],
+        "operationId": "updateSiteSnippet",
+        "parameters": [
+          {
+            "name": "snippet",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/snippet"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No content"
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "snippet"
+        ],
+        "operationId": "deleteSiteSnippet",
+        "responses": {
+          "204": {
+            "description": "No content"
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "site_id",
+          "in": "path",
+          "required": true
+        },
+        {
+          "type": "string",
+          "name": "snippet_id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/sites/{site_id}/ssl": {
+      "get": {
+        "tags": [
+          "sniCertificate"
+        ],
+        "operationId": "showSiteTLSCertificate",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "site_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/sniCertificate"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "sniCertificate"
+        ],
+        "operationId": "provisionSiteTLSCertificate",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "site_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "name": "certificate",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "name": "key",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "name": "ca_certificates",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/sniCertificate"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/sites/{site_id}/submissions": {
+      "get": {
+        "tags": [
+          "submission"
+        ],
+        "operationId": "listSiteSubmissions",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "site_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/submission"
+              }
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/submissions/{submission_id}": {
+      "get": {
+        "tags": [
+          "submission"
+        ],
+        "operationId": "listFormSubmission",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "query",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/submission"
+              }
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "submission"
+        ],
+        "operationId": "deleteSubmission",
+        "responses": {
+          "204": {
+            "description": "Deleted"
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "submission_id",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/user": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "operationId": "getCurrentUser",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/user"
+              }
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/{account_slug}/members": {
+      "get": {
+        "tags": [
+          "member"
+        ],
+        "operationId": "listMembersForAccount",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/member"
+              }
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "member"
+        ],
+        "operationId": "addMemberToAccount",
+        "parameters": [
+          {
+            "enum": [
+              "Owner",
+              "Collaborator",
+              "Controller"
+            ],
+            "type": "string",
+            "name": "role",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "name": "email",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/member"
+              }
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "account_slug",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/{account_slug}/sites": {
+      "get": {
+        "tags": [
+          "site"
+        ],
+        "operationId": "listSitesForAccount",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "name",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "name": "account_slug",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/site"
+              }
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "tags": [
+          "site"
+        ],
+        "operationId": "createSiteInTeam",
+        "parameters": [
+          {
+            "name": "site",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/siteSetup"
+            }
+          },
+          {
+            "type": "boolean",
+            "name": "configure_dns",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "name": "account_slug",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/site"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "accessToken": {
+      "type": "object",
+      "properties": {
+        "access_token": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "dateTime"
+        },
+        "id": {
+          "type": "string"
+        },
+        "user_email": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        }
+      }
+    },
+    "accountMembership": {
+      "type": "object",
+      "properties": {
+        "billing_details": {
+          "type": "string"
+        },
+        "billing_email": {
+          "type": "string"
+        },
+        "billing_name": {
+          "type": "string"
+        },
+        "billing_period": {
+          "type": "string"
+        },
+        "capabilities": {
+          "type": "object",
+          "properties": {
+            "collaborators": {
+              "$ref": "#/definitions/accountUsageCapability"
+            },
+            "sites": {
+              "$ref": "#/definitions/accountUsageCapability"
+            }
+          }
+        },
+        "created_at": {
+          "type": "string",
+          "format": "dateTime"
+        },
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "owner_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "payment_method_id": {
+          "type": "string"
+        },
+        "roles_allowed": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "slug": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "type_id": {
+          "type": "string"
+        },
+        "type_name": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "dateTime"
+        }
+      }
+    },
+    "accountSetup": {
+      "type": "object",
+      "required": [
+        "name",
+        "type_id"
+      ],
+      "properties": {
+        "extra_seats_block": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        },
+        "payment_method_id": {
+          "type": "string"
+        },
+        "period": {
+          "type": "string",
+          "enum": [
+            "monthly",
+            "yearly"
+          ]
+        },
+        "type_id": {
+          "type": "string"
+        }
+      }
+    },
+    "accountType": {
+      "type": "object",
+      "properties": {
+        "capabilities": {
+          "type": "object"
+        },
+        "description": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "monthly_dollar_price": {
+          "type": "integer"
+        },
+        "monthly_seats_addon_dollar_price": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        },
+        "yearly_dollar_price": {
+          "type": "integer"
+        },
+        "yearly_seats_addon_dollar_price": {
+          "type": "integer"
+        }
+      }
+    },
+    "accountUpdateSetup": {
+      "type": "object",
+      "properties": {
+        "billing_details": {
+          "type": "string"
+        },
+        "billing_email": {
+          "type": "string"
+        },
+        "billing_name": {
+          "type": "string"
+        },
+        "extra_seats_block": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "type_id": {
+          "type": "string"
+        }
+      }
+    },
+    "accountUsageCapability": {
+      "type": "object",
+      "properties": {
+        "included": {
+          "type": "integer"
+        },
+        "used": {
+          "type": "integer"
+        }
+      }
+    },
+    "asset": {
+      "type": "object",
+      "properties": {
+        "content_type": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "dateTime"
+        },
+        "creator_id": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "key": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "site_id": {
+          "type": "string"
+        },
+        "size": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "state": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "dateTime"
+        },
+        "url": {
+          "type": "string"
+        },
+        "visibility": {
+          "type": "string"
+        }
+      }
+    },
+    "assetForm": {
+      "type": "object",
+      "properties": {
+        "fields": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "assetPublicSignature": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "assetSignature": {
+      "type": "object",
+      "properties": {
+        "asset": {
+          "type": "object",
+          "$ref": "#/definitions/asset"
+        },
+        "form": {
+          "type": "object",
+          "$ref": "#/definitions/assetForm"
+        }
+      }
+    },
+    "auditLog": {
+      "type": "object",
+      "properties": {
+        "account_id": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "action": {
+              "type": "string"
+            },
+            "actor_email": {
+              "type": "string"
+            },
+            "actor_id": {
+              "type": "string"
+            },
+            "actor_name": {
+              "type": "string"
+            },
+            "log_type": {
+              "type": "string"
+            },
+            "timestamp": {
+              "type": "string",
+              "format": "dateTime"
+            }
+          },
+          "additionalProperties": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "build": {
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "format": "dateTime"
+        },
+        "deploy_id": {
+          "type": "string"
+        },
+        "done": {
+          "type": "boolean"
+        },
+        "error": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "sha": {
+          "type": "string"
+        }
+      }
+    },
+    "buildHook": {
+      "type": "object",
+      "properties": {
+        "branch": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "dateTime"
+        },
+        "id": {
+          "type": "string"
+        },
+        "site_id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "buildLogMsg": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "deploy": {
+      "type": "object",
+      "properties": {
+        "admin_url": {
+          "type": "string"
+        },
+        "branch": {
+          "type": "string"
+        },
+        "build_id": {
+          "type": "string"
+        },
+        "commit_ref": {
+          "type": "string"
+        },
+        "commit_url": {
+          "type": "string"
+        },
+        "context": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "dateTime"
+        },
+        "deploy_ssl_url": {
+          "type": "string"
+        },
+        "deploy_url": {
+          "type": "string"
+        },
+        "draft": {
+          "type": "boolean"
+        },
+        "error_message": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "locked": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "published_at": {
+          "type": "string",
+          "format": "dateTime"
+        },
+        "required": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "required_functions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "review_id": {
+          "type": "number"
+        },
+        "review_url": {
+          "type": "string"
+        },
+        "screenshot_url": {
+          "type": "string"
+        },
+        "site_capabilities": {
+          "type": "object",
+          "properties": {
+            "large_media_enabled": {
+              "type": "boolean"
+            }
+          }
+        },
+        "site_id": {
+          "type": "string"
+        },
+        "skipped": {
+          "type": "boolean"
+        },
+        "ssl_url": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "dateTime"
+        },
+        "url": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        }
+      }
+    },
+    "deployFiles": {
+      "type": "object",
+      "properties": {
+        "async": {
+          "type": "boolean"
+        },
+        "draft": {
+          "type": "boolean"
+        },
+        "files": {
+          "type": "object"
+        },
+        "functions": {
+          "type": "object"
+        }
+      }
+    },
+    "deployKey": {
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "format": "dateTime"
+        },
+        "id": {
+          "type": "string"
+        },
+        "public_key": {
+          "type": "string"
+        }
+      }
+    },
+    "deployedBranch": {
+      "type": "object",
+      "properties": {
+        "deploy_id": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "ssl_url": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "dnsRecord": {
+      "type": "object",
+      "properties": {
+        "hostname": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "priority": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "ttl": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "type": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "dnsZone": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "records": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dnsRecord"
+          }
+        }
+      }
+    },
+    "error": {
+      "type": "object",
+      "required": [
+        "message"
+      ],
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "message": {
+          "type": "string",
+          "x-nullable": false
+        }
+      }
+    },
+    "file": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "mime_type": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "sha": {
+          "type": "string"
+        },
+        "size": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "form": {
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "format": "dateTime"
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "paths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "site_id": {
+          "type": "string"
+        },
+        "submission_count": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "function": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "sha": {
+          "type": "string"
+        }
+      }
+    },
+    "hook": {
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "format": "dateTime"
+        },
+        "data": {
+          "type": "object"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "event": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "site_id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "dateTime"
+        }
+      }
+    },
+    "hookType": {
+      "type": "object",
+      "properties": {
+        "events": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "member": {
+      "type": "object",
+      "properties": {
+        "avatar": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "full_name": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        }
+      }
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "minifyOptions": {
+      "type": "object",
+      "properties": {
+        "bundle": {
+          "type": "boolean"
+        },
+        "minify": {
+          "type": "boolean"
+        }
+      }
+    },
+    "paymentMethod": {
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "format": "dateTime"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "card_type": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            },
+            "last4": {
+              "type": "string"
+            }
+          }
+        },
+        "id": {
+          "type": "string"
+        },
+        "method_name": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "dateTime"
+        }
+      }
+    },
+    "repoInfo": {
+      "type": "object",
+      "properties": {
+        "allowed_branches": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "cmd": {
+          "type": "string"
+        },
+        "deploy_key_id": {
+          "type": "string"
+        },
+        "dir": {
+          "type": "string"
+        },
+        "env": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "id": {
+          "type": "integer"
+        },
+        "installation_id": {
+          "type": "integer"
+        },
+        "private_logs": {
+          "type": "boolean"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "public_repo": {
+          "type": "boolean"
+        },
+        "repo_branch": {
+          "type": "string"
+        },
+        "repo_path": {
+          "type": "string"
+        },
+        "repo_url": {
+          "type": "string"
+        }
+      }
+    },
+    "service": {
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "format": "dateTime"
+        },
+        "description": {
+          "type": "string"
+        },
+        "environments": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "icon": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "long_description": {
+          "type": "string"
+        },
+        "manifest_url": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "service_path": {
+          "type": "string"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "dateTime"
+        }
+      }
+    },
+    "serviceInstance": {
+      "type": "object",
+      "properties": {
+        "auth_url": {
+          "type": "string"
+        },
+        "config": {
+          "type": "object"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "dateTime"
+        },
+        "env": {
+          "type": "object"
+        },
+        "external_attributes": {
+          "type": "object"
+        },
+        "id": {
+          "type": "string"
+        },
+        "service_name": {
+          "type": "string"
+        },
+        "service_path": {
+          "type": "string"
+        },
+        "service_slug": {
+          "type": "string"
+        },
+        "snippets": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "dateTime"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "site": {
+      "type": "object",
+      "properties": {
+        "account_name": {
+          "type": "string"
+        },
+        "account_slug": {
+          "type": "string"
+        },
+        "admin_url": {
+          "type": "string"
+        },
+        "build_image": {
+          "type": "string"
+        },
+        "build_settings": {
+          "$ref": "#/definitions/repoInfo"
+        },
+        "capabilities": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "created_at": {
+          "type": "string",
+          "format": "dateTime"
+        },
+        "custom_domain": {
+          "type": "string"
+        },
+        "default_hooks_data": {
+          "type": "object",
+          "properties": {
+            "access_token": {
+              "type": "string"
+            }
+          }
+        },
+        "deploy_hook": {
+          "type": "string"
+        },
+        "deploy_url": {
+          "type": "string"
+        },
+        "domain_aliases": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "force_ssl": {
+          "type": "boolean"
+        },
+        "git_provider": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "id_domain": {
+          "type": "string"
+        },
+        "managed_dns": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "notification_email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "plan": {
+          "type": "string"
+        },
+        "processing_settings": {
+          "type": "object",
+          "properties": {
+            "css": {
+              "$ref": "#/definitions/minifyOptions"
+            },
+            "html": {
+              "type": "object",
+              "properties": {
+                "pretty_urls": {
+                  "type": "boolean"
+                }
+              }
+            },
+            "images": {
+              "type": "object",
+              "properties": {
+                "optimize": {
+                  "type": "boolean"
+                }
+              }
+            },
+            "js": {
+              "$ref": "#/definitions/minifyOptions"
+            },
+            "skip": {
+              "type": "boolean"
+            }
+          }
+        },
+        "published_deploy": {
+          "$ref": "#/definitions/deploy"
+        },
+        "screenshot_url": {
+          "type": "string"
+        },
+        "session_id": {
+          "type": "string"
+        },
+        "ssl": {
+          "type": "boolean"
+        },
+        "ssl_url": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "dateTime"
+        },
+        "url": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        }
+      }
+    },
+    "siteSetup": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/site"
+        },
+        {
+          "properties": {
+            "repo": {
+              "$ref": "#/definitions/repoInfo"
+            }
+          }
+        }
+      ]
+    },
+    "sniCertificate": {
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "format": "dateTime"
+        },
+        "domains": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "dateTime"
+        },
+        "state": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "dateTime"
+        }
+      }
+    },
+    "snippet": {
+      "type": "object",
+      "properties": {
+        "general": {
+          "type": "string"
+        },
+        "general_position": {
+          "type": "string"
+        },
+        "goal": {
+          "type": "string"
+        },
+        "goal_position": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "site_id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        }
+      }
+    },
+    "splitTest": {
+      "type": "object",
+      "properties": {
+        "active": {
+          "type": "boolean"
+        },
+        "branches": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "created_at": {
+          "type": "string",
+          "format": "dateTime"
+        },
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "site_id": {
+          "type": "string"
+        },
+        "unpublished_at": {
+          "type": "string",
+          "format": "dateTime"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "dateTime"
+        }
+      }
+    },
+    "splitTestSetup": {
+      "type": "object",
+      "properties": {
+        "branch_tests": {
+          "type": "object"
+        }
+      }
+    },
+    "splitTests": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/splitTest"
+      }
+    },
+    "submission": {
+      "type": "object",
+      "properties": {
+        "body": {
+          "type": "string"
+        },
+        "company": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "dateTime"
+        },
+        "data": {
+          "type": "object"
+        },
+        "email": {
+          "type": "string"
+        },
+        "first_name": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "number": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "site_url": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        }
+      }
+    },
+    "ticket": {
+      "type": "object",
+      "properties": {
+        "authorized": {
+          "type": "boolean"
+        },
+        "client_id": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "dateTime"
+        },
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "user": {
+      "type": "object",
+      "properties": {
+        "affiliate_id": {
+          "type": "string"
+        },
+        "avatar_url": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "dateTime"
+        },
+        "email": {
+          "type": "string"
+        },
+        "full_name": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "last_login": {
+          "type": "string",
+          "format": "dateTime"
+        },
+        "login_providers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "onboarding_progress": {
+          "type": "object",
+          "properties": {
+            "slides": {
+              "type": "string"
+            }
+          }
+        },
+        "site_count": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "support_priority": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "uid": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "responses": {
+    "error": {
+      "description": "error",
+      "schema": {
+        "$ref": "#/definitions/error"
+      }
+    }
+  },
+  "securityDefinitions": {
+    "netlifyAuth": {
+      "type": "oauth2",
+      "flow": "implicit",
+      "authorizationUrl": "https://app.netlify.com/authorize"
+    }
+  },
+  "security": [
+    {
+      "netlifyAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "ticket",
+      "x-displayName": "Ticket"
+    },
+    {
+      "name": "accessToken",
+      "x-displayName": "Access token"
+    },
+    {
+      "name": "user",
+      "x-displayName": "User"
+    },
+    {
+      "name": "accountMembership",
+      "x-displayName": "Accounts"
+    },
+    {
+      "name": "member",
+      "x-displayName": "Member"
+    },
+    {
+      "name": "accountType",
+      "x-displayName": "Access type"
+    },
+    {
+      "name": "paymentMethod",
+      "x-displayName": "Payment method"
+    },
+    {
+      "name": "auditLog",
+      "x-displayName": "Audit log"
+    },
+    {
+      "name": "site",
+      "x-displayName": "Site"
+    },
+    {
+      "name": "file",
+      "x-displayName": "File"
+    },
+    {
+      "name": "metadata",
+      "x-displayName": "Metadata"
+    },
+    {
+      "name": "snippet",
+      "x-displayName": "Snippet"
+    },
+    {
+      "name": "dnsZone",
+      "x-displayName": "DNS zone"
+    },
+    {
+      "name": "sniCertificate",
+      "x-displayName": "SNI certificate"
+    },
+    {
+      "name": "deploy",
+      "x-displayName": "Deploy"
+    },
+    {
+      "name": "deployedBranch",
+      "x-displayName": "Deployed branch"
+    },
+    {
+      "name": "deployKey",
+      "x-displayName": "Deploy key"
+    },
+    {
+      "name": "build",
+      "x-displayName": "Build"
+    },
+    {
+      "name": "buildLogMsg",
+      "x-displayName": "Build log message"
+    },
+    {
+      "name": "hook",
+      "x-displayName": "Hook"
+    },
+    {
+      "name": "hookType",
+      "x-displayName": "Hook type"
+    },
+    {
+      "name": "buildHook",
+      "x-displayName": "Build hook"
+    },
+    {
+      "name": "service",
+      "x-displayName": "Service"
+    },
+    {
+      "name": "serviceInstance",
+      "x-displayName": "Service instance"
+    },
+    {
+      "name": "function",
+      "x-displayName": "Function"
+    },
+    {
+      "name": "form",
+      "x-displayName": "Form"
+    },
+    {
+      "name": "submission",
+      "x-displayName": "Form submission"
+    },
+    {
+      "name": "splitTest",
+      "x-displayName": "Split test"
+    },
+    {
+      "name": "asset",
+      "x-displayName": "Asset"
+    },
+    {
+      "name": "assetPublicSignature",
+      "x-displayName": "Asset public signature"
+    }
+  ],
+  "externalDocs": {
+    "description": "Online documentation",
+    "url": "https://www.netlify.com/docs/api/"
+  },
+  "x-tagGroups": [
+    {
+      "name": "OAuth",
+      "tags": [
+        "ticket",
+        "accessToken"
+      ]
+    },
+    {
+      "name": "User accounts",
+      "tags": [
+        "user",
+        "accountMembership",
+        "member",
+        "accountType",
+        "paymentMethod",
+        "auditLog"
+      ]
+    },
+    {
+      "name": "Site",
+      "tags": [
+        "site",
+        "file",
+        "metadata",
+        "snippet"
+      ]
+    },
+    {
+      "name": "Domain names",
+      "tags": [
+        "dnsZone",
+        "sniCertificate"
+      ]
+    },
+    {
+      "name": "Deploys",
+      "tags": [
+        "deploy",
+        "deployedBranch",
+        "deployKey"
+      ]
+    },
+    {
+      "name": "Builds",
+      "tags": [
+        "build",
+        "buildLogMsg"
+      ]
+    },
+    {
+      "name": "Webhooks and notifications",
+      "tags": [
+        "hook",
+        "hookType",
+        "buildHook"
+      ]
+    },
+    {
+      "name": "Services",
+      "tags": [
+        "service",
+        "serviceInstance"
+      ]
+    },
+    {
+      "name": "Functions",
+      "tags": [
+        "function"
+      ]
+    },
+    {
+      "name": "Forms",
+      "tags": [
+        "form",
+        "submission"
+      ]
+    },
+    {
+      "name": "Split tests",
+      "tags": [
+        "splitTest"
+      ]
+    },
+    {
+      "name": "Large media",
+      "tags": [
+        "asset",
+        "assetPublicSignature"
+      ]
+    }
+  ]
+}
