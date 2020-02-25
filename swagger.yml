@@ -628,6 +628,26 @@ paths:
             $ref: '#/definitions/deploy'
         default:
           $ref: '#/responses/error'
+  /sites/{site_id}/deploys/{deploy_id}/cancel:
+    post:
+      operationId: cancelSiteDeploy
+      tags: [deploy]
+      parameters:
+        - name: site_id
+          type: string
+          in: path
+          required: true
+        - name: deploy_id
+          type: string
+          in: path
+          required: true
+      responses:
+        '201':
+          description: Cancelled
+          schema:
+            $ref: '#/definitions/deploy'
+        default:
+          $ref: '#/responses/error'
   /sites/{site_id}/deploys/{deploy_id}/restore:
     post:
       operationId: restoreSiteDeploy
