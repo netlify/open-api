@@ -65,8 +65,5 @@
     "eslint": "eslint --fix \"src/**/*.js\"",
     "prettier": "prettier --write --loglevel warn \"src/**/*.js\" \"*.{js,md,yml,json}\"",
     "unit": "ava"
-  },
-  "engines": {
-    "node": "12"
   }
 }
