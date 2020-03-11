@@ -628,15 +628,11 @@ paths:
             $ref: '#/definitions/deploy'
         default:
           $ref: '#/responses/error'
-  /sites/{site_id}/deploys/{deploy_id}/cancel:
+  /deploys/{deploy_id}/cancel:
     post:
       operationId: cancelSiteDeploy
       tags: [deploy]
       parameters:
-        - name: site_id
-          type: string
-          in: path
-          required: true
         - name: deploy_id
           type: string
           in: path
