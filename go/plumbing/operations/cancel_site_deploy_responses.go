@@ -56,7 +56,7 @@ type CancelSiteDeployCreated struct {
 }
 
 func (o *CancelSiteDeployCreated) Error() string {
-	return fmt.Sprintf("[POST /sites/{site_id}/deploys/{deploy_id}/cancel][%d] cancelSiteDeployCreated  %+v", 201, o.Payload)
+	return fmt.Sprintf("[POST /deploys/{deploy_id}/cancel][%d] cancelSiteDeployCreated  %+v", 201, o.Payload)
 }
 
 func (o *CancelSiteDeployCreated) GetPayload() *models.Deploy {
@@ -98,7 +98,7 @@ func (o *CancelSiteDeployDefault) Code() int {
 }
 
 func (o *CancelSiteDeployDefault) Error() string {
-	return fmt.Sprintf("[POST /sites/{site_id}/deploys/{deploy_id}/cancel][%d] cancelSiteDeploy default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[POST /deploys/{deploy_id}/cancel][%d] cancelSiteDeploy default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *CancelSiteDeployDefault) GetPayload() *models.Error {

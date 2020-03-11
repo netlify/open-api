@@ -63,8 +63,6 @@ type CancelSiteDeployParams struct {
 
 	/*DeployID*/
 	DeployID string
-	/*SiteID*/
-	SiteID string
 
 	timeout    time.Duration
 	Context    context.Context
@@ -115,17 +113,6 @@ func (o *CancelSiteDeployParams) SetDeployID(deployID string) {
 	o.DeployID = deployID
 }
 
-// WithSiteID adds the siteID to the cancel site deploy params
-func (o *CancelSiteDeployParams) WithSiteID(siteID string) *CancelSiteDeployParams {
-	o.SetSiteID(siteID)
-	return o
-}
-
-// SetSiteID adds the siteId to the cancel site deploy params
-func (o *CancelSiteDeployParams) SetSiteID(siteID string) {
-	o.SiteID = siteID
-}
-
 // WriteToRequest writes these params to a swagger request
 func (o *CancelSiteDeployParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -136,11 +123,6 @@ func (o *CancelSiteDeployParams) WriteToRequest(r runtime.ClientRequest, reg str
 
 	// path param deploy_id
 	if err := r.SetPathParam("deploy_id", o.DeployID); err != nil {
-		return err
-	}
-
-	// path param site_id
-	if err := r.SetPathParam("site_id", o.SiteID); err != nil {
 		return err
 	}
 

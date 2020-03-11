@@ -106,7 +106,7 @@ func (a *Client) CancelSiteDeploy(params *CancelSiteDeployParams, authInfo runti
 	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "cancelSiteDeploy",
 		Method:             "POST",
-		PathPattern:        "/sites/{site_id}/deploys/{deploy_id}/cancel",
+		PathPattern:        "/deploys/{deploy_id}/cancel",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"https"},
