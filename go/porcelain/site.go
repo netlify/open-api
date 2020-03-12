@@ -38,6 +38,18 @@ func (n *Netlify) GetSite(ctx context.Context, siteID string) (*models.Site, err
 	return resp.Payload, nil
 }
 
+// DeleteSite deletes a site.
+func (n *Netlify) DeleteSite(ctx context.Context, siteID string) error {
+	authInfo := context.GetAuthInfo(ctx)
+
+	_, err := n.Netlify.Operations.DeleteSite(operations.NewDeleteSiteParams().WithSiteID(siteID), authInfo)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // CreateSite creates a new site.
 func (n *Netlify) CreateSite(ctx context.Context, site *models.SiteSetup, configureDNS bool) (*models.Site, error) {
 	authInfo := context.GetAuthInfo(ctx)
