@@ -63,7 +63,7 @@ type DeployObserver interface {
 }
 
 type DeployWarner interface {
-	OnWalkWarning(string)
+	OnWalkWarning(path, msg string)
 }
 
 // DeployOptions holds the option for creating a new deploy
@@ -591,9 +591,7 @@ func bundle(functionDir string, observer DeployObserver) (*deployFiles, error) {
 			functions.Add(file.Name, file)
 		default:
 			if warner, ok := observer.(DeployWarner); ok {
-				warner.OnWalkWarning(
-					fmt.Sprintf("Function \"%s\" is not valid for deployment. Please check that it matches the format for the runtime.", filePath),
-				)
+				warner.OnWalkWarning(filePath, "Function is not valid for deployment. Please check that it matches the format for the runtime.")
 			}
 		}
 	}
@@ -668,14 +666,14 @@ func goFile(filePath string, i os.FileInfo, observer DeployObserver) bool {
 
 	if m := i.Mode(); m&0111 == 0 { // check if it's an executable file
 		if hasWarner {
-			warner.OnWalkWarning(fmt.Sprintf("%s: Go binary does not have executable permissions", filePath))
+			warner.OnWalkWarning(filePath, "Go binary does not have executable permissions")
 		}
 		return false
 	}
 
 	if _, err := elf.Open(filePath); err != nil { // check if it's a linux executable
 		if hasWarner {
-			warner.OnWalkWarning(fmt.Sprintf("%s: Go binary is not a linux executable", filePath))
+			warner.OnWalkWarning(filePath, "Go binary is not a linux executable")
 		}
 		return false
 	}
@@ -683,7 +681,7 @@ func goFile(filePath string, i os.FileInfo, observer DeployObserver) bool {
 	v, err := version.ReadExe(filePath)
 	if err != nil || !strings.HasPrefix(v.Release, "go1.") {
 		if hasWarner {
-			warner.OnWalkWarning(fmt.Sprintf("%s: Unable to detect Go version 1.x", filePath))
+			warner.OnWalkWarning(filePath, "Unable to detect Go version 1.x")
 		}
 	}
 
