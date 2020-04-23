@@ -1010,7 +1010,7 @@ paths:
         default:
           $ref: '#/responses/error'
     delete:
-      operationId: deleteHookBySiteId
+      operationId: deleteHook
       tags: [hook]
       responses:
         '204':
