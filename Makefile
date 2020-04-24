@@ -19,5 +19,5 @@ generate: validate ## Generate the API Go client and the JSON document for the U
 test: ## Test the go code.
 	gobin -m -run github.com/kyoh86/richgo test -v $(CHECK_FILES)
 
-validate: ## Check that the swagger spec is valid.
+validate: deps ## Check that the swagger spec is valid.
 	gobin -m -run github.com/go-swagger/go-swagger/cmd/swagger@c49ea4ca2112a67af0faa06ffdc994b036860a0c validate $(SWAGGER_SPEC)
