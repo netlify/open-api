@@ -1651,6 +1651,7 @@ paths:
           $ref: '#/responses/error'
     get:
       operationId: getDnsZones
+      tags: [dnsZone]
       responses:
         '200':
           description: 'get all DNS zones your user account has access to'
@@ -1668,6 +1669,7 @@ paths:
         required: true
     get:
       operationId: getDnsZone
+      tags: [dnsZone]
       responses:
         '200':
           description: 'get a single DNS zone'
@@ -1677,6 +1679,7 @@ paths:
           $ref: '#/responses/error'
     delete:
       operationId: deleteDnsZone
+      tags: [dnsZone]
       responses:
         '204':
           description: 'delete a single DNS zone'
@@ -1707,6 +1710,7 @@ paths:
         required: true
     put:
       operationId: transferDnsZone
+      tags: [dnsZone]
       responses:
         '200':
           description: 'transfer a DNS zone to another account'
@@ -1733,6 +1737,7 @@ paths:
           $ref: '#/responses/error'
     post:
       operationId: createDnsRecord
+      tags: [dnsZone]
       consumes:
         - application/json
       parameters:
@@ -1762,6 +1767,7 @@ paths:
         required: true
     get:
       operationId: getIndividualDnsRecord
+      tags: [dnsZone]
       responses:
         '200':
           description: 'get a single DNS record'
@@ -1771,6 +1777,7 @@ paths:
           $ref: '#/responses/error'
     delete:
       operationId: deleteDnsRecord
+      tags: [dnsZone]
       responses:
         '204':
           description: 'record deleted'
