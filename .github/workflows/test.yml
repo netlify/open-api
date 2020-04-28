@@ -27,7 +27,7 @@ jobs:
       - name: Tests
         run: npm test
   test-go:
-    name: Test on go ${{ matrix.go_version }} and ${{ matrix.os }}
+    name: Go ${{ matrix.go_version }} on ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest, macOS-latest, windows-latest]
