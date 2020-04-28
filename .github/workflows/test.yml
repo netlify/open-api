@@ -9,7 +9,7 @@ on:
 
 jobs:
   test-node:
-    name: Test on node ${{ matrix.node_version }} and ${{ matrix.os }}
+    name: Node ${{ matrix.node_version }} on ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest, macOS-latest, windows-latest]
