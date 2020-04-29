@@ -1,0 +1,49 @@
+name: Test
+on:
+  # Ensure GitHub actions are not run twice for same commits
+  push:
+    branches: [master]
+    tags: ['*']
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  test-node:
+    name: Node ${{ matrix.node_version }} on ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macOS-latest, windows-latest]
+        node_version: [12]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Install Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node_version }}
+      - name: Git checkout
+        uses: actions/checkout@v1
+      - name: Install dependencies
+        run: npm install
+      - name: Tests
+        run: npm test
+  test-go:
+    name: Go ${{ matrix.go_version }} on ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macOS-latest, windows-latest]
+        go_version: [1.13.x, 1.14.x]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Install Go ${{ matrix.go }}
+        uses: actions/setup-go@v2-beta
+        with:
+          go-version: ${{ matrix.go_version }}
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install make
+        run: choco install make
+        if: ${{ matrix.os == 'windows-latest' }}
+      - name: Install dependencies
+        run: make deps
+      - name: Tests
+        run: make test
