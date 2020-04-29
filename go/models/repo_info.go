@@ -53,6 +53,9 @@ type RepoInfo struct {
 
 	// repo url
 	RepoURL string `json:"repo_url,omitempty"`
+
+	// stop builds
+	StopBuilds bool `json:"stop_builds,omitempty"`
 }
 
 // Validate validates this repo info

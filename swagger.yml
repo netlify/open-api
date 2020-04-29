@@ -1864,6 +1864,8 @@ definitions:
           type: string
       installation_id:
         type: integer
+      stop_builds:
+        type: boolean
   submission:
     type: object
     properties:
