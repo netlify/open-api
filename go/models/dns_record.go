@@ -19,7 +19,7 @@ type DNSRecord struct {
 	DNSZoneID string `json:"dns_zone_id,omitempty"`
 
 	// flag
-	Flag string `json:"flag,omitempty"`
+	Flag int64 `json:"flag,omitempty"`
 
 	// hostname
 	Hostname string `json:"hostname,omitempty"`

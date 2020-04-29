@@ -49,7 +49,7 @@ func NewGetDNSZonesOK() *GetDNSZonesOK {
 
 /*GetDNSZonesOK handles this case with default header values.
 
-get all DNS zones your user account has access to
+get all DNS zones the user has access to
 */
 type GetDNSZonesOK struct {
 	Payload models.DNSZones

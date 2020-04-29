@@ -31,7 +31,7 @@ type DNSZone struct {
 	CreatedAt string `json:"created_at,omitempty"`
 
 	// dedicated
-	Dedicated string `json:"dedicated,omitempty"`
+	Dedicated bool `json:"dedicated,omitempty"`
 
 	// dns servers
 	DNSServers []string `json:"dns_servers"`

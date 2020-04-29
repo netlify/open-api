@@ -20,7 +20,7 @@ import (
 // NewGetDNSZonesParams creates a new GetDNSZonesParams object
 // with the default values initialized.
 func NewGetDNSZonesParams() *GetDNSZonesParams {
-
+	var ()
 	return &GetDNSZonesParams{
 
 		timeout: cr.DefaultTimeout,
@@ -30,7 +30,7 @@ func NewGetDNSZonesParams() *GetDNSZonesParams {
 // NewGetDNSZonesParamsWithTimeout creates a new GetDNSZonesParams object
 // with the default values initialized, and the ability to set a timeout on a request
 func NewGetDNSZonesParamsWithTimeout(timeout time.Duration) *GetDNSZonesParams {
-
+	var ()
 	return &GetDNSZonesParams{
 
 		timeout: timeout,
@@ -40,7 +40,7 @@ func NewGetDNSZonesParamsWithTimeout(timeout time.Duration) *GetDNSZonesParams {
 // NewGetDNSZonesParamsWithContext creates a new GetDNSZonesParams object
 // with the default values initialized, and the ability to set a context for a request
 func NewGetDNSZonesParamsWithContext(ctx context.Context) *GetDNSZonesParams {
-
+	var ()
 	return &GetDNSZonesParams{
 
 		Context: ctx,
@@ -50,7 +50,7 @@ func NewGetDNSZonesParamsWithContext(ctx context.Context) *GetDNSZonesParams {
 // NewGetDNSZonesParamsWithHTTPClient creates a new GetDNSZonesParams object
 // with the default values initialized, and the ability to set a custom HTTPClient for a request
 func NewGetDNSZonesParamsWithHTTPClient(client *http.Client) *GetDNSZonesParams {
-
+	var ()
 	return &GetDNSZonesParams{
 		HTTPClient: client,
 	}
@@ -60,6 +60,10 @@ func NewGetDNSZonesParamsWithHTTPClient(client *http.Client) *GetDNSZonesParams 
 for the get Dns zones operation typically these are written to a http.Request
 */
 type GetDNSZonesParams struct {
+
+	/*AccountSlug*/
+	AccountSlug *string
+
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
@@ -98,6 +102,17 @@ func (o *GetDNSZonesParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
+// WithAccountSlug adds the accountSlug to the get Dns zones params
+func (o *GetDNSZonesParams) WithAccountSlug(accountSlug *string) *GetDNSZonesParams {
+	o.SetAccountSlug(accountSlug)
+	return o
+}
+
+// SetAccountSlug adds the accountSlug to the get Dns zones params
+func (o *GetDNSZonesParams) SetAccountSlug(accountSlug *string) {
+	o.AccountSlug = accountSlug
+}
+
 // WriteToRequest writes these params to a swagger request
 func (o *GetDNSZonesParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -105,6 +120,22 @@ func (o *GetDNSZonesParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.R
 		return err
 	}
 	var res []error
+
+	if o.AccountSlug != nil {
+
+		// query param account_slug
+		var qrAccountSlug string
+		if o.AccountSlug != nil {
+			qrAccountSlug = *o.AccountSlug
+		}
+		qAccountSlug := qrAccountSlug
+		if qAccountSlug != "" {
+			if err := r.SetQueryParam("account_slug", qAccountSlug); err != nil {
+				return err
+			}
+		}
+
+	}
 
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)

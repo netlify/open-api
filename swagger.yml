@@ -1152,7 +1152,6 @@ paths:
           in: body
           schema:
             $ref: '#/definitions/siteSetup'
-          required: false
         - name: configure_dns
           type: boolean
           in: query
@@ -1634,6 +1633,7 @@ paths:
   /dns_zones:
     post:
       operationId: createDnsZone
+      tags: [dnsZone]
       consumes:
         - application/json
       parameters:
@@ -1652,9 +1652,14 @@ paths:
     get:
       operationId: getDnsZones
       tags: [dnsZone]
+      parameters:
+        - name: account_slug
+          in: query
+          type: string
+          required: false
       responses:
         '200':
-          description: 'get all DNS zones your user account has access to'
+          description: 'get all DNS zones the user has access to'
           schema:
             $ref: '#/definitions/dnsZones'
         default:
@@ -1728,6 +1733,7 @@ paths:
         required: true
     get:
       operationId: getDnsRecords
+      tags: [dnsZone]      
       responses:
         '200':
           description: 'get all DNS records for a single DNS zone'
@@ -2312,7 +2318,7 @@ definitions:
       ipv6_enabled:
         type: boolean
       dedicated:
-        type: string
+        type: boolean
   dnsRecordCreate:
     type: object
     properties:
@@ -2325,6 +2331,20 @@ definitions:
       ttl:
         type: integer
         format: int64
+      priority:
+        type: integer
+        format: int64
+      weight:
+        type: integer
+        format: int64
+      port:
+        type: integer
+        format: int64
+      flag:
+        type: integer
+        format: int64
+      tag:
+        type: string
   dnsRecords:
     type: array
     items:
@@ -2351,7 +2371,7 @@ definitions:
       site_id:
         type: string
       flag:
-        type: string
+        type: integer
       tag:
         type: string
       managed:

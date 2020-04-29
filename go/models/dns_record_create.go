@@ -15,8 +15,20 @@ import (
 // swagger:model dnsRecordCreate
 type DNSRecordCreate struct {
 
+	// flag
+	Flag int64 `json:"flag,omitempty"`
+
 	// hostname
 	Hostname string `json:"hostname,omitempty"`
+
+	// port
+	Port int64 `json:"port,omitempty"`
+
+	// priority
+	Priority int64 `json:"priority,omitempty"`
+
+	// tag
+	Tag string `json:"tag,omitempty"`
 
 	// ttl
 	TTL int64 `json:"ttl,omitempty"`
@@ -26,6 +38,9 @@ type DNSRecordCreate struct {
 
 	// value
 	Value string `json:"value,omitempty"`
+
+	// weight
+	Weight int64 `json:"weight,omitempty"`
 }
 
 // Validate validates this dns record create
