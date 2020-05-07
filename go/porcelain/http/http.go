@@ -31,11 +31,11 @@ func NewRetryableTransport(tr runtime.ClientTransport, attempts int) *RetryableT
 }
 
 func (t *RetryableTransport) Submit(op *runtime.ClientOperation) (interface{}, error) {
-	client := &http.Client{}
+	var client http.Client
 	if op.Client == nil {
-		*client = *http.DefaultClient
+		client = *http.DefaultClient
 	} else {
-		*client = *op.Client
+		client = *op.Client
 	}
 
 	transport := client.Transport
@@ -47,7 +47,7 @@ func (t *RetryableTransport) Submit(op *runtime.ClientOperation) (interface{}, e
 		attempts: t.attempts,
 	}
 
-	op.Client = client
+	op.Client = &client
 	res, err := t.tr.Submit(op)
 
 	return res, err
