@@ -13,8 +13,7 @@ require (
 	github.com/go-swagger/go-swagger v0.20.2-0.20190910212040-c49ea4ca2112
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
 	github.com/kyoh86/richgo v0.3.3
-	github.com/myitcv/gobin v0.0.13
-	github.com/rogpeppe/go-internal v1.3.2 // indirect
+	github.com/myitcv/gobin v0.0.14
 	github.com/rsc/goversion v1.2.0
 	github.com/sirupsen/logrus v1.4.2
 	github.com/stretchr/testify v1.5.1
