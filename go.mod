@@ -4,7 +4,7 @@ go 1.13
 
 require (
 	github.com/Azure/go-autorest/autorest v0.10.1
-	github.com/cenkalti/backoff v2.1.1+incompatible
+	github.com/cenkalti/backoff/v4 v4.0.2
 	github.com/go-openapi/errors v0.19.4
 	github.com/go-openapi/runtime v0.19.15
 	github.com/go-openapi/strfmt v0.19.5
