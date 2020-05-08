@@ -18,14 +18,53 @@ import (
 // swagger:model dnsZone
 type DNSZone struct {
 
+	// account id
+	AccountID string `json:"account_id,omitempty"`
+
+	// account name
+	AccountName string `json:"account_name,omitempty"`
+
+	// account slug
+	AccountSlug string `json:"account_slug,omitempty"`
+
+	// created at
+	CreatedAt string `json:"created_at,omitempty"`
+
+	// dedicated
+	Dedicated bool `json:"dedicated,omitempty"`
+
+	// dns servers
+	DNSServers []string `json:"dns_servers"`
+
+	// domain
+	Domain string `json:"domain,omitempty"`
+
+	// errors
+	Errors []string `json:"errors"`
+
 	// id
 	ID string `json:"id,omitempty"`
+
+	// ipv6 enabled
+	IPV6Enabled bool `json:"ipv6_enabled,omitempty"`
 
 	// name
 	Name string `json:"name,omitempty"`
 
 	// records
 	Records []*DNSRecord `json:"records"`
+
+	// site id
+	SiteID string `json:"site_id,omitempty"`
+
+	// supported record types
+	SupportedRecordTypes []string `json:"supported_record_types"`
+
+	// updated at
+	UpdatedAt string `json:"updated_at,omitempty"`
+
+	// user id
+	UserID string `json:"user_id,omitempty"`
 }
 
 // Validate validates this dns zone

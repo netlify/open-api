@@ -231,6 +231,74 @@ func (a *Client) CreateDeployKey(params *CreateDeployKeyParams, authInfo runtime
 }
 
 /*
+CreateDNSRecord create Dns record API
+*/
+func (a *Client) CreateDNSRecord(params *CreateDNSRecordParams, authInfo runtime.ClientAuthInfoWriter) (*CreateDNSRecordCreated, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewCreateDNSRecordParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "createDnsRecord",
+		Method:             "POST",
+		PathPattern:        "/dns_zones/{zone_id}/dns_records",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &CreateDNSRecordReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*CreateDNSRecordCreated)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*CreateDNSRecordDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+CreateDNSZone create Dns zone API
+*/
+func (a *Client) CreateDNSZone(params *CreateDNSZoneParams, authInfo runtime.ClientAuthInfoWriter) (*CreateDNSZoneCreated, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewCreateDNSZoneParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "createDnsZone",
+		Method:             "POST",
+		PathPattern:        "/dns_zones",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &CreateDNSZoneReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*CreateDNSZoneCreated)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*CreateDNSZoneDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
 CreateHookBySiteID create hook by site Id API
 */
 func (a *Client) CreateHookBySiteID(params *CreateHookBySiteIDParams, authInfo runtime.ClientAuthInfoWriter) (*CreateHookBySiteIDCreated, error) {
@@ -635,6 +703,74 @@ func (a *Client) DeleteDeployKey(params *DeleteDeployKeyParams, authInfo runtime
 	}
 	// unexpected success response
 	unexpectedSuccess := result.(*DeleteDeployKeyDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+DeleteDNSRecord delete Dns record API
+*/
+func (a *Client) DeleteDNSRecord(params *DeleteDNSRecordParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteDNSRecordNoContent, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewDeleteDNSRecordParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "deleteDnsRecord",
+		Method:             "DELETE",
+		PathPattern:        "/dns_zones/{zone_id}/dns_records/{dns_record_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &DeleteDNSRecordReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*DeleteDNSRecordNoContent)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*DeleteDNSRecordDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+DeleteDNSZone delete Dns zone API
+*/
+func (a *Client) DeleteDNSZone(params *DeleteDNSZoneParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteDNSZoneNoContent, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewDeleteDNSZoneParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "deleteDnsZone",
+		Method:             "DELETE",
+		PathPattern:        "/dns_zones/{zone_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &DeleteDNSZoneReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*DeleteDNSZoneNoContent)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*DeleteDNSZoneDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
@@ -1184,6 +1320,108 @@ func (a *Client) GetDeployKey(params *GetDeployKeyParams, authInfo runtime.Clien
 }
 
 /*
+GetDNSRecords get Dns records API
+*/
+func (a *Client) GetDNSRecords(params *GetDNSRecordsParams, authInfo runtime.ClientAuthInfoWriter) (*GetDNSRecordsOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetDNSRecordsParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "getDnsRecords",
+		Method:             "GET",
+		PathPattern:        "/dns_zones/{zone_id}/dns_records",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &GetDNSRecordsReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*GetDNSRecordsOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*GetDNSRecordsDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+GetDNSZone get Dns zone API
+*/
+func (a *Client) GetDNSZone(params *GetDNSZoneParams, authInfo runtime.ClientAuthInfoWriter) (*GetDNSZoneOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetDNSZoneParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "getDnsZone",
+		Method:             "GET",
+		PathPattern:        "/dns_zones/{zone_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &GetDNSZoneReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*GetDNSZoneOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*GetDNSZoneDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+GetDNSZones get Dns zones API
+*/
+func (a *Client) GetDNSZones(params *GetDNSZonesParams, authInfo runtime.ClientAuthInfoWriter) (*GetDNSZonesOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetDNSZonesParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "getDnsZones",
+		Method:             "GET",
+		PathPattern:        "/dns_zones",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &GetDNSZonesReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*GetDNSZonesOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*GetDNSZonesDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
 GetHook get hook API
 */
 func (a *Client) GetHook(params *GetHookParams, authInfo runtime.ClientAuthInfoWriter) (*GetHookOK, error) {
@@ -1214,6 +1452,40 @@ func (a *Client) GetHook(params *GetHookParams, authInfo runtime.ClientAuthInfoW
 	}
 	// unexpected success response
 	unexpectedSuccess := result.(*GetHookDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+GetIndividualDNSRecord get individual Dns record API
+*/
+func (a *Client) GetIndividualDNSRecord(params *GetIndividualDNSRecordParams, authInfo runtime.ClientAuthInfoWriter) (*GetIndividualDNSRecordOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetIndividualDNSRecordParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "getIndividualDnsRecord",
+		Method:             "GET",
+		PathPattern:        "/dns_zones/{zone_id}/dns_records/{dns_record_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &GetIndividualDNSRecordReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*GetIndividualDNSRecordOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*GetIndividualDNSRecordDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
@@ -2676,6 +2948,40 @@ func (a *Client) ShowTicket(params *ShowTicketParams, authInfo runtime.ClientAut
 	}
 	// unexpected success response
 	unexpectedSuccess := result.(*ShowTicketDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+TransferDNSZone transfer Dns zone API
+*/
+func (a *Client) TransferDNSZone(params *TransferDNSZoneParams, authInfo runtime.ClientAuthInfoWriter) (*TransferDNSZoneOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewTransferDNSZoneParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "transferDnsZone",
+		Method:             "PUT",
+		PathPattern:        "/dns_zones/{zone_id}/transfer",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &TransferDNSZoneReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*TransferDNSZoneOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*TransferDNSZoneDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
