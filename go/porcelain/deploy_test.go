@@ -101,4 +101,32 @@ func TestOpenAPIClientWithWeirdResponse(t *testing.T) {
 	_, operationError := client.Operations.UploadDeployFile(params, authInfo)
 	require.Error(t, operationError)
 	require.Equal(t, "[PUT /deploys/{deploy_id}/files/{path}][408] uploadDeployFile default  &{Code:408 Message:a message}", operationError.Error())
+
+}
+
+func TestConcurrentFileUpload(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+		rw.WriteHeader(408)
+		rw.Write([]byte(`{ "foo": "bar", "message": "a message", "code": 408 }`))
+	}))
+	defer server.Close()
+
+	httpClient := http.DefaultClient
+	authInfo := runtime.ClientAuthInfoWriterFunc(func(r runtime.ClientRequest, _ strfmt.Registry) error {
+		r.SetHeaderParam("User-Agent", "buildbot")
+		r.SetHeaderParam("Authorization", "Bearer 1234")
+		return nil
+	})
+
+	hu, _ := url.Parse(server.URL)
+	tr := apiClient.NewWithClient(hu.Host, "/api/v1", []string{"http"}, httpClient)
+	client := NewRetryable(tr, strfmt.Default, 1)
+	for i := 0; i < 30; i++ {
+		go func() {
+			body := ioutil.NopCloser(bytes.NewReader([]byte("hello world")))
+			params := operations.NewUploadDeployFileParams().WithDeployID("1234").WithPath("foo/bar/biz").WithFileBody(body)
+			_, _ = client.Operations.UploadDeployFile(params, authInfo)
+		}()
+	}
 }
