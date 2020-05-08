@@ -1733,7 +1733,7 @@ paths:
         required: true
     get:
       operationId: getDnsRecords
-      tags: [dnsZone]      
+      tags: [dnsZone]
       responses:
         '200':
           description: 'get all DNS records for a single DNS zone'
