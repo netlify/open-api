@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/cenkalti/backoff"
+	"github.com/cenkalti/backoff/v4"
 	"github.com/netlify/open-api/go/models"
 	"github.com/netlify/open-api/go/plumbing/operations"
 	"github.com/netlify/open-api/go/porcelain/context"
