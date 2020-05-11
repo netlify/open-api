@@ -13,10 +13,9 @@ import (
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	cr "github.com/go-openapi/runtime/client"
+	"github.com/go-openapi/strfmt"
 
-	strfmt "github.com/go-openapi/strfmt"
-
-	models "github.com/netlify/open-api/go/models"
+	"github.com/netlify/open-api/go/models"
 )
 
 // NewCreateHookBySiteIDParams creates a new CreateHookBySiteIDParams object

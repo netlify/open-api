@@ -10,7 +10,7 @@ require (
 	github.com/go-openapi/strfmt v0.19.5
 	github.com/go-openapi/swag v0.19.9
 	github.com/go-openapi/validate v0.19.8
-	github.com/go-swagger/go-swagger v0.20.2-0.20190910212040-c49ea4ca2112
+	github.com/go-swagger/go-swagger v0.23.0
 	github.com/kyoh86/richgo v0.3.3
 	github.com/myitcv/gobin v0.0.14
 	github.com/rsc/goversion v1.2.0
