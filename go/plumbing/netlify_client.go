@@ -8,9 +8,7 @@ package plumbing
 import (
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
-
-	strfmt "github.com/go-openapi/strfmt"
-
+	"github.com/go-openapi/strfmt"
 	"github.com/netlify/open-api/go/plumbing/operations"
 )
 
@@ -56,9 +54,7 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *Netlify {
 
 	cli := new(Netlify)
 	cli.Transport = transport
-
 	cli.Operations = operations.New(transport, formats)
-
 	return cli
 }
 
@@ -103,7 +99,7 @@ func (cfg *TransportConfig) WithSchemes(schemes []string) *TransportConfig {
 
 // Netlify is a client for netlify
 type Netlify struct {
-	Operations *operations.Client
+	Operations operations.ClientService
 
 	Transport runtime.ClientTransport
 }
@@ -111,7 +107,5 @@ type Netlify struct {
 // SetTransport changes the transport on the client and all its subresources
 func (c *Netlify) SetTransport(transport runtime.ClientTransport) {
 	c.Transport = transport
-
 	c.Operations.SetTransport(transport)
-
 }

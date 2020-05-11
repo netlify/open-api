@@ -8,12 +8,12 @@ package models
 import (
 	"encoding/json"
 
-	strfmt "github.com/go-openapi/strfmt"
-
+	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
 
 // AuditLogPayload audit log payload
+//
 // swagger:model auditLogPayload
 type AuditLogPayload struct {
 
@@ -68,17 +68,11 @@ func (m *AuditLogPayload) UnmarshalJSON(data []byte) error {
 	var rcv AuditLogPayload
 
 	rcv.Action = stage1.Action
-
 	rcv.ActorEmail = stage1.ActorEmail
-
 	rcv.ActorID = stage1.ActorID
-
 	rcv.ActorName = stage1.ActorName
-
 	rcv.LogType = stage1.LogType
-
 	rcv.Timestamp = stage1.Timestamp
-
 	*m = rcv
 
 	// stage 2, remove properties and add to map
@@ -88,17 +82,11 @@ func (m *AuditLogPayload) UnmarshalJSON(data []byte) error {
 	}
 
 	delete(stage2, "action")
-
 	delete(stage2, "actor_email")
-
 	delete(stage2, "actor_id")
-
 	delete(stage2, "actor_name")
-
 	delete(stage2, "log_type")
-
 	delete(stage2, "timestamp")
-
 	// stage 3, add additional properties values
 	if len(stage2) > 0 {
 		result := make(map[string]interface{})
@@ -139,15 +127,10 @@ func (m AuditLogPayload) MarshalJSON() ([]byte, error) {
 	}
 
 	stage1.Action = m.Action
-
 	stage1.ActorEmail = m.ActorEmail
-
 	stage1.ActorID = m.ActorID
-
 	stage1.ActorName = m.ActorName
-
 	stage1.LogType = m.LogType
-
 	stage1.Timestamp = m.Timestamp
 
 	// make JSON object for known properties
