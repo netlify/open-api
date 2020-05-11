@@ -906,6 +906,7 @@ paths:
     post:
       operationId: createPluginRun
       tags: [x-internal]
+      description: "This is an internal-only endpoint."
       parameters:
         - name: deploy_id
           type: string
