@@ -333,6 +333,40 @@ func (a *Client) CreateHookBySiteID(params *CreateHookBySiteIDParams, authInfo r
 }
 
 /*
+CreatePluginRun This is an internal-only endpoint.
+*/
+func (a *Client) CreatePluginRun(params *CreatePluginRunParams, authInfo runtime.ClientAuthInfoWriter) (*CreatePluginRunCreated, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewCreatePluginRunParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "createPluginRun",
+		Method:             "POST",
+		PathPattern:        "/deploys/{deploy_id}/plugin_runs",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &CreatePluginRunReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*CreatePluginRunCreated)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*CreatePluginRunDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
 CreateServiceInstance create service instance API
 */
 func (a *Client) CreateServiceInstance(params *CreateServiceInstanceParams, authInfo runtime.ClientAuthInfoWriter) (*CreateServiceInstanceCreated, error) {

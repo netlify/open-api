@@ -902,6 +902,27 @@ paths:
             $ref: '#/definitions/function'
         default:
           $ref: '#/responses/error'
+  /deploys/{deploy_id}/plugin_runs:
+    post:
+      operationId: createPluginRun
+      tags: [x-internal]
+      description: "This is an internal-only endpoint."
+      parameters:
+        - name: deploy_id
+          type: string
+          in: path
+          required: true
+        - name: plugin_run
+          in: body
+          schema:
+            $ref: '#/definitions/pluginRun'
+      responses:
+        '201':
+          description: CREATED
+          schema:
+            $ref: '#/definitions/pluginRun'
+        default:
+          $ref: '#/responses/error'
   /forms:
     get:
       operationId: listForms
@@ -2259,6 +2280,25 @@ definitions:
         type: string
       error:
         type: boolean
+  pluginRun:
+    type: object
+    properties:
+      deploy_id:
+        type: string
+      package:
+        type: string
+      version:
+        type: string
+      state:
+        type: string
+      reporting_event:
+        type: string
+      title:
+        type: string
+      summary:
+        type: string
+      text:
+        type: string
   metadata:
     type: object
   dnsZoneSetup:
