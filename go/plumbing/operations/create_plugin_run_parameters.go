@@ -65,7 +65,7 @@ type CreatePluginRunParams struct {
 	/*DeployID*/
 	DeployID string
 	/*PluginRun*/
-	PluginRun *models.PluginRun
+	PluginRun *models.PluginRunData
 
 	timeout    time.Duration
 	Context    context.Context
@@ -117,13 +117,13 @@ func (o *CreatePluginRunParams) SetDeployID(deployID string) {
 }
 
 // WithPluginRun adds the pluginRun to the create plugin run params
-func (o *CreatePluginRunParams) WithPluginRun(pluginRun *models.PluginRun) *CreatePluginRunParams {
+func (o *CreatePluginRunParams) WithPluginRun(pluginRun *models.PluginRunData) *CreatePluginRunParams {
 	o.SetPluginRun(pluginRun)
 	return o
 }
 
 // SetPluginRun adds the pluginRun to the create plugin run params
-func (o *CreatePluginRunParams) SetPluginRun(pluginRun *models.PluginRun) {
+func (o *CreatePluginRunParams) SetPluginRun(pluginRun *models.PluginRunData) {
 	o.PluginRun = pluginRun
 }
 

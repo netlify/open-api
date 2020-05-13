@@ -6,6 +6,7 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
@@ -14,34 +15,64 @@ import (
 //
 // swagger:model pluginRun
 type PluginRun struct {
+	PluginRunData
 
-	// deploy id
-	DeployID string `json:"deploy_id,omitempty"`
+	PluginRunAllOf1
+}
 
-	// package
-	Package string `json:"package,omitempty"`
+// UnmarshalJSON unmarshals this object from a JSON structure
+func (m *PluginRun) UnmarshalJSON(raw []byte) error {
+	// AO0
+	var aO0 PluginRunData
+	if err := swag.ReadJSON(raw, &aO0); err != nil {
+		return err
+	}
+	m.PluginRunData = aO0
 
-	// reporting event
-	ReportingEvent string `json:"reporting_event,omitempty"`
+	// AO1
+	var aO1 PluginRunAllOf1
+	if err := swag.ReadJSON(raw, &aO1); err != nil {
+		return err
+	}
+	m.PluginRunAllOf1 = aO1
 
-	// state
-	State string `json:"state,omitempty"`
+	return nil
+}
 
-	// summary
-	Summary string `json:"summary,omitempty"`
+// MarshalJSON marshals this object to a JSON structure
+func (m PluginRun) MarshalJSON() ([]byte, error) {
+	_parts := make([][]byte, 0, 2)
 
-	// text
-	Text string `json:"text,omitempty"`
+	aO0, err := swag.WriteJSON(m.PluginRunData)
+	if err != nil {
+		return nil, err
+	}
+	_parts = append(_parts, aO0)
 
-	// title
-	Title string `json:"title,omitempty"`
-
-	// version
-	Version string `json:"version,omitempty"`
+	aO1, err := swag.WriteJSON(m.PluginRunAllOf1)
+	if err != nil {
+		return nil, err
+	}
+	_parts = append(_parts, aO1)
+	return swag.ConcatJSON(_parts...), nil
 }
 
 // Validate validates this plugin run
 func (m *PluginRun) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	// validation for a type composition with PluginRunData
+	if err := m.PluginRunData.Validate(formats); err != nil {
+		res = append(res, err)
+	}
+	// validation for a type composition with PluginRunAllOf1
+	if err := m.PluginRunAllOf1.Validate(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
 	return nil
 }
 

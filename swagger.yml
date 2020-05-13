@@ -915,7 +915,7 @@ paths:
         - name: plugin_run
           in: body
           schema:
-            $ref: '#/definitions/pluginRun'
+            $ref: '#/definitions/pluginRunData'
       responses:
         '201':
           description: CREATED
@@ -2280,11 +2280,9 @@ definitions:
         type: string
       error:
         type: boolean
-  pluginRun:
+  pluginRunData:
     type: object
     properties:
-      deploy_id:
-        type: string
       package:
         type: string
       version:
@@ -2299,6 +2297,13 @@ definitions:
         type: string
       text:
         type: string
+  pluginRun:
+    allOf:
+      - $ref: '#/definitions/pluginRunData'
+      - type: object
+        properties:
+          deploy_id:
+            type: string
   metadata:
     type: object
   dnsZoneSetup:
