@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - github-tools-add-fossa
 
 defaults:
   run:
