@@ -2257,6 +2257,8 @@ definitions:
         type: boolean
       functions:
         type: object
+      branch:
+        type: string
   build:
     type: object
     properties:
