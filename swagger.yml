@@ -710,6 +710,33 @@ paths:
               $ref: '#/definitions/deployedBranch'
         default:
           $ref: '#/responses/error'
+  /sites/{site_id}/unlink_repo:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+    put:
+      operationId: unlinkSiteRepo
+      tags: [site]
+      description: >-
+        [Beta] Unlinks the repo from the site.
+
+
+        This action will also:
+
+        - Delete associated deploy keys
+
+        - Delete outgoing webhooks for the repo
+
+        - Delete the site's build hooks
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/site'
+        '404':
+          description: Site not found
   /builds/{build_id}:
     parameters:
       - name: build_id
