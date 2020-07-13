@@ -2800,9 +2800,6 @@ definitions:
         properties:
           slides:
             type: string
-      support_priority:
-        type: integer
-        format: int64
   error:
     type: object
     required:
