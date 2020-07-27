@@ -1561,8 +1561,8 @@ paths:
         default:
           $ref: '#/responses/error'
   # end users
-  # begin site/split_testing/
-  /site/{site_id}/traffic_splits:
+  # begin sites/split_testing/
+  /sites/{site_id}/traffic_splits:
     parameters:
       - name: site_id
         type: string
@@ -1596,9 +1596,9 @@ paths:
             $ref: '#/definitions/splitTests'
         default:
           $ref: '#/responses/error'
-  # end site/split_testing/
-  # begin site/split_testing/{split_test_id}
-  /site/{site_id}/traffic_splits/{split_test_id}:
+  # end sites/split_testing/
+  # begin sites/split_testing/{split_test_id}
+  /sites/{site_id}/traffic_splits/{split_test_id}:
     parameters:
       - name: site_id
         type: string
@@ -1636,9 +1636,9 @@ paths:
             $ref: '#/definitions/splitTest'
         default:
           $ref: '#/responses/error'
-  # end site/split_testing/{split_test_id}
-  # begin site/split_testing/{split_test_id/publish}
-  /site/{site_id}/traffic_splits/{split_test_id}/publish:
+  # end sites/split_testing/{split_test_id}
+  # begin sites/split_testing/{split_test_id/publish}
+  /sites/{site_id}/traffic_splits/{split_test_id}/publish:
     parameters:
       - name: site_id
         type: string
@@ -1656,9 +1656,9 @@ paths:
           description: enable
         default:
           $ref: '#/responses/error'
-  # end site/split_testing/{split_test_id/publish}
-  # begin site/split_testing/{split_test_id/unpublish}
-  /site/{site_id}/traffic_splits/{split_test_id}/unpublish:
+  # end sites/split_testing/{split_test_id/publish}
+  # begin sites/split_testing/{split_test_id/unpublish}
+  /sites/{site_id}/traffic_splits/{split_test_id}/unpublish:
     parameters:
       - name: site_id
         type: string
@@ -1676,7 +1676,7 @@ paths:
           description: disabled
         default:
           $ref: '#/responses/error'
-  # end site/split_testing/{split_test_id/unpublish}
+  # end sites/split_testing/{split_test_id/unpublish}
   # begin /dns_zones/
   /dns_zones:
     post:
