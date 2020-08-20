@@ -18,6 +18,9 @@ type DeployFiles struct {
 	// async
 	Async bool `json:"async,omitempty"`
 
+	// branch
+	Branch string `json:"branch,omitempty"`
+
 	// draft
 	Draft bool `json:"draft,omitempty"`
 
