@@ -83,6 +83,8 @@ type ClientService interface {
 
 	DeleteSiteBuildHook(params *DeleteSiteBuildHookParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSiteBuildHookNoContent, error)
 
+	DeleteSiteForm(params *DeleteSiteFormParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSiteFormNoContent, error)
+
 	DeleteSiteSnippet(params *DeleteSiteSnippetParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSiteSnippetNoContent, error)
 
 	DeleteSubmission(params *DeleteSubmissionParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSubmissionNoContent, error)
@@ -1184,6 +1186,40 @@ func (a *Client) DeleteSiteBuildHook(params *DeleteSiteBuildHookParams, authInfo
 	}
 	// unexpected success response
 	unexpectedSuccess := result.(*DeleteSiteBuildHookDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+  DeleteSiteForm delete site form API
+*/
+func (a *Client) DeleteSiteForm(params *DeleteSiteFormParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSiteFormNoContent, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewDeleteSiteFormParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "deleteSiteForm",
+		Method:             "DELETE",
+		PathPattern:        "/sites/{site_id}/forms/{form_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &DeleteSiteFormReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*DeleteSiteFormNoContent)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*DeleteSiteFormDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
