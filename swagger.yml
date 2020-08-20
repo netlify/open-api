@@ -193,6 +193,24 @@ paths:
               $ref: '#/definitions/form'
         default:
           $ref: '#/responses/error'
+  /sites/{site_id}/forms/{form_id}:
+    delete:
+      operationId: deleteSiteForm
+      tags: [form]
+      parameters:
+        - name: site_id
+          type: string
+          in: path
+          required: true
+        - name: form_id
+          type: string
+          in: path
+          required: true
+      responses:
+        '204':
+          description: Deleted
+        default:
+          $ref: '#/responses/error'
   /sites/{site_id}/submissions:
     get:
       operationId: listSiteSubmissions
