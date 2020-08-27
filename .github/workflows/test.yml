@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macOS-latest, windows-latest]
-        node_version: [12]
+        node_version: [14]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Install Node.js ${{ matrix.node }}
