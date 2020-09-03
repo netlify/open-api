@@ -1,7 +1,6 @@
 # open-api
 
 [![Build Status][travis-img]][travis]
-[![Build status][av-img]][av]
 
 This repository contains Netlify's API definition in the [Open API format][open-api-2], formerly known as Swagger.
 
