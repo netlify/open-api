@@ -1445,7 +1445,7 @@ paths:
         default:
           $ref: '#/responses/error'
   # end submission
-  # begin service instances
+  # begin service instances (addon instance)
   /sites/{site_id}/services/{addon}/instances:
     parameters:
       - name: site_id
@@ -1474,6 +1474,20 @@ paths:
             $ref: '#/definitions/serviceInstance'
         default:
           $ref: '#/responses/error'
+  /sites/{site_id}/services/{addon}/instances/{instance_id}:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+      - name: addon
+        type: string
+        in: path
+        required: true
+      - name: instance_id
+        type: string
+        in: path
+        required: true
     get:
       operationId: showServiceInstance
       tags: [serviceInstance]
