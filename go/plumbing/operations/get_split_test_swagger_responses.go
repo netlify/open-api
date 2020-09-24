@@ -55,7 +55,7 @@ type GetSplitTestOK struct {
 }
 
 func (o *GetSplitTestOK) Error() string {
-	return fmt.Sprintf("[GET /site/{site_id}/traffic_splits/{split_test_id}][%d] getSplitTestOK  %+v", 200, o.Payload)
+	return fmt.Sprintf("[GET /sites/{site_id}/traffic_splits/{split_test_id}][%d] getSplitTestOK  %+v", 200, o.Payload)
 }
 
 func (o *GetSplitTestOK) GetPayload() *models.SplitTest {
@@ -97,7 +97,7 @@ func (o *GetSplitTestDefault) Code() int {
 }
 
 func (o *GetSplitTestDefault) Error() string {
-	return fmt.Sprintf("[GET /site/{site_id}/traffic_splits/{split_test_id}][%d] getSplitTest default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[GET /sites/{site_id}/traffic_splits/{split_test_id}][%d] getSplitTest default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *GetSplitTestDefault) GetPayload() *models.Error {

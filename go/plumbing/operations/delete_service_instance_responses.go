@@ -54,7 +54,7 @@ type DeleteServiceInstanceNoContent struct {
 }
 
 func (o *DeleteServiceInstanceNoContent) Error() string {
-	return fmt.Sprintf("[DELETE /sites/{site_id}/services/{addon}/instances][%d] deleteServiceInstanceNoContent ", 204)
+	return fmt.Sprintf("[DELETE /sites/{site_id}/services/{addon}/instances/{instance_id}][%d] deleteServiceInstanceNoContent ", 204)
 }
 
 func (o *DeleteServiceInstanceNoContent) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -85,7 +85,7 @@ func (o *DeleteServiceInstanceDefault) Code() int {
 }
 
 func (o *DeleteServiceInstanceDefault) Error() string {
-	return fmt.Sprintf("[DELETE /sites/{site_id}/services/{addon}/instances][%d] deleteServiceInstance default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[DELETE /sites/{site_id}/services/{addon}/instances/{instance_id}][%d] deleteServiceInstance default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *DeleteServiceInstanceDefault) GetPayload() *models.Error {

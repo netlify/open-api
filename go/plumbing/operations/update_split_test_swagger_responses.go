@@ -55,7 +55,7 @@ type UpdateSplitTestCreated struct {
 }
 
 func (o *UpdateSplitTestCreated) Error() string {
-	return fmt.Sprintf("[PUT /site/{site_id}/traffic_splits/{split_test_id}][%d] updateSplitTestCreated  %+v", 201, o.Payload)
+	return fmt.Sprintf("[PUT /sites/{site_id}/traffic_splits/{split_test_id}][%d] updateSplitTestCreated  %+v", 201, o.Payload)
 }
 
 func (o *UpdateSplitTestCreated) GetPayload() *models.SplitTest {
@@ -97,7 +97,7 @@ func (o *UpdateSplitTestDefault) Code() int {
 }
 
 func (o *UpdateSplitTestDefault) Error() string {
-	return fmt.Sprintf("[PUT /site/{site_id}/traffic_splits/{split_test_id}][%d] updateSplitTest default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[PUT /sites/{site_id}/traffic_splits/{split_test_id}][%d] updateSplitTest default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *UpdateSplitTestDefault) GetPayload() *models.Error {

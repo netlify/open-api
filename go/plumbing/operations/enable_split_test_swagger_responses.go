@@ -54,7 +54,7 @@ type EnableSplitTestNoContent struct {
 }
 
 func (o *EnableSplitTestNoContent) Error() string {
-	return fmt.Sprintf("[POST /site/{site_id}/traffic_splits/{split_test_id}/publish][%d] enableSplitTestNoContent ", 204)
+	return fmt.Sprintf("[POST /sites/{site_id}/traffic_splits/{split_test_id}/publish][%d] enableSplitTestNoContent ", 204)
 }
 
 func (o *EnableSplitTestNoContent) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -85,7 +85,7 @@ func (o *EnableSplitTestDefault) Code() int {
 }
 
 func (o *EnableSplitTestDefault) Error() string {
-	return fmt.Sprintf("[POST /site/{site_id}/traffic_splits/{split_test_id}/publish][%d] enableSplitTest default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[POST /sites/{site_id}/traffic_splits/{split_test_id}/publish][%d] enableSplitTest default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *EnableSplitTestDefault) GetPayload() *models.Error {

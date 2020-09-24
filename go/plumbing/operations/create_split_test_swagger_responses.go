@@ -55,7 +55,7 @@ type CreateSplitTestCreated struct {
 }
 
 func (o *CreateSplitTestCreated) Error() string {
-	return fmt.Sprintf("[POST /site/{site_id}/traffic_splits][%d] createSplitTestCreated  %+v", 201, o.Payload)
+	return fmt.Sprintf("[POST /sites/{site_id}/traffic_splits][%d] createSplitTestCreated  %+v", 201, o.Payload)
 }
 
 func (o *CreateSplitTestCreated) GetPayload() *models.SplitTest {
@@ -97,7 +97,7 @@ func (o *CreateSplitTestDefault) Code() int {
 }
 
 func (o *CreateSplitTestDefault) Error() string {
-	return fmt.Sprintf("[POST /site/{site_id}/traffic_splits][%d] createSplitTest default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[POST /sites/{site_id}/traffic_splits][%d] createSplitTest default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *CreateSplitTestDefault) GetPayload() *models.Error {

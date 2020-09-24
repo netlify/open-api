@@ -54,7 +54,7 @@ type UpdateServiceInstanceNoContent struct {
 }
 
 func (o *UpdateServiceInstanceNoContent) Error() string {
-	return fmt.Sprintf("[PUT /sites/{site_id}/services/{addon}/instances][%d] updateServiceInstanceNoContent ", 204)
+	return fmt.Sprintf("[PUT /sites/{site_id}/services/{addon}/instances/{instance_id}][%d] updateServiceInstanceNoContent ", 204)
 }
 
 func (o *UpdateServiceInstanceNoContent) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -85,7 +85,7 @@ func (o *UpdateServiceInstanceDefault) Code() int {
 }
 
 func (o *UpdateServiceInstanceDefault) Error() string {
-	return fmt.Sprintf("[PUT /sites/{site_id}/services/{addon}/instances][%d] updateServiceInstance default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[PUT /sites/{site_id}/services/{addon}/instances/{instance_id}][%d] updateServiceInstance default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *UpdateServiceInstanceDefault) GetPayload() *models.Error {

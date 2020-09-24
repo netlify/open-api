@@ -55,7 +55,7 @@ type ShowServiceInstanceCreated struct {
 }
 
 func (o *ShowServiceInstanceCreated) Error() string {
-	return fmt.Sprintf("[GET /sites/{site_id}/services/{addon}/instances][%d] showServiceInstanceCreated  %+v", 201, o.Payload)
+	return fmt.Sprintf("[GET /sites/{site_id}/services/{addon}/instances/{instance_id}][%d] showServiceInstanceCreated  %+v", 201, o.Payload)
 }
 
 func (o *ShowServiceInstanceCreated) GetPayload() *models.ServiceInstance {
@@ -97,7 +97,7 @@ func (o *ShowServiceInstanceDefault) Code() int {
 }
 
 func (o *ShowServiceInstanceDefault) Error() string {
-	return fmt.Sprintf("[GET /sites/{site_id}/services/{addon}/instances][%d] showServiceInstance default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[GET /sites/{site_id}/services/{addon}/instances/{instance_id}][%d] showServiceInstance default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *ShowServiceInstanceDefault) GetPayload() *models.Error {

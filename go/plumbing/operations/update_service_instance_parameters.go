@@ -64,6 +64,8 @@ type UpdateServiceInstanceParams struct {
 	Addon string
 	/*Config*/
 	Config interface{}
+	/*InstanceID*/
+	InstanceID string
 	/*SiteID*/
 	SiteID string
 
@@ -127,6 +129,17 @@ func (o *UpdateServiceInstanceParams) SetConfig(config interface{}) {
 	o.Config = config
 }
 
+// WithInstanceID adds the instanceID to the update service instance params
+func (o *UpdateServiceInstanceParams) WithInstanceID(instanceID string) *UpdateServiceInstanceParams {
+	o.SetInstanceID(instanceID)
+	return o
+}
+
+// SetInstanceID adds the instanceId to the update service instance params
+func (o *UpdateServiceInstanceParams) SetInstanceID(instanceID string) {
+	o.InstanceID = instanceID
+}
+
 // WithSiteID adds the siteID to the update service instance params
 func (o *UpdateServiceInstanceParams) WithSiteID(siteID string) *UpdateServiceInstanceParams {
 	o.SetSiteID(siteID)
@@ -155,6 +168,11 @@ func (o *UpdateServiceInstanceParams) WriteToRequest(r runtime.ClientRequest, re
 		if err := r.SetBodyParam(o.Config); err != nil {
 			return err
 		}
+	}
+
+	// path param instance_id
+	if err := r.SetPathParam("instance_id", o.InstanceID); err != nil {
+		return err
 	}
 
 	// path param site_id
