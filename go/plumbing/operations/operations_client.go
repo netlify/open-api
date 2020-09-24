@@ -205,6 +205,8 @@ type ClientService interface {
 
 	TransferDNSZone(params *TransferDNSZoneParams, authInfo runtime.ClientAuthInfoWriter) (*TransferDNSZoneOK, error)
 
+	UnlinkSiteRepo(params *UnlinkSiteRepoParams, authInfo runtime.ClientAuthInfoWriter) (*UnlinkSiteRepoOK, error)
+
 	UnlockDeploy(params *UnlockDeployParams, authInfo runtime.ClientAuthInfoWriter) (*UnlockDeployOK, error)
 
 	UpdateAccount(params *UpdateAccountParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateAccountOK, error)
@@ -860,7 +862,7 @@ func (a *Client) CreateSplitTest(params *CreateSplitTestParams, authInfo runtime
 	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "createSplitTest",
 		Method:             "POST",
-		PathPattern:        "/site/{site_id}/traffic_splits",
+		PathPattern:        "/sites/{site_id}/traffic_splits",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"https"},
@@ -1065,7 +1067,7 @@ func (a *Client) DeleteServiceInstance(params *DeleteServiceInstanceParams, auth
 	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "deleteServiceInstance",
 		Method:             "DELETE",
-		PathPattern:        "/sites/{site_id}/services/{addon}/instances",
+		PathPattern:        "/sites/{site_id}/services/{addon}/instances/{instance_id}",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"https"},
@@ -1303,7 +1305,7 @@ func (a *Client) DisableSplitTest(params *DisableSplitTestParams, authInfo runti
 	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "disableSplitTest",
 		Method:             "POST",
-		PathPattern:        "/site/{site_id}/traffic_splits/{split_test_id}/unpublish",
+		PathPattern:        "/sites/{site_id}/traffic_splits/{split_test_id}/unpublish",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"https"},
@@ -1371,7 +1373,7 @@ func (a *Client) EnableSplitTest(params *EnableSplitTestParams, authInfo runtime
 	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "enableSplitTest",
 		Method:             "POST",
-		PathPattern:        "/site/{site_id}/traffic_splits/{split_test_id}/publish",
+		PathPattern:        "/sites/{site_id}/traffic_splits/{split_test_id}/publish",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"https"},
@@ -2119,7 +2121,7 @@ func (a *Client) GetSplitTest(params *GetSplitTestParams, authInfo runtime.Clien
 	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "getSplitTest",
 		Method:             "GET",
-		PathPattern:        "/site/{site_id}/traffic_splits/{split_test_id}",
+		PathPattern:        "/sites/{site_id}/traffic_splits/{split_test_id}",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"https"},
@@ -2153,7 +2155,7 @@ func (a *Client) GetSplitTests(params *GetSplitTestsParams, authInfo runtime.Cli
 	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "getSplitTests",
 		Method:             "GET",
-		PathPattern:        "/site/{site_id}/traffic_splits",
+		PathPattern:        "/sites/{site_id}/traffic_splits",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"https"},
@@ -3105,7 +3107,7 @@ func (a *Client) ShowServiceInstance(params *ShowServiceInstanceParams, authInfo
 	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "showServiceInstance",
 		Method:             "GET",
-		PathPattern:        "/sites/{site_id}/services/{addon}/instances",
+		PathPattern:        "/sites/{site_id}/services/{addon}/instances/{instance_id}",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"https"},
@@ -3264,6 +3266,46 @@ func (a *Client) TransferDNSZone(params *TransferDNSZoneParams, authInfo runtime
 }
 
 /*
+  UnlinkSiteRepo [Beta] Unlinks the repo from the site.
+
+This action will also:
+- Delete associated deploy keys
+- Delete outgoing webhooks for the repo
+- Delete the site's build hooks
+*/
+func (a *Client) UnlinkSiteRepo(params *UnlinkSiteRepoParams, authInfo runtime.ClientAuthInfoWriter) (*UnlinkSiteRepoOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewUnlinkSiteRepoParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "unlinkSiteRepo",
+		Method:             "PUT",
+		PathPattern:        "/sites/{site_id}/unlink_repo",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &UnlinkSiteRepoReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*UnlinkSiteRepoOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for unlinkSiteRepo: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
   UnlockDeploy unlock deploy API
 */
 func (a *Client) UnlockDeploy(params *UnlockDeployParams, authInfo runtime.ClientAuthInfoWriter) (*UnlockDeployOK, error) {
@@ -3377,7 +3419,7 @@ func (a *Client) UpdateServiceInstance(params *UpdateServiceInstanceParams, auth
 	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "updateServiceInstance",
 		Method:             "PUT",
-		PathPattern:        "/sites/{site_id}/services/{addon}/instances",
+		PathPattern:        "/sites/{site_id}/services/{addon}/instances/{instance_id}",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"https"},
@@ -3649,7 +3691,7 @@ func (a *Client) UpdateSplitTest(params *UpdateSplitTestParams, authInfo runtime
 	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "updateSplitTest",
 		Method:             "PUT",
-		PathPattern:        "/site/{site_id}/traffic_splits/{split_test_id}",
+		PathPattern:        "/sites/{site_id}/traffic_splits/{split_test_id}",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"https"},

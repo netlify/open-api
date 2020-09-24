@@ -46,9 +46,6 @@ type User struct {
 	// site count
 	SiteCount int64 `json:"site_count,omitempty"`
 
-	// support priority
-	SupportPriority int64 `json:"support_priority,omitempty"`
-
 	// uid
 	UID string `json:"uid,omitempty"`
 }

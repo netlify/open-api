@@ -62,6 +62,8 @@ type DeleteServiceInstanceParams struct {
 
 	/*Addon*/
 	Addon string
+	/*InstanceID*/
+	InstanceID string
 	/*SiteID*/
 	SiteID string
 
@@ -114,6 +116,17 @@ func (o *DeleteServiceInstanceParams) SetAddon(addon string) {
 	o.Addon = addon
 }
 
+// WithInstanceID adds the instanceID to the delete service instance params
+func (o *DeleteServiceInstanceParams) WithInstanceID(instanceID string) *DeleteServiceInstanceParams {
+	o.SetInstanceID(instanceID)
+	return o
+}
+
+// SetInstanceID adds the instanceId to the delete service instance params
+func (o *DeleteServiceInstanceParams) SetInstanceID(instanceID string) {
+	o.InstanceID = instanceID
+}
+
 // WithSiteID adds the siteID to the delete service instance params
 func (o *DeleteServiceInstanceParams) WithSiteID(siteID string) *DeleteServiceInstanceParams {
 	o.SetSiteID(siteID)
@@ -135,6 +148,11 @@ func (o *DeleteServiceInstanceParams) WriteToRequest(r runtime.ClientRequest, re
 
 	// path param addon
 	if err := r.SetPathParam("addon", o.Addon); err != nil {
+		return err
+	}
+
+	// path param instance_id
+	if err := r.SetPathParam("instance_id", o.InstanceID); err != nil {
 		return err
 	}
 
