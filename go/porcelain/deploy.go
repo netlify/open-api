@@ -311,7 +311,7 @@ func (n *Netlify) waitForState(ctx context.Context, d *models.Deploy, timeout ti
 		context.GetLogger(ctx).WithFields(logrus.Fields{
 			"deploy_id": d.ID,
 			"state":     resp.Payload.State,
-		}).Debug("Waiting until deploy ready")
+		}).Debugf("Waiting until deploy state in %s", states)
 
 		for _, state := range states {
 			if resp.Payload.State == state {
@@ -331,12 +331,22 @@ func (n *Netlify) waitForState(ctx context.Context, d *models.Deploy, timeout ti
 	return d, nil
 }
 
+// WaitUntilDeployReady blocks until the deploy is in the "prepared" or "ready" state.
 func (n *Netlify) WaitUntilDeployReady(ctx context.Context, d *models.Deploy, timeout time.Duration) (*models.Deploy, error) {
 	if timeout <= 0 {
 		timeout = preProcessingTimeout
 	}
 
 	return n.waitForState(ctx, d, timeout, "prepared", "ready")
+}
+
+// WaitUntilDeployLive blocks until the deploy is in the or "ready" state. At this point, the deploy is ready to recieve traffic.
+func (n *Netlify) WaitUntilDeployLive(ctx context.Context, d *models.Deploy, timeout time.Duration) (*models.Deploy, error) {
+	if timeout <= 0 {
+		timeout = preProcessingTimeout
+	}
+
+	return n.waitForState(ctx, d, timeout, "ready")
 }
 
 func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *deployFiles, observer DeployObserver, t uploadType, timeout time.Duration) error {
