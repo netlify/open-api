@@ -163,6 +163,8 @@ type ClientService interface {
 
 	ListPaymentMethodsForUser(params *ListPaymentMethodsForUserParams, authInfo runtime.ClientAuthInfoWriter) (*ListPaymentMethodsForUserOK, error)
 
+	ListServiceInstancesForSite(params *ListServiceInstancesForSiteParams, authInfo runtime.ClientAuthInfoWriter) (*ListServiceInstancesForSiteOK, error)
+
 	ListSiteAssets(params *ListSiteAssetsParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteAssetsOK, error)
 
 	ListSiteBuildHooks(params *ListSiteBuildHooksParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteBuildHooksOK, error)
@@ -195,7 +197,7 @@ type ClientService interface {
 
 	ShowService(params *ShowServiceParams, authInfo runtime.ClientAuthInfoWriter) (*ShowServiceOK, error)
 
-	ShowServiceInstance(params *ShowServiceInstanceParams, authInfo runtime.ClientAuthInfoWriter) (*ShowServiceInstanceCreated, error)
+	ShowServiceInstance(params *ShowServiceInstanceParams, authInfo runtime.ClientAuthInfoWriter) (*ShowServiceInstanceOK, error)
 
 	ShowServiceManifest(params *ShowServiceManifestParams, authInfo runtime.ClientAuthInfoWriter) (*ShowServiceManifestCreated, error)
 
@@ -2552,6 +2554,40 @@ func (a *Client) ListPaymentMethodsForUser(params *ListPaymentMethodsForUserPara
 }
 
 /*
+  ListServiceInstancesForSite list service instances for site API
+*/
+func (a *Client) ListServiceInstancesForSite(params *ListServiceInstancesForSiteParams, authInfo runtime.ClientAuthInfoWriter) (*ListServiceInstancesForSiteOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewListServiceInstancesForSiteParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "listServiceInstancesForSite",
+		Method:             "GET",
+		PathPattern:        "/sites/{site_id}/service-instances",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &ListServiceInstancesForSiteReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*ListServiceInstancesForSiteOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*ListServiceInstancesForSiteDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
   ListSiteAssets list site assets API
 */
 func (a *Client) ListSiteAssets(params *ListSiteAssetsParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteAssetsOK, error) {
@@ -3098,7 +3134,7 @@ func (a *Client) ShowService(params *ShowServiceParams, authInfo runtime.ClientA
 /*
   ShowServiceInstance show service instance API
 */
-func (a *Client) ShowServiceInstance(params *ShowServiceInstanceParams, authInfo runtime.ClientAuthInfoWriter) (*ShowServiceInstanceCreated, error) {
+func (a *Client) ShowServiceInstance(params *ShowServiceInstanceParams, authInfo runtime.ClientAuthInfoWriter) (*ShowServiceInstanceOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewShowServiceInstanceParams()
@@ -3120,7 +3156,7 @@ func (a *Client) ShowServiceInstance(params *ShowServiceInstanceParams, authInfo
 	if err != nil {
 		return nil, err
 	}
-	success, ok := result.(*ShowServiceInstanceCreated)
+	success, ok := result.(*ShowServiceInstanceOK)
 	if ok {
 		return success, nil
 	}

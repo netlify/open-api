@@ -48,7 +48,7 @@ func NewUpdateServiceInstanceNoContent() *UpdateServiceInstanceNoContent {
 
 /*UpdateServiceInstanceNoContent handles this case with default header values.
 
-Created
+No Content
 */
 type UpdateServiceInstanceNoContent struct {
 }
