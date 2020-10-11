@@ -51,20 +51,20 @@ func NewShowServiceOK() *ShowServiceOK {
 services
 */
 type ShowServiceOK struct {
-	Payload *models.ServiceInstance
+	Payload *models.Service
 }
 
 func (o *ShowServiceOK) Error() string {
 	return fmt.Sprintf("[GET /services/{addonName}][%d] showServiceOK  %+v", 200, o.Payload)
 }
 
-func (o *ShowServiceOK) GetPayload() *models.ServiceInstance {
+func (o *ShowServiceOK) GetPayload() *models.Service {
 	return o.Payload
 }
 
 func (o *ShowServiceOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.ServiceInstance)
+	o.Payload = new(models.Service)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
