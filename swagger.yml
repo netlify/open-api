@@ -834,6 +834,20 @@ paths:
               $ref: '#/definitions/dnsZone'
         default:
           $ref: '#/responses/error'
+  /sites/{site_id}/rollback:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+    post:
+      operationId: rollbackSiteDeploy
+      tags: [deploy]
+      responses:
+        '204':
+          description: No content
+        default:
+          $ref: '#/responses/error'
   /deploys/{deploy_id}:
     get:
       operationId: getDeploy

@@ -195,6 +195,8 @@ type ClientService interface {
 
 	RestoreSiteDeploy(params *RestoreSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*RestoreSiteDeployCreated, error)
 
+	RollbackSiteDeploy(params *RollbackSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*RollbackSiteDeployNoContent, error)
+
 	ShowService(params *ShowServiceParams, authInfo runtime.ClientAuthInfoWriter) (*ShowServiceOK, error)
 
 	ShowServiceInstance(params *ShowServiceInstanceParams, authInfo runtime.ClientAuthInfoWriter) (*ShowServiceInstanceOK, error)
@@ -3094,6 +3096,40 @@ func (a *Client) RestoreSiteDeploy(params *RestoreSiteDeployParams, authInfo run
 	}
 	// unexpected success response
 	unexpectedSuccess := result.(*RestoreSiteDeployDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+  RollbackSiteDeploy rollback site deploy API
+*/
+func (a *Client) RollbackSiteDeploy(params *RollbackSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*RollbackSiteDeployNoContent, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewRollbackSiteDeployParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "rollbackSiteDeploy",
+		Method:             "POST",
+		PathPattern:        "/sites/{site_id}/rollback",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &RollbackSiteDeployReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*RollbackSiteDeployNoContent)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*RollbackSiteDeployDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
