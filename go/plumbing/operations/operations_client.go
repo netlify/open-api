@@ -3100,9 +3100,7 @@ func (a *Client) RestoreSiteDeploy(params *RestoreSiteDeployParams, authInfo run
 }
 
 /*
-  RollbackSiteDeploy rollbacks production deploys
-
-  Revert the production deploy for a site to the previous successful production deploy.
+  RollbackSiteDeploy rollback site deploy API
 */
 func (a *Client) RollbackSiteDeploy(params *RollbackSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*RollbackSiteDeployNoContent, error) {
 	// TODO: Validate the params before sending

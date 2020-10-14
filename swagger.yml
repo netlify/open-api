@@ -841,9 +841,6 @@ paths:
         in: path
         required: true
     post:
-      summary: Rollback production deploys
-      description: >-
-        Revert the production deploy for a site to the previous successful production deploy.
       operationId: rollbackSiteDeploy
       tags: [deploy]
       responses:
