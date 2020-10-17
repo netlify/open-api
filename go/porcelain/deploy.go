@@ -261,6 +261,10 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 		deploy = resp.Payload
 	}
 
+	if deploy.State == "error" {
+		return nil, fmt.Errorf("Failed to prepare deploy: %s", deploy.ErrorMessage)
+	}
+
 	if n.overCommitted(options.files) {
 		var err error
 		deploy, err = n.WaitUntilDeployReady(ctx, deploy, options.PreProcessTimeout)
