@@ -11,7 +11,6 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -184,7 +183,7 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 		largeMediaEnabled = deploy.SiteCapabilities.LargeMediaEnabled
 	}
 
-	context.GetLogger(ctx).Infof("Getting files info with large media flag: %v", largeMediaEnabled)
+	context.GetLogger(ctx).Infof("Getting files info with large media floog: %v", largeMediaEnabled)
 	files, err := walk(options.Dir, options.Observer, largeMediaEnabled)
 	if err != nil {
 		if options.Observer != nil {
@@ -262,7 +261,7 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 		deploy = resp.Payload
 	}
 
-	log.Printf("Deploy state: %s", deploy.State)
+	context.GetLogger(ctx).Infof("Deploy state: %v", deploy.State)
 	if deploy.State == "error" {
 		return nil, fmt.Errorf("Failed to prepare deploy: %s", deploy.ErrorMessage)
 	}
