@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -261,6 +262,7 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 		deploy = resp.Payload
 	}
 
+	log.Printf("Deploy state: %s", deploy.State)
 	if deploy.State == "error" {
 		return nil, fmt.Errorf("Failed to prepare deploy: %s", deploy.ErrorMessage)
 	}
