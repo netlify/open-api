@@ -1124,6 +1124,26 @@ paths:
               $ref: '#/definitions/hookType'
         default:
           $ref: '#/responses/error'
+  /oauth/token?grant_type=refresh_token:
+    post:
+      operationId: refreshToken
+      tags: [accessToken]
+      parameters:
+        - name: refresh_token
+          type: string
+          in: query
+          required: true
+        - name: client_id
+          type: string
+          in: query
+          required: true
+      responses:
+        '200':
+          description: ok
+          schema:
+            $ref: '#/definitions/accessToken'
+        default:
+          $ref: '#/responses/error'
   /oauth/tickets:
     post:
       operationId: createTicket
