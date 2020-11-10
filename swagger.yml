@@ -985,6 +985,7 @@ paths:
   /forms:
     get:
       operationId: listForms
+      deprecated: true
       tags: [form]
       parameters:
         - name: site_id
