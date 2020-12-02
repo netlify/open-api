@@ -153,8 +153,6 @@ type ClientService interface {
 
 	ListFormSubmissions(params *ListFormSubmissionsParams, authInfo runtime.ClientAuthInfoWriter) (*ListFormSubmissionsOK, error)
 
-	ListForms(params *ListFormsParams, authInfo runtime.ClientAuthInfoWriter) (*ListFormsOK, error)
-
 	ListHookTypes(params *ListHookTypesParams, authInfo runtime.ClientAuthInfoWriter) (*ListHookTypesOK, error)
 
 	ListHooksBySiteID(params *ListHooksBySiteIDParams, authInfo runtime.ClientAuthInfoWriter) (*ListHooksBySiteIDOK, error)
@@ -2382,40 +2380,6 @@ func (a *Client) ListFormSubmissions(params *ListFormSubmissionsParams, authInfo
 	}
 	// unexpected success response
 	unexpectedSuccess := result.(*ListFormSubmissionsDefault)
-	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
-}
-
-/*
-  ListForms list forms API
-*/
-func (a *Client) ListForms(params *ListFormsParams, authInfo runtime.ClientAuthInfoWriter) (*ListFormsOK, error) {
-	// TODO: Validate the params before sending
-	if params == nil {
-		params = NewListFormsParams()
-	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
-		ID:                 "listForms",
-		Method:             "GET",
-		PathPattern:        "/forms",
-		ProducesMediaTypes: []string{"application/json"},
-		ConsumesMediaTypes: []string{"application/json"},
-		Schemes:            []string{"https"},
-		Params:             params,
-		Reader:             &ListFormsReader{formats: a.formats},
-		AuthInfo:           authInfo,
-		Context:            params.Context,
-		Client:             params.HTTPClient,
-	})
-	if err != nil {
-		return nil, err
-	}
-	success, ok := result.(*ListFormsOK)
-	if ok {
-		return success, nil
-	}
-	// unexpected success response
-	unexpectedSuccess := result.(*ListFormsDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
