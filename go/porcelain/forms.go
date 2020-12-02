@@ -9,7 +9,7 @@ import (
 // ListFormsBySiteId lists the forms of a particular site
 func (n *Netlify) ListFormsBySiteId(ctx context.Context, siteID string) ([]*models.Form, error) {
 	authInfo := context.GetAuthInfo(ctx)
-	resp, err := n.Netlify.Operations.ListSiteForms(operations.NewListSiteFormsParams().WithSiteID(&siteID), authInfo)
+	resp, err := n.Netlify.Operations.ListSiteForms(operations.NewListSiteFormsParams().WithSiteID(siteID), authInfo)
 	if err != nil {
 		return nil, err
 	}
