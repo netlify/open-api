@@ -582,7 +582,11 @@ func bundle(functionDir string, observer DeployObserver) (*deployFiles, error) {
 
 		switch {
 		case zipFile(i):
-			file, err := newFunctionFile(filePath, i, jsRuntime, observer)
+			runtime, err := readZipRuntime(filePath)
+			if err != nil {
+				return nil, err
+			}
+			file, err := newFunctionFile(filePath, i, runtime, observer)
 			if err != nil {
 				return nil, err
 			}
@@ -607,6 +611,43 @@ func bundle(functionDir string, observer DeployObserver) (*deployFiles, error) {
 	}
 
 	return functions, nil
+}
+
+func readZipRuntime(filePath string) (string, error) {
+	zf, err := zip.OpenReader(filePath)
+	if err != nil {
+		return "", err
+	}
+	defer zf.Close()
+
+	for _, file := range zf.File {
+		if file.Name == "netlify-toolchain" {
+			fc, err := file.Open()
+			if err != nil {
+				// Ignore any errors and choose the default runtime.
+				// This preserves the current behavior in this library.
+				return jsRuntime, nil
+			}
+			defer fc.Close()
+
+			reader := bufio.NewReader(fc)
+			for {
+				line, err := reader.ReadString('\n')
+				if err != nil && err != io.EOF {
+					// Ignore any errors and choose the default runtime.
+					// This preserves the current behavior in this library.
+					return jsRuntime, nil
+				}
+
+				if strings.HasPrefix(line, "runtime=") {
+					split := strings.SplitN(line, "=", 2)
+					return split[1], nil
+				}
+			}
+		}
+	}
+
+	return jsRuntime, nil
 }
 
 func newFunctionFile(filePath string, i os.FileInfo, runtime string, observer DeployObserver) (*FileBundle, error) {
