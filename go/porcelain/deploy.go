@@ -8,6 +8,7 @@ import (
 	"crypto/sha256"
 	"debug/elf"
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -101,6 +102,10 @@ type FileBundle struct {
 	// Path OR Buffer should be populated
 	Path   string
 	Buffer io.ReadSeeker
+}
+
+type toolchainSpec struct {
+	Runtime string `json:"runtime"`
 }
 
 func (f *FileBundle) Read(p []byte) (n int, err error) {
@@ -582,7 +587,11 @@ func bundle(functionDir string, observer DeployObserver) (*deployFiles, error) {
 
 		switch {
 		case zipFile(i):
-			file, err := newFunctionFile(filePath, i, jsRuntime, observer)
+			runtime, err := readZipRuntime(filePath)
+			if err != nil {
+				return nil, err
+			}
+			file, err := newFunctionFile(filePath, i, runtime, observer)
 			if err != nil {
 				return nil, err
 			}
@@ -607,6 +616,36 @@ func bundle(functionDir string, observer DeployObserver) (*deployFiles, error) {
 	}
 
 	return functions, nil
+}
+
+func readZipRuntime(filePath string) (string, error) {
+	zf, err := zip.OpenReader(filePath)
+	if err != nil {
+		return "", err
+	}
+	defer zf.Close()
+
+	for _, file := range zf.File {
+		if file.Name == "netlify-toolchain" {
+			fc, err := file.Open()
+			if err != nil {
+				// Ignore any errors and choose the default runtime.
+				// This preserves the current behavior in this library.
+				return jsRuntime, nil
+			}
+			defer fc.Close()
+
+			var tc toolchainSpec
+			if err := json.NewDecoder(fc).Decode(&tc); err != nil {
+				// Ignore any errors and choose the default runtime.
+				// This preserves the current behavior in this library.
+				return jsRuntime, nil
+			}
+			return tc.Runtime, nil
+		}
+	}
+
+	return jsRuntime, nil
 }
 
 func newFunctionFile(filePath string, i os.FileInfo, runtime string, observer DeployObserver) (*FileBundle, error) {

@@ -130,3 +130,14 @@ func TestConcurrentFileUpload(t *testing.T) {
 		}()
 	}
 }
+
+func TestReadZipRuntime(t *testing.T) {
+	runtime, err := readZipRuntime("../internal/data/hello-rs-function-test.zip")
+	if err != nil {
+		t.Fatalf("unexpected error reading zip file: %v", err)
+	}
+
+	if runtime != "rs" {
+		t.Fatalf("unexpected runtime value, expected='rs', got='%s'", runtime)
+	}
+}
