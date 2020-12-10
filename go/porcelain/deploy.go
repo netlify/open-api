@@ -641,7 +641,9 @@ func readZipRuntime(filePath string) (string, error) {
 
 				if strings.HasPrefix(line, "runtime=") {
 					split := strings.SplitN(line, "=", 2)
-					return split[1], nil
+					if len(split) == 2 && split[1] != "" {
+						return split[1], nil
+					}
 				}
 			}
 		}
