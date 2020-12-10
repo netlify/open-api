@@ -982,24 +982,6 @@ paths:
             $ref: '#/definitions/pluginRun'
         default:
           $ref: '#/responses/error'
-  /forms:
-    get:
-      operationId: listForms
-      deprecated: true
-      tags: [form]
-      parameters:
-        - name: site_id
-          in: query
-          type: string
-      responses:
-        '200':
-          description: OK
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/form'
-        default:
-          $ref: '#/responses/error'
   /forms/{form_id}/submissions:
     get:
       operationId: listFormSubmissions
