@@ -8,6 +8,7 @@ import (
 	"crypto/sha256"
 	"debug/elf"
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -101,6 +102,10 @@ type FileBundle struct {
 	// Path OR Buffer should be populated
 	Path   string
 	Buffer io.ReadSeeker
+}
+
+type toolchainSpec struct {
+	Runtime string `json:"runtime"`
 }
 
 func (f *FileBundle) Read(p []byte) (n int, err error) {
@@ -630,22 +635,13 @@ func readZipRuntime(filePath string) (string, error) {
 			}
 			defer fc.Close()
 
-			reader := bufio.NewReader(fc)
-			for {
-				line, err := reader.ReadString('\n')
-				if err != nil && err != io.EOF {
-					// Ignore any errors and choose the default runtime.
-					// This preserves the current behavior in this library.
-					return jsRuntime, nil
-				}
-
-				if strings.HasPrefix(line, "runtime=") {
-					split := strings.SplitN(line, "=", 2)
-					if len(split) == 2 && split[1] != "" {
-						return split[1], nil
-					}
-				}
+			var tc toolchainSpec
+			if err := json.NewDecoder(fc).Decode(&tc); err != nil {
+				// Ignore any errors and choose the default runtime.
+				// This preserves the current behavior in this library.
+				return jsRuntime, nil
 			}
+			return tc.Runtime, nil
 		}
 	}
 

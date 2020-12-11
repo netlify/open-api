@@ -132,7 +132,7 @@ func TestConcurrentFileUpload(t *testing.T) {
 }
 
 func TestReadZipRuntime(t *testing.T) {
-	runtime, err := readZipRuntime("../internal/data/hello-world.zip")
+	runtime, err := readZipRuntime("../internal/data/hello-rs-function-test.zip")
 	if err != nil {
 		t.Fatalf("unexpected error reading zip file: %v", err)
 	}
