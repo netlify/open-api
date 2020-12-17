@@ -804,6 +804,24 @@ paths:
           description: No content
         default:
           $ref: '#/responses/error'
+  /{account_id}/builds/status:
+    parameters:
+      - name: account_id
+        type: string
+        in: path
+        required: true
+    get:
+      operationId: getAccountBuildStatus
+      tags: [build]
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/buildStatus'
+        default:
+          $ref: '#/responses/error'
   /sites/{site_id}/dns:
     parameters:
       - name: site_id
@@ -2351,6 +2369,39 @@ definitions:
         type: object
       branch:
         type: string
+  buildStatus:
+    type: object
+    properties:
+      active:
+        type: integer
+      pending_concurrency:
+        type: integer
+      enqueued:
+        type: integer
+      build_count:
+        type: integer
+      minutes:
+        type: object
+        properties:
+          current:
+            type: integer
+          current_average_sec:
+            type: integer
+          previous:
+            type: integer
+          period_start_date:
+            type: string
+            format: dateTime
+          period_end_date:
+            type: string
+            format: dateTime
+          last_updated_at:
+            type: string
+            format: dateTime
+          included_minutes:
+            type: string
+          included_minutes_with_packs:
+            type: string
   build:
     type: object
     properties:
