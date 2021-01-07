@@ -14,6 +14,7 @@ import (
 	"github.com/go-openapi/runtime"
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
+	"github.com/go-openapi/swag"
 )
 
 // NewListSiteBuildsParams creates a new ListSiteBuildsParams object
@@ -60,6 +61,10 @@ for the list site builds operation typically these are written to a http.Request
 */
 type ListSiteBuildsParams struct {
 
+	/*Page*/
+	Page *int32
+	/*PerPage*/
+	PerPage *int32
 	/*SiteID*/
 	SiteID string
 
@@ -101,6 +106,28 @@ func (o *ListSiteBuildsParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
+// WithPage adds the page to the list site builds params
+func (o *ListSiteBuildsParams) WithPage(page *int32) *ListSiteBuildsParams {
+	o.SetPage(page)
+	return o
+}
+
+// SetPage adds the page to the list site builds params
+func (o *ListSiteBuildsParams) SetPage(page *int32) {
+	o.Page = page
+}
+
+// WithPerPage adds the perPage to the list site builds params
+func (o *ListSiteBuildsParams) WithPerPage(perPage *int32) *ListSiteBuildsParams {
+	o.SetPerPage(perPage)
+	return o
+}
+
+// SetPerPage adds the perPage to the list site builds params
+func (o *ListSiteBuildsParams) SetPerPage(perPage *int32) {
+	o.PerPage = perPage
+}
+
 // WithSiteID adds the siteID to the list site builds params
 func (o *ListSiteBuildsParams) WithSiteID(siteID string) *ListSiteBuildsParams {
 	o.SetSiteID(siteID)
@@ -119,6 +146,38 @@ func (o *ListSiteBuildsParams) WriteToRequest(r runtime.ClientRequest, reg strfm
 		return err
 	}
 	var res []error
+
+	if o.Page != nil {
+
+		// query param page
+		var qrPage int32
+		if o.Page != nil {
+			qrPage = *o.Page
+		}
+		qPage := swag.FormatInt32(qrPage)
+		if qPage != "" {
+			if err := r.SetQueryParam("page", qPage); err != nil {
+				return err
+			}
+		}
+
+	}
+
+	if o.PerPage != nil {
+
+		// query param per_page
+		var qrPerPage int32
+		if o.PerPage != nil {
+			qrPerPage = *o.PerPage
+		}
+		qPerPage := swag.FormatInt32(qrPerPage)
+		if qPerPage != "" {
+			if err := r.SetQueryParam("per_page", qPerPage); err != nil {
+				return err
+			}
+		}
+
+	}
 
 	// path param site_id
 	if err := r.SetPathParam("site_id", o.SiteID); err != nil {

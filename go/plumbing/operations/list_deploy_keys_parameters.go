@@ -14,12 +14,13 @@ import (
 	"github.com/go-openapi/runtime"
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
+	"github.com/go-openapi/swag"
 )
 
 // NewListDeployKeysParams creates a new ListDeployKeysParams object
 // with the default values initialized.
 func NewListDeployKeysParams() *ListDeployKeysParams {
-
+	var ()
 	return &ListDeployKeysParams{
 
 		timeout: cr.DefaultTimeout,
@@ -29,7 +30,7 @@ func NewListDeployKeysParams() *ListDeployKeysParams {
 // NewListDeployKeysParamsWithTimeout creates a new ListDeployKeysParams object
 // with the default values initialized, and the ability to set a timeout on a request
 func NewListDeployKeysParamsWithTimeout(timeout time.Duration) *ListDeployKeysParams {
-
+	var ()
 	return &ListDeployKeysParams{
 
 		timeout: timeout,
@@ -39,7 +40,7 @@ func NewListDeployKeysParamsWithTimeout(timeout time.Duration) *ListDeployKeysPa
 // NewListDeployKeysParamsWithContext creates a new ListDeployKeysParams object
 // with the default values initialized, and the ability to set a context for a request
 func NewListDeployKeysParamsWithContext(ctx context.Context) *ListDeployKeysParams {
-
+	var ()
 	return &ListDeployKeysParams{
 
 		Context: ctx,
@@ -49,7 +50,7 @@ func NewListDeployKeysParamsWithContext(ctx context.Context) *ListDeployKeysPara
 // NewListDeployKeysParamsWithHTTPClient creates a new ListDeployKeysParams object
 // with the default values initialized, and the ability to set a custom HTTPClient for a request
 func NewListDeployKeysParamsWithHTTPClient(client *http.Client) *ListDeployKeysParams {
-
+	var ()
 	return &ListDeployKeysParams{
 		HTTPClient: client,
 	}
@@ -59,6 +60,12 @@ func NewListDeployKeysParamsWithHTTPClient(client *http.Client) *ListDeployKeysP
 for the list deploy keys operation typically these are written to a http.Request
 */
 type ListDeployKeysParams struct {
+
+	/*Page*/
+	Page *int32
+	/*PerPage*/
+	PerPage *int32
+
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
@@ -97,6 +104,28 @@ func (o *ListDeployKeysParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
+// WithPage adds the page to the list deploy keys params
+func (o *ListDeployKeysParams) WithPage(page *int32) *ListDeployKeysParams {
+	o.SetPage(page)
+	return o
+}
+
+// SetPage adds the page to the list deploy keys params
+func (o *ListDeployKeysParams) SetPage(page *int32) {
+	o.Page = page
+}
+
+// WithPerPage adds the perPage to the list deploy keys params
+func (o *ListDeployKeysParams) WithPerPage(perPage *int32) *ListDeployKeysParams {
+	o.SetPerPage(perPage)
+	return o
+}
+
+// SetPerPage adds the perPage to the list deploy keys params
+func (o *ListDeployKeysParams) SetPerPage(perPage *int32) {
+	o.PerPage = perPage
+}
+
 // WriteToRequest writes these params to a swagger request
 func (o *ListDeployKeysParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -104,6 +133,38 @@ func (o *ListDeployKeysParams) WriteToRequest(r runtime.ClientRequest, reg strfm
 		return err
 	}
 	var res []error
+
+	if o.Page != nil {
+
+		// query param page
+		var qrPage int32
+		if o.Page != nil {
+			qrPage = *o.Page
+		}
+		qPage := swag.FormatInt32(qrPage)
+		if qPage != "" {
+			if err := r.SetQueryParam("page", qPage); err != nil {
+				return err
+			}
+		}
+
+	}
+
+	if o.PerPage != nil {
+
+		// query param per_page
+		var qrPerPage int32
+		if o.PerPage != nil {
+			qrPerPage = *o.PerPage
+		}
+		qPerPage := swag.FormatInt32(qrPerPage)
+		if qPerPage != "" {
+			if err := r.SetQueryParam("per_page", qPerPage); err != nil {
+				return err
+			}
+		}
+
+	}
 
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)

@@ -63,6 +63,8 @@ paths:
           in: query
           type: string
           enum: ['all', 'owner', 'guest']
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/perPage'
       responses:
         '200':
           description: OK
@@ -184,6 +186,8 @@ paths:
           type: string
           in: path
           required: true
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/perPage'
       responses:
         '200':
           description: OK
@@ -220,6 +224,8 @@ paths:
           type: string
           in: path
           required: true
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/perPage'
       responses:
         '200':
           description: OK
@@ -238,6 +244,8 @@ paths:
           type: string
           in: path
           required: true
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/perPage'
       responses:
         '200':
           description: OK
@@ -256,6 +264,9 @@ paths:
     get:
       operationId: listSiteAssets
       tags: [asset]
+      parameters:
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/perPage'
       responses:
         '200':
           description: OK
@@ -384,6 +395,9 @@ paths:
     get:
       operationId: listSiteSnippets
       tags: [snippet]
+      parameters:
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/perPage'
       responses:
         '200':
           description: OK
@@ -494,6 +508,9 @@ paths:
     get:
       operationId: listSiteBuildHooks
       tags: [buildHook]
+      parameters:
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/perPage'
       responses:
         '200':
           description: OK
@@ -574,6 +591,9 @@ paths:
     get:
       operationId: listSiteDeploys
       tags: [deploy]
+      parameters:
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/perPage'
       responses:
         '200':
           description: OK
@@ -691,6 +711,9 @@ paths:
     get:
       operationId: listSiteBuilds
       tags: [build]
+      parameters:
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/perPage'
       responses:
         '200':
           description: OK
@@ -719,6 +742,9 @@ paths:
     get:
       operationId: listSiteDeployedBranches
       tags: [deployedBranch]
+      parameters:
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/perPage'
       responses:
         '200':
           description: OK
@@ -991,6 +1017,8 @@ paths:
           type: string
           in: path
           required: true
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/perPage'
       responses:
         '200':
           description: OK
@@ -1009,6 +1037,8 @@ paths:
           in: query
           type: string
           required: true
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/perPage'
       responses:
         '200':
           description: OK
@@ -1098,6 +1128,9 @@ paths:
     get:
       operationId: listHookTypes
       tags: [hookType]
+      parameters:
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/perPage'
       responses:
         '200':
           description: OK
@@ -1159,6 +1192,9 @@ paths:
     get:
       operationId: listDeployKeys
       tags: [deployKey]
+      parameters:
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/perPage'
       responses:
         '200':
           description: OK
@@ -1240,6 +1276,8 @@ paths:
           in: path
           type: string
           required: true
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/perPage'
       responses:
         '200':
           description: OK
@@ -1258,6 +1296,9 @@ paths:
     get:
       operationId: listMembersForAccount # an account represents a team or a user
       tags: [member]
+      parameters:
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/perPage'
       responses:
         '200':
           description: OK
@@ -1292,6 +1333,9 @@ paths:
     get:
       operationId: listPaymentMethodsForUser
       tags: [paymentMethod]
+      parameters:
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/perPage'
       responses:
         '200':
           description: OK
@@ -1305,6 +1349,9 @@ paths:
     get:
       operationId: listAccountTypesForUser
       tags: [accountType]
+      parameters:
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/perPage'
       responses:
         '200':
           description: OK
@@ -1318,6 +1365,9 @@ paths:
     get:
       operationId: listAccountsForUser
       tags: [accountMembership]
+      parameters:
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/perPage'
       responses:
         '200':
           description: OK
@@ -1400,6 +1450,8 @@ paths:
         - name: log_type
           type: string
           in: query
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/perPage'
       responses:
         '200':
           description: OK
@@ -1424,6 +1476,8 @@ paths:
         - name: query
           type: string
           in: query
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/perPage'
       responses:
         '200':
           description: OK
@@ -1452,6 +1506,9 @@ paths:
     get:
       operationId: listServiceInstancesForSite
       tags: [serviceInstance]
+      parameters:
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/perPage'
       responses:
         '200':
           description: OK
@@ -2858,6 +2915,19 @@ definitions:
       message:
         type: string
         x-nullable: false
+parameters:
+  page:
+    type: integer
+    format: int32
+    name: page
+    required: false
+    in: query
+  perPage:
+    type: integer
+    format: int32
+    name: per_page
+    required: false
+    in: query
 x-tagGroups:
   - name: OAuth
     tags:

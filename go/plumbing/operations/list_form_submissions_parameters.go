@@ -14,6 +14,7 @@ import (
 	"github.com/go-openapi/runtime"
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
+	"github.com/go-openapi/swag"
 )
 
 // NewListFormSubmissionsParams creates a new ListFormSubmissionsParams object
@@ -62,6 +63,10 @@ type ListFormSubmissionsParams struct {
 
 	/*FormID*/
 	FormID string
+	/*Page*/
+	Page *int32
+	/*PerPage*/
+	PerPage *int32
 
 	timeout    time.Duration
 	Context    context.Context
@@ -112,6 +117,28 @@ func (o *ListFormSubmissionsParams) SetFormID(formID string) {
 	o.FormID = formID
 }
 
+// WithPage adds the page to the list form submissions params
+func (o *ListFormSubmissionsParams) WithPage(page *int32) *ListFormSubmissionsParams {
+	o.SetPage(page)
+	return o
+}
+
+// SetPage adds the page to the list form submissions params
+func (o *ListFormSubmissionsParams) SetPage(page *int32) {
+	o.Page = page
+}
+
+// WithPerPage adds the perPage to the list form submissions params
+func (o *ListFormSubmissionsParams) WithPerPage(perPage *int32) *ListFormSubmissionsParams {
+	o.SetPerPage(perPage)
+	return o
+}
+
+// SetPerPage adds the perPage to the list form submissions params
+func (o *ListFormSubmissionsParams) SetPerPage(perPage *int32) {
+	o.PerPage = perPage
+}
+
 // WriteToRequest writes these params to a swagger request
 func (o *ListFormSubmissionsParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -123,6 +150,38 @@ func (o *ListFormSubmissionsParams) WriteToRequest(r runtime.ClientRequest, reg 
 	// path param form_id
 	if err := r.SetPathParam("form_id", o.FormID); err != nil {
 		return err
+	}
+
+	if o.Page != nil {
+
+		// query param page
+		var qrPage int32
+		if o.Page != nil {
+			qrPage = *o.Page
+		}
+		qPage := swag.FormatInt32(qrPage)
+		if qPage != "" {
+			if err := r.SetQueryParam("page", qPage); err != nil {
+				return err
+			}
+		}
+
+	}
+
+	if o.PerPage != nil {
+
+		// query param per_page
+		var qrPerPage int32
+		if o.PerPage != nil {
+			qrPerPage = *o.PerPage
+		}
+		qPerPage := swag.FormatInt32(qrPerPage)
+		if qPerPage != "" {
+			if err := r.SetQueryParam("per_page", qPerPage); err != nil {
+				return err
+			}
+		}
+
 	}
 
 	if len(res) > 0 {

@@ -14,12 +14,13 @@ import (
 	"github.com/go-openapi/runtime"
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
+	"github.com/go-openapi/swag"
 )
 
 // NewListHookTypesParams creates a new ListHookTypesParams object
 // with the default values initialized.
 func NewListHookTypesParams() *ListHookTypesParams {
-
+	var ()
 	return &ListHookTypesParams{
 
 		timeout: cr.DefaultTimeout,
@@ -29,7 +30,7 @@ func NewListHookTypesParams() *ListHookTypesParams {
 // NewListHookTypesParamsWithTimeout creates a new ListHookTypesParams object
 // with the default values initialized, and the ability to set a timeout on a request
 func NewListHookTypesParamsWithTimeout(timeout time.Duration) *ListHookTypesParams {
-
+	var ()
 	return &ListHookTypesParams{
 
 		timeout: timeout,
@@ -39,7 +40,7 @@ func NewListHookTypesParamsWithTimeout(timeout time.Duration) *ListHookTypesPara
 // NewListHookTypesParamsWithContext creates a new ListHookTypesParams object
 // with the default values initialized, and the ability to set a context for a request
 func NewListHookTypesParamsWithContext(ctx context.Context) *ListHookTypesParams {
-
+	var ()
 	return &ListHookTypesParams{
 
 		Context: ctx,
@@ -49,7 +50,7 @@ func NewListHookTypesParamsWithContext(ctx context.Context) *ListHookTypesParams
 // NewListHookTypesParamsWithHTTPClient creates a new ListHookTypesParams object
 // with the default values initialized, and the ability to set a custom HTTPClient for a request
 func NewListHookTypesParamsWithHTTPClient(client *http.Client) *ListHookTypesParams {
-
+	var ()
 	return &ListHookTypesParams{
 		HTTPClient: client,
 	}
@@ -59,6 +60,12 @@ func NewListHookTypesParamsWithHTTPClient(client *http.Client) *ListHookTypesPar
 for the list hook types operation typically these are written to a http.Request
 */
 type ListHookTypesParams struct {
+
+	/*Page*/
+	Page *int32
+	/*PerPage*/
+	PerPage *int32
+
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
@@ -97,6 +104,28 @@ func (o *ListHookTypesParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
+// WithPage adds the page to the list hook types params
+func (o *ListHookTypesParams) WithPage(page *int32) *ListHookTypesParams {
+	o.SetPage(page)
+	return o
+}
+
+// SetPage adds the page to the list hook types params
+func (o *ListHookTypesParams) SetPage(page *int32) {
+	o.Page = page
+}
+
+// WithPerPage adds the perPage to the list hook types params
+func (o *ListHookTypesParams) WithPerPage(perPage *int32) *ListHookTypesParams {
+	o.SetPerPage(perPage)
+	return o
+}
+
+// SetPerPage adds the perPage to the list hook types params
+func (o *ListHookTypesParams) SetPerPage(perPage *int32) {
+	o.PerPage = perPage
+}
+
 // WriteToRequest writes these params to a swagger request
 func (o *ListHookTypesParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -104,6 +133,38 @@ func (o *ListHookTypesParams) WriteToRequest(r runtime.ClientRequest, reg strfmt
 		return err
 	}
 	var res []error
+
+	if o.Page != nil {
+
+		// query param page
+		var qrPage int32
+		if o.Page != nil {
+			qrPage = *o.Page
+		}
+		qPage := swag.FormatInt32(qrPage)
+		if qPage != "" {
+			if err := r.SetQueryParam("page", qPage); err != nil {
+				return err
+			}
+		}
+
+	}
+
+	if o.PerPage != nil {
+
+		// query param per_page
+		var qrPerPage int32
+		if o.PerPage != nil {
+			qrPerPage = *o.PerPage
+		}
+		qPerPage := swag.FormatInt32(qrPerPage)
+		if qPerPage != "" {
+			if err := r.SetQueryParam("per_page", qPerPage); err != nil {
+				return err
+			}
+		}
+
+	}
 
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)

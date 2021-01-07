@@ -14,6 +14,7 @@ import (
 	"github.com/go-openapi/runtime"
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
+	"github.com/go-openapi/swag"
 )
 
 // NewListSiteDeployedBranchesParams creates a new ListSiteDeployedBranchesParams object
@@ -60,6 +61,10 @@ for the list site deployed branches operation typically these are written to a h
 */
 type ListSiteDeployedBranchesParams struct {
 
+	/*Page*/
+	Page *int32
+	/*PerPage*/
+	PerPage *int32
 	/*SiteID*/
 	SiteID string
 
@@ -101,6 +106,28 @@ func (o *ListSiteDeployedBranchesParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
+// WithPage adds the page to the list site deployed branches params
+func (o *ListSiteDeployedBranchesParams) WithPage(page *int32) *ListSiteDeployedBranchesParams {
+	o.SetPage(page)
+	return o
+}
+
+// SetPage adds the page to the list site deployed branches params
+func (o *ListSiteDeployedBranchesParams) SetPage(page *int32) {
+	o.Page = page
+}
+
+// WithPerPage adds the perPage to the list site deployed branches params
+func (o *ListSiteDeployedBranchesParams) WithPerPage(perPage *int32) *ListSiteDeployedBranchesParams {
+	o.SetPerPage(perPage)
+	return o
+}
+
+// SetPerPage adds the perPage to the list site deployed branches params
+func (o *ListSiteDeployedBranchesParams) SetPerPage(perPage *int32) {
+	o.PerPage = perPage
+}
+
 // WithSiteID adds the siteID to the list site deployed branches params
 func (o *ListSiteDeployedBranchesParams) WithSiteID(siteID string) *ListSiteDeployedBranchesParams {
 	o.SetSiteID(siteID)
@@ -119,6 +146,38 @@ func (o *ListSiteDeployedBranchesParams) WriteToRequest(r runtime.ClientRequest,
 		return err
 	}
 	var res []error
+
+	if o.Page != nil {
+
+		// query param page
+		var qrPage int32
+		if o.Page != nil {
+			qrPage = *o.Page
+		}
+		qPage := swag.FormatInt32(qrPage)
+		if qPage != "" {
+			if err := r.SetQueryParam("page", qPage); err != nil {
+				return err
+			}
+		}
+
+	}
+
+	if o.PerPage != nil {
+
+		// query param per_page
+		var qrPerPage int32
+		if o.PerPage != nil {
+			qrPerPage = *o.PerPage
+		}
+		qPerPage := swag.FormatInt32(qrPerPage)
+		if qPerPage != "" {
+			if err := r.SetQueryParam("per_page", qPerPage); err != nil {
+				return err
+			}
+		}
+
+	}
 
 	// path param site_id
 	if err := r.SetPathParam("site_id", o.SiteID); err != nil {
