@@ -14,13 +14,12 @@ import (
 	"github.com/go-openapi/runtime"
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
-	"github.com/go-openapi/swag"
 )
 
 // NewListAccountsForUserParams creates a new ListAccountsForUserParams object
 // with the default values initialized.
 func NewListAccountsForUserParams() *ListAccountsForUserParams {
-	var ()
+
 	return &ListAccountsForUserParams{
 
 		timeout: cr.DefaultTimeout,
@@ -30,7 +29,7 @@ func NewListAccountsForUserParams() *ListAccountsForUserParams {
 // NewListAccountsForUserParamsWithTimeout creates a new ListAccountsForUserParams object
 // with the default values initialized, and the ability to set a timeout on a request
 func NewListAccountsForUserParamsWithTimeout(timeout time.Duration) *ListAccountsForUserParams {
-	var ()
+
 	return &ListAccountsForUserParams{
 
 		timeout: timeout,
@@ -40,7 +39,7 @@ func NewListAccountsForUserParamsWithTimeout(timeout time.Duration) *ListAccount
 // NewListAccountsForUserParamsWithContext creates a new ListAccountsForUserParams object
 // with the default values initialized, and the ability to set a context for a request
 func NewListAccountsForUserParamsWithContext(ctx context.Context) *ListAccountsForUserParams {
-	var ()
+
 	return &ListAccountsForUserParams{
 
 		Context: ctx,
@@ -50,7 +49,7 @@ func NewListAccountsForUserParamsWithContext(ctx context.Context) *ListAccountsF
 // NewListAccountsForUserParamsWithHTTPClient creates a new ListAccountsForUserParams object
 // with the default values initialized, and the ability to set a custom HTTPClient for a request
 func NewListAccountsForUserParamsWithHTTPClient(client *http.Client) *ListAccountsForUserParams {
-	var ()
+
 	return &ListAccountsForUserParams{
 		HTTPClient: client,
 	}
@@ -60,12 +59,6 @@ func NewListAccountsForUserParamsWithHTTPClient(client *http.Client) *ListAccoun
 for the list accounts for user operation typically these are written to a http.Request
 */
 type ListAccountsForUserParams struct {
-
-	/*Page*/
-	Page *int32
-	/*PerPage*/
-	PerPage *int32
-
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
@@ -104,28 +97,6 @@ func (o *ListAccountsForUserParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithPage adds the page to the list accounts for user params
-func (o *ListAccountsForUserParams) WithPage(page *int32) *ListAccountsForUserParams {
-	o.SetPage(page)
-	return o
-}
-
-// SetPage adds the page to the list accounts for user params
-func (o *ListAccountsForUserParams) SetPage(page *int32) {
-	o.Page = page
-}
-
-// WithPerPage adds the perPage to the list accounts for user params
-func (o *ListAccountsForUserParams) WithPerPage(perPage *int32) *ListAccountsForUserParams {
-	o.SetPerPage(perPage)
-	return o
-}
-
-// SetPerPage adds the perPage to the list accounts for user params
-func (o *ListAccountsForUserParams) SetPerPage(perPage *int32) {
-	o.PerPage = perPage
-}
-
 // WriteToRequest writes these params to a swagger request
 func (o *ListAccountsForUserParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -133,38 +104,6 @@ func (o *ListAccountsForUserParams) WriteToRequest(r runtime.ClientRequest, reg 
 		return err
 	}
 	var res []error
-
-	if o.Page != nil {
-
-		// query param page
-		var qrPage int32
-		if o.Page != nil {
-			qrPage = *o.Page
-		}
-		qPage := swag.FormatInt32(qrPage)
-		if qPage != "" {
-			if err := r.SetQueryParam("page", qPage); err != nil {
-				return err
-			}
-		}
-
-	}
-
-	if o.PerPage != nil {
-
-		// query param per_page
-		var qrPerPage int32
-		if o.PerPage != nil {
-			qrPerPage = *o.PerPage
-		}
-		qPerPage := swag.FormatInt32(qrPerPage)
-		if qPerPage != "" {
-			if err := r.SetQueryParam("per_page", qPerPage); err != nil {
-				return err
-			}
-		}
-
-	}
 
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)

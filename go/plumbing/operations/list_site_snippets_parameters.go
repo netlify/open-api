@@ -14,7 +14,6 @@ import (
 	"github.com/go-openapi/runtime"
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
-	"github.com/go-openapi/swag"
 )
 
 // NewListSiteSnippetsParams creates a new ListSiteSnippetsParams object
@@ -61,10 +60,6 @@ for the list site snippets operation typically these are written to a http.Reque
 */
 type ListSiteSnippetsParams struct {
 
-	/*Page*/
-	Page *int32
-	/*PerPage*/
-	PerPage *int32
 	/*SiteID*/
 	SiteID string
 
@@ -106,28 +101,6 @@ func (o *ListSiteSnippetsParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithPage adds the page to the list site snippets params
-func (o *ListSiteSnippetsParams) WithPage(page *int32) *ListSiteSnippetsParams {
-	o.SetPage(page)
-	return o
-}
-
-// SetPage adds the page to the list site snippets params
-func (o *ListSiteSnippetsParams) SetPage(page *int32) {
-	o.Page = page
-}
-
-// WithPerPage adds the perPage to the list site snippets params
-func (o *ListSiteSnippetsParams) WithPerPage(perPage *int32) *ListSiteSnippetsParams {
-	o.SetPerPage(perPage)
-	return o
-}
-
-// SetPerPage adds the perPage to the list site snippets params
-func (o *ListSiteSnippetsParams) SetPerPage(perPage *int32) {
-	o.PerPage = perPage
-}
-
 // WithSiteID adds the siteID to the list site snippets params
 func (o *ListSiteSnippetsParams) WithSiteID(siteID string) *ListSiteSnippetsParams {
 	o.SetSiteID(siteID)
@@ -146,38 +119,6 @@ func (o *ListSiteSnippetsParams) WriteToRequest(r runtime.ClientRequest, reg str
 		return err
 	}
 	var res []error
-
-	if o.Page != nil {
-
-		// query param page
-		var qrPage int32
-		if o.Page != nil {
-			qrPage = *o.Page
-		}
-		qPage := swag.FormatInt32(qrPage)
-		if qPage != "" {
-			if err := r.SetQueryParam("page", qPage); err != nil {
-				return err
-			}
-		}
-
-	}
-
-	if o.PerPage != nil {
-
-		// query param per_page
-		var qrPerPage int32
-		if o.PerPage != nil {
-			qrPerPage = *o.PerPage
-		}
-		qPerPage := swag.FormatInt32(qrPerPage)
-		if qPerPage != "" {
-			if err := r.SetQueryParam("per_page", qPerPage); err != nil {
-				return err
-			}
-		}
-
-	}
 
 	// path param site_id
 	if err := r.SetPathParam("site_id", o.SiteID); err != nil {

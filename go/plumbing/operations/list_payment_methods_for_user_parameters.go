@@ -14,13 +14,12 @@ import (
 	"github.com/go-openapi/runtime"
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
-	"github.com/go-openapi/swag"
 )
 
 // NewListPaymentMethodsForUserParams creates a new ListPaymentMethodsForUserParams object
 // with the default values initialized.
 func NewListPaymentMethodsForUserParams() *ListPaymentMethodsForUserParams {
-	var ()
+
 	return &ListPaymentMethodsForUserParams{
 
 		timeout: cr.DefaultTimeout,
@@ -30,7 +29,7 @@ func NewListPaymentMethodsForUserParams() *ListPaymentMethodsForUserParams {
 // NewListPaymentMethodsForUserParamsWithTimeout creates a new ListPaymentMethodsForUserParams object
 // with the default values initialized, and the ability to set a timeout on a request
 func NewListPaymentMethodsForUserParamsWithTimeout(timeout time.Duration) *ListPaymentMethodsForUserParams {
-	var ()
+
 	return &ListPaymentMethodsForUserParams{
 
 		timeout: timeout,
@@ -40,7 +39,7 @@ func NewListPaymentMethodsForUserParamsWithTimeout(timeout time.Duration) *ListP
 // NewListPaymentMethodsForUserParamsWithContext creates a new ListPaymentMethodsForUserParams object
 // with the default values initialized, and the ability to set a context for a request
 func NewListPaymentMethodsForUserParamsWithContext(ctx context.Context) *ListPaymentMethodsForUserParams {
-	var ()
+
 	return &ListPaymentMethodsForUserParams{
 
 		Context: ctx,
@@ -50,7 +49,7 @@ func NewListPaymentMethodsForUserParamsWithContext(ctx context.Context) *ListPay
 // NewListPaymentMethodsForUserParamsWithHTTPClient creates a new ListPaymentMethodsForUserParams object
 // with the default values initialized, and the ability to set a custom HTTPClient for a request
 func NewListPaymentMethodsForUserParamsWithHTTPClient(client *http.Client) *ListPaymentMethodsForUserParams {
-	var ()
+
 	return &ListPaymentMethodsForUserParams{
 		HTTPClient: client,
 	}
@@ -60,12 +59,6 @@ func NewListPaymentMethodsForUserParamsWithHTTPClient(client *http.Client) *List
 for the list payment methods for user operation typically these are written to a http.Request
 */
 type ListPaymentMethodsForUserParams struct {
-
-	/*Page*/
-	Page *int32
-	/*PerPage*/
-	PerPage *int32
-
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
@@ -104,28 +97,6 @@ func (o *ListPaymentMethodsForUserParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithPage adds the page to the list payment methods for user params
-func (o *ListPaymentMethodsForUserParams) WithPage(page *int32) *ListPaymentMethodsForUserParams {
-	o.SetPage(page)
-	return o
-}
-
-// SetPage adds the page to the list payment methods for user params
-func (o *ListPaymentMethodsForUserParams) SetPage(page *int32) {
-	o.Page = page
-}
-
-// WithPerPage adds the perPage to the list payment methods for user params
-func (o *ListPaymentMethodsForUserParams) WithPerPage(perPage *int32) *ListPaymentMethodsForUserParams {
-	o.SetPerPage(perPage)
-	return o
-}
-
-// SetPerPage adds the perPage to the list payment methods for user params
-func (o *ListPaymentMethodsForUserParams) SetPerPage(perPage *int32) {
-	o.PerPage = perPage
-}
-
 // WriteToRequest writes these params to a swagger request
 func (o *ListPaymentMethodsForUserParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -133,38 +104,6 @@ func (o *ListPaymentMethodsForUserParams) WriteToRequest(r runtime.ClientRequest
 		return err
 	}
 	var res []error
-
-	if o.Page != nil {
-
-		// query param page
-		var qrPage int32
-		if o.Page != nil {
-			qrPage = *o.Page
-		}
-		qPage := swag.FormatInt32(qrPage)
-		if qPage != "" {
-			if err := r.SetQueryParam("page", qPage); err != nil {
-				return err
-			}
-		}
-
-	}
-
-	if o.PerPage != nil {
-
-		// query param per_page
-		var qrPerPage int32
-		if o.PerPage != nil {
-			qrPerPage = *o.PerPage
-		}
-		qPerPage := swag.FormatInt32(qrPerPage)
-		if qPerPage != "" {
-			if err := r.SetQueryParam("per_page", qPerPage); err != nil {
-				return err
-			}
-		}
-
-	}
 
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
