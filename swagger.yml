@@ -516,7 +516,7 @@ paths:
         - name: buildHook
           in: body
           schema:
-            $ref: '#/definitions/buildHook'
+            $ref: '#/definitions/buildHookSetup'
           required: true
       responses:
         '201':
@@ -554,7 +554,7 @@ paths:
         - name: buildHook
           in: body
           schema:
-            $ref: '#/definitions/buildHook'
+            $ref: '#/definitions/buildHookSetup'
           required: true
       responses:
         '204':
@@ -2801,6 +2801,13 @@ definitions:
         type: boolean
       minify:
         type: boolean
+  buildHookSetup:
+    type: object
+    properties:
+      title:
+        type: string
+      branch:
+        type: string
   buildHook:
     type: object
     properties:
