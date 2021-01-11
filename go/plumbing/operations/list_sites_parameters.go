@@ -14,6 +14,7 @@ import (
 	"github.com/go-openapi/runtime"
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
+	"github.com/go-openapi/swag"
 )
 
 // NewListSitesParams creates a new ListSitesParams object
@@ -64,6 +65,10 @@ type ListSitesParams struct {
 	Filter *string
 	/*Name*/
 	Name *string
+	/*Page*/
+	Page *int32
+	/*PerPage*/
+	PerPage *int32
 
 	timeout    time.Duration
 	Context    context.Context
@@ -125,6 +130,28 @@ func (o *ListSitesParams) SetName(name *string) {
 	o.Name = name
 }
 
+// WithPage adds the page to the list sites params
+func (o *ListSitesParams) WithPage(page *int32) *ListSitesParams {
+	o.SetPage(page)
+	return o
+}
+
+// SetPage adds the page to the list sites params
+func (o *ListSitesParams) SetPage(page *int32) {
+	o.Page = page
+}
+
+// WithPerPage adds the perPage to the list sites params
+func (o *ListSitesParams) WithPerPage(perPage *int32) *ListSitesParams {
+	o.SetPerPage(perPage)
+	return o
+}
+
+// SetPerPage adds the perPage to the list sites params
+func (o *ListSitesParams) SetPerPage(perPage *int32) {
+	o.PerPage = perPage
+}
+
 // WriteToRequest writes these params to a swagger request
 func (o *ListSitesParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -159,6 +186,38 @@ func (o *ListSitesParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Reg
 		qName := qrName
 		if qName != "" {
 			if err := r.SetQueryParam("name", qName); err != nil {
+				return err
+			}
+		}
+
+	}
+
+	if o.Page != nil {
+
+		// query param page
+		var qrPage int32
+		if o.Page != nil {
+			qrPage = *o.Page
+		}
+		qPage := swag.FormatInt32(qrPage)
+		if qPage != "" {
+			if err := r.SetQueryParam("page", qPage); err != nil {
+				return err
+			}
+		}
+
+	}
+
+	if o.PerPage != nil {
+
+		// query param per_page
+		var qrPerPage int32
+		if o.PerPage != nil {
+			qrPerPage = *o.PerPage
+		}
+		qPerPage := swag.FormatInt32(qrPerPage)
+		if qPerPage != "" {
+			if err := r.SetQueryParam("per_page", qPerPage); err != nil {
 				return err
 			}
 		}

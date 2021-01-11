@@ -14,6 +14,7 @@ import (
 	"github.com/go-openapi/runtime"
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
+	"github.com/go-openapi/swag"
 )
 
 // NewListAccountAuditEventsParams creates a new ListAccountAuditEventsParams object
@@ -64,6 +65,10 @@ type ListAccountAuditEventsParams struct {
 	AccountID string
 	/*LogType*/
 	LogType *string
+	/*Page*/
+	Page *int32
+	/*PerPage*/
+	PerPage *int32
 	/*Query*/
 	Query *string
 
@@ -127,6 +132,28 @@ func (o *ListAccountAuditEventsParams) SetLogType(logType *string) {
 	o.LogType = logType
 }
 
+// WithPage adds the page to the list account audit events params
+func (o *ListAccountAuditEventsParams) WithPage(page *int32) *ListAccountAuditEventsParams {
+	o.SetPage(page)
+	return o
+}
+
+// SetPage adds the page to the list account audit events params
+func (o *ListAccountAuditEventsParams) SetPage(page *int32) {
+	o.Page = page
+}
+
+// WithPerPage adds the perPage to the list account audit events params
+func (o *ListAccountAuditEventsParams) WithPerPage(perPage *int32) *ListAccountAuditEventsParams {
+	o.SetPerPage(perPage)
+	return o
+}
+
+// SetPerPage adds the perPage to the list account audit events params
+func (o *ListAccountAuditEventsParams) SetPerPage(perPage *int32) {
+	o.PerPage = perPage
+}
+
 // WithQuery adds the query to the list account audit events params
 func (o *ListAccountAuditEventsParams) WithQuery(query *string) *ListAccountAuditEventsParams {
 	o.SetQuery(query)
@@ -161,6 +188,38 @@ func (o *ListAccountAuditEventsParams) WriteToRequest(r runtime.ClientRequest, r
 		qLogType := qrLogType
 		if qLogType != "" {
 			if err := r.SetQueryParam("log_type", qLogType); err != nil {
+				return err
+			}
+		}
+
+	}
+
+	if o.Page != nil {
+
+		// query param page
+		var qrPage int32
+		if o.Page != nil {
+			qrPage = *o.Page
+		}
+		qPage := swag.FormatInt32(qrPage)
+		if qPage != "" {
+			if err := r.SetQueryParam("page", qPage); err != nil {
+				return err
+			}
+		}
+
+	}
+
+	if o.PerPage != nil {
+
+		// query param per_page
+		var qrPerPage int32
+		if o.PerPage != nil {
+			qrPerPage = *o.PerPage
+		}
+		qPerPage := swag.FormatInt32(qrPerPage)
+		if qPerPage != "" {
+			if err := r.SetQueryParam("per_page", qPerPage); err != nil {
 				return err
 			}
 		}
