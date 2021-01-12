@@ -63,7 +63,7 @@ for the create site build hook operation typically these are written to a http.R
 type CreateSiteBuildHookParams struct {
 
 	/*BuildHook*/
-	BuildHook *models.BuildHook
+	BuildHook *models.BuildHookSetup
 	/*SiteID*/
 	SiteID string
 
@@ -106,13 +106,13 @@ func (o *CreateSiteBuildHookParams) SetHTTPClient(client *http.Client) {
 }
 
 // WithBuildHook adds the buildHook to the create site build hook params
-func (o *CreateSiteBuildHookParams) WithBuildHook(buildHook *models.BuildHook) *CreateSiteBuildHookParams {
+func (o *CreateSiteBuildHookParams) WithBuildHook(buildHook *models.BuildHookSetup) *CreateSiteBuildHookParams {
 	o.SetBuildHook(buildHook)
 	return o
 }
 
 // SetBuildHook adds the buildHook to the create site build hook params
-func (o *CreateSiteBuildHookParams) SetBuildHook(buildHook *models.BuildHook) {
+func (o *CreateSiteBuildHookParams) SetBuildHook(buildHook *models.BuildHookSetup) {
 	o.BuildHook = buildHook
 }
 
