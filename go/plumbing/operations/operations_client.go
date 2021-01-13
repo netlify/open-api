@@ -99,6 +99,8 @@ type ClientService interface {
 
 	GetAccount(params *GetAccountParams, authInfo runtime.ClientAuthInfoWriter) (*GetAccountOK, error)
 
+	GetAccountBuildStatus(params *GetAccountBuildStatusParams, authInfo runtime.ClientAuthInfoWriter) (*GetAccountBuildStatusOK, error)
+
 	GetCurrentUser(params *GetCurrentUserParams, authInfo runtime.ClientAuthInfoWriter) (*GetCurrentUserOK, error)
 
 	GetDNSForSite(params *GetDNSForSiteParams, authInfo runtime.ClientAuthInfoWriter) (*GetDNSForSiteOK, error)
@@ -1462,6 +1464,40 @@ func (a *Client) GetAccount(params *GetAccountParams, authInfo runtime.ClientAut
 	}
 	// unexpected success response
 	unexpectedSuccess := result.(*GetAccountDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+  GetAccountBuildStatus get account build status API
+*/
+func (a *Client) GetAccountBuildStatus(params *GetAccountBuildStatusParams, authInfo runtime.ClientAuthInfoWriter) (*GetAccountBuildStatusOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetAccountBuildStatusParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "getAccountBuildStatus",
+		Method:             "GET",
+		PathPattern:        "/{account_id}/builds/status",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &GetAccountBuildStatusReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*GetAccountBuildStatusOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*GetAccountBuildStatusDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
