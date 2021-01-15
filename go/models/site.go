@@ -79,6 +79,9 @@ type Site struct {
 	// plan
 	Plan string `json:"plan,omitempty"`
 
+	// prerender
+	Prerender string `json:"prerender,omitempty"`
+
 	// processing settings
 	ProcessingSettings *SiteProcessingSettings `json:"processing_settings,omitempty"`
 
