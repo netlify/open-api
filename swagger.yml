@@ -2117,6 +2117,8 @@ definitions:
             type: string
       build_image:
         type: string
+      prerender:
+        type: string
   siteSetup:
     allOf:
       - $ref: '#/definitions/site'
