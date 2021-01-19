@@ -10,7 +10,7 @@ jobs:
       - uses: GoogleCloudPlatform/release-please-action@v2
         id: release
         with:
-          token: ${{ secrets.NODE_PKG_RELEASE_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           release-type: node
           package-name: '@netlify/open-api'
         if: ${{ !steps.release.outputs.release_created }}
