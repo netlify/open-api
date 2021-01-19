@@ -1,0 +1,16 @@
+name: release-please
+on:
+  push:
+    branches:
+      - test/release-flow
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: GoogleCloudPlatform/release-please-action@v2
+        id: release
+        with:
+          token: ${{ secrets.NODE_PKG_RELEASE_TOKEN }}
+          release-type: node
+          package-name: '@netlify/open-api'
+        if: ${{ !steps.release.outputs.release_created }}
