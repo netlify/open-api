@@ -32,17 +32,17 @@ You may first want to edit swagger.yml to add your field or endpoint definitions
 
 ## Making PRs
 
-1. Don't bump the version number for `swagger.yml` changes. Do that during the release process.
+1. Don't bump the version number for `swagger.yml` changes. The release process handles that.
 2. Ensure `make validate` passes.
 3. The go tests run against the last generated go client. These must pass before making a release.
 4. If all you want is a new endpoint, you can PR just the `swagger.yml` changes for review and regenerate the go client when its ready to go in.
 
 ## Making a new release
 
-1. Make sure you are on the HEAD of the master branch.
-2. regenarate go client (if you haven't) (Make all and commit the results)
-3. bump a JS package version with `npm version [major|minor|patch]` (updates package.json, swagger.yaml and create a git tag)
-4. Run `npm publish` which will as `git push && git push --tags` to push to the origin, create a github release and publish the spec to npm.
+1. Merge the release PR (auto generated via `release-please`).
+2. Switch to the default branch git checkout master.
+3. Pull latest changes git pull.
+4. Run `npm publish`.
 
 ## License
 
