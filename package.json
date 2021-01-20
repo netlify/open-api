@@ -17,7 +17,6 @@
   "devDependencies": {
     "analytics": "^0.2.0",
     "analytics-plugin-ga": "^0.1.5",
-    "auto-changelog": "^1.16.1",
     "ava": "^2.4.0",
     "cp-file": "^7.0.0",
     "eslint": "^6.3.0",
@@ -58,8 +57,7 @@
     "convert": "node src/convert.js",
     "version": "run-s version:*",
     "version:1-swagger": "node src/bump-swagger.js",
-    "version:2-changelog": "auto-changelog -p --template keepachangelog --breaking-pattern breaking",
-    "version:3-git": "git add CHANGELOG.md swagger.yml",
+    "version:2-git": "git add swagger.yml",
     "redoc": "node src/docs/build.js",
     "lint": "run-s eslint prettier",
     "eslint": "eslint --fix \"src/**/*.js\"",

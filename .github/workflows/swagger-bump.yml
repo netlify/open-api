@@ -1,5 +1,6 @@
 name: swagger-bump
 on:
+  # Workaround for bumping the swagger.yml file on release-please PRs
   push:
     branches:
       - release-*
@@ -16,4 +17,4 @@ jobs:
       - run: npm version:1-swagger
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: "Bump swagger.yml file"
+          commit_message: "chore: bump swagger.yml file"
