@@ -1,0 +1,20 @@
+name: swagger-bump
+on:
+  # Workaround for bumping the swagger.yml file on release-please PRs
+  push:
+    branches:
+      - release-*
+jobs:
+  swagger-bump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+          registry-url: 'https://registry.npmjs.org'
+      - run: npm ci
+      - run: npm version:1-swagger
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "chore: bump swagger.yml file"
