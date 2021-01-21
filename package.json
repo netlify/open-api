@@ -49,15 +49,12 @@
     "url": "git+https://github.com/netlify/open-api.git"
   },
   "scripts": {
-    "prepublishOnly": "git push && git push --tags && gh-release",
     "prepare": "run-s test",
     "test": "run-s lint build unit",
     "start": "run-s lint build",
     "build": "run-s convert redoc",
     "convert": "node src/convert.js",
-    "version": "run-s version:*",
-    "version:1-swagger": "node src/bump-swagger.js",
-    "version:2-git": "git add swagger.yml",
+    "bump-swagger": "node src/bump-swagger.js",
     "redoc": "node src/docs/build.js",
     "lint": "run-s eslint prettier",
     "eslint": "eslint --fix \"src/**/*.js\"",
