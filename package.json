@@ -58,7 +58,7 @@
     "redoc": "node src/docs/build.js",
     "lint": "run-s eslint prettier",
     "eslint": "eslint --fix \"src/**/*.js\"",
-    "prettier": "prettier --write --loglevel warn \"src/**/*.js\" \"*.{js,md,yml,json}\"",
+    "prettier": "prettier --write --loglevel warn \"src/**/*.js\" \"*.{js,md,yml,json}\" \"!CHANGELOG.md\"",
     "unit": "ava"
   }
 }
