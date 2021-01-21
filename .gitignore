@@ -5,3 +5,5 @@ yarn.lock
 dist
 .vscode
 .gobincache
+swagger_flat.json
+swagger_go.json
