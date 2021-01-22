@@ -150,16 +150,13 @@ func TestWalk_IgnoreNodeModulesInRoot(t *testing.T) {
 	err = ioutil.WriteFile(filepath.Join(dir, "more", "node_modules", "inner-package"), []byte{}, 0644)
 	require.Nil(t, err)
 
-	// When deploy directory != build directory, always deploy node_modules.
-	getwd = func() (string, error) { return "elsewhere", nil }
-	files, err := walk(dir, mockObserver{}, false)
+	files, err := walk(dir, mockObserver{}, false, false)
 	require.Nil(t, err)
 	assert.NotNil(t, files.Files["node_modules/root-package"])
 	assert.NotNil(t, files.Files["more/node_modules/inner-package"])
 
 	// When deploy directory == build directory, ignore node_modules in deploy directory root.
-	getwd = func() (string, error) { return dir, nil }
-	files, err = walk(dir, mockObserver{}, false)
+	files, err = walk(dir, mockObserver{}, false, true)
 	require.Nil(t, err)
 	assert.Nil(t, files.Files["node_modules/root-package"])
 	assert.NotNil(t, files.Files["more/node_modules/inner-package"])

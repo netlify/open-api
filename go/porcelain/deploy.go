@@ -42,7 +42,7 @@ const (
 	lfsVersionString = "version https://git-lfs.github.com/spec/v1"
 )
 
-var ignoreInstallDirs = []string{"node_modules/", "bower_components/"}
+var installDirs = []string{"node_modules/", "bower_components/"}
 
 type uploadType int
 type pointerData struct {
@@ -74,6 +74,7 @@ type DeployOptions struct {
 	SiteID            string
 	Dir               string
 	FunctionsDir      string
+	BuildDir          string
 	LargeMediaEnabled bool
 
 	IsDraft bool
@@ -190,8 +191,10 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 		largeMediaEnabled = deploy.SiteCapabilities.LargeMediaEnabled
 	}
 
+	ignoreInstallDirs := options.Dir == options.BuildDir
+
 	context.GetLogger(ctx).Infof("Getting files info with large media flag: %v", largeMediaEnabled)
-	files, err := walk(options.Dir, options.Observer, largeMediaEnabled)
+	files, err := walk(options.Dir, options.Observer, largeMediaEnabled, ignoreInstallDirs)
 	if err != nil {
 		if options.Observer != nil {
 			options.Observer.OnFailedWalk()
@@ -500,16 +503,10 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 	}
 }
 
-var getwd = os.Getwd
-
-func walk(dir string, observer DeployObserver, useLargeMedia bool) (*deployFiles, error) {
+func walk(dir string, observer DeployObserver, useLargeMedia, ignoreInstallDirs bool) (*deployFiles, error) {
 	files := newDeployFiles()
-	cwd, err := getwd()
-	if err != nil {
-		return nil, err
-	}
 
-	err = filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
@@ -521,7 +518,7 @@ func walk(dir string, observer DeployObserver, useLargeMedia bool) (*deployFiles
 			}
 			rel := forceSlashSeparators(osRel)
 
-			if ignoreFile(rel, dir == cwd) {
+			if ignoreFile(rel, ignoreInstallDirs) {
 				return nil
 			}
 
@@ -745,14 +742,14 @@ func goFile(filePath string, i os.FileInfo, observer DeployObserver) bool {
 	return true
 }
 
-func ignoreFile(rel string, deployFromBuildDir bool) bool {
+func ignoreFile(rel string, ignoreInstallDirs bool) bool {
 	if strings.HasPrefix(rel, ".") || strings.Contains(rel, "/.") || strings.HasPrefix(rel, "__MACOS") {
 		return !strings.HasPrefix(rel, ".well-known/")
 	}
-	if !deployFromBuildDir {
+	if !ignoreInstallDirs {
 		return false
 	}
-	for _, ignorePath := range ignoreInstallDirs {
+	for _, ignorePath := range installDirs {
 		if strings.HasPrefix(rel, ignorePath) {
 			return true
 		}
