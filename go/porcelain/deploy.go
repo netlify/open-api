@@ -325,11 +325,11 @@ func (n *Netlify) waitForState(ctx context.Context, d *models.Deploy, timeout ti
 		}
 
 		if resp.Payload.State == "error" {
-			return nil, fmt.Errorf("Error: entered errors state while waiting to enter states: %s", strings.Join(states, ","))
+			return nil, fmt.Errorf("Error: entered error state while waiting to enter states: %s", strings.Join(states, ", "))
 		}
 
 		if t.Sub(start) > timeout {
-			return nil, fmt.Errorf("Error: deploy timed out while waiting to enter states: %s", strings.Join(states, ","))
+			return nil, fmt.Errorf("Error: deploy timed out while waiting to enter states: %s", strings.Join(states, ", "))
 		}
 	}
 
