@@ -42,6 +42,8 @@ const (
 	lfsVersionString = "version https://git-lfs.github.com/spec/v1"
 )
 
+var ignoreInstallDirs = []string{"node_modules/", "bower_components/"}
+
 type uploadType int
 type pointerData struct {
 	SHA  string
@@ -500,8 +502,12 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 
 func walk(dir string, observer DeployObserver, useLargeMedia bool) (*deployFiles, error) {
 	files := newDeployFiles()
+	cwd, err := os.Getwd()
+	if err != nil {
+		return nil, err
+	}
 
-	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+	err = filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
@@ -513,7 +519,7 @@ func walk(dir string, observer DeployObserver, useLargeMedia bool) (*deployFiles
 			}
 			rel := forceSlashSeparators(osRel)
 
-			if ignoreFile(rel) {
+			if ignoreFile(rel, dir == cwd) {
 				return nil
 			}
 
@@ -737,9 +743,17 @@ func goFile(filePath string, i os.FileInfo, observer DeployObserver) bool {
 	return true
 }
 
-func ignoreFile(rel string) bool {
+func ignoreFile(rel string, deployFromBuildDir bool) bool {
 	if strings.HasPrefix(rel, ".") || strings.Contains(rel, "/.") || strings.HasPrefix(rel, "__MACOS") {
 		return !strings.HasPrefix(rel, ".well-known/")
+	}
+	if !deployFromBuildDir {
+		return false
+	}
+	for _, ignorePath := range ignoreInstallDirs {
+		if strings.HasPrefix(rel, ignorePath) {
+			return true
+		}
 	}
 	return false
 }

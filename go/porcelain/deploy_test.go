@@ -6,13 +6,17 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 
 	"github.com/go-openapi/runtime"
 	apiClient "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
+	"github.com/netlify/open-api/go/models"
 	"github.com/netlify/open-api/go/plumbing/operations"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -131,6 +135,42 @@ func TestConcurrentFileUpload(t *testing.T) {
 	}
 }
 
+func TestWalk_IgnoreNodeModulesInRoot(t *testing.T) {
+	dir, err := ioutil.TempDir("", "deploy")
+	require.Nil(t, err)
+	defer os.RemoveAll(dir)
+
+	err = os.Mkdir(filepath.Join(dir, "node_modules"), os.ModePerm)
+	require.Nil(t, err)
+	err = ioutil.WriteFile(filepath.Join(dir, "node_modules", "root-package"), []byte{}, 0644)
+	require.Nil(t, err)
+
+	err = os.MkdirAll(filepath.Join(dir, "more", "node_modules"), os.ModePerm)
+	require.Nil(t, err)
+	err = ioutil.WriteFile(filepath.Join(dir, "more", "node_modules", "inner-package"), []byte{}, 0644)
+	require.Nil(t, err)
+
+	files, err := walk(dir, mockObserver{}, false)
+	require.Nil(t, err)
+
+	// When deploy directory != build directory, always deploy node_modules.
+	assert.NotNil(t, files.Files["node_modules/root-package"])
+	assert.NotNil(t, files.Files["more/node_modules/inner-package"])
+
+	cwd, err := os.Getwd()
+	require.Nil(t, err)
+	err = os.Chdir(dir)
+	require.Nil(t, err)
+	defer os.Chdir(cwd)
+
+	files, err = walk(dir, mockObserver{}, false)
+	require.Nil(t, err)
+
+	// When deploy directory == build directory, ignore node_modules in deploy directory root.
+	assert.Nil(t, files.Files["node_modules/root-package"])
+	assert.NotNil(t, files.Files["more/node_modules/inner-package"])
+}
+
 func TestReadZipRuntime(t *testing.T) {
 	runtime, err := readZipRuntime("../internal/data/hello-rs-function-test.zip")
 	if err != nil {
@@ -141,3 +181,18 @@ func TestReadZipRuntime(t *testing.T) {
 		t.Fatalf("unexpected runtime value, expected='rs', got='%s'", runtime)
 	}
 }
+
+type mockObserver struct{}
+
+func (m mockObserver) OnSetupWalk() error                         { return nil }
+func (m mockObserver) OnSuccessfulStep(*FileBundle) error         { return nil }
+func (m mockObserver) OnSuccessfulWalk(*models.DeployFiles) error { return nil }
+func (m mockObserver) OnFailedWalk()                              {}
+
+func (m mockObserver) OnSetupDelta(*models.DeployFiles) error                      { return nil }
+func (m mockObserver) OnSuccessfulDelta(*models.DeployFiles, *models.Deploy) error { return nil }
+func (m mockObserver) OnFailedDelta(*models.DeployFiles)                           {}
+
+func (m mockObserver) OnSetupUpload(*FileBundle) error      { return nil }
+func (m mockObserver) OnSuccessfulUpload(*FileBundle) error { return nil }
+func (m mockObserver) OnFailedUpload(*FileBundle)           {}
