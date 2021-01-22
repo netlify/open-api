@@ -500,9 +500,11 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 	}
 }
 
+var getwd = os.Getwd
+
 func walk(dir string, observer DeployObserver, useLargeMedia bool) (*deployFiles, error) {
 	files := newDeployFiles()
-	cwd, err := os.Getwd()
+	cwd, err := getwd()
 	if err != nil {
 		return nil, err
 	}
