@@ -21,13 +21,14 @@ import (
 	"time"
 
 	"github.com/cenkalti/backoff/v4"
+	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 
 	"github.com/netlify/open-api/go/models"
 	"github.com/netlify/open-api/go/plumbing/operations"
 	"github.com/netlify/open-api/go/porcelain/context"
 
-	"github.com/go-openapi/errors"
+	apierrors "github.com/go-openapi/errors"
 	"github.com/rsc/goversion/version"
 )
 
@@ -351,7 +352,7 @@ func (n *Netlify) WaitUntilDeployReady(ctx context.Context, d *models.Deploy) (*
 	return n.waitForState(ctx, d, "prepared", "ready")
 }
 
-// WaitUntilDeployLive blocks until the deploy is in the or "ready" state. At this point, the deploy is ready to recieve traffic.
+// WaitUntilDeployLive blocks until the deploy is in the "ready" state. At this point, the deploy is ready to recieve traffic.
 func (n *Netlify) WaitUntilDeployLive(ctx context.Context, d *models.Deploy) (*models.Deploy, error) {
 	return n.waitForState(ctx, d, "ready")
 }
@@ -434,7 +435,7 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 
 		if sharedErr.err != nil {
 			sharedErr.mutex.Unlock()
-			return fmt.Errorf("Upload cancelled: %s", f.Name)
+			return errors.Wrapf(sharedErr.err, "aborting upload of file %s due to upload failure", f.Name)
 		}
 		sharedErr.mutex.Unlock()
 
@@ -470,7 +471,7 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 
 		if operationError != nil {
 			context.GetLogger(ctx).WithError(operationError).Errorf("Failed to upload file %v", f.Name)
-			apiErr, ok := operationError.(errors.Error)
+			apiErr, ok := operationError.(apierrors.Error)
 
 			if ok && apiErr.Code() == 401 {
 				sharedErr.mutex.Lock()
