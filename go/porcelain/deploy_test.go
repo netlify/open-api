@@ -2,6 +2,7 @@ package porcelain
 
 import (
 	"bytes"
+	gocontext "context"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -10,12 +11,14 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/go-openapi/runtime"
 	apiClient "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 	"github.com/netlify/open-api/go/models"
 	"github.com/netlify/open-api/go/plumbing/operations"
+	"github.com/netlify/open-api/go/porcelain/context"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -133,6 +136,31 @@ func TestConcurrentFileUpload(t *testing.T) {
 			_, _ = client.Operations.UploadDeployFile(params, authInfo)
 		}()
 	}
+}
+
+func TestWaitUntilDeployLive_Timeout(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+		rw.Write([]byte(`{ "state": "chillin" }`))
+	}))
+	defer server.Close()
+
+	httpClient := http.DefaultClient
+	authInfo := runtime.ClientAuthInfoWriterFunc(func(r runtime.ClientRequest, _ strfmt.Registry) error {
+		r.SetHeaderParam("User-Agent", "buildbot")
+		r.SetHeaderParam("Authorization", "Bearer 1234")
+		return nil
+	})
+
+	hu, _ := url.Parse(server.URL)
+	tr := apiClient.NewWithClient(hu.Host, "/api/v1", []string{"http"}, httpClient)
+	client := NewRetryable(tr, strfmt.Default, 1)
+
+	ctx := context.WithAuthInfo(gocontext.Background(), authInfo)
+	ctx, _ = gocontext.WithTimeout(ctx, 50*time.Millisecond)
+	_, err := client.WaitUntilDeployLive(ctx, &models.Deploy{})
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "timed out")
 }
 
 func TestWalk_IgnoreNodeModulesInRoot(t *testing.T) {

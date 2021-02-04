@@ -3,8 +3,8 @@ package context
 import (
 	"context"
 
-	"github.com/sirupsen/logrus"
 	"github.com/go-openapi/runtime"
+	"github.com/sirupsen/logrus"
 )
 
 type Context interface {

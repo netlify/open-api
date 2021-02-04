@@ -4,6 +4,7 @@ import (
 	"archive/zip"
 	"bufio"
 	"bytes"
+	gocontext "context"
 	"crypto/sha1"
 	"crypto/sha256"
 	"debug/elf"
@@ -273,7 +274,13 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 
 	if n.overCommitted(options.files) {
 		var err error
-		deploy, err = n.WaitUntilDeployReady(ctx, deploy, options.PreProcessTimeout)
+
+		timeout := options.PreProcessTimeout
+		if timeout <= 0 {
+			timeout = preProcessingTimeout
+		}
+		deployReadyCtx, _ := gocontext.WithTimeout(ctx, timeout)
+		deploy, err = n.WaitUntilDeployReady(deployReadyCtx, deploy)
 		if err != nil {
 			if options.Observer != nil {
 				options.Observer.OnFailedDelta(deployFiles)
@@ -305,58 +312,48 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 	return deploy, nil
 }
 
-func (n *Netlify) waitForState(ctx context.Context, d *models.Deploy, timeout time.Duration, states ...string) (*models.Deploy, error) {
+func (n *Netlify) waitForState(ctx context.Context, d *models.Deploy, states ...string) (*models.Deploy, error) {
 	authInfo := context.GetAuthInfo(ctx)
 	ticker := time.NewTicker(2 * time.Second)
 	defer ticker.Stop()
 
 	params := operations.NewGetSiteDeployParams().WithSiteID(d.SiteID).WithDeployID(d.ID)
-	start := time.Now()
-	for t := range ticker.C {
-		resp, err := n.Operations.GetSiteDeploy(params, authInfo)
-		if err != nil {
-			time.Sleep(3 * time.Second)
-			continue
-		}
-		context.GetLogger(ctx).WithFields(logrus.Fields{
-			"deploy_id": d.ID,
-			"state":     resp.Payload.State,
-		}).Debugf("Waiting until deploy state in %s", states)
+	for {
+		select {
+		case <-ctx.Done():
+			return nil, fmt.Errorf("timed out while waiting to enter states [%s]", strings.Join(states, ", "))
+		case <-ticker.C:
+			resp, err := n.Operations.GetSiteDeploy(params, authInfo)
+			if err != nil {
+				time.Sleep(3 * time.Second)
+				continue
+			}
+			context.GetLogger(ctx).WithFields(logrus.Fields{
+				"deploy_id": d.ID,
+				"state":     resp.Payload.State,
+			}).Debugf("Waiting until deploy state in %s", states)
 
-		for _, state := range states {
-			if resp.Payload.State == state {
-				return resp.Payload, nil
+			for _, state := range states {
+				if resp.Payload.State == state {
+					return resp.Payload, nil
+				}
+			}
+
+			if resp.Payload.State == "error" {
+				return nil, fmt.Errorf("entered error state while waiting to enter states [%s]", strings.Join(states, ", "))
 			}
 		}
-
-		if resp.Payload.State == "error" {
-			return nil, fmt.Errorf("Error: entered errors state while waiting to enter states: %s", strings.Join(states, ","))
-		}
-
-		if t.Sub(start) > timeout {
-			return nil, fmt.Errorf("Error: deploy timed out while waiting to enter states: %s", strings.Join(states, ","))
-		}
 	}
-
-	return d, nil
 }
 
 // WaitUntilDeployReady blocks until the deploy is in the "prepared" or "ready" state.
-func (n *Netlify) WaitUntilDeployReady(ctx context.Context, d *models.Deploy, timeout time.Duration) (*models.Deploy, error) {
-	if timeout <= 0 {
-		timeout = preProcessingTimeout
-	}
-
-	return n.waitForState(ctx, d, timeout, "prepared", "ready")
+func (n *Netlify) WaitUntilDeployReady(ctx context.Context, d *models.Deploy) (*models.Deploy, error) {
+	return n.waitForState(ctx, d, "prepared", "ready")
 }
 
 // WaitUntilDeployLive blocks until the deploy is in the or "ready" state. At this point, the deploy is ready to recieve traffic.
-func (n *Netlify) WaitUntilDeployLive(ctx context.Context, d *models.Deploy, timeout time.Duration) (*models.Deploy, error) {
-	if timeout <= 0 {
-		timeout = preProcessingTimeout
-	}
-
-	return n.waitForState(ctx, d, timeout, "ready")
+func (n *Netlify) WaitUntilDeployLive(ctx context.Context, d *models.Deploy) (*models.Deploy, error) {
+	return n.waitForState(ctx, d, "ready")
 }
 
 func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *deployFiles, observer DeployObserver, t uploadType, timeout time.Duration) error {
