@@ -1,4 +1,4 @@
-module github.com/netlify/open-api
+module github.com/netlify/open-api/v2
 
 go 1.13
 
@@ -12,12 +12,9 @@ require (
 	github.com/go-openapi/validate v0.20.0
 	github.com/go-swagger/go-swagger v0.23.0
 	github.com/kyoh86/richgo v0.3.3
-	github.com/mitchellh/mapstructure v1.4.0 // indirect
 	github.com/myitcv/gobin v0.0.14
+	github.com/netlify/open-api v1.4.0
 	github.com/rsc/goversion v1.2.0
 	github.com/sirupsen/logrus v1.6.0
 	github.com/stretchr/testify v1.6.1
-	go.mongodb.org/mongo-driver v1.4.4 // indirect
-	golang.org/x/net v0.0.0-20201224014010-6772e930b67b // indirect
-	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
