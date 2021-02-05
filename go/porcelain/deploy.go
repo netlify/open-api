@@ -21,13 +21,14 @@ import (
 	"time"
 
 	"github.com/cenkalti/backoff/v4"
+	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 
 	"github.com/netlify/open-api/go/models"
 	"github.com/netlify/open-api/go/plumbing/operations"
 	"github.com/netlify/open-api/go/porcelain/context"
 
-	"github.com/go-openapi/errors"
+	apierrors "github.com/go-openapi/errors"
 	"github.com/rsc/goversion/version"
 )
 
@@ -360,6 +361,7 @@ func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *depl
 	sharedErr := &uploadError{err: nil, mutex: &sync.Mutex{}}
 	sem := make(chan int, n.uploadLimit)
 	wg := &sync.WaitGroup{}
+	defer wg.Wait()
 
 	var required []string
 	switch t {
@@ -390,13 +392,11 @@ func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *depl
 
 					go n.uploadFile(ctx, d, file, observer, t, timeout, wg, sem, sharedErr)
 				case <-ctx.Done():
-					break
+					return errors.Wrap(ctx.Err(), "aborted file upload early")
 				}
 			}
 		}
 	}
-
-	wg.Wait()
 
 	return sharedErr.err
 }
@@ -475,7 +475,7 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 
 		if operationError != nil {
 			context.GetLogger(ctx).WithError(operationError).Errorf("Failed to upload file %v", f.Name)
-			apiErr, ok := operationError.(errors.Error)
+			apiErr, ok := operationError.(apierrors.Error)
 
 			if ok && apiErr.Code() == 401 {
 				sharedErr.mutex.Lock()
