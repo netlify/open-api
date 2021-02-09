@@ -10,7 +10,7 @@ import (
 	"github.com/go-openapi/runtime"
 	apiClient "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
-	apiContext "github.com/netlify/open-api/go/porcelain/context"
+	apiContext "github.com/netlify/open-api/v2/go/porcelain/context"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

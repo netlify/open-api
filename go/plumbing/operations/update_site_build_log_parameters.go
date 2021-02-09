@@ -15,7 +15,7 @@ import (
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/netlify/open-api/go/models"
+	"github.com/netlify/open-api/v2/go/models"
 )
 
 // NewUpdateSiteBuildLogParams creates a new UpdateSiteBuildLogParams object

@@ -12,7 +12,7 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/netlify/open-api/go/models"
+	"github.com/netlify/open-api/v2/go/models"
 )
 
 // ExchangeTicketReader is a Reader for the ExchangeTicket structure.
