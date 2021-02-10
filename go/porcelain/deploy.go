@@ -361,6 +361,7 @@ func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *depl
 	sharedErr := &uploadError{err: nil, mutex: &sync.Mutex{}}
 	sem := make(chan int, n.uploadLimit)
 	wg := &sync.WaitGroup{}
+	defer wg.Wait()
 
 	var required []string
 	switch t {
@@ -384,15 +385,18 @@ func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *depl
 	for _, sha := range required {
 		if files, exist := files.Hashed[sha]; exist {
 			for _, file := range files {
-				sem <- 1
-				wg.Add(1)
+				select {
+				case sem <- 1:
+					sem <- 1
+					wg.Add(1)
 
-				go n.uploadFile(ctx, d, file, observer, t, timeout, wg, sem, sharedErr)
+					go n.uploadFile(ctx, d, file, observer, t, timeout, wg, sem, sharedErr)
+				case <-ctx.Done():
+					return errors.Wrap(ctx.Err(), "aborted file upload early")
+				}
 			}
 		}
 	}
-
-	wg.Wait()
 
 	return sharedErr.err
 }
