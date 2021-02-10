@@ -10,7 +10,7 @@ import (
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
-	"github.com/netlify/open-api/go/plumbing/operations"
+	"github.com/netlify/open-api/v2/go/plumbing/operations"
 )
 
 func Example() {
