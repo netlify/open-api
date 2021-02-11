@@ -21,15 +21,14 @@ import (
 	"time"
 
 	"github.com/cenkalti/backoff/v4"
+	apierrors "github.com/go-openapi/errors"
 	"github.com/pkg/errors"
+	"github.com/rsc/goversion/version"
 	"github.com/sirupsen/logrus"
 
 	"github.com/netlify/open-api/v2/go/models"
 	"github.com/netlify/open-api/v2/go/plumbing/operations"
 	"github.com/netlify/open-api/v2/go/porcelain/context"
-
-	apierrors "github.com/go-openapi/errors"
-	"github.com/rsc/goversion/version"
 )
 
 const (
@@ -439,7 +438,7 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 
 		if sharedErr.err != nil {
 			sharedErr.mutex.Unlock()
-			return errors.Wrapf(sharedErr.err, "aborting upload of file %s due to upload failure", f.Name)
+			return fmt.Errorf("aborting upload of file %s due to failed upload of another file", f.Name)
 		}
 		sharedErr.mutex.Unlock()
 
