@@ -191,6 +191,46 @@ func TestWalk_IgnoreNodeModulesInRoot(t *testing.T) {
 	assert.NotNil(t, files.Files["more/node_modules/inner-package"])
 }
 
+func TestUploadFiles_Cancelation(t *testing.T) {
+	ctx, cancel := gocontext.WithCancel(gocontext.Background())
+	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		cancel() // Cancel deploy as soon as first file upload is attempted.
+		rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+		rw.Write([]byte(`{ "state": "canceled" }`))
+	}))
+	defer server.Close()
+
+	// Create test client
+	httpClient := http.DefaultClient
+	authInfo := runtime.ClientAuthInfoWriterFunc(func(r runtime.ClientRequest, _ strfmt.Registry) error {
+		r.SetHeaderParam("User-Agent", "buildbot")
+		r.SetHeaderParam("Authorization", "Bearer 1234")
+		return nil
+	})
+
+	hu, _ := url.Parse(server.URL)
+	tr := apiClient.NewWithClient(hu.Host, "/api/v1", []string{"http"}, httpClient)
+	client := NewRetryable(tr, strfmt.Default, 1)
+	client.uploadLimit = 1
+	ctx = context.WithAuthInfo(ctx, authInfo)
+
+	// Create some files to deploy
+	dir, err := ioutil.TempDir("", "deploy")
+	require.NoError(t, err)
+	defer os.RemoveAll(dir)
+	require.NoError(t, ioutil.WriteFile(filepath.Join(dir, "foo.html"), []byte("Hello"), 0644))
+	require.NoError(t, ioutil.WriteFile(filepath.Join(dir, "bar.html"), []byte("World"), 0644))
+
+	files, err := walk(dir, nil, false, false)
+	require.NoError(t, err)
+	d := &models.Deploy{}
+	for _, bundle := range files.Files {
+		d.Required = append(d.Required, bundle.Sum)
+	}
+	err = client.uploadFiles(ctx, d, files, nil, fileUpload, time.Minute)
+	require.ErrorIs(t, err, gocontext.Canceled)
+}
+
 func TestReadZipRuntime(t *testing.T) {
 	runtime, err := readZipRuntime("../internal/data/hello-rs-function-test.zip")
 	if err != nil {

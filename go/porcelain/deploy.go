@@ -379,18 +379,18 @@ func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *depl
 		}
 	}
 
-	context.GetLogger(ctx).Infof("Uploading %v files", count)
+	log := context.GetLogger(ctx)
+	log.Infof("Uploading %v files", count)
 
 	for _, sha := range required {
 		if files, exist := files.Hashed[sha]; exist {
 			for _, file := range files {
 				select {
 				case sem <- 1:
-					sem <- 1
 					wg.Add(1)
-
 					go n.uploadFile(ctx, d, file, observer, t, timeout, wg, sem, sharedErr)
 				case <-ctx.Done():
+					log.Info("Context terminated, aborting file upload")
 					return errors.Wrap(ctx.Err(), "aborted file upload early")
 				}
 			}
