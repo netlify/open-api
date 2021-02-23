@@ -17,7 +17,6 @@ import (
 	"github.com/netlify/open-api/v2/go/plumbing/operations"
 	"github.com/netlify/open-api/v2/go/porcelain/context"
 
-	"github.com/go-openapi/runtime"
 	apiClient "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 	"github.com/stretchr/testify/assert"
@@ -93,23 +92,15 @@ func TestOpenAPIClientWithWeirdResponse(t *testing.T) {
 	}))
 	defer server.Close()
 
-	httpClient := http.DefaultClient
-	authInfo := runtime.ClientAuthInfoWriterFunc(func(r runtime.ClientRequest, _ strfmt.Registry) error {
-		r.SetHeaderParam("User-Agent", "buildbot")
-		r.SetHeaderParam("Authorization", "Bearer 1234")
-		return nil
-	})
-
 	hu, _ := url.Parse(server.URL)
-	tr := apiClient.NewWithClient(hu.Host, "/api/v1", []string{"http"}, httpClient)
+	tr := apiClient.NewWithClient(hu.Host, "/api/v1", []string{"http"}, http.DefaultClient)
 	client := NewRetryable(tr, strfmt.Default, 1)
 
 	body := ioutil.NopCloser(bytes.NewReader([]byte("hello world")))
 	params := operations.NewUploadDeployFileParams().WithDeployID("1234").WithPath("foo/bar/biz").WithFileBody(body)
-	_, operationError := client.Operations.UploadDeployFile(params, authInfo)
+	_, operationError := client.Operations.UploadDeployFile(params, nil)
 	require.Error(t, operationError)
 	require.Equal(t, "[PUT /deploys/{deploy_id}/files/{path}][408] uploadDeployFile default  &{Code:408 Message:a message}", operationError.Error())
-
 }
 
 func TestConcurrentFileUpload(t *testing.T) {
@@ -120,21 +111,14 @@ func TestConcurrentFileUpload(t *testing.T) {
 	}))
 	defer server.Close()
 
-	httpClient := http.DefaultClient
-	authInfo := runtime.ClientAuthInfoWriterFunc(func(r runtime.ClientRequest, _ strfmt.Registry) error {
-		r.SetHeaderParam("User-Agent", "buildbot")
-		r.SetHeaderParam("Authorization", "Bearer 1234")
-		return nil
-	})
-
 	hu, _ := url.Parse(server.URL)
-	tr := apiClient.NewWithClient(hu.Host, "/api/v1", []string{"http"}, httpClient)
+	tr := apiClient.NewWithClient(hu.Host, "/api/v1", []string{"http"}, http.DefaultClient)
 	client := NewRetryable(tr, strfmt.Default, 1)
 	for i := 0; i < 30; i++ {
 		go func() {
 			body := ioutil.NopCloser(bytes.NewReader([]byte("hello world")))
 			params := operations.NewUploadDeployFileParams().WithDeployID("1234").WithPath("foo/bar/biz").WithFileBody(body)
-			_, _ = client.Operations.UploadDeployFile(params, authInfo)
+			_, _ = client.Operations.UploadDeployFile(params, nil)
 		}()
 	}
 }
@@ -146,18 +130,11 @@ func TestWaitUntilDeployLive_Timeout(t *testing.T) {
 	}))
 	defer server.Close()
 
-	httpClient := http.DefaultClient
-	authInfo := runtime.ClientAuthInfoWriterFunc(func(r runtime.ClientRequest, _ strfmt.Registry) error {
-		r.SetHeaderParam("User-Agent", "buildbot")
-		r.SetHeaderParam("Authorization", "Bearer 1234")
-		return nil
-	})
-
 	hu, _ := url.Parse(server.URL)
-	tr := apiClient.NewWithClient(hu.Host, "/api/v1", []string{"http"}, httpClient)
+	tr := apiClient.NewWithClient(hu.Host, "/api/v1", []string{"http"}, http.DefaultClient)
 	client := NewRetryable(tr, strfmt.Default, 1)
 
-	ctx := context.WithAuthInfo(gocontext.Background(), authInfo)
+	ctx := context.WithAuthInfo(gocontext.Background(), apiClient.BearerToken("token"))
 	ctx, _ = gocontext.WithTimeout(ctx, 50*time.Millisecond)
 	_, err := client.WaitUntilDeployLive(ctx, &models.Deploy{})
 	assert.Error(t, err)
@@ -189,6 +166,38 @@ func TestWalk_IgnoreNodeModulesInRoot(t *testing.T) {
 	require.Nil(t, err)
 	assert.Nil(t, files.Files["node_modules/root-package"])
 	assert.NotNil(t, files.Files["more/node_modules/inner-package"])
+}
+
+func TestUploadFiles_Cancelation(t *testing.T) {
+	ctx, cancel := gocontext.WithCancel(gocontext.Background())
+	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		cancel() // Cancel deploy as soon as first file upload is attempted.
+		rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+		rw.Write([]byte(`{ "state": "canceled" }`))
+	}))
+	defer server.Close()
+
+	hu, _ := url.Parse(server.URL)
+	tr := apiClient.NewWithClient(hu.Host, "/api/v1", []string{"http"}, http.DefaultClient)
+	client := NewRetryable(tr, strfmt.Default, 1)
+	client.uploadLimit = 1
+	ctx = context.WithAuthInfo(ctx, apiClient.BearerToken("token"))
+
+	// Create some files to deploy
+	dir, err := ioutil.TempDir("", "deploy")
+	require.NoError(t, err)
+	defer os.RemoveAll(dir)
+	require.NoError(t, ioutil.WriteFile(filepath.Join(dir, "foo.html"), []byte("Hello"), 0644))
+	require.NoError(t, ioutil.WriteFile(filepath.Join(dir, "bar.html"), []byte("World"), 0644))
+
+	files, err := walk(dir, nil, false, false)
+	require.NoError(t, err)
+	d := &models.Deploy{}
+	for _, bundle := range files.Files {
+		d.Required = append(d.Required, bundle.Sum)
+	}
+	err = client.uploadFiles(ctx, d, files, nil, fileUpload, time.Minute)
+	require.ErrorIs(t, err, gocontext.Canceled)
 }
 
 func TestReadZipRuntime(t *testing.T) {
