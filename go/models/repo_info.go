@@ -30,6 +30,9 @@ type RepoInfo struct {
 	// env
 	Env map[string]string `json:"env,omitempty"`
 
+	// functions dir
+	FunctionsDir string `json:"functions_dir,omitempty"`
+
 	// id
 	ID int64 `json:"id,omitempty"`
 

@@ -2140,6 +2140,8 @@ definitions:
         type: string
       dir:
         type: string
+      functions_dir:
+        type: string
       cmd:
         type: string
       allowed_branches:
