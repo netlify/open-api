@@ -1,4 +1,4 @@
-# open-api
+![open-api](api.png)
 
 [![Build Status][travis-img]][travis]
 
