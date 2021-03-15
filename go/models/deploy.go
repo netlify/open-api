@@ -49,6 +49,9 @@ type Deploy struct {
 	// error message
 	ErrorMessage string `json:"error_message,omitempty"`
 
+	// framework
+	Framework string `json:"framework,omitempty"`
+
 	// id
 	ID string `json:"id,omitempty"`
 

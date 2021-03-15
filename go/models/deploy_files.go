@@ -27,6 +27,9 @@ type DeployFiles struct {
 	// files
 	Files interface{} `json:"files,omitempty"`
 
+	// framework
+	Framework string `json:"framework,omitempty"`
+
 	// functions
 	Functions interface{} `json:"functions,omitempty"`
 }

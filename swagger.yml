@@ -2373,6 +2373,8 @@ definitions:
         type: object
       branch:
         type: string
+      framework:
+        type: string
   buildStatus:
     type: object
     properties:
