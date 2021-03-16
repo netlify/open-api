@@ -2360,6 +2360,8 @@ definitions:
         properties:
           large_media_enabled:
             type: boolean
+      framework:
+        type: string
   deployFiles:
     type: object
     properties:
@@ -2372,6 +2374,8 @@ definitions:
       functions:
         type: object
       branch:
+        type: string
+      framework:
         type: string
   buildStatus:
     type: object
