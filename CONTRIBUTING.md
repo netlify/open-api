@@ -40,10 +40,7 @@ You may first want to edit swagger.yml to add your field or endpoint definitions
 
 ## Making a new release
 
-1. Merge the release PR (auto generated via `release-please`).
-2. Switch to the default branch git checkout master.
-3. Pull latest changes git pull.
-4. Run `npm publish`.
+Merge the release PR (auto generated via `release-please`)
 
 ## License
 
