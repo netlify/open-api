@@ -49,6 +49,7 @@
     "url": "git+https://github.com/netlify/open-api.git"
   },
   "scripts": {
+    "prepublishOnly": "npm ci && npm test",
     "prepare": "run-s test",
     "test": "run-s lint build unit",
     "start": "run-s lint build",
