@@ -111,7 +111,7 @@ paths:
             $ref: '#/definitions/site'
         default:
           $ref: '#/responses/error'
-    patch:
+    put:
       operationId: updateSite
       tags: [site]
       consumes:
