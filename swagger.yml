@@ -989,6 +989,31 @@ paths:
             $ref: '#/definitions/function'
         default:
           $ref: '#/responses/error'
+  /sites/{site_id}/plugins/{package}:
+    put:
+      operationId: updatePlugin
+      tags: [x-internal]
+      description: 'This is an internal-only endpoint.'
+      parameters:
+        - name: site_id
+          type: string
+          in: path
+          required: true
+        - name: package
+          type: string
+          in: path
+          required: true
+        - name: plugin_params
+          in: body
+          schema:
+            $ref: '#/definitions/pluginParams'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/plugin'
+        default:
+          $ref: '#/responses/error'
   /deploys/{deploy_id}/plugin_runs:
     post:
       operationId: createPluginRun
@@ -2376,6 +2401,18 @@ definitions:
       branch:
         type: string
       framework:
+        type: string
+  pluginParams:
+    type: object
+    properties:
+      pinned_version:
+        type: string
+  plugin:
+    type: object
+    properties:
+      package:
+        type: string
+      pinned_version:
         type: string
   buildStatus:
     type: object
