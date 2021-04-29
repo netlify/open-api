@@ -217,6 +217,8 @@ type ClientService interface {
 
 	UpdateHook(params *UpdateHookParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateHookOK, error)
 
+	UpdatePlugin(params *UpdatePluginParams, authInfo runtime.ClientAuthInfoWriter) (*UpdatePluginOK, error)
+
 	UpdateServiceInstance(params *UpdateServiceInstanceParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateServiceInstanceNoContent, error)
 
 	UpdateSite(params *UpdateSiteParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateSiteOK, error)
@@ -3476,6 +3478,40 @@ func (a *Client) UpdateHook(params *UpdateHookParams, authInfo runtime.ClientAut
 	}
 	// unexpected success response
 	unexpectedSuccess := result.(*UpdateHookDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+  UpdatePlugin This is an internal-only endpoint.
+*/
+func (a *Client) UpdatePlugin(params *UpdatePluginParams, authInfo runtime.ClientAuthInfoWriter) (*UpdatePluginOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewUpdatePluginParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "updatePlugin",
+		Method:             "PUT",
+		PathPattern:        "/sites/{site_id}/plugins/{package}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &UpdatePluginReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*UpdatePluginOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*UpdatePluginDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
