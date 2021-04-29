@@ -50,7 +50,6 @@
   },
   "scripts": {
     "prepublishOnly": "npm ci && npm test",
-    "prepare": "run-s test",
     "test": "run-s lint build unit",
     "start": "run-s lint build",
     "build": "run-s convert redoc",
