@@ -119,6 +119,8 @@ type ClientService interface {
 
 	GetIndividualDNSRecord(params *GetIndividualDNSRecordParams, authInfo runtime.ClientAuthInfoWriter) (*GetIndividualDNSRecordOK, error)
 
+	GetLatestPluginRuns(params *GetLatestPluginRunsParams, authInfo runtime.ClientAuthInfoWriter) (*GetLatestPluginRunsOK, error)
+
 	GetServices(params *GetServicesParams, authInfo runtime.ClientAuthInfoWriter) (*GetServicesOK, error)
 
 	GetSite(params *GetSiteParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteOK, error)
@@ -1806,6 +1808,40 @@ func (a *Client) GetIndividualDNSRecord(params *GetIndividualDNSRecordParams, au
 	}
 	// unexpected success response
 	unexpectedSuccess := result.(*GetIndividualDNSRecordDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+  GetLatestPluginRuns This is an internal-only endpoint.
+*/
+func (a *Client) GetLatestPluginRuns(params *GetLatestPluginRunsParams, authInfo runtime.ClientAuthInfoWriter) (*GetLatestPluginRunsOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetLatestPluginRunsParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "getLatestPluginRuns",
+		Method:             "GET",
+		PathPattern:        "/sites/{site_id}/plugin_runs/latest",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &GetLatestPluginRunsReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*GetLatestPluginRunsOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*GetLatestPluginRunsDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
