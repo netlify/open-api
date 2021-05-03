@@ -1014,6 +1014,34 @@ paths:
             $ref: '#/definitions/plugin'
         default:
           $ref: '#/responses/error'
+  /sites/{site_id}/plugin_runs/latest:
+    get:
+      operationId: getLatestPluginRuns
+      tags: [x-internal]
+      description: 'This is an internal-only endpoint.'
+      parameters:
+        - name: site_id
+          in: path
+          type: string
+          required: true
+        - name: packages
+          in: query
+          type: array
+          items:
+            type: string
+          required: true
+        - name: state
+          in: query
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/pluginRun'
+        default:
+          $ref: '#/responses/error'
   /deploys/{deploy_id}/plugin_runs:
     post:
       operationId: createPluginRun
