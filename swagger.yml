@@ -713,6 +713,12 @@ paths:
     post:
       operationId: createSiteBuild
       tags: [build]
+      parameters:
+        - name: build
+          in: body
+          schema:
+            $ref: '#/definitions/buildSetup'
+          required: false
       responses:
         '200':
           description: OK
@@ -2925,6 +2931,11 @@ definitions:
         type: boolean
       minify:
         type: boolean
+  buildSetup:
+    type: object
+    properties:
+      image:
+        type: string
   buildHookSetup:
     type: object
     properties:
