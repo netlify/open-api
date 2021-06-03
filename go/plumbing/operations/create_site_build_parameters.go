@@ -14,6 +14,8 @@ import (
 	"github.com/go-openapi/runtime"
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
+
+	"github.com/netlify/open-api/v2/go/models"
 )
 
 // NewCreateSiteBuildParams creates a new CreateSiteBuildParams object
@@ -60,6 +62,8 @@ for the create site build operation typically these are written to a http.Reques
 */
 type CreateSiteBuildParams struct {
 
+	/*Build*/
+	Build *models.BuildSetup
 	/*SiteID*/
 	SiteID string
 
@@ -101,6 +105,17 @@ func (o *CreateSiteBuildParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
+// WithBuild adds the build to the create site build params
+func (o *CreateSiteBuildParams) WithBuild(build *models.BuildSetup) *CreateSiteBuildParams {
+	o.SetBuild(build)
+	return o
+}
+
+// SetBuild adds the build to the create site build params
+func (o *CreateSiteBuildParams) SetBuild(build *models.BuildSetup) {
+	o.Build = build
+}
+
 // WithSiteID adds the siteID to the create site build params
 func (o *CreateSiteBuildParams) WithSiteID(siteID string) *CreateSiteBuildParams {
 	o.SetSiteID(siteID)
@@ -119,6 +134,12 @@ func (o *CreateSiteBuildParams) WriteToRequest(r runtime.ClientRequest, reg strf
 		return err
 	}
 	var res []error
+
+	if o.Build != nil {
+		if err := r.SetBodyParam(o.Build); err != nil {
+			return err
+		}
+	}
 
 	// path param site_id
 	if err := r.SetPathParam("site_id", o.SiteID); err != nil {
