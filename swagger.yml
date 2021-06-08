@@ -213,6 +213,149 @@ paths:
           description: Deleted
         default:
           $ref: '#/responses/error'
+  /sites/{site_id}/identity/{identity_instance_id}:
+    get:
+      operationId: identityServiceInstance
+      tags: [identity]
+      parameters:
+        - name: site_id
+          type: string
+          in: path
+          required: true
+        - name: identity_instance_id
+          type: string
+          in: path
+          required: true
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/serviceInstance'
+        default:
+          $ref: '#/responses/error'
+  /sites/{site_id}/identity/{identity_instance_id}/users:
+    get:
+      operationId: listSiteUsers
+      tags: [identity]
+      parameters:
+        - name: site_id
+          type: string
+          in: path
+          required: true
+        - name: identity_instance_id
+          type: string
+          in: path
+          required: true
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/perPage'
+        - name: sort
+          type: string
+          in: query
+        - name: filter
+          type: string
+          in: query
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/identityUser'
+        default:
+          $ref: '#/responses/error'
+  /sites/{site_id}/identity/{identity_instance_id}/users/{user_id}:
+    get:
+      operationId: getSiteUser
+      tags: [identity]
+      parameters:
+        - name: site_id
+          type: string
+          in: path
+          required: true
+        - name: identity_instance_id
+          type: string
+          in: path
+          required: true
+        - name: user_id
+          type: string
+          in: path
+          required: true
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/identityUser'
+        default:
+          $ref: '#/responses/error'
+    put:
+      operationId: updateSiteUser
+      tags: [identity]
+      consumes:
+        - application/json
+      parameters:
+        - name: site_id
+          type: string
+          in: path
+          required: true
+        - name: identity_instance_id
+          type: string
+          in: path
+          required: true
+        - name: user_id
+          type: string
+          in: path
+          required: true
+        - name: identity
+          in: body
+          schema:
+            type: object
+            properties:
+              aud:
+                type: string
+              role:
+                type: string
+              email:
+                type: string
+                format: email
+              password:
+                type: string
+                format: password
+              confirm:
+                type: boolean
+              user_metadata:
+                $ref: '#/definitions/identityAppMetadata'
+              app_metadata:
+                $ref: '#/definitions/identityUserMetadata'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/identityUser'
+        default:
+          $ref: '#/responses/error'
+    delete:
+      operationId: deleteSiteUser
+      tags: [identity]
+      parameters:
+        - name: site_id
+          type: string
+          in: path
+          required: true
+        - name: identity_instance_id
+          type: string
+          in: path
+          required: true
+        - name: user_id
+          type: string
+          in: path
+          required: true
+      responses:
+        '200':
+          description: OK
+        default:
+          $ref: '#/responses/error'
   /sites/{site_id}/submissions:
     get:
       operationId: listSiteSubmissions
@@ -2178,6 +2321,9 @@ definitions:
         type: string
       prerender:
         type: string
+      identity_instance_id:
+        type: string
+        x-nullable: true
   siteSetup:
     allOf:
       - $ref: '#/definitions/site'
@@ -3007,6 +3153,74 @@ definitions:
         properties:
           slides:
             type: string
+  identityAppMetadata:
+    type: object
+    additionalProperties: true
+    properties:
+      provider:
+        type: string
+      roles:
+        type: array
+        items:
+          type: string
+  identityUserMetadata:
+    type: object
+    additionalProperties: true
+    properties:
+      full_name:
+        type: string
+  identityUser:
+    type: object
+    properties:
+      id:
+        type: string
+      aud:
+        type: string
+      role:
+        type: string
+      email:
+        type: string
+        format: email
+      confirmed_at:
+        type: string
+        format: dateTime
+      invited_at:
+        type: string
+        format: dateTime
+      confirmation_sent_at:
+        type: string
+        format: dateTime
+      recovery_sent_at:
+        type: string
+        format: dateTime
+      new_email:
+        type: string
+        format: email
+      email_change_sent_at:
+        type: string
+        format: dateTime
+      last_sign_in_at:
+        type: string
+        format: dateTime
+      app_metadata:
+        $ref: '#/definitions/identityAppMetadata'
+      user_metadata:
+        $ref: '#/definitions/identityUserMetadata'
+      created_at:
+        type: string
+        format: dateTime
+      updated_at:
+        type: string
+        format: dateTime
+    required:
+      - id
+      - aud
+      - role
+      - email
+      - app_metadata
+      - user_metadata
+      - created_at
+      - updated_at
   error:
     type: object
     required:
@@ -3079,6 +3293,9 @@ x-tagGroups:
     tags:
       - form
       - submission
+  - name: Identity
+    tags:
+      - identity
   - name: Split tests
     tags:
       - splitTest
