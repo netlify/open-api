@@ -3148,7 +3148,7 @@ func (a *Client) RollbackSiteDeploy(params *RollbackSiteDeployParams, authInfo r
 
 	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "rollbackSiteDeploy",
-		Method:             "POST",
+		Method:             "PUT",
 		PathPattern:        "/sites/{site_id}/rollback",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},

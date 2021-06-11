@@ -54,7 +54,7 @@ type RollbackSiteDeployNoContent struct {
 }
 
 func (o *RollbackSiteDeployNoContent) Error() string {
-	return fmt.Sprintf("[POST /sites/{site_id}/rollback][%d] rollbackSiteDeployNoContent ", 204)
+	return fmt.Sprintf("[PUT /sites/{site_id}/rollback][%d] rollbackSiteDeployNoContent ", 204)
 }
 
 func (o *RollbackSiteDeployNoContent) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -85,7 +85,7 @@ func (o *RollbackSiteDeployDefault) Code() int {
 }
 
 func (o *RollbackSiteDeployDefault) Error() string {
-	return fmt.Sprintf("[POST /sites/{site_id}/rollback][%d] rollbackSiteDeploy default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[PUT /sites/{site_id}/rollback][%d] rollbackSiteDeploy default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *RollbackSiteDeployDefault) GetPayload() *models.Error {
