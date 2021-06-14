@@ -874,7 +874,7 @@ paths:
         type: string
         in: path
         required: true
-    post:
+    put:
       operationId: rollbackSiteDeploy
       tags: [deploy]
       responses:
