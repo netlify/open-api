@@ -592,8 +592,7 @@ paths:
           $ref: '#/responses/error'
     post:
       operationId: createSiteDeploy
-      tags: [
-      ]
+      tags: [deploy]
       parameters:
         - name: title
           type: string
