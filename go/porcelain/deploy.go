@@ -39,6 +39,7 @@ const (
 
 	fileUpload uploadType = iota
 	functionUpload
+	builderUpload
 
 	lfsVersionString = "version https://git-lfs.github.com/spec/v1"
 )
@@ -75,6 +76,7 @@ type DeployOptions struct {
 	SiteID            string
 	Dir               string
 	FunctionsDir      string
+	BuildersDir       string
 	BuildDir          string
 	LargeMediaEnabled bool
 
@@ -91,6 +93,7 @@ type DeployOptions struct {
 
 	files     *deployFiles
 	functions *deployFiles
+	builders  *deployFiles
 }
 
 type uploadError struct {
@@ -220,6 +223,15 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 	}
 	options.functions = functions
 
+	builders, err := bundle(options.BuildersDir, options.Observer)
+	if err != nil {
+		if options.Observer != nil {
+			options.Observer.OnFailedWalk()
+		}
+		return nil, err
+	}
+	options.builders = builders
+
 	deployFiles := &models.DeployFiles{
 		Files:     options.files.Sums,
 		Draft:     options.IsDraft,
@@ -228,6 +240,9 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 	}
 	if options.functions != nil {
 		deployFiles.Functions = options.functions.Sums
+	}
+	if options.builders != nil {
+		deployFiles.Builders = options.builders.Sums
 	}
 
 	if options.Observer != nil {
@@ -311,6 +326,12 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 		}
 	}
 
+	if options.builders != nil {
+		if err := n.uploadFiles(ctx, deploy, options.builders, options.Observer, builderUpload, options.UploadTimeout); err != nil {
+			return nil, err
+		}
+	}
+
 	return deploy, nil
 }
 
@@ -370,6 +391,10 @@ func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *depl
 		required = d.Required
 	case functionUpload:
 		required = d.RequiredFunctions
+	case builderUpload:
+		required = d.RequiredBuilders
+	default:
+		return errors.New(fmt.Sprintf("invalid upload type: %d", t))
 	}
 
 	count := 0

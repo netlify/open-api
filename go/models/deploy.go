@@ -67,6 +67,9 @@ type Deploy struct {
 	// required
 	Required []string `json:"required"`
 
+	// required builders
+	RequiredBuilders []string `json:"required_builders"`
+
 	// required functions
 	RequiredFunctions []string `json:"required_functions"`
 

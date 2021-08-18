@@ -592,7 +592,8 @@ paths:
           $ref: '#/responses/error'
     post:
       operationId: createSiteDeploy
-      tags: [deploy]
+      tags: [
+      ]
       parameters:
         - name: title
           type: string
@@ -2387,6 +2388,10 @@ definitions:
         type: array
         items:
           type: string
+      required_builders:
+        type: array
+        items:
+          type: string
       error_message:
         type: string
       branch:
@@ -2431,6 +2436,8 @@ definitions:
       async:
         type: boolean
       functions:
+        type: object
+      builders:
         type: object
       branch:
         type: string

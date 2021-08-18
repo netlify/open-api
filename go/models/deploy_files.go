@@ -21,6 +21,9 @@ type DeployFiles struct {
 	// branch
 	Branch string `json:"branch,omitempty"`
 
+	// builders
+	Builders interface{} `json:"builders,omitempty"`
+
 	// draft
 	Draft bool `json:"draft,omitempty"`
 
