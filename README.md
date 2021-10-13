@@ -1,4 +1,4 @@
-![open-api](api.png)
+[![open-api](api.png)](https://open-api.netlify.com/#/default)
 
 [![Build Status][travis-img]][travis]
 
