@@ -232,7 +232,7 @@ func TestBundle(t *testing.T) {
 
 func TestBundleWithManifest(t *testing.T) {
 	cwd, _ := os.Getwd()
-	basePath := path.Join(cwd, "../internal/data")
+	basePath := path.Join(cwd, "..", "internal", "data")
 	manifestPath := path.Join(basePath, "manifest.json")
 	manifestFile := fmt.Sprintf(`{
 		"functions": [
