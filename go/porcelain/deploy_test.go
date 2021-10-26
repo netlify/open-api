@@ -3,6 +3,7 @@ package porcelain
 import (
 	"bytes"
 	gocontext "context"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -230,13 +231,26 @@ func TestBundle(t *testing.T) {
 }
 
 func TestBundleWithManifest(t *testing.T) {
-	// We'll create a `manifest.json` from the template file, replacing the
-	// @BASEPATH@ placeholder with the absolute path to `go/internal/data`.
-	manifestTemplate, _ := ioutil.ReadFile("../internal/data/manifest.json-template")
 	cwd, _ := os.Getwd()
 	basePath := path.Join(cwd, "../internal/data")
-	manifestFile := strings.Replace(string(manifestTemplate), "@BASEPATH@", basePath, 2)
 	manifestPath := path.Join(basePath, "manifest.json")
+	manifestFile := fmt.Sprintf(`{
+		"functions": [
+			{
+				"path": "%s",
+				"runtime": "a-runtime",
+				"mainFile": "/some/path/hello-js-function-test.js",
+				"name": "hello-js-function-test"
+			},
+			{
+				"path": "%s",
+				"runtime": "some-other-runtime",
+				"mainFile": "/some/path/hello-py-function-test",
+				"name": "hello-py-function-test"
+			}    
+		],
+		"version": 1
+	}`, path.Join(basePath, "hello-js-function-test.zip"), path.Join(basePath, "hello-py-function-test.zip"))
 
 	err := ioutil.WriteFile(manifestPath, []byte(manifestFile), 0644)
 	defer os.Remove(manifestPath)
