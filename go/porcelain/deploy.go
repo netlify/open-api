@@ -43,18 +43,6 @@ const (
 	lfsVersionString = "version https://git-lfs.github.com/spec/v1"
 )
 
-type functionsManifestEntry struct {
-	MainFile string `json:"mainFile"`
-	Name     string `json:"name"`
-	Path     string `json:"path"`
-	Runtime  string `json:"runtime"`
-}
-
-type functionsManifest struct {
-	Functions []functionsManifestEntry `json:"functions"`
-	Version   int                      `json:"version"`
-}
-
 var installDirs = []string{"node_modules/", "bower_components/"}
 
 type uploadType int
