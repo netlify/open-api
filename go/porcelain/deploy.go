@@ -641,7 +641,11 @@ func bundleFromManifest(manifestFile *os.File, observer DeployObserver) (*deploy
 
 	var manifest functionsManifest
 
-	json.Unmarshal(manifestBytes, &manifest)
+	err := json.Unmarshal(manifestBytes, &manifest)
+
+	if err != nil {
+		return nil, fmt.Errorf("malformed functions manifest file")
+	}
 
 	functions := newDeployFiles()
 
