@@ -210,7 +210,7 @@ func TestBundle(t *testing.T) {
 	}
 
 	if len(functions.Files) != 3 {
-		t.Fatalf("unexpected number of functions, expected=1, got=%d", len(functions.Files))
+		t.Fatalf("unexpected number of functions, expected=3, got=%d", len(functions.Files))
 	}
 
 	jsFunction := functions.Files["hello-js-function-test"]
