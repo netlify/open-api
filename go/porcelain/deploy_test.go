@@ -238,7 +238,7 @@ func TestBundleWithManifest(t *testing.T) {
 	manifestFile := strings.Replace(string(manifestTemplate), "@BASEPATH@", basePath, 2)
 	manifestPath := path.Join(basePath, "manifest.json")
 
-	err := os.WriteFile(manifestPath, []byte(manifestFile), 0644)
+	err := ioutil.WriteFile(manifestPath, []byte(manifestFile), 0644)
 	defer os.Remove(manifestPath)
 
 	if err != nil {
