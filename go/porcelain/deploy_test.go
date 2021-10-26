@@ -274,14 +274,16 @@ func TestBundleWithManifest(t *testing.T) {
 	}
 
 	jsFunction := functions.Files["hello-js-function-test"]
+	expectedJsFunctionRuntime := "a-runtime"
 	pyFunction := functions.Files["hello-py-function-test"]
+	expectedPyFunctionRuntime := "some-other-runtime"
 
-	if jsFunction.Runtime != "a-runtime" {
-		t.Fatalf("unexpected runtime, expected='js', got='%v'", jsFunction.Runtime)
+	if jsFunction.Runtime != expectedJsFunctionRuntime {
+		t.Fatalf("unexpected runtime, expected='%s', got='%v'", expectedJsFunctionRuntime, jsFunction.Runtime)
 	}
 
-	if pyFunction.Runtime != "some-other-runtime" {
-		t.Fatalf("unexpected runtime, expected='py', got='%v'", pyFunction.Runtime)
+	if pyFunction.Runtime != expectedPyFunctionRuntime {
+		t.Fatalf("unexpected runtime, expected='%s', got='%v'", expectedPyFunctionRuntime, pyFunction.Runtime)
 	}
 }
 
