@@ -43,6 +43,18 @@ const (
 	lfsVersionString = "version https://git-lfs.github.com/spec/v1"
 )
 
+type functionsManifestEntry struct {
+	MainFile string `json:"mainFile"`
+	Name     string `json:"name"`
+	Path     string `json:"path"`
+	Runtime  string `json:"runtime"`
+}
+
+type functionsManifest struct {
+	Functions []functionsManifestEntry `json:"functions"`
+	Version   int                      `json:"version"`
+}
+
 var installDirs = []string{"node_modules/", "bower_components/"}
 
 type uploadType int
@@ -583,6 +595,16 @@ func bundle(functionDir string, observer DeployObserver) (*deployFiles, error) {
 		return nil, nil
 	}
 
+	manifestFile, err := os.Open(filepath.Join(functionDir, "manifest.json"))
+
+	// If a `manifest.json` file is found, we extract the functions and their
+	// metadata from it.
+	if err == nil {
+		defer manifestFile.Close()
+
+		return bundleFromManifest(manifestFile, observer)
+	}
+
 	functions := newDeployFiles()
 
 	info, err := ioutil.ReadDir(functionDir)
@@ -621,6 +643,34 @@ func bundle(functionDir string, observer DeployObserver) (*deployFiles, error) {
 				warner.OnWalkWarning(filePath, "Function is not valid for deployment. Please check that it matches the format for the runtime.")
 			}
 		}
+	}
+
+	return functions, nil
+}
+
+func bundleFromManifest(manifestFile *os.File, observer DeployObserver) (*deployFiles, error) {
+	manifestBytes, _ := ioutil.ReadAll(manifestFile)
+
+	var manifest functionsManifest
+
+	json.Unmarshal(manifestBytes, &manifest)
+
+	functions := newDeployFiles()
+
+	for _, function := range manifest.Functions {
+		fileInfo, err := os.Stat(function.Path)
+
+		if err != nil {
+			return nil, err
+		}
+
+		file, err := newFunctionFile(function.Path, fileInfo, function.Runtime, observer)
+
+		if err != nil {
+			return nil, err
+		}
+
+		functions.Add(file.Name, file)
 	}
 
 	return functions, nil

@@ -8,6 +8,7 @@ import (
 	"net/http/httptest"
 	"net/url"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -198,6 +199,74 @@ func TestUploadFiles_Cancelation(t *testing.T) {
 	}
 	err = client.uploadFiles(ctx, d, files, nil, fileUpload, time.Minute)
 	require.ErrorIs(t, err, gocontext.Canceled)
+}
+
+func TestBundle(t *testing.T) {
+	functions, err := bundle("../internal/data", mockObserver{})
+
+	if err != nil {
+		t.Fatalf("unexpected error bundling functions: %v", err)
+	}
+
+	if len(functions.Files) != 3 {
+		t.Fatalf("unexpected number of functions, expected=1, got=%d", len(functions.Files))
+	}
+
+	jsFunction := functions.Files["hello-js-function-test"]
+	pyFunction := functions.Files["hello-py-function-test"]
+	rsFunction := functions.Files["hello-rs-function-test"]
+
+	if jsFunction.Runtime != "js" {
+		t.Fatalf("unexpected runtime, expected='js', got='%v'", jsFunction.Runtime)
+	}
+
+	if pyFunction.Runtime != "py" {
+		t.Fatalf("unexpected runtime, expected='py', got='%v'", pyFunction.Runtime)
+	}
+
+	if rsFunction.Runtime != "rs" {
+		t.Fatalf("unexpected runtime, expected='rs', got='%v'", rsFunction.Runtime)
+	}
+}
+
+func TestBundleWithManifest(t *testing.T) {
+	// We'll create a `manifest.json` from the template file, replacing the
+	// @BASEPATH@ placeholder with the absolute path to `go/internal/data`.
+	manifestTemplate, _ := ioutil.ReadFile("../internal/data/manifest.json-template")
+	cwd, _ := os.Getwd()
+	basePath := path.Join(cwd, "../internal/data")
+	manifestFile := strings.Replace(string(manifestTemplate), "@BASEPATH@", basePath, 2)
+	manifestPath := path.Join(basePath, "manifest.json")
+
+	err := os.WriteFile(manifestPath, []byte(manifestFile), 0644)
+	defer os.Remove(manifestPath)
+
+	if err != nil {
+		t.Fatal("could not create manifest file")
+	}
+
+	functions, err := bundle("../internal/data", mockObserver{})
+
+	t.Log(functions)
+
+	if err != nil {
+		t.Fatalf("unexpected error bundling functions: %v", err)
+	}
+
+	if len(functions.Files) != 2 {
+		t.Fatalf("unexpected number of functions, expected=1, got=%d", len(functions.Files))
+	}
+
+	jsFunction := functions.Files["hello-js-function-test"]
+	pyFunction := functions.Files["hello-py-function-test"]
+
+	if jsFunction.Runtime != "a-runtime" {
+		t.Fatalf("unexpected runtime, expected='js', got='%v'", jsFunction.Runtime)
+	}
+
+	if pyFunction.Runtime != "some-other-runtime" {
+		t.Fatalf("unexpected runtime, expected='py', got='%v'", pyFunction.Runtime)
+	}
 }
 
 func TestReadZipRuntime(t *testing.T) {
