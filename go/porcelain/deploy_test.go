@@ -232,7 +232,9 @@ func TestBundle(t *testing.T) {
 
 func TestBundleWithManifest(t *testing.T) {
 	cwd, _ := os.Getwd()
-	basePath := path.Join(cwd, "..", "internal", "data")
+	basePath := path.Join(filepath.Dir(cwd), "internal", "data")
+	jsFunctionPath := strings.Replace(filepath.Join(basePath, "hello-js-function-test.zip"), "\\", "/", -1)
+	pyFunctionPath := strings.Replace(filepath.Join(basePath, "hello-py-function-test.zip"), "\\", "/", -1)
 	manifestPath := path.Join(basePath, "manifest.json")
 	manifestFile := fmt.Sprintf(`{
 		"functions": [
@@ -250,7 +252,7 @@ func TestBundleWithManifest(t *testing.T) {
 			}    
 		],
 		"version": 1
-	}`, path.Join(basePath, "hello-js-function-test.zip"), path.Join(basePath, "hello-py-function-test.zip"))
+	}`, jsFunctionPath, pyFunctionPath)
 
 	err := ioutil.WriteFile(manifestPath, []byte(manifestFile), 0644)
 	defer os.Remove(manifestPath)
@@ -268,7 +270,7 @@ func TestBundleWithManifest(t *testing.T) {
 	}
 
 	if len(functions.Files) != 2 {
-		t.Fatalf("unexpected number of functions, expected=1, got=%d", len(functions.Files))
+		t.Fatalf("unexpected number of functions, expected=2, got=%d", len(functions.Files))
 	}
 
 	jsFunction := functions.Files["hello-js-function-test"]
