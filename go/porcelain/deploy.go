@@ -657,7 +657,7 @@ func bundleFromManifest(manifestFile *os.File, observer DeployObserver) (*deploy
 		fileInfo, err := os.Stat(function.Path)
 
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("manifest file specifies a function path that cannot be found: %s", function.Path)
 		}
 
 		file, err := newFunctionFile(function.Path, fileInfo, function.Runtime, observer)
