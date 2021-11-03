@@ -637,11 +637,15 @@ func bundle(functionDir string, observer DeployObserver) (*deployFiles, error) {
 }
 
 func bundleFromManifest(manifestFile *os.File, observer DeployObserver) (*deployFiles, error) {
-	manifestBytes, _ := ioutil.ReadAll(manifestFile)
+	manifestBytes, err := ioutil.ReadAll(manifestFile)
+
+	if err != nil {
+		return nil, err
+	}
 
 	var manifest functionsManifest
 
-	err := json.Unmarshal(manifestBytes, &manifest)
+	err = json.Unmarshal(manifestBytes, &manifest)
 
 	if err != nil {
 		return nil, fmt.Errorf("malformed functions manifest file: %w", err)
