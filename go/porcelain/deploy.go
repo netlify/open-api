@@ -583,6 +583,16 @@ func bundle(functionDir string, observer DeployObserver) (*deployFiles, error) {
 		return nil, nil
 	}
 
+	manifestFile, err := os.Open(filepath.Join(functionDir, "manifest.json"))
+
+	// If a `manifest.json` file is found, we extract the functions and their
+	// metadata from it.
+	if err == nil {
+		defer manifestFile.Close()
+
+		return bundleFromManifest(manifestFile, observer)
+	}
+
 	functions := newDeployFiles()
 
 	info, err := ioutil.ReadDir(functionDir)
@@ -621,6 +631,42 @@ func bundle(functionDir string, observer DeployObserver) (*deployFiles, error) {
 				warner.OnWalkWarning(filePath, "Function is not valid for deployment. Please check that it matches the format for the runtime.")
 			}
 		}
+	}
+
+	return functions, nil
+}
+
+func bundleFromManifest(manifestFile *os.File, observer DeployObserver) (*deployFiles, error) {
+	manifestBytes, err := ioutil.ReadAll(manifestFile)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var manifest functionsManifest
+
+	err = json.Unmarshal(manifestBytes, &manifest)
+
+	if err != nil {
+		return nil, fmt.Errorf("malformed functions manifest file: %w", err)
+	}
+
+	functions := newDeployFiles()
+
+	for _, function := range manifest.Functions {
+		fileInfo, err := os.Stat(function.Path)
+
+		if err != nil {
+			return nil, fmt.Errorf("manifest file specifies a function path that cannot be found: %s", function.Path)
+		}
+
+		file, err := newFunctionFile(function.Path, fileInfo, function.Runtime, observer)
+
+		if err != nil {
+			return nil, err
+		}
+
+		functions.Add(file.Name, file)
 	}
 
 	return functions, nil

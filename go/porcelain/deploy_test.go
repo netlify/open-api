@@ -3,11 +3,13 @@ package porcelain
 import (
 	"bytes"
 	gocontext "context"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -198,6 +200,91 @@ func TestUploadFiles_Cancelation(t *testing.T) {
 	}
 	err = client.uploadFiles(ctx, d, files, nil, fileUpload, time.Minute)
 	require.ErrorIs(t, err, gocontext.Canceled)
+}
+
+func TestBundle(t *testing.T) {
+	functions, err := bundle("../internal/data", mockObserver{})
+
+	if err != nil {
+		t.Fatalf("unexpected error bundling functions: %v", err)
+	}
+
+	if len(functions.Files) != 3 {
+		t.Fatalf("unexpected number of functions, expected=3, got=%d", len(functions.Files))
+	}
+
+	jsFunction := functions.Files["hello-js-function-test"]
+	pyFunction := functions.Files["hello-py-function-test"]
+	rsFunction := functions.Files["hello-rs-function-test"]
+
+	if jsFunction.Runtime != "js" {
+		t.Fatalf("unexpected runtime, expected='js', got='%v'", jsFunction.Runtime)
+	}
+
+	if pyFunction.Runtime != "py" {
+		t.Fatalf("unexpected runtime, expected='py', got='%v'", pyFunction.Runtime)
+	}
+
+	if rsFunction.Runtime != "rs" {
+		t.Fatalf("unexpected runtime, expected='rs', got='%v'", rsFunction.Runtime)
+	}
+}
+
+func TestBundleWithManifest(t *testing.T) {
+	cwd, _ := os.Getwd()
+	basePath := path.Join(filepath.Dir(cwd), "internal", "data")
+	jsFunctionPath := strings.Replace(filepath.Join(basePath, "hello-js-function-test.zip"), "\\", "/", -1)
+	pyFunctionPath := strings.Replace(filepath.Join(basePath, "hello-py-function-test.zip"), "\\", "/", -1)
+	manifestPath := path.Join(basePath, "manifest.json")
+	manifestFile := fmt.Sprintf(`{
+		"functions": [
+			{
+				"path": "%s",
+				"runtime": "a-runtime",
+				"mainFile": "/some/path/hello-js-function-test.js",
+				"name": "hello-js-function-test"
+			},
+			{
+				"path": "%s",
+				"runtime": "some-other-runtime",
+				"mainFile": "/some/path/hello-py-function-test",
+				"name": "hello-py-function-test"
+			}    
+		],
+		"version": 1
+	}`, jsFunctionPath, pyFunctionPath)
+
+	err := ioutil.WriteFile(manifestPath, []byte(manifestFile), 0644)
+	defer os.Remove(manifestPath)
+
+	if err != nil {
+		t.Fatal("could not create manifest file")
+	}
+
+	functions, err := bundle("../internal/data", mockObserver{})
+
+	t.Log(functions)
+
+	if err != nil {
+		t.Fatalf("unexpected error bundling functions: %v", err)
+	}
+
+	if len(functions.Files) != 2 {
+		t.Fatalf("unexpected number of functions, expected=2, got=%d", len(functions.Files))
+	}
+
+	jsFunction := functions.Files["hello-js-function-test"]
+	expectedJsFunctionRuntime := "a-runtime"
+	pyFunction := functions.Files["hello-py-function-test"]
+	expectedPyFunctionRuntime := "some-other-runtime"
+
+	if jsFunction.Runtime != expectedJsFunctionRuntime {
+		t.Fatalf("unexpected runtime, expected='%s', got='%v'", expectedJsFunctionRuntime, jsFunction.Runtime)
+	}
+
+	if pyFunction.Runtime != expectedPyFunctionRuntime {
+		t.Fatalf("unexpected runtime, expected='%s', got='%v'", expectedPyFunctionRuntime, pyFunction.Runtime)
+	}
 }
 
 func TestReadZipRuntime(t *testing.T) {
