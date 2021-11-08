@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  version: 2.5.2
+  version: 2.6.0
   title: Netlify's API documentation
   description: >-
     Netlify is a hosting service for the programmable web. It understands your
