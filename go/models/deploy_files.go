@@ -32,6 +32,9 @@ type DeployFiles struct {
 
 	// functions
 	Functions interface{} `json:"functions,omitempty"`
+
+	// functions env
+	FunctionsEnv interface{} `json:"functions_env,omitempty"`
 }
 
 // Validate validates this deploy files

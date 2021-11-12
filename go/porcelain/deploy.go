@@ -77,8 +77,8 @@ type DeployOptions struct {
 	FunctionsDir      string
 	BuildDir          string
 	LargeMediaEnabled bool
-
-	IsDraft bool
+	FunctionsEnv      map[string]string
+	IsDraft           bool
 
 	Title             string
 	Branch            string
@@ -228,6 +228,7 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 	}
 	if options.functions != nil {
 		deployFiles.Functions = options.functions.Sums
+		deployFiles.FunctionsEnv = options.FunctionsEnv
 	}
 
 	if options.Observer != nil {

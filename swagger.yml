@@ -2431,6 +2431,8 @@ definitions:
         type: boolean
       functions:
         type: object
+      functions_env:
+        type: object
       branch:
         type: string
       framework:
