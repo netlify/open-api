@@ -2422,11 +2422,8 @@ definitions:
         type: string
       function_schedules:
         type: array
-        properties:
-          name:
-            type: string
-          cron:
-            type: string         
+        items:
+          $ref: '#/definitions/functionSchedule'
   deployFiles:
     type: object
     properties:
@@ -2440,11 +2437,8 @@ definitions:
         type: object
       function_schedules:
         type: array
-        properties:
-          name:
-            type: string
-          cron:
-            type: string
+        items:
+          $ref: '#/definitions/functionSchedule'
       branch:
         type: string
       framework:
@@ -3031,6 +3025,13 @@ definitions:
       message:
         type: string
         x-nullable: false
+  functionSchedule:
+      type: object
+      properties:
+        name:
+          type: string
+        cron:
+          type: string           
 parameters:
   page:
     type: integer
