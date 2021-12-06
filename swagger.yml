@@ -2420,6 +2420,13 @@ definitions:
             type: boolean
       framework:
         type: string
+      function_schedules:
+        type: array
+        properties:
+          name:
+            type: string
+          cron:
+            type: string         
   deployFiles:
     type: object
     properties:
@@ -2431,6 +2438,13 @@ definitions:
         type: boolean
       functions:
         type: object
+      function_schedules:
+        type: array
+        properties:
+          name:
+            type: string
+          cron:
+            type: string
       branch:
         type: string
       framework:
