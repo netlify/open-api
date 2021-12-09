@@ -203,31 +203,18 @@ func TestUploadFiles_Cancelation(t *testing.T) {
 }
 
 func TestBundle(t *testing.T) {
-	functions, err := bundle("../internal/data", mockObserver{})
+	functions, _, err := bundle("../internal/data", mockObserver{})
 
-	if err != nil {
-		t.Fatalf("unexpected error bundling functions: %v", err)
-	}
-
-	if len(functions.Files) != 3 {
-		t.Fatalf("unexpected number of functions, expected=3, got=%d", len(functions.Files))
-	}
+	assert.Nil(t, err)
+	assert.Equal(t, 3, len(functions.Files))
 
 	jsFunction := functions.Files["hello-js-function-test"]
 	pyFunction := functions.Files["hello-py-function-test"]
 	rsFunction := functions.Files["hello-rs-function-test"]
 
-	if jsFunction.Runtime != "js" {
-		t.Fatalf("unexpected runtime, expected='js', got='%v'", jsFunction.Runtime)
-	}
-
-	if pyFunction.Runtime != "py" {
-		t.Fatalf("unexpected runtime, expected='py', got='%v'", pyFunction.Runtime)
-	}
-
-	if rsFunction.Runtime != "rs" {
-		t.Fatalf("unexpected runtime, expected='rs', got='%v'", rsFunction.Runtime)
-	}
+	assert.Equal(t, "js", jsFunction.Runtime)
+	assert.Equal(t, "py", pyFunction.Runtime)
+	assert.Equal(t, "rs", rsFunction.Runtime)
 }
 
 func TestBundleWithManifest(t *testing.T) {
@@ -242,7 +229,8 @@ func TestBundleWithManifest(t *testing.T) {
 				"path": "%s",
 				"runtime": "a-runtime",
 				"mainFile": "/some/path/hello-js-function-test.js",
-				"name": "hello-js-function-test"
+				"name": "hello-js-function-test",
+				"schedule": "* * * * *"
 			},
 			{
 				"path": "%s",
@@ -256,46 +244,26 @@ func TestBundleWithManifest(t *testing.T) {
 
 	err := ioutil.WriteFile(manifestPath, []byte(manifestFile), 0644)
 	defer os.Remove(manifestPath)
+	assert.Nil(t, err)
 
-	if err != nil {
-		t.Fatal("could not create manifest file")
-	}
+	functions, schedules, err := bundle("../internal/data", mockObserver{})
 
-	functions, err := bundle("../internal/data", mockObserver{})
+	assert.Nil(t, err)
 
-	t.Log(functions)
+	assert.Equal(t, 1, len(schedules))
+	assert.Equal(t, "hello-js-function-test", schedules[0].Name)
+	assert.Equal(t, "* * * * *", schedules[0].Cron)
 
-	if err != nil {
-		t.Fatalf("unexpected error bundling functions: %v", err)
-	}
-
-	if len(functions.Files) != 2 {
-		t.Fatalf("unexpected number of functions, expected=2, got=%d", len(functions.Files))
-	}
-
-	jsFunction := functions.Files["hello-js-function-test"]
-	expectedJsFunctionRuntime := "a-runtime"
-	pyFunction := functions.Files["hello-py-function-test"]
-	expectedPyFunctionRuntime := "some-other-runtime"
-
-	if jsFunction.Runtime != expectedJsFunctionRuntime {
-		t.Fatalf("unexpected runtime, expected='%s', got='%v'", expectedJsFunctionRuntime, jsFunction.Runtime)
-	}
-
-	if pyFunction.Runtime != expectedPyFunctionRuntime {
-		t.Fatalf("unexpected runtime, expected='%s', got='%v'", expectedPyFunctionRuntime, pyFunction.Runtime)
-	}
+	assert.Equal(t, 2, len(functions.Files))
+	assert.Equal(t, "a-runtime", functions.Files["hello-js-function-test"].Runtime)
+	assert.Equal(t, "some-other-runtime", functions.Files["hello-py-function-test"].Runtime)
 }
 
 func TestReadZipRuntime(t *testing.T) {
 	runtime, err := readZipRuntime("../internal/data/hello-rs-function-test.zip")
-	if err != nil {
-		t.Fatalf("unexpected error reading zip file: %v", err)
-	}
 
-	if runtime != "rs" {
-		t.Fatalf("unexpected runtime value, expected='rs', got='%s'", runtime)
-	}
+	assert.Nil(t, err)
+	assert.Equal(t, "rs", runtime)
 }
 
 type mockObserver struct{}

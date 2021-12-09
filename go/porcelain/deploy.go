@@ -89,8 +89,9 @@ type DeployOptions struct {
 
 	Observer DeployObserver
 
-	files     *deployFiles
-	functions *deployFiles
+	files             *deployFiles
+	functions         *deployFiles
+	functionSchedules []models.FunctionSchedule
 }
 
 type uploadError struct {
@@ -211,7 +212,7 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 
 	options.files = files
 
-	functions, err := bundle(options.FunctionsDir, options.Observer)
+	functions, schedules, err := bundle(options.FunctionsDir, options.Observer)
 	if err != nil {
 		if options.Observer != nil {
 			options.Observer.OnFailedWalk()
@@ -219,6 +220,7 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 		return nil, err
 	}
 	options.functions = functions
+	options.functionSchedules = schedules
 
 	deployFiles := &models.DeployFiles{
 		Files:     options.files.Sums,
@@ -578,9 +580,9 @@ func walk(dir string, observer DeployObserver, useLargeMedia, ignoreInstallDirs 
 	return files, err
 }
 
-func bundle(functionDir string, observer DeployObserver) (*deployFiles, error) {
+func bundle(functionDir string, observer DeployObserver) (*deployFiles, []models.FunctionSchedule, error) {
 	if functionDir == "" {
-		return nil, nil
+		return nil, nil, nil
 	}
 
 	manifestFile, err := os.Open(filepath.Join(functionDir, "manifest.json"))
@@ -597,7 +599,7 @@ func bundle(functionDir string, observer DeployObserver) (*deployFiles, error) {
 
 	info, err := ioutil.ReadDir(functionDir)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	for _, i := range info {
@@ -607,23 +609,23 @@ func bundle(functionDir string, observer DeployObserver) (*deployFiles, error) {
 		case zipFile(i):
 			runtime, err := readZipRuntime(filePath)
 			if err != nil {
-				return nil, err
+				return nil, nil, err
 			}
 			file, err := newFunctionFile(filePath, i, runtime, observer)
 			if err != nil {
-				return nil, err
+				return nil, nil, err
 			}
 			functions.Add(file.Name, file)
 		case jsFile(i):
 			file, err := newFunctionFile(filePath, i, jsRuntime, observer)
 			if err != nil {
-				return nil, err
+				return nil, nil, err
 			}
 			functions.Add(file.Name, file)
 		case goFile(filePath, i, observer):
 			file, err := newFunctionFile(filePath, i, goRuntime, observer)
 			if err != nil {
-				return nil, err
+				return nil, nil, err
 			}
 			functions.Add(file.Name, file)
 		default:
@@ -633,14 +635,14 @@ func bundle(functionDir string, observer DeployObserver) (*deployFiles, error) {
 		}
 	}
 
-	return functions, nil
+	return functions, nil, nil
 }
 
-func bundleFromManifest(manifestFile *os.File, observer DeployObserver) (*deployFiles, error) {
+func bundleFromManifest(manifestFile *os.File, observer DeployObserver) (*deployFiles, []models.FunctionSchedule, error) {
 	manifestBytes, err := ioutil.ReadAll(manifestFile)
 
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	var manifest functionsManifest
@@ -648,28 +650,36 @@ func bundleFromManifest(manifestFile *os.File, observer DeployObserver) (*deploy
 	err = json.Unmarshal(manifestBytes, &manifest)
 
 	if err != nil {
-		return nil, fmt.Errorf("malformed functions manifest file: %w", err)
+		return nil, nil, fmt.Errorf("malformed functions manifest file: %w", err)
 	}
 
+	schedules := make([]models.FunctionSchedule, 0, len(manifest.Functions))
 	functions := newDeployFiles()
 
 	for _, function := range manifest.Functions {
 		fileInfo, err := os.Stat(function.Path)
 
 		if err != nil {
-			return nil, fmt.Errorf("manifest file specifies a function path that cannot be found: %s", function.Path)
+			return nil, nil, fmt.Errorf("manifest file specifies a function path that cannot be found: %s", function.Path)
 		}
 
 		file, err := newFunctionFile(function.Path, fileInfo, function.Runtime, observer)
 
 		if err != nil {
-			return nil, err
+			return nil, nil, err
+		}
+
+		if function.Schedule != "" {
+			schedules = append(schedules, models.FunctionSchedule{
+				Cron: function.Schedule,
+				Name: function.Name,
+			})
 		}
 
 		functions.Add(file.Name, file)
 	}
 
-	return functions, nil
+	return functions, schedules, nil
 }
 
 func readZipRuntime(filePath string) (string, error) {
