@@ -203,10 +203,11 @@ func TestUploadFiles_Cancelation(t *testing.T) {
 }
 
 func TestBundle(t *testing.T) {
-	functions, _, err := bundle("../internal/data", mockObserver{})
+	functions, schedules, err := bundle("../internal/data", mockObserver{})
 
 	assert.Nil(t, err)
 	assert.Equal(t, 3, len(functions.Files))
+	assert.Empty(t, schedules)
 
 	jsFunction := functions.Files["hello-js-function-test"]
 	pyFunction := functions.Files["hello-py-function-test"]
