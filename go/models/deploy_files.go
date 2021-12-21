@@ -6,6 +6,9 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"strconv"
+
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
@@ -30,12 +33,49 @@ type DeployFiles struct {
 	// framework
 	Framework string `json:"framework,omitempty"`
 
+	// function schedules
+	FunctionSchedules []*FunctionSchedule `json:"function_schedules"`
+
 	// functions
 	Functions interface{} `json:"functions,omitempty"`
 }
 
 // Validate validates this deploy files
 func (m *DeployFiles) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateFunctionSchedules(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *DeployFiles) validateFunctionSchedules(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.FunctionSchedules) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.FunctionSchedules); i++ {
+		if swag.IsZero(m.FunctionSchedules[i]) { // not required
+			continue
+		}
+
+		if m.FunctionSchedules[i] != nil {
+			if err := m.FunctionSchedules[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("function_schedules" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
 	return nil
 }
 
