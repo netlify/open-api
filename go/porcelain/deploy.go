@@ -650,9 +650,7 @@ func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer Dep
 		return nil, nil, err
 	}
 
-	context.GetLogger(ctx).WithFields(logrus.Fields{
-		"manifest": string(manifestBytes),
-	}).Debug("Found functions manifest file")
+	context.GetLogger(ctx).Debug("Found functions manifest file")
 
 	var manifest functionsManifest
 
