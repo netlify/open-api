@@ -212,7 +212,7 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 
 	options.files = files
 
-	functions, schedules, err := bundle(options.FunctionsDir, options.Observer)
+	functions, schedules, err := bundle(ctx, options.FunctionsDir, options.Observer)
 	if err != nil {
 		if options.Observer != nil {
 			options.Observer.OnFailedWalk()
@@ -240,10 +240,8 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 
 	l := context.GetLogger(ctx)
 	l.WithFields(logrus.Fields{
-		"site_id":            options.SiteID,
-		"deploy_files":       len(options.files.Sums),
-		"functions":          len(functions.Files),
-		"function_schedules": len(schedules),
+		"site_id":      options.SiteID,
+		"deploy_files": len(options.files.Sums),
 	}).Debug("Starting to deploy files")
 	authInfo := context.GetAuthInfo(ctx)
 
@@ -582,7 +580,7 @@ func walk(dir string, observer DeployObserver, useLargeMedia, ignoreInstallDirs 
 	return files, err
 }
 
-func bundle(functionDir string, observer DeployObserver) (*deployFiles, []models.FunctionSchedule, error) {
+func bundle(ctx context.Context, functionDir string, observer DeployObserver) (*deployFiles, []models.FunctionSchedule, error) {
 	if functionDir == "" {
 		return nil, nil, nil
 	}
@@ -594,7 +592,7 @@ func bundle(functionDir string, observer DeployObserver) (*deployFiles, []models
 	if err == nil {
 		defer manifestFile.Close()
 
-		return bundleFromManifest(manifestFile, observer)
+		return bundleFromManifest(ctx, manifestFile, observer)
 	}
 
 	functions := newDeployFiles()
@@ -640,12 +638,16 @@ func bundle(functionDir string, observer DeployObserver) (*deployFiles, []models
 	return functions, nil, nil
 }
 
-func bundleFromManifest(manifestFile *os.File, observer DeployObserver) (*deployFiles, []models.FunctionSchedule, error) {
+func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer DeployObserver) (*deployFiles, []models.FunctionSchedule, error) {
 	manifestBytes, err := ioutil.ReadAll(manifestFile)
 
 	if err != nil {
 		return nil, nil, err
 	}
+
+	context.GetLogger(ctx).WithFields(logrus.Fields{
+		"manifest": string(manifestBytes),
+	}).Debug("Found functions manifest file")
 
 	var manifest functionsManifest
 
