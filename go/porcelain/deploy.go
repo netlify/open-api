@@ -650,7 +650,8 @@ func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer Dep
 		return nil, nil, err
 	}
 
-	context.GetLogger(ctx).Debug("Found functions manifest file")
+	logger := context.GetLogger(ctx)
+	logger.Debug("Found functions manifest file")
 
 	var manifest functionsManifest
 
