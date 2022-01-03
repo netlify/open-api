@@ -240,8 +240,10 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 
 	l := context.GetLogger(ctx)
 	l.WithFields(logrus.Fields{
-		"site_id":      options.SiteID,
-		"deploy_files": len(options.files.Sums),
+		"site_id":            options.SiteID,
+		"deploy_files":       len(options.files.Sums),
+		"functions":          len(functions.Files),
+		"function_schedules": len(schedules),
 	}).Debug("Starting to deploy files")
 	authInfo := context.GetAuthInfo(ctx)
 
