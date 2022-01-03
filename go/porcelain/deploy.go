@@ -91,7 +91,7 @@ type DeployOptions struct {
 
 	files             *deployFiles
 	functions         *deployFiles
-	functionSchedules []models.FunctionSchedule
+	functionSchedules []*models.FunctionSchedule
 }
 
 type uploadError struct {
@@ -236,6 +236,10 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 		if err := options.Observer.OnSuccessfulWalk(deployFiles); err != nil {
 			return nil, err
 		}
+	}
+
+	if len(schedules) > 0 {
+		deployFiles.FunctionSchedules = schedules
 	}
 
 	l := context.GetLogger(ctx)
@@ -581,7 +585,7 @@ func walk(dir string, observer DeployObserver, useLargeMedia, ignoreInstallDirs 
 	return files, err
 }
 
-func bundle(ctx context.Context, functionDir string, observer DeployObserver) (*deployFiles, []models.FunctionSchedule, error) {
+func bundle(ctx context.Context, functionDir string, observer DeployObserver) (*deployFiles, []*models.FunctionSchedule, error) {
 	if functionDir == "" {
 		return nil, nil, nil
 	}
@@ -639,7 +643,7 @@ func bundle(ctx context.Context, functionDir string, observer DeployObserver) (*
 	return functions, nil, nil
 }
 
-func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer DeployObserver) (*deployFiles, []models.FunctionSchedule, error) {
+func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer DeployObserver) (*deployFiles, []*models.FunctionSchedule, error) {
 	manifestBytes, err := ioutil.ReadAll(manifestFile)
 
 	if err != nil {
@@ -658,7 +662,7 @@ func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer Dep
 		return nil, nil, fmt.Errorf("malformed functions manifest file: %w", err)
 	}
 
-	schedules := make([]models.FunctionSchedule, 0, len(manifest.Functions))
+	schedules := make([]*models.FunctionSchedule, 0, len(manifest.Functions))
 	functions := newDeployFiles()
 
 	for _, function := range manifest.Functions {
@@ -675,7 +679,7 @@ func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer Dep
 		}
 
 		if function.Schedule != "" {
-			schedules = append(schedules, models.FunctionSchedule{
+			schedules = append(schedules, &models.FunctionSchedule{
 				Cron: function.Schedule,
 				Name: function.Name,
 			})
