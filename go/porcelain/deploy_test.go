@@ -203,7 +203,7 @@ func TestUploadFiles_Cancelation(t *testing.T) {
 }
 
 func TestBundle(t *testing.T) {
-	functions, schedules, err := bundle("../internal/data", mockObserver{})
+	functions, schedules, err := bundle(gocontext.Background(), "../internal/data", mockObserver{})
 
 	assert.Nil(t, err)
 	assert.Equal(t, 3, len(functions.Files))
@@ -247,7 +247,7 @@ func TestBundleWithManifest(t *testing.T) {
 	defer os.Remove(manifestPath)
 	assert.Nil(t, err)
 
-	functions, schedules, err := bundle("../internal/data", mockObserver{})
+	functions, schedules, err := bundle(gocontext.Background(), "../internal/data", mockObserver{})
 
 	assert.Nil(t, err)
 
