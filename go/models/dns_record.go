@@ -30,6 +30,9 @@ type DNSRecord struct {
 	// managed
 	Managed bool `json:"managed,omitempty"`
 
+	// port
+	Port int64 `json:"port,omitempty"`
+
 	// priority
 	Priority int64 `json:"priority,omitempty"`
 
@@ -47,6 +50,9 @@ type DNSRecord struct {
 
 	// value
 	Value string `json:"value,omitempty"`
+
+	// weight
+	Weight int64 `json:"weight,omitempty"`
 }
 
 // Validate validates this dns record
