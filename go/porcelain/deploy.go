@@ -513,6 +513,28 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 	}
 }
 
+func createFileBundle(rel, path string) (*FileBundle, error) {
+	o, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer o.Close()
+
+	file := &FileBundle{
+		Name: rel,
+		Path: path,
+	}
+
+	s := sha1.New()
+	if _, err := io.Copy(s, o); err != nil {
+		return nil, err
+	}
+
+	file.Sum = hex.EncodeToString(s.Sum(nil))
+
+	return file, nil
+}
+
 func walk(dir string, observer DeployObserver, useLargeMedia, ignoreInstallDirs bool) (*deployFiles, error) {
 	files := newDeployFiles()
 
@@ -532,22 +554,10 @@ func walk(dir string, observer DeployObserver, useLargeMedia, ignoreInstallDirs 
 				return nil
 			}
 
-			o, err := os.Open(path)
+			file, err := createFileBundle(rel, path)
 			if err != nil {
 				return err
 			}
-			defer o.Close()
-
-			file := &FileBundle{
-				Name: rel,
-				Path: path,
-			}
-
-			s := sha1.New()
-			if _, err := io.Copy(s, o); err != nil {
-				return err
-			}
-			file.Sum = hex.EncodeToString(s.Sum(nil))
 
 			if useLargeMedia {
 				o, err := os.Open(path)
