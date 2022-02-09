@@ -186,7 +186,7 @@ func TestWalk_EdgeHandlers(t *testing.T) {
 	err = ioutil.WriteFile(filepath.Join(edgeHandlersDir, "123456789.js"), []byte{}, 0644)
 	require.Nil(t, err)
 
-	err = walkEdgeHandlers(edgeHandlersDir, files, mockObserver{})
+	err = addEdgeHandlersToDeployFiles(edgeHandlersDir, files, mockObserver{})
 	require.Nil(t, err)
 
 	assert.NotNil(t, files.Files[".netlify/internal/edge-handlers/manifest.json"])
@@ -221,7 +221,7 @@ func TestWalk_PublishedFilesAndEdgeHandlers(t *testing.T) {
 	files, err := walk(publishDir, mockObserver{}, false, false)
 	require.Nil(t, err)
 
-	err = walkEdgeHandlers(edgeHandlersDir, files, mockObserver{})
+	err = addEdgeHandlersToDeployFiles(edgeHandlersDir, files, mockObserver{})
 	require.Nil(t, err)
 
 	assert.NotNil(t, files.Files["assets/styles.css"])

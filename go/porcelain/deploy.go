@@ -41,10 +41,11 @@ const (
 	functionUpload
 
 	lfsVersionString = "version https://git-lfs.github.com/spec/v1"
+
+	edgeHandlersInternalPath = ".netlify/internal/edge-handlers/"
 )
 
 var installDirs = []string{"node_modules/", "bower_components/"}
-var edgeHandlersInternalPath = []string{".netlify", "internal", "edge-handlers"}
 
 type uploadType int
 type pointerData struct {
@@ -213,7 +214,7 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 	}
 
 	if options.EdgeHandlersDir != "" {
-		err = walkEdgeHandlers(options.EdgeHandlersDir, files, options.Observer)
+		err = addEdgeHandlersToDeployFiles(options.EdgeHandlersDir, files, options.Observer)
 		if err != nil {
 			if options.Observer != nil {
 				options.Observer.OnFailedWalk()
@@ -607,7 +608,7 @@ func walk(dir string, observer DeployObserver, useLargeMedia, ignoreInstallDirs 
 	return files, err
 }
 
-func walkEdgeHandlers(dir string, files *deployFiles, observer DeployObserver) error {
+func addEdgeHandlersToDeployFiles(dir string, files *deployFiles, observer DeployObserver) error {
 	return filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
@@ -618,8 +619,7 @@ func walkEdgeHandlers(dir string, files *deployFiles, observer DeployObserver) e
 			if err != nil {
 				return err
 			}
-			internalPath := filepath.Join(edgeHandlersInternalPath...)
-			rel := forceSlashSeparators(filepath.Join(internalPath, osRel))
+			rel := edgeHandlersInternalPath + forceSlashSeparators(osRel)
 
 			file, err := createFileBundle(rel, path)
 			if err != nil {
