@@ -44,6 +44,7 @@ const (
 )
 
 var installDirs = []string{"node_modules/", "bower_components/"}
+var edgeHandlersInternalPath = []string{".netlify", "internal", "edge-handlers"}
 
 type uploadType int
 type pointerData struct {
@@ -75,6 +76,7 @@ type DeployOptions struct {
 	SiteID            string
 	Dir               string
 	FunctionsDir      string
+	EdgeHandlersDir   string
 	BuildDir          string
 	LargeMediaEnabled bool
 
@@ -207,6 +209,16 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 	for name := range files.Files {
 		if strings.ContainsAny(name, "#?") {
 			return nil, fmt.Errorf("Invalid filename '%s'. Deployed filenames cannot contain # or ? characters", name)
+		}
+	}
+
+	if options.EdgeHandlersDir != "" {
+		err = walkEdgeHandlers(options.EdgeHandlersDir, files, options.Observer)
+		if err != nil {
+			if options.Observer != nil {
+				options.Observer.OnFailedWalk()
+			}
+			return nil, err
 		}
 	}
 
@@ -593,6 +605,38 @@ func walk(dir string, observer DeployObserver, useLargeMedia, ignoreInstallDirs 
 		return nil
 	})
 	return files, err
+}
+
+func walkEdgeHandlers(dir string, files *deployFiles, observer DeployObserver) error {
+	return filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+
+		if !info.IsDir() && info.Mode().IsRegular() {
+			osRel, err := filepath.Rel(dir, path)
+			if err != nil {
+				return err
+			}
+			internalPath := filepath.Join(edgeHandlersInternalPath...)
+			rel := forceSlashSeparators(filepath.Join(internalPath, osRel))
+
+			file, err := createFileBundle(rel, path)
+			if err != nil {
+				return err
+			}
+
+			files.Add(rel, file)
+
+			if observer != nil {
+				if err := observer.OnSuccessfulStep(file); err != nil {
+					return err
+				}
+			}
+		}
+
+		return nil
+	})
 }
 
 func bundle(ctx context.Context, functionDir string, observer DeployObserver) (*deployFiles, []*models.FunctionSchedule, error) {
