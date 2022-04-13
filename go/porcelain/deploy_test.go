@@ -170,6 +170,66 @@ func TestWalk_IgnoreNodeModulesInRoot(t *testing.T) {
 	assert.NotNil(t, files.Files["more/node_modules/inner-package"])
 }
 
+func TestWalk_EdgeFunctions(t *testing.T) {
+	files := newDeployFiles()
+
+	netlifyDir, err := ioutil.TempDir("", ".netlify")
+	require.Nil(t, err)
+	defer os.RemoveAll(netlifyDir)
+
+	edgeFunctionsDir, err := ioutil.TempDir(netlifyDir, "edge-functions-dist")
+	require.Nil(t, err)
+	defer os.RemoveAll(edgeFunctionsDir)
+
+	err = ioutil.WriteFile(filepath.Join(edgeFunctionsDir, "manifest.json"), []byte{}, 0644)
+	require.Nil(t, err)
+	err = ioutil.WriteFile(filepath.Join(edgeFunctionsDir, "123456789.js"), []byte{}, 0644)
+	require.Nil(t, err)
+
+	err = addEdgeFunctionsToDeployFiles(edgeFunctionsDir, files, mockObserver{})
+	require.Nil(t, err)
+
+	assert.NotNil(t, files.Files[".netlify/internal/edge-functions/manifest.json"])
+	assert.NotNil(t, files.Files[".netlify/internal/edge-functions/123456789.js"])
+}
+
+func TestWalk_PublishedFilesAndEdgeFunctions(t *testing.T) {
+	publishDir, err := ioutil.TempDir("", "publish")
+	require.Nil(t, err)
+	defer os.RemoveAll(publishDir)
+
+	netlifyDir, err := ioutil.TempDir("", ".netlify")
+	require.Nil(t, err)
+	defer os.RemoveAll(netlifyDir)
+
+	edgeFunctionsDir, err := ioutil.TempDir(netlifyDir, "edge-functions-dist")
+	require.Nil(t, err)
+	defer os.RemoveAll(edgeFunctionsDir)
+
+	err = os.Mkdir(filepath.Join(publishDir, "assets"), os.ModePerm)
+	require.Nil(t, err)
+	err = ioutil.WriteFile(filepath.Join(publishDir, "assets", "styles.css"), []byte{}, 0644)
+	require.Nil(t, err)
+	err = ioutil.WriteFile(filepath.Join(publishDir, "index.html"), []byte{}, 0644)
+	require.Nil(t, err)
+
+	err = ioutil.WriteFile(filepath.Join(edgeFunctionsDir, "manifest.json"), []byte{}, 0644)
+	require.Nil(t, err)
+	err = ioutil.WriteFile(filepath.Join(edgeFunctionsDir, "123456789.js"), []byte{}, 0644)
+	require.Nil(t, err)
+
+	files, err := walk(publishDir, mockObserver{}, false, false)
+	require.Nil(t, err)
+
+	err = addEdgeFunctionsToDeployFiles(edgeFunctionsDir, files, mockObserver{})
+	require.Nil(t, err)
+
+	assert.NotNil(t, files.Files["assets/styles.css"])
+	assert.NotNil(t, files.Files["index.html"])
+	assert.NotNil(t, files.Files[".netlify/internal/edge-functions/manifest.json"])
+	assert.NotNil(t, files.Files[".netlify/internal/edge-functions/123456789.js"])
+}
+
 func TestUploadFiles_Cancelation(t *testing.T) {
 	ctx, cancel := gocontext.WithCancel(gocontext.Background())
 	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
