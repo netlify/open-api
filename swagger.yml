@@ -2642,6 +2642,12 @@ definitions:
       priority:
         type: integer
         format: int64
+      weight:
+        type: integer
+        format: int64
+      port:
+        type: integer
+        format: int64
       dns_zone_id:
         type: string
       site_id:
@@ -3031,7 +3037,7 @@ definitions:
         name:
           type: string
         cron:
-          type: string           
+          type: string
 parameters:
   page:
     type: integer
