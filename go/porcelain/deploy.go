@@ -41,6 +41,8 @@ const (
 	functionUpload
 
 	lfsVersionString = "version https://git-lfs.github.com/spec/v1"
+
+	edgeFunctionsInternalPath = ".netlify/internal/edge-functions/"
 )
 
 var installDirs = []string{"node_modules/", "bower_components/"}
@@ -75,6 +77,7 @@ type DeployOptions struct {
 	SiteID            string
 	Dir               string
 	FunctionsDir      string
+	EdgeFunctionsDir  string
 	BuildDir          string
 	LargeMediaEnabled bool
 
@@ -207,6 +210,16 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 	for name := range files.Files {
 		if strings.ContainsAny(name, "#?") {
 			return nil, fmt.Errorf("Invalid filename '%s'. Deployed filenames cannot contain # or ? characters", name)
+		}
+	}
+
+	if options.EdgeFunctionsDir != "" {
+		err = addEdgeFunctionsToDeployFiles(options.EdgeFunctionsDir, files, options.Observer)
+		if err != nil {
+			if options.Observer != nil {
+				options.Observer.OnFailedWalk()
+			}
+			return nil, err
 		}
 	}
 
@@ -513,6 +526,28 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 	}
 }
 
+func createFileBundle(rel, path string) (*FileBundle, error) {
+	o, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer o.Close()
+
+	file := &FileBundle{
+		Name: rel,
+		Path: path,
+	}
+
+	s := sha1.New()
+	if _, err := io.Copy(s, o); err != nil {
+		return nil, err
+	}
+
+	file.Sum = hex.EncodeToString(s.Sum(nil))
+
+	return file, nil
+}
+
 func walk(dir string, observer DeployObserver, useLargeMedia, ignoreInstallDirs bool) (*deployFiles, error) {
 	files := newDeployFiles()
 
@@ -532,22 +567,10 @@ func walk(dir string, observer DeployObserver, useLargeMedia, ignoreInstallDirs 
 				return nil
 			}
 
-			o, err := os.Open(path)
+			file, err := createFileBundle(rel, path)
 			if err != nil {
 				return err
 			}
-			defer o.Close()
-
-			file := &FileBundle{
-				Name: rel,
-				Path: path,
-			}
-
-			s := sha1.New()
-			if _, err := io.Copy(s, o); err != nil {
-				return err
-			}
-			file.Sum = hex.EncodeToString(s.Sum(nil))
 
 			if useLargeMedia {
 				o, err := os.Open(path)
@@ -583,6 +606,37 @@ func walk(dir string, observer DeployObserver, useLargeMedia, ignoreInstallDirs 
 		return nil
 	})
 	return files, err
+}
+
+func addEdgeFunctionsToDeployFiles(dir string, files *deployFiles, observer DeployObserver) error {
+	return filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+
+		if !info.IsDir() && info.Mode().IsRegular() {
+			osRel, err := filepath.Rel(dir, path)
+			if err != nil {
+				return err
+			}
+			rel := edgeFunctionsInternalPath + forceSlashSeparators(osRel)
+
+			file, err := createFileBundle(rel, path)
+			if err != nil {
+				return err
+			}
+
+			files.Add(rel, file)
+
+			if observer != nil {
+				if err := observer.OnSuccessfulStep(file); err != nil {
+					return err
+				}
+			}
+		}
+
+		return nil
+	})
 }
 
 func bundle(ctx context.Context, functionDir string, observer DeployObserver) (*deployFiles, []*models.FunctionSchedule, error) {
