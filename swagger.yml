@@ -236,11 +236,31 @@ paths:
       parameters:
         - in: body
           name: env_vars
-          description: The array of environment variables to create
           schema:
             type: array
             items:
-              $ref: '#/definitions/envVar'
+              type: object
+              properties:
+                key:
+                  type: string
+                  description: >-
+                    The existing or new name of the key, if you wish to rename it (case-sensitive)
+                scopes:
+                  description: >-
+                    The scopes that this environment variable is set to (Pro plans and
+                    above)
+                  type: array
+                  items:
+                    type: string
+                    enum:
+                      - builds
+                      - functions
+                      - runtime
+                      - post_processing
+                values:
+                  type: array
+                  items:
+                    $ref: '#/definitions/envVarValue'
         - name: account_id
           description: Scope response to account_id
           type: string
