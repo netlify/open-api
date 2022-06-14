@@ -180,7 +180,7 @@ paths:
   /accounts/{account_id}/env:
     get:
       tags:
-        - Environment variables
+        - environmentVariables
       operationId: getEnvVars
       parameters:
         - name: account_id
@@ -228,7 +228,7 @@ paths:
         account corresponds to a team in the Netlify UI.
     post:
       tags:
-        - Environment variables
+        - environmentVariables
       operationId: createEnvVars
       description: >-
         [Beta] Creates new environment variables. Granular scopes are available
@@ -265,7 +265,7 @@ paths:
   /accounts/{account_id}/env/{key}:
     get:
       tags:
-        - Environment variables
+        - environmentVariables
       operationId: getEnvVar
       parameters:
         - name: account_id
@@ -295,7 +295,7 @@ paths:
       description: '[Beta] Returns an individual environment variable.'
     put:
       tags:
-        - Environment variables
+        - environmentVariables
       operationId: updateEnvVar
       description: >-
         [Beta] Updates an existing environment variable and all of its values.
@@ -313,10 +313,10 @@ paths:
           in: path
         - in: body
           name: env_var
-          schema: 
+          schema:
             type: object
             properties:
-              key: 
+              key:
                 type: string
                 description: >-
                   The existing or new name of the key, if you wish to rename it (case-sensitive)
@@ -350,7 +350,7 @@ paths:
           $ref: '#/responses/error'
     delete:
       tags:
-        - Environment variables
+        - environmentVariables
       operationId: deleteEnvVar
       parameters:
         - name: account_id
@@ -373,11 +373,11 @@ paths:
           description: No Content (success)
         default:
           $ref: '#/responses/error'
-      description: '[Beta] Deletes an environment variable.'    
+      description: '[Beta] Deletes an environment variable.'
   /accounts/{account_id}/env/{key}/value/{id}:
     delete:
       tags:
-        - Environment variables
+        - environmentVariables
       operationId: deleteEnvVarValue
       parameters:
         - name: account_id
@@ -389,7 +389,7 @@ paths:
           description: The environment variable value's ID
           type: string
           required: true
-          in: path       
+          in: path
         - name: key
           description: The environment variable key name (case-sensitive)
           type: string
@@ -3330,12 +3330,12 @@ definitions:
         type: string
         x-nullable: false
   functionSchedule:
-      type: object
-      properties:
-        name:
-          type: string
-        cron:
-          type: string           
+    type: object
+    properties:
+      name:
+        type: string
+      cron:
+        type: string
 parameters:
   page:
     type: integer
@@ -3365,6 +3365,7 @@ x-tagGroups:
   - name: Site
     tags:
       - site
+      - environmentVariables
       - file
       - metadata
       - snippet
@@ -3423,6 +3424,8 @@ tags:
     x-displayName: Audit log
   - name: site
     x-displayName: Site
+  - name: environmentVariables
+    x-displayName: Environment variables
   - name: file
     x-displayName: File
   - name: metadata
