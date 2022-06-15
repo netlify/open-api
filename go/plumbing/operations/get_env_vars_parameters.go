@@ -65,11 +65,11 @@ type GetEnvVarsParams struct {
 
 	*/
 	AccountID string
-	/*Context
+	/*ContextName
 	  Filter by deploy context
 
 	*/
-	Context *string
+	ContextName *string
 	/*Scope
 	  Filter by scope
 
@@ -130,15 +130,15 @@ func (o *GetEnvVarsParams) SetAccountID(accountID string) {
 	o.AccountID = accountID
 }
 
-// WithContext adds the context to the get env vars params
-func (o *GetEnvVarsParams) WithContext(context *string) *GetEnvVarsParams {
-	o.SetContext(context)
+// WithContextName adds the contextName to the get env vars params
+func (o *GetEnvVarsParams) WithContextName(contextName *string) *GetEnvVarsParams {
+	o.SetContextName(contextName)
 	return o
 }
 
-// SetContext adds the context to the get env vars params
-func (o *GetEnvVarsParams) SetContext(context *string) {
-	o.Context = context
+// SetContextName adds the contextName to the get env vars params
+func (o *GetEnvVarsParams) SetContextName(contextName *string) {
+	o.ContextName = contextName
 }
 
 // WithScope adds the scope to the get env vars params
@@ -176,16 +176,16 @@ func (o *GetEnvVarsParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Re
 		return err
 	}
 
-	if o.Context != nil {
+	if o.ContextName != nil {
 
-		// query param context
-		var qrContext string
-		if o.Context != nil {
-			qrContext = *o.Context
+		// query param context_name
+		var qrContextName string
+		if o.ContextName != nil {
+			qrContextName = *o.ContextName
 		}
-		qContext := qrContext
-		if qContext != "" {
-			if err := r.SetQueryParam("context", qContext); err != nil {
+		qContextName := qrContextName
+		if qContextName != "" {
+			if err := r.SetQueryParam("context_name", qContextName); err != nil {
 				return err
 			}
 		}
