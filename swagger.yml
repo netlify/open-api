@@ -188,7 +188,7 @@ paths:
           type: string
           required: true
           in: path
-        - name: context
+        - name: context_name
           description: Filter by deploy context
           type: string
           enum:
