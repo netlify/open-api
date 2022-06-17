@@ -177,6 +177,257 @@ paths:
             $ref: '#/definitions/sniCertificate'
         default:
           $ref: '#/responses/error'
+  /accounts/{account_id}/env:
+    get:
+      tags:
+        - environmentVariables
+      operationId: getEnvVars
+      parameters:
+        - name: account_id
+          description: Scope response to account_id
+          type: string
+          required: true
+          in: path
+        - name: context_name
+          description: Filter by deploy context
+          type: string
+          enum:
+            - all
+            - dev
+            - branch-deploy
+            - deploy-preview
+            - production
+          required: false
+          in: query
+        - name: scope
+          description: Filter by scope
+          type: string
+          enum:
+            - builds
+            - functions
+            - runtime
+            - post_processing
+          required: false
+          in: query
+        - name: site_id
+          description: 'If specified, only return environment variables set on this site'
+          type: string
+          required: false
+          in: query
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/envVar'
+        default:
+          $ref: '#/responses/error'
+      description: >-
+        [Beta] Returns all environment variables for an account or site. An
+        account corresponds to a team in the Netlify UI.
+    post:
+      tags:
+        - environmentVariables
+      operationId: createEnvVars
+      description: >-
+        [Beta] Creates new environment variables. Granular scopes are available
+        on Pro plans and above.
+      parameters:
+        - in: body
+          name: env_vars
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                key:
+                  type: string
+                  description: >-
+                    The existing or new name of the key, if you wish to rename it (case-sensitive)
+                scopes:
+                  description: >-
+                    The scopes that this environment variable is set to (Pro plans and
+                    above)
+                  type: array
+                  items:
+                    type: string
+                    enum:
+                      - builds
+                      - functions
+                      - runtime
+                      - post_processing
+                values:
+                  type: array
+                  items:
+                    $ref: '#/definitions/envVarValue'
+        - name: account_id
+          description: Scope response to account_id
+          type: string
+          required: true
+          in: path
+        - name: site_id
+          description: >-
+            If provided, create an environment variable on the site level, not
+            the account level
+          type: string
+          required: false
+          in: query
+      responses:
+        '201':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/envVar'
+        default:
+          $ref: '#/responses/error'
+  /accounts/{account_id}/env/{key}:
+    get:
+      tags:
+        - environmentVariables
+      operationId: getEnvVar
+      parameters:
+        - name: account_id
+          description: Scope response to account_id
+          type: string
+          required: true
+          in: path
+        - name: key
+          description: The environment variable key (case-sensitive)
+          type: string
+          required: true
+          in: path
+        - name: site_id
+          description: >-
+            If provided, return the environment variable for a specific site (no
+            merging is performed)
+          type: string
+          required: false
+          in: query
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/envVar'
+        default:
+          $ref: '#/responses/error'
+      description: '[Beta] Returns an individual environment variable.'
+    put:
+      tags:
+        - environmentVariables
+      operationId: updateEnvVar
+      description: >-
+        [Beta] Updates an existing environment variable and all of its values.
+        Existing values will be replaced by values provided.
+      parameters:
+        - name: account_id
+          description: Scope response to account_id
+          type: string
+          required: true
+          in: path
+        - name: key
+          description: The existing environment variable key name (case-sensitive)
+          type: string
+          required: true
+          in: path
+        - in: body
+          name: env_var
+          schema:
+            type: object
+            properties:
+              key:
+                type: string
+                description: >-
+                  The existing or new name of the key, if you wish to rename it (case-sensitive)
+              scopes:
+                description: >-
+                  The scopes that this environment variable is set to (Pro plans and
+                  above)
+                type: array
+                items:
+                  type: string
+                  enum:
+                    - builds
+                    - functions
+                    - runtime
+                    - post_processing
+              values:
+                type: array
+                items:
+                  $ref: '#/definitions/envVarValue'
+        - name: site_id
+          description: 'If provided, update an environment variable set on this site'
+          type: string
+          required: false
+          in: query
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/envVar'
+        default:
+          $ref: '#/responses/error'
+    delete:
+      tags:
+        - environmentVariables
+      operationId: deleteEnvVar
+      parameters:
+        - name: account_id
+          description: Scope response to account_id
+          type: string
+          required: true
+          in: path
+        - name: key
+          description: The environment variable key (case-sensitive)
+          type: string
+          required: true
+          in: path
+        - name: site_id
+          description: 'If provided, delete the environment variable from this site'
+          type: string
+          required: false
+          in: query
+      responses:
+        '204':
+          description: No Content (success)
+        default:
+          $ref: '#/responses/error'
+      description: '[Beta] Deletes an environment variable.'
+  /accounts/{account_id}/env/{key}/value/{id}:
+    delete:
+      tags:
+        - environmentVariables
+      operationId: deleteEnvVarValue
+      parameters:
+        - name: account_id
+          description: Scope response to account_id
+          required: true
+          in: path
+          type: string
+        - name: id
+          description: The environment variable value's ID
+          type: string
+          required: true
+          in: path
+        - name: key
+          description: The environment variable key name (case-sensitive)
+          type: string
+          required: true
+          in: path
+        - name: site_id
+          description: >-
+            If provided, delete the value from an environment variable on this
+            site
+          type: string
+          required: false
+          in: query
+      responses:
+        '204':
+          description: No Content (success)
+        default:
+          $ref: '#/responses/error'
+      description: '[Beta] Deletes a specific environment variable value.'
   /sites/{site_id}/forms:
     get:
       operationId: listSiteForms
@@ -2249,6 +2500,79 @@ definitions:
         format: dateTime
       site_url:
         type: string
+  envVar:
+    type: object
+    properties:
+      key:
+        type: string
+        description: 'The environment variable key, like ALGOLIA_ID (case-sensitive)'
+        x-faker: commerce.productName
+      scopes:
+        type: array
+        items:
+          type: string
+          enum:
+            - builds
+            - functions
+            - runtime
+            - post_processing
+        description: The scopes that this environment variable is set to
+      values:
+        type: array
+        items:
+          $ref: '#/definitions/envVarValue'
+        description: An array of Value objects containing values and metadata
+        x-faker: internet.password
+      updated_at:
+        type: string
+        format: date-time
+        description: The timestamp of when the value was last updated
+        x-faker: date.past
+      updated_by:
+        $ref: '#/definitions/envVarUser'
+    description: Environment variable model definition
+  envVarValue:
+    type: object
+    properties:
+      id:
+        type: string
+        description: The environment variable value's universally unique ID
+        x-faker: datatype.uuid
+      value:
+        type: string
+        description: The environment variable's unencrypted value
+        x-faker: internet.password
+      context:
+        type: string
+        enum:
+          - all
+          - dev
+          - branch-deploy
+          - deploy-preview
+          - production
+        description: >-
+          The deploy context in which this value will be used. `dev` refers to
+          local development when running `netlify dev`.
+    description: Environment variable value model definition
+  envVarUser:
+    type: object
+    properties:
+      id:
+        type: string
+        description: The user's unique identifier
+        x-faker: datatype.number
+      full_name:
+        type: string
+        description: The user's full name (first and last)
+        x-faker: name.findName
+      email:
+        type: string
+        description: The user's email address
+        x-faker: internet.email
+      avatar_url:
+        type: string
+        description: A URL pointing to the user's avatar
+        x-faker: internet.avatar
   form:
     type: object
     properties:
@@ -3026,12 +3350,12 @@ definitions:
         type: string
         x-nullable: false
   functionSchedule:
-      type: object
-      properties:
-        name:
-          type: string
-        cron:
-          type: string           
+    type: object
+    properties:
+      name:
+        type: string
+      cron:
+        type: string
 parameters:
   page:
     type: integer
@@ -3061,6 +3385,7 @@ x-tagGroups:
   - name: Site
     tags:
       - site
+      - environmentVariables
       - file
       - metadata
       - snippet
@@ -3119,6 +3444,8 @@ tags:
     x-displayName: Audit log
   - name: site
     x-displayName: Site
+  - name: environmentVariables
+    x-displayName: Environment variables
   - name: file
     x-displayName: File
   - name: metadata
