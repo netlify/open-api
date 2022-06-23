@@ -531,7 +531,7 @@ func (a *Client) CreateDNSZone(params *CreateDNSZoneParams, authInfo runtime.Cli
 }
 
 /*
-  CreateEnvVars [Beta] Creates new environment variables. Granular scopes are available on Pro plans and above.
+  CreateEnvVars [Beta] Creates new environment variables. Granular scopes are available on Pro plans and above.  To use this endpoint, opt in to the beta environment variable experience using the Netlify UI.
 */
 func (a *Client) CreateEnvVars(params *CreateEnvVarsParams, authInfo runtime.ClientAuthInfoWriter) (*CreateEnvVarsCreated, error) {
 	// TODO: Validate the params before sending
@@ -1075,7 +1075,7 @@ func (a *Client) DeleteDNSZone(params *DeleteDNSZoneParams, authInfo runtime.Cli
 }
 
 /*
-  DeleteEnvVar [Beta] Deletes an environment variable.
+  DeleteEnvVar [Beta] Deletes an environment variable. To use this endpoint, opt in to the beta environment variable experience using the Netlify UI.
 */
 func (a *Client) DeleteEnvVar(params *DeleteEnvVarParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteEnvVarNoContent, error) {
 	// TODO: Validate the params before sending
@@ -1109,7 +1109,7 @@ func (a *Client) DeleteEnvVar(params *DeleteEnvVarParams, authInfo runtime.Clien
 }
 
 /*
-  DeleteEnvVarValue [Beta] Deletes a specific environment variable value.
+  DeleteEnvVarValue [Beta] Deletes a specific environment variable value. To use this endpoint,  opt in to the beta environment variable experience using the Netlify UI.
 */
 func (a *Client) DeleteEnvVarValue(params *DeleteEnvVarValueParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteEnvVarValueNoContent, error) {
 	// TODO: Validate the params before sending
@@ -1858,7 +1858,7 @@ func (a *Client) GetDNSZones(params *GetDNSZonesParams, authInfo runtime.ClientA
 }
 
 /*
-  GetEnvVar [Beta] Returns an individual environment variable.
+  GetEnvVar [Beta] Returns an individual environment variable. To use this endpoint, opt in to the beta environment variable experience using the Netlify UI.
 */
 func (a *Client) GetEnvVar(params *GetEnvVarParams, authInfo runtime.ClientAuthInfoWriter) (*GetEnvVarOK, error) {
 	// TODO: Validate the params before sending
@@ -1892,7 +1892,7 @@ func (a *Client) GetEnvVar(params *GetEnvVarParams, authInfo runtime.ClientAuthI
 }
 
 /*
-  GetEnvVars [Beta] Returns all environment variables for an account or site. An account corresponds to a team in the Netlify UI.
+  GetEnvVars [Beta] Returns all environment variables for an account or site. An account corresponds to a team in the Netlify UI. To use this endpoint, opt in to the beta environment variable experience using the Netlify UI.
 */
 func (a *Client) GetEnvVars(params *GetEnvVarsParams, authInfo runtime.ClientAuthInfoWriter) (*GetEnvVarsOK, error) {
 	// TODO: Validate the params before sending
@@ -3666,7 +3666,7 @@ func (a *Client) UpdateAccount(params *UpdateAccountParams, authInfo runtime.Cli
 }
 
 /*
-  UpdateEnvVar [Beta] Updates an existing environment variable and all of its values. Existing values will be replaced by values provided.
+  UpdateEnvVar [Beta] Updates an existing environment variable and all of its values. Existing values will be replaced by values provided. To use this endpoint, opt in to the beta environment variable experience using the Netlify UI.
 */
 func (a *Client) UpdateEnvVar(params *UpdateEnvVarParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateEnvVarOK, error) {
 	// TODO: Validate the params before sending
