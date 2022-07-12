@@ -455,6 +455,8 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 		}
 	}
 
+	var retryCount int64 = 0
+
 	err := backoff.Retry(func() error {
 		sharedErr.mutex.Lock()
 
@@ -485,6 +487,11 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 			}
 		case functionUpload:
 			params := operations.NewUploadDeployFunctionParams().WithDeployID(d.ID).WithName(f.Name).WithFileBody(f).WithRuntime(&f.Runtime)
+
+			if retryCount > 0 {
+				params = params.WithXNfRetryCount(&retryCount)
+			}
+
 			if timeout != 0 {
 				params.SetTimeout(timeout)
 			}
@@ -504,6 +511,9 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 				sharedErr.mutex.Unlock()
 			}
 		}
+
+		retryCount++
+
 		return operationError
 	}, b)
 
