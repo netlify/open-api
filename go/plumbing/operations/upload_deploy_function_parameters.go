@@ -62,6 +62,8 @@ for the upload deploy function operation typically these are written to a http.R
 */
 type UploadDeployFunctionParams struct {
 
+	/*XNfRetryCount*/
+	XNfRetryCount *int64
 	/*DeployID*/
 	DeployID string
 	/*FileBody*/
@@ -109,6 +111,17 @@ func (o *UploadDeployFunctionParams) WithHTTPClient(client *http.Client) *Upload
 // SetHTTPClient adds the HTTPClient to the upload deploy function params
 func (o *UploadDeployFunctionParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
+}
+
+// WithXNfRetryCount adds the xNfRetryCount to the upload deploy function params
+func (o *UploadDeployFunctionParams) WithXNfRetryCount(xNfRetryCount *int64) *UploadDeployFunctionParams {
+	o.SetXNfRetryCount(xNfRetryCount)
+	return o
+}
+
+// SetXNfRetryCount adds the xNfRetryCount to the upload deploy function params
+func (o *UploadDeployFunctionParams) SetXNfRetryCount(xNfRetryCount *int64) {
+	o.XNfRetryCount = xNfRetryCount
 }
 
 // WithDeployID adds the deployID to the upload deploy function params
@@ -173,6 +186,15 @@ func (o *UploadDeployFunctionParams) WriteToRequest(r runtime.ClientRequest, reg
 		return err
 	}
 	var res []error
+
+	if o.XNfRetryCount != nil {
+
+		// header param X-Nf-Retry-Count
+		if err := r.SetHeaderParam("X-Nf-Retry-Count", swag.FormatInt64(*o.XNfRetryCount)); err != nil {
+			return err
+		}
+
+	}
 
 	// path param deploy_id
 	if err := r.SetPathParam("deploy_id", o.DeployID); err != nil {

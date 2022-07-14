@@ -262,6 +262,60 @@ func TestUploadFiles_Cancelation(t *testing.T) {
 	require.ErrorIs(t, err, gocontext.Canceled)
 }
 
+func TestUploadFunctions_RetryCountHeader(t *testing.T) {
+	attempts := 0
+	ctx, cancel := gocontext.WithCancel(gocontext.Background())
+	t.Cleanup(cancel)
+
+	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		defer func() {
+			attempts++
+		}()
+
+		rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+
+		retryCount := req.Header.Get("X-Nf-Retry-Count")
+
+		if attempts == 0 {
+			require.Empty(t, retryCount)
+		} else {
+			require.Equal(t, fmt.Sprint(attempts), retryCount)
+		}
+
+		if attempts <= 2 {
+			rw.WriteHeader(http.StatusInternalServerError)
+
+			return
+		}
+
+		rw.WriteHeader(http.StatusOK)
+		rw.Write([]byte(`{ "name": "foo" }`))
+	}))
+	defer server.Close()
+
+	hu, _ := url.Parse(server.URL)
+	tr := apiClient.NewWithClient(hu.Host, "/api/v1", []string{"http"}, http.DefaultClient)
+	client := NewRetryable(tr, strfmt.Default, 1)
+	client.uploadLimit = 1
+	apiCtx := context.WithAuthInfo(ctx, apiClient.BearerToken("token"))
+
+	dir, err := ioutil.TempDir("", "deploy")
+	functionsPath := filepath.Join(dir, ".netlify", "functions")
+	os.MkdirAll(functionsPath, os.ModePerm)
+	require.NoError(t, err)
+	defer os.RemoveAll(dir)
+	require.NoError(t, ioutil.WriteFile(filepath.Join(functionsPath, "foo.js"), []byte("module.exports = () => {}"), 0644))
+
+	files, _, err := bundle(ctx, functionsPath, mockObserver{})
+	require.NoError(t, err)
+	d := &models.Deploy{}
+	for _, bundle := range files.Files {
+		d.RequiredFunctions = append(d.RequiredFunctions, bundle.Sum)
+	}
+
+	require.NoError(t, client.uploadFiles(apiCtx, d, files, nil, functionUpload, time.Minute))
+}
+
 func TestBundle(t *testing.T) {
 	functions, schedules, err := bundle(gocontext.Background(), "../internal/data", mockObserver{})
 

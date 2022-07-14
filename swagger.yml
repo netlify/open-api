@@ -1248,6 +1248,7 @@ paths:
             type: string
             format: binary
           required: true
+        - $ref: '#/parameters/retryCount'
       responses:
         '200':
           description: OK
@@ -3378,6 +3379,10 @@ parameters:
     name: per_page
     required: false
     in: query
+  retryCount:
+    name: X-Nf-Retry-Count
+    type: integer
+    in: header    
 x-tagGroups:
   - name: OAuth
     tags:
