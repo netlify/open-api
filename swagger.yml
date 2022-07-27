@@ -373,6 +373,55 @@ paths:
             $ref: '#/definitions/envVar'
         default:
           $ref: '#/responses/error'
+    patch:
+      tags:
+        - Environment variables
+      operationId: setEnvVarValue
+      description: >-
+        [Beta] Updates or creates an environment variable value.
+      parameters:
+        - name: account_id
+          description: Scope response to account_id
+          required: true
+          type: string
+          in: path
+        - name: key
+          description: The existing environment variable key name (case-sensitive)
+          required: true
+          type: string
+          in: path
+        - name: site_id
+          description: 'If provided, update an environment variable set on this site'
+          in: query
+          type: string
+        - in: body
+          name: env_var
+          schema:
+            type: object
+            properties:
+              branch:
+                type: string
+                description: >-
+                  If present, the name of the branch for a branch-specific context
+              context:
+                description: >-
+                  The deploy context where this value will be applied
+                type: string
+                enum:
+                  - dev
+                  - branch-deploy
+                  - deploy-preview
+                  - production
+              value:
+                description: The updated value
+                type: string
+      responses:
+        '201':
+          description: 'Created (success)'
+          schema:
+            $ref: '#/definitions/envVar'
+        default:
+          $ref: '#/responses/error'
     delete:
       tags:
         - environmentVariables
@@ -3382,7 +3431,7 @@ parameters:
   retryCount:
     name: X-Nf-Retry-Count
     type: integer
-    in: header    
+    in: header
 x-tagGroups:
   - name: OAuth
     tags:
