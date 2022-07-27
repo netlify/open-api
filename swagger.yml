@@ -375,7 +375,7 @@ paths:
           $ref: '#/responses/error'
     patch:
       tags:
-        - Environment variables
+        - environmentVariables
       operationId: setEnvVarValue
       description: >-
         [Beta] Updates or creates an environment variable value.
