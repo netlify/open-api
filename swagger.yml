@@ -378,7 +378,7 @@ paths:
         - environmentVariables
       operationId: setEnvVarValue
       description: >-
-        [Beta] Updates or creates an environment variable value.
+        [Beta] Updates or creates a new value for an existing environment variable. To use this endpoint, opt in to the beta environment variable experience using the Netlify UI.
       parameters:
         - name: account_id
           description: Scope response to account_id
@@ -401,7 +401,7 @@ paths:
             properties:
               context:
                 description: >-
-                  The deploy context where this value will be applied
+                  The deploy context in which this value will be used. `dev` refers to local development when running `netlify dev`.
                 type: string
                 enum:
                   - dev
@@ -409,7 +409,7 @@ paths:
                   - deploy-preview
                   - production
               value:
-                description: The updated value
+                description: The environment variable's unencrypted value
                 type: string
       responses:
         '201':
