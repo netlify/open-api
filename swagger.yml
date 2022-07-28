@@ -399,10 +399,6 @@ paths:
           schema:
             type: object
             properties:
-              branch:
-                type: string
-                description: >-
-                  If present, the name of the branch for a branch-specific context
               context:
                 description: >-
                   The deploy context where this value will be applied
