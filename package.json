@@ -32,7 +32,7 @@
     "prettier": "^1.18.2",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
-    "redoc-cli": "^0.9.6",
+    "redoc-cli": "^0.13.7",
     "swagger-parser": "^8.0.1"
   },
   "files": [],

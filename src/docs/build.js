@@ -20,12 +20,13 @@ const redocCli = async function() {
     [
       `--title=${TITLE}`,
       '--options.requiredPropsFirst',
+      '--options.sortOperationsAlphabetically',
       `--options.theme.colors.primary.main=${HEADINGS_TEXT_COLOR}`,
-      `--options.theme.menu.backgroundColor=${MENU_BACKGROUND_COLOR}`,
+      `--options.theme.sidebar.backgroundColor=${MENU_BACKGROUND_COLOR}`,
       `--options.theme.typography.headings.fontFamily=${FONT}`,
       `--options.theme.logo.gutter=${LOGO_PADDING}`,
       `--output=${normalize(OUTPUT_PATH)}`,
-      'bundle',
+      'build',
       SWAGGER_PATH
     ],
     { stdio: 'inherit' }
