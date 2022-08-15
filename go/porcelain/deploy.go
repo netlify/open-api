@@ -14,10 +14,12 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+	"os/user"
 	"path/filepath"
 	"strconv"
 	"strings"
 	"sync"
+	"syscall"
 	"time"
 
 	"github.com/cenkalti/backoff/v4"
@@ -564,6 +566,18 @@ func walk(dir string, observer DeployObserver, useLargeMedia, ignoreInstallDirs 
 	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
+		}
+
+		// Get file ownership
+		fileinfo, _ := os.Stat(path)
+		stat := fileinfo.Sys().(*syscall.Stat_t)
+		uid := int(stat.Uid)
+		// Get root user id
+		r, _ := user.Lookup("root")
+		rid, _ := strconv.Atoi(r.Uid)
+
+		if rid == uid {
+			return nil
 		}
 
 		if !info.IsDir() && info.Mode().IsRegular() {
