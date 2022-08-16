@@ -46,7 +46,8 @@ func NewCreateServiceInstanceCreated() *CreateServiceInstanceCreated {
 	return &CreateServiceInstanceCreated{}
 }
 
-/*CreateServiceInstanceCreated handles this case with default header values.
+/*
+CreateServiceInstanceCreated handles this case with default header values.
 
 Created
 */
@@ -81,7 +82,8 @@ func NewCreateServiceInstanceDefault(code int) *CreateServiceInstanceDefault {
 	}
 }
 
-/*CreateServiceInstanceDefault handles this case with default header values.
+/*
+CreateServiceInstanceDefault handles this case with default header values.
 
 error
 */

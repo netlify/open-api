@@ -55,7 +55,8 @@ func NewShowTicketParamsWithHTTPClient(client *http.Client) *ShowTicketParams {
 	}
 }
 
-/*ShowTicketParams contains all the parameters to send to the API endpoint
+/*
+ShowTicketParams contains all the parameters to send to the API endpoint
 for the show ticket operation typically these are written to a http.Request
 */
 type ShowTicketParams struct {

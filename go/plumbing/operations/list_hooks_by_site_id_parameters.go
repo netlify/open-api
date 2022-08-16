@@ -55,7 +55,8 @@ func NewListHooksBySiteIDParamsWithHTTPClient(client *http.Client) *ListHooksByS
 	}
 }
 
-/*ListHooksBySiteIDParams contains all the parameters to send to the API endpoint
+/*
+ListHooksBySiteIDParams contains all the parameters to send to the API endpoint
 for the list hooks by site Id operation typically these are written to a http.Request
 */
 type ListHooksBySiteIDParams struct {

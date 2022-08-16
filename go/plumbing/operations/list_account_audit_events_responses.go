@@ -46,7 +46,8 @@ func NewListAccountAuditEventsOK() *ListAccountAuditEventsOK {
 	return &ListAccountAuditEventsOK{}
 }
 
-/*ListAccountAuditEventsOK handles this case with default header values.
+/*
+ListAccountAuditEventsOK handles this case with default header values.
 
 OK
 */
@@ -79,7 +80,8 @@ func NewListAccountAuditEventsDefault(code int) *ListAccountAuditEventsDefault {
 	}
 }
 
-/*ListAccountAuditEventsDefault handles this case with default header values.
+/*
+ListAccountAuditEventsDefault handles this case with default header values.
 
 error
 */

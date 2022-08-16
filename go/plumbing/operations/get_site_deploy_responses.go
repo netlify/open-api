@@ -46,7 +46,8 @@ func NewGetSiteDeployOK() *GetSiteDeployOK {
 	return &GetSiteDeployOK{}
 }
 
-/*GetSiteDeployOK handles this case with default header values.
+/*
+GetSiteDeployOK handles this case with default header values.
 
 OK
 */
@@ -81,7 +82,8 @@ func NewGetSiteDeployDefault(code int) *GetSiteDeployDefault {
 	}
 }
 
-/*GetSiteDeployDefault handles this case with default header values.
+/*
+GetSiteDeployDefault handles this case with default header values.
 
 error
 */

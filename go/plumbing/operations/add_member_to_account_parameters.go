@@ -55,7 +55,8 @@ func NewAddMemberToAccountParamsWithHTTPClient(client *http.Client) *AddMemberTo
 	}
 }
 
-/*AddMemberToAccountParams contains all the parameters to send to the API endpoint
+/*
+AddMemberToAccountParams contains all the parameters to send to the API endpoint
 for the add member to account operation typically these are written to a http.Request
 */
 type AddMemberToAccountParams struct {

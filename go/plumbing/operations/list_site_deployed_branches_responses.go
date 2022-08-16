@@ -46,7 +46,8 @@ func NewListSiteDeployedBranchesOK() *ListSiteDeployedBranchesOK {
 	return &ListSiteDeployedBranchesOK{}
 }
 
-/*ListSiteDeployedBranchesOK handles this case with default header values.
+/*
+ListSiteDeployedBranchesOK handles this case with default header values.
 
 OK
 */
@@ -79,7 +80,8 @@ func NewListSiteDeployedBranchesDefault(code int) *ListSiteDeployedBranchesDefau
 	}
 }
 
-/*ListSiteDeployedBranchesDefault handles this case with default header values.
+/*
+ListSiteDeployedBranchesDefault handles this case with default header values.
 
 error
 */

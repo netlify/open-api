@@ -46,7 +46,8 @@ func NewCreateSiteAssetCreated() *CreateSiteAssetCreated {
 	return &CreateSiteAssetCreated{}
 }
 
-/*CreateSiteAssetCreated handles this case with default header values.
+/*
+CreateSiteAssetCreated handles this case with default header values.
 
 Created
 */
@@ -81,7 +82,8 @@ func NewCreateSiteAssetDefault(code int) *CreateSiteAssetDefault {
 	}
 }
 
-/*CreateSiteAssetDefault handles this case with default header values.
+/*
+CreateSiteAssetDefault handles this case with default header values.
 
 error
 */

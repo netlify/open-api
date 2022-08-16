@@ -46,7 +46,8 @@ func NewGetDeployKeyOK() *GetDeployKeyOK {
 	return &GetDeployKeyOK{}
 }
 
-/*GetDeployKeyOK handles this case with default header values.
+/*
+GetDeployKeyOK handles this case with default header values.
 
 OK
 */
@@ -81,7 +82,8 @@ func NewGetDeployKeyDefault(code int) *GetDeployKeyDefault {
 	}
 }
 
-/*GetDeployKeyDefault handles this case with default header values.
+/*
+GetDeployKeyDefault handles this case with default header values.
 
 error
 */

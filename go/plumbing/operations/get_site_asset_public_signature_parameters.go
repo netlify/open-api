@@ -55,7 +55,8 @@ func NewGetSiteAssetPublicSignatureParamsWithHTTPClient(client *http.Client) *Ge
 	}
 }
 
-/*GetSiteAssetPublicSignatureParams contains all the parameters to send to the API endpoint
+/*
+GetSiteAssetPublicSignatureParams contains all the parameters to send to the API endpoint
 for the get site asset public signature operation typically these are written to a http.Request
 */
 type GetSiteAssetPublicSignatureParams struct {

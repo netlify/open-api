@@ -46,7 +46,8 @@ func NewExchangeTicketCreated() *ExchangeTicketCreated {
 	return &ExchangeTicketCreated{}
 }
 
-/*ExchangeTicketCreated handles this case with default header values.
+/*
+ExchangeTicketCreated handles this case with default header values.
 
 ok
 */
@@ -81,7 +82,8 @@ func NewExchangeTicketDefault(code int) *ExchangeTicketDefault {
 	}
 }
 
-/*ExchangeTicketDefault handles this case with default header values.
+/*
+ExchangeTicketDefault handles this case with default header values.
 
 error
 */

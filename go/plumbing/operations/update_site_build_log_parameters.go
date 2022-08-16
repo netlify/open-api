@@ -57,7 +57,8 @@ func NewUpdateSiteBuildLogParamsWithHTTPClient(client *http.Client) *UpdateSiteB
 	}
 }
 
-/*UpdateSiteBuildLogParams contains all the parameters to send to the API endpoint
+/*
+UpdateSiteBuildLogParams contains all the parameters to send to the API endpoint
 for the update site build log operation typically these are written to a http.Request
 */
 type UpdateSiteBuildLogParams struct {

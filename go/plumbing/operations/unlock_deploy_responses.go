@@ -46,7 +46,8 @@ func NewUnlockDeployOK() *UnlockDeployOK {
 	return &UnlockDeployOK{}
 }
 
-/*UnlockDeployOK handles this case with default header values.
+/*
+UnlockDeployOK handles this case with default header values.
 
 OK
 */
@@ -81,7 +82,8 @@ func NewUnlockDeployDefault(code int) *UnlockDeployDefault {
 	}
 }
 
-/*UnlockDeployDefault handles this case with default header values.
+/*
+UnlockDeployDefault handles this case with default header values.
 
 error
 */

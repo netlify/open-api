@@ -46,7 +46,8 @@ func NewUpdateSiteMetadataNoContent() *UpdateSiteMetadataNoContent {
 	return &UpdateSiteMetadataNoContent{}
 }
 
-/*UpdateSiteMetadataNoContent handles this case with default header values.
+/*
+UpdateSiteMetadataNoContent handles this case with default header values.
 
 No content
 */
@@ -69,7 +70,8 @@ func NewUpdateSiteMetadataDefault(code int) *UpdateSiteMetadataDefault {
 	}
 }
 
-/*UpdateSiteMetadataDefault handles this case with default header values.
+/*
+UpdateSiteMetadataDefault handles this case with default header values.
 
 error
 */

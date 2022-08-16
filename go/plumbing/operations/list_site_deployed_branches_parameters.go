@@ -55,7 +55,8 @@ func NewListSiteDeployedBranchesParamsWithHTTPClient(client *http.Client) *ListS
 	}
 }
 
-/*ListSiteDeployedBranchesParams contains all the parameters to send to the API endpoint
+/*
+ListSiteDeployedBranchesParams contains all the parameters to send to the API endpoint
 for the list site deployed branches operation typically these are written to a http.Request
 */
 type ListSiteDeployedBranchesParams struct {
