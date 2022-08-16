@@ -9,10 +9,8 @@ import (
 	"net/http/httptest"
 	"net/url"
 	"os"
-	"os/user"
 	"path"
 	"path/filepath"
-	"strconv"
 	"strings"
 	"testing"
 	"time"
@@ -383,29 +381,23 @@ func TestReadZipRuntime(t *testing.T) {
 	assert.Equal(t, "rs", runtime)
 }
 
-func TestWalk_IgnoreFilesOwnedByRoot(t *testing.T) {
-	dir, err := ioutil.TempDir("", "deploy")
-	require.Nil(t, err)
-	defer os.RemoveAll(dir)
+// This test must be run as root
 
-	err = ioutil.WriteFile(filepath.Join(dir, "secret"), []byte{1, 2, 3, 4, 5}, 0644)
-	require.Nil(t, err)
+// func TestWalk_IgnoreFilesOwnedByRoot(t *testing.T) {
+// 	dir, err := ioutil.TempDir("", "deploy")
+// 	require.Nil(t, err)
+// 	defer os.RemoveAll(dir)
 
-	rid, err := user.Lookup("root")
-	require.Nil(t, err)
+// 	err = ioutil.WriteFile(filepath.Join(dir, "secret"), []byte{1, 2, 3, 4, 5}, 0644)
+// 	require.Nil(t, err)
 
-	ridInt, err := strconv.Atoi(rid.Uid)
-	require.Nil(t, err)
-	gidInt, err := strconv.Atoi(rid.Gid)
-	require.Nil(t, err)
+// 	err = os.Chown(filepath.Join(dir, "secret"), 0, 0)
+// 	require.Nil(t, err)
 
-	err = os.Chown(filepath.Join(dir, "secret"), ridInt, gidInt)
-	require.Nil(t, err)
-
-	files, err := walk(dir, mockObserver{}, false, false)
-	require.Nil(t, err)
-	assert.Nil(t, files.Files["secret"])
-}
+// 	files, err := walk(dir, mockObserver{}, false, false)
+// 	require.Nil(t, err)
+// 	assert.Nil(t, files.Files["secret"])
+// }
 
 type mockObserver struct{}
 

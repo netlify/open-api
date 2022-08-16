@@ -14,7 +14,6 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
-	"os/user"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -572,11 +571,8 @@ func walk(dir string, observer DeployObserver, useLargeMedia, ignoreInstallDirs 
 		fileinfo, _ := os.Stat(path)
 		stat := fileinfo.Sys().(*syscall.Stat_t)
 		uid := int(stat.Uid)
-		// Get root user id
-		r, _ := user.Lookup("root")
-		rid, _ := strconv.Atoi(r.Uid)
 
-		if rid == uid {
+		if uid == 0 {
 			return nil
 		}
 
