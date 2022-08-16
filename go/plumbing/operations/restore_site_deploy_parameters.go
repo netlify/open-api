@@ -55,8 +55,7 @@ func NewRestoreSiteDeployParamsWithHTTPClient(client *http.Client) *RestoreSiteD
 	}
 }
 
-/*
-RestoreSiteDeployParams contains all the parameters to send to the API endpoint
+/*RestoreSiteDeployParams contains all the parameters to send to the API endpoint
 for the restore site deploy operation typically these are written to a http.Request
 */
 type RestoreSiteDeployParams struct {

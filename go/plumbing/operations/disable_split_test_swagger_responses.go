@@ -46,8 +46,7 @@ func NewDisableSplitTestNoContent() *DisableSplitTestNoContent {
 	return &DisableSplitTestNoContent{}
 }
 
-/*
-DisableSplitTestNoContent handles this case with default header values.
+/*DisableSplitTestNoContent handles this case with default header values.
 
 disabled
 */
@@ -70,8 +69,7 @@ func NewDisableSplitTestDefault(code int) *DisableSplitTestDefault {
 	}
 }
 
-/*
-DisableSplitTestDefault handles this case with default header values.
+/*DisableSplitTestDefault handles this case with default header values.
 
 error
 */

@@ -46,8 +46,7 @@ func NewGetIndividualDNSRecordOK() *GetIndividualDNSRecordOK {
 	return &GetIndividualDNSRecordOK{}
 }
 
-/*
-GetIndividualDNSRecordOK handles this case with default header values.
+/*GetIndividualDNSRecordOK handles this case with default header values.
 
 get a single DNS record
 */
@@ -82,8 +81,7 @@ func NewGetIndividualDNSRecordDefault(code int) *GetIndividualDNSRecordDefault {
 	}
 }
 
-/*
-GetIndividualDNSRecordDefault handles this case with default header values.
+/*GetIndividualDNSRecordDefault handles this case with default header values.
 
 error
 */

@@ -46,8 +46,7 @@ func NewCreateTicketCreated() *CreateTicketCreated {
 	return &CreateTicketCreated{}
 }
 
-/*
-CreateTicketCreated handles this case with default header values.
+/*CreateTicketCreated handles this case with default header values.
 
 ok
 */
@@ -82,8 +81,7 @@ func NewCreateTicketDefault(code int) *CreateTicketDefault {
 	}
 }
 
-/*
-CreateTicketDefault handles this case with default header values.
+/*CreateTicketDefault handles this case with default header values.
 
 error
 */

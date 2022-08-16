@@ -55,8 +55,7 @@ func NewCancelSiteDeployParamsWithHTTPClient(client *http.Client) *CancelSiteDep
 	}
 }
 
-/*
-CancelSiteDeployParams contains all the parameters to send to the API endpoint
+/*CancelSiteDeployParams contains all the parameters to send to the API endpoint
 for the cancel site deploy operation typically these are written to a http.Request
 */
 type CancelSiteDeployParams struct {

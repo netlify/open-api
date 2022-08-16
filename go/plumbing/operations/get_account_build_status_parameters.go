@@ -55,8 +55,7 @@ func NewGetAccountBuildStatusParamsWithHTTPClient(client *http.Client) *GetAccou
 	}
 }
 
-/*
-GetAccountBuildStatusParams contains all the parameters to send to the API endpoint
+/*GetAccountBuildStatusParams contains all the parameters to send to the API endpoint
 for the get account build status operation typically these are written to a http.Request
 */
 type GetAccountBuildStatusParams struct {

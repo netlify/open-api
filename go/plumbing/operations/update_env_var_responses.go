@@ -46,8 +46,7 @@ func NewUpdateEnvVarOK() *UpdateEnvVarOK {
 	return &UpdateEnvVarOK{}
 }
 
-/*
-UpdateEnvVarOK handles this case with default header values.
+/*UpdateEnvVarOK handles this case with default header values.
 
 OK
 */
@@ -82,8 +81,7 @@ func NewUpdateEnvVarDefault(code int) *UpdateEnvVarDefault {
 	}
 }
 
-/*
-UpdateEnvVarDefault handles this case with default header values.
+/*UpdateEnvVarDefault handles this case with default header values.
 
 error
 */

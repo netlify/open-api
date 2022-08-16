@@ -55,8 +55,7 @@ func NewShowServiceManifestParamsWithHTTPClient(client *http.Client) *ShowServic
 	}
 }
 
-/*
-ShowServiceManifestParams contains all the parameters to send to the API endpoint
+/*ShowServiceManifestParams contains all the parameters to send to the API endpoint
 for the show service manifest operation typically these are written to a http.Request
 */
 type ShowServiceManifestParams struct {

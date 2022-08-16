@@ -56,8 +56,7 @@ func NewListAccountAuditEventsParamsWithHTTPClient(client *http.Client) *ListAcc
 	}
 }
 
-/*
-ListAccountAuditEventsParams contains all the parameters to send to the API endpoint
+/*ListAccountAuditEventsParams contains all the parameters to send to the API endpoint
 for the list account audit events operation typically these are written to a http.Request
 */
 type ListAccountAuditEventsParams struct {

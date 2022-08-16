@@ -46,8 +46,7 @@ func NewCreateSiteBuildHookCreated() *CreateSiteBuildHookCreated {
 	return &CreateSiteBuildHookCreated{}
 }
 
-/*
-CreateSiteBuildHookCreated handles this case with default header values.
+/*CreateSiteBuildHookCreated handles this case with default header values.
 
 Created
 */
@@ -82,8 +81,7 @@ func NewCreateSiteBuildHookDefault(code int) *CreateSiteBuildHookDefault {
 	}
 }
 
-/*
-CreateSiteBuildHookDefault handles this case with default header values.
+/*CreateSiteBuildHookDefault handles this case with default header values.
 
 error
 */

@@ -46,8 +46,7 @@ func NewUpdatePluginOK() *UpdatePluginOK {
 	return &UpdatePluginOK{}
 }
 
-/*
-UpdatePluginOK handles this case with default header values.
+/*UpdatePluginOK handles this case with default header values.
 
 OK
 */
@@ -82,8 +81,7 @@ func NewUpdatePluginDefault(code int) *UpdatePluginDefault {
 	}
 }
 
-/*
-UpdatePluginDefault handles this case with default header values.
+/*UpdatePluginDefault handles this case with default header values.
 
 error
 */

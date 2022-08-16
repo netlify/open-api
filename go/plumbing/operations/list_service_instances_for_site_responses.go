@@ -46,8 +46,7 @@ func NewListServiceInstancesForSiteOK() *ListServiceInstancesForSiteOK {
 	return &ListServiceInstancesForSiteOK{}
 }
 
-/*
-ListServiceInstancesForSiteOK handles this case with default header values.
+/*ListServiceInstancesForSiteOK handles this case with default header values.
 
 OK
 */
@@ -80,8 +79,7 @@ func NewListServiceInstancesForSiteDefault(code int) *ListServiceInstancesForSit
 	}
 }
 
-/*
-ListServiceInstancesForSiteDefault handles this case with default header values.
+/*ListServiceInstancesForSiteDefault handles this case with default header values.
 
 error
 */

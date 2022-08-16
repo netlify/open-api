@@ -46,8 +46,7 @@ func NewListSiteFormsOK() *ListSiteFormsOK {
 	return &ListSiteFormsOK{}
 }
 
-/*
-ListSiteFormsOK handles this case with default header values.
+/*ListSiteFormsOK handles this case with default header values.
 
 OK
 */
@@ -80,8 +79,7 @@ func NewListSiteFormsDefault(code int) *ListSiteFormsDefault {
 	}
 }
 
-/*
-ListSiteFormsDefault handles this case with default header values.
+/*ListSiteFormsDefault handles this case with default header values.
 
 error
 */

@@ -55,8 +55,7 @@ func NewUnlockDeployParamsWithHTTPClient(client *http.Client) *UnlockDeployParam
 	}
 }
 
-/*
-UnlockDeployParams contains all the parameters to send to the API endpoint
+/*UnlockDeployParams contains all the parameters to send to the API endpoint
 for the unlock deploy operation typically these are written to a http.Request
 */
 type UnlockDeployParams struct {

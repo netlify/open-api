@@ -46,8 +46,7 @@ func NewListDeployKeysOK() *ListDeployKeysOK {
 	return &ListDeployKeysOK{}
 }
 
-/*
-ListDeployKeysOK handles this case with default header values.
+/*ListDeployKeysOK handles this case with default header values.
 
 OK
 */
@@ -80,8 +79,7 @@ func NewListDeployKeysDefault(code int) *ListDeployKeysDefault {
 	}
 }
 
-/*
-ListDeployKeysDefault handles this case with default header values.
+/*ListDeployKeysDefault handles this case with default header values.
 
 error
 */

@@ -46,8 +46,7 @@ func NewCreateDNSZoneCreated() *CreateDNSZoneCreated {
 	return &CreateDNSZoneCreated{}
 }
 
-/*
-CreateDNSZoneCreated handles this case with default header values.
+/*CreateDNSZoneCreated handles this case with default header values.
 
 Created
 */
@@ -82,8 +81,7 @@ func NewCreateDNSZoneDefault(code int) *CreateDNSZoneDefault {
 	}
 }
 
-/*
-CreateDNSZoneDefault handles this case with default header values.
+/*CreateDNSZoneDefault handles this case with default header values.
 
 error
 */

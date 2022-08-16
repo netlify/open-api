@@ -46,8 +46,7 @@ func NewDeleteSiteAssetNoContent() *DeleteSiteAssetNoContent {
 	return &DeleteSiteAssetNoContent{}
 }
 
-/*
-DeleteSiteAssetNoContent handles this case with default header values.
+/*DeleteSiteAssetNoContent handles this case with default header values.
 
 Deleted
 */
@@ -70,8 +69,7 @@ func NewDeleteSiteAssetDefault(code int) *DeleteSiteAssetDefault {
 	}
 }
 
-/*
-DeleteSiteAssetDefault handles this case with default header values.
+/*DeleteSiteAssetDefault handles this case with default header values.
 
 error
 */

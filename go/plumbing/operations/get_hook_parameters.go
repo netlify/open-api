@@ -55,8 +55,7 @@ func NewGetHookParamsWithHTTPClient(client *http.Client) *GetHookParams {
 	}
 }
 
-/*
-GetHookParams contains all the parameters to send to the API endpoint
+/*GetHookParams contains all the parameters to send to the API endpoint
 for the get hook operation typically these are written to a http.Request
 */
 type GetHookParams struct {

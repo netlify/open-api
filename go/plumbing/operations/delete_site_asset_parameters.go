@@ -55,8 +55,7 @@ func NewDeleteSiteAssetParamsWithHTTPClient(client *http.Client) *DeleteSiteAsse
 	}
 }
 
-/*
-DeleteSiteAssetParams contains all the parameters to send to the API endpoint
+/*DeleteSiteAssetParams contains all the parameters to send to the API endpoint
 for the delete site asset operation typically these are written to a http.Request
 */
 type DeleteSiteAssetParams struct {

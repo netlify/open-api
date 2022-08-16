@@ -37,8 +37,7 @@ func NewDeleteHookNoContent() *DeleteHookNoContent {
 	return &DeleteHookNoContent{}
 }
 
-/*
-DeleteHookNoContent handles this case with default header values.
+/*DeleteHookNoContent handles this case with default header values.
 
 No content
 */

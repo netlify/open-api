@@ -57,8 +57,7 @@ func NewCreateSiteDeployParamsWithHTTPClient(client *http.Client) *CreateSiteDep
 	}
 }
 
-/*
-CreateSiteDeployParams contains all the parameters to send to the API endpoint
+/*CreateSiteDeployParams contains all the parameters to send to the API endpoint
 for the create site deploy operation typically these are written to a http.Request
 */
 type CreateSiteDeployParams struct {

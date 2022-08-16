@@ -55,8 +55,7 @@ func NewGetDNSRecordsParamsWithHTTPClient(client *http.Client) *GetDNSRecordsPar
 	}
 }
 
-/*
-GetDNSRecordsParams contains all the parameters to send to the API endpoint
+/*GetDNSRecordsParams contains all the parameters to send to the API endpoint
 for the get Dns records operation typically these are written to a http.Request
 */
 type GetDNSRecordsParams struct {

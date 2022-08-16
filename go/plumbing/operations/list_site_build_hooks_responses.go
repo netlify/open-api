@@ -46,8 +46,7 @@ func NewListSiteBuildHooksOK() *ListSiteBuildHooksOK {
 	return &ListSiteBuildHooksOK{}
 }
 
-/*
-ListSiteBuildHooksOK handles this case with default header values.
+/*ListSiteBuildHooksOK handles this case with default header values.
 
 OK
 */
@@ -80,8 +79,7 @@ func NewListSiteBuildHooksDefault(code int) *ListSiteBuildHooksDefault {
 	}
 }
 
-/*
-ListSiteBuildHooksDefault handles this case with default header values.
+/*ListSiteBuildHooksDefault handles this case with default header values.
 
 error
 */

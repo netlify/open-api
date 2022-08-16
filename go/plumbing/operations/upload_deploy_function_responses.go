@@ -46,8 +46,7 @@ func NewUploadDeployFunctionOK() *UploadDeployFunctionOK {
 	return &UploadDeployFunctionOK{}
 }
 
-/*
-UploadDeployFunctionOK handles this case with default header values.
+/*UploadDeployFunctionOK handles this case with default header values.
 
 OK
 */
@@ -82,8 +81,7 @@ func NewUploadDeployFunctionDefault(code int) *UploadDeployFunctionDefault {
 	}
 }
 
-/*
-UploadDeployFunctionDefault handles this case with default header values.
+/*UploadDeployFunctionDefault handles this case with default header values.
 
 error
 */

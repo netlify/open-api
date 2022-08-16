@@ -46,8 +46,7 @@ func NewSetEnvVarValueCreated() *SetEnvVarValueCreated {
 	return &SetEnvVarValueCreated{}
 }
 
-/*
-SetEnvVarValueCreated handles this case with default header values.
+/*SetEnvVarValueCreated handles this case with default header values.
 
 Created (success)
 */
@@ -82,8 +81,7 @@ func NewSetEnvVarValueDefault(code int) *SetEnvVarValueDefault {
 	}
 }
 
-/*
-SetEnvVarValueDefault handles this case with default header values.
+/*SetEnvVarValueDefault handles this case with default header values.
 
 error
 */

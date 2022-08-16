@@ -46,8 +46,7 @@ func NewListHookTypesOK() *ListHookTypesOK {
 	return &ListHookTypesOK{}
 }
 
-/*
-ListHookTypesOK handles this case with default header values.
+/*ListHookTypesOK handles this case with default header values.
 
 OK
 */
@@ -80,8 +79,7 @@ func NewListHookTypesDefault(code int) *ListHookTypesDefault {
 	}
 }
 
-/*
-ListHookTypesDefault handles this case with default header values.
+/*ListHookTypesDefault handles this case with default header values.
 
 error
 */

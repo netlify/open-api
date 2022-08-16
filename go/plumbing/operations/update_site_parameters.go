@@ -57,8 +57,7 @@ func NewUpdateSiteParamsWithHTTPClient(client *http.Client) *UpdateSiteParams {
 	}
 }
 
-/*
-UpdateSiteParams contains all the parameters to send to the API endpoint
+/*UpdateSiteParams contains all the parameters to send to the API endpoint
 for the update site operation typically these are written to a http.Request
 */
 type UpdateSiteParams struct {

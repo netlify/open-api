@@ -55,8 +55,7 @@ func NewGetSplitTestsParamsWithHTTPClient(client *http.Client) *GetSplitTestsPar
 	}
 }
 
-/*
-GetSplitTestsParams contains all the parameters to send to the API endpoint
+/*GetSplitTestsParams contains all the parameters to send to the API endpoint
 for the get split tests operation typically these are written to a http.Request
 */
 type GetSplitTestsParams struct {

@@ -57,8 +57,7 @@ func NewUpdateHookParamsWithHTTPClient(client *http.Client) *UpdateHookParams {
 	}
 }
 
-/*
-UpdateHookParams contains all the parameters to send to the API endpoint
+/*UpdateHookParams contains all the parameters to send to the API endpoint
 for the update hook operation typically these are written to a http.Request
 */
 type UpdateHookParams struct {

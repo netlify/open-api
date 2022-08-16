@@ -55,8 +55,7 @@ func NewListServiceInstancesForSiteParamsWithHTTPClient(client *http.Client) *Li
 	}
 }
 
-/*
-ListServiceInstancesForSiteParams contains all the parameters to send to the API endpoint
+/*ListServiceInstancesForSiteParams contains all the parameters to send to the API endpoint
 for the list service instances for site operation typically these are written to a http.Request
 */
 type ListServiceInstancesForSiteParams struct {

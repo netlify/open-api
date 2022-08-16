@@ -55,8 +55,7 @@ func NewListAccountsForUserParamsWithHTTPClient(client *http.Client) *ListAccoun
 	}
 }
 
-/*
-ListAccountsForUserParams contains all the parameters to send to the API endpoint
+/*ListAccountsForUserParams contains all the parameters to send to the API endpoint
 for the list accounts for user operation typically these are written to a http.Request
 */
 type ListAccountsForUserParams struct {

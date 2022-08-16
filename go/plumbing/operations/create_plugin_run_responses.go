@@ -46,8 +46,7 @@ func NewCreatePluginRunCreated() *CreatePluginRunCreated {
 	return &CreatePluginRunCreated{}
 }
 
-/*
-CreatePluginRunCreated handles this case with default header values.
+/*CreatePluginRunCreated handles this case with default header values.
 
 CREATED
 */
@@ -82,8 +81,7 @@ func NewCreatePluginRunDefault(code int) *CreatePluginRunDefault {
 	}
 }
 
-/*
-CreatePluginRunDefault handles this case with default header values.
+/*CreatePluginRunDefault handles this case with default header values.
 
 error
 */

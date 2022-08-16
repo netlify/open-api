@@ -56,8 +56,7 @@ func NewListSiteDeploysParamsWithHTTPClient(client *http.Client) *ListSiteDeploy
 	}
 }
 
-/*
-ListSiteDeploysParams contains all the parameters to send to the API endpoint
+/*ListSiteDeploysParams contains all the parameters to send to the API endpoint
 for the list site deploys operation typically these are written to a http.Request
 */
 type ListSiteDeploysParams struct {

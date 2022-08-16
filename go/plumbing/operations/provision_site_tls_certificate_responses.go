@@ -46,8 +46,7 @@ func NewProvisionSiteTLSCertificateOK() *ProvisionSiteTLSCertificateOK {
 	return &ProvisionSiteTLSCertificateOK{}
 }
 
-/*
-ProvisionSiteTLSCertificateOK handles this case with default header values.
+/*ProvisionSiteTLSCertificateOK handles this case with default header values.
 
 OK
 */
@@ -82,8 +81,7 @@ func NewProvisionSiteTLSCertificateDefault(code int) *ProvisionSiteTLSCertificat
 	}
 }
 
-/*
-ProvisionSiteTLSCertificateDefault handles this case with default header values.
+/*ProvisionSiteTLSCertificateDefault handles this case with default header values.
 
 error
 */

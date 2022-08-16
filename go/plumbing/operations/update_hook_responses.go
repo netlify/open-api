@@ -46,8 +46,7 @@ func NewUpdateHookOK() *UpdateHookOK {
 	return &UpdateHookOK{}
 }
 
-/*
-UpdateHookOK handles this case with default header values.
+/*UpdateHookOK handles this case with default header values.
 
 OK
 */
@@ -82,8 +81,7 @@ func NewUpdateHookDefault(code int) *UpdateHookDefault {
 	}
 }
 
-/*
-UpdateHookDefault handles this case with default header values.
+/*UpdateHookDefault handles this case with default header values.
 
 error
 */

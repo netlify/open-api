@@ -55,8 +55,7 @@ func NewGetSiteAssetInfoParamsWithHTTPClient(client *http.Client) *GetSiteAssetI
 	}
 }
 
-/*
-GetSiteAssetInfoParams contains all the parameters to send to the API endpoint
+/*GetSiteAssetInfoParams contains all the parameters to send to the API endpoint
 for the get site asset info operation typically these are written to a http.Request
 */
 type GetSiteAssetInfoParams struct {

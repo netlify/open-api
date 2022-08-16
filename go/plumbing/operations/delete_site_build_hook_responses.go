@@ -46,8 +46,7 @@ func NewDeleteSiteBuildHookNoContent() *DeleteSiteBuildHookNoContent {
 	return &DeleteSiteBuildHookNoContent{}
 }
 
-/*
-DeleteSiteBuildHookNoContent handles this case with default header values.
+/*DeleteSiteBuildHookNoContent handles this case with default header values.
 
 No content
 */
@@ -70,8 +69,7 @@ func NewDeleteSiteBuildHookDefault(code int) *DeleteSiteBuildHookDefault {
 	}
 }
 
-/*
-DeleteSiteBuildHookDefault handles this case with default header values.
+/*DeleteSiteBuildHookDefault handles this case with default header values.
 
 error
 */

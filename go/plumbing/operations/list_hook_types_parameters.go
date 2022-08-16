@@ -55,8 +55,7 @@ func NewListHookTypesParamsWithHTTPClient(client *http.Client) *ListHookTypesPar
 	}
 }
 
-/*
-ListHookTypesParams contains all the parameters to send to the API endpoint
+/*ListHookTypesParams contains all the parameters to send to the API endpoint
 for the list hook types operation typically these are written to a http.Request
 */
 type ListHookTypesParams struct {

@@ -55,8 +55,7 @@ func NewGetEnvVarsParamsWithHTTPClient(client *http.Client) *GetEnvVarsParams {
 	}
 }
 
-/*
-GetEnvVarsParams contains all the parameters to send to the API endpoint
+/*GetEnvVarsParams contains all the parameters to send to the API endpoint
 for the get env vars operation typically these are written to a http.Request
 */
 type GetEnvVarsParams struct {

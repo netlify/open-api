@@ -46,8 +46,7 @@ func NewRestoreSiteDeployCreated() *RestoreSiteDeployCreated {
 	return &RestoreSiteDeployCreated{}
 }
 
-/*
-RestoreSiteDeployCreated handles this case with default header values.
+/*RestoreSiteDeployCreated handles this case with default header values.
 
 Created
 */
@@ -82,8 +81,7 @@ func NewRestoreSiteDeployDefault(code int) *RestoreSiteDeployDefault {
 	}
 }
 
-/*
-RestoreSiteDeployDefault handles this case with default header values.
+/*RestoreSiteDeployDefault handles this case with default header values.
 
 error
 */

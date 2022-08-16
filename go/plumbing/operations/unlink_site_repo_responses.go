@@ -46,8 +46,7 @@ func NewUnlinkSiteRepoOK() *UnlinkSiteRepoOK {
 	return &UnlinkSiteRepoOK{}
 }
 
-/*
-UnlinkSiteRepoOK handles this case with default header values.
+/*UnlinkSiteRepoOK handles this case with default header values.
 
 OK
 */
@@ -80,8 +79,7 @@ func NewUnlinkSiteRepoNotFound() *UnlinkSiteRepoNotFound {
 	return &UnlinkSiteRepoNotFound{}
 }
 
-/*
-UnlinkSiteRepoNotFound handles this case with default header values.
+/*UnlinkSiteRepoNotFound handles this case with default header values.
 
 Site not found
 */

@@ -46,8 +46,7 @@ func NewUpdateAccountOK() *UpdateAccountOK {
 	return &UpdateAccountOK{}
 }
 
-/*
-UpdateAccountOK handles this case with default header values.
+/*UpdateAccountOK handles this case with default header values.
 
 OK
 */
@@ -82,8 +81,7 @@ func NewUpdateAccountDefault(code int) *UpdateAccountDefault {
 	}
 }
 
-/*
-UpdateAccountDefault handles this case with default header values.
+/*UpdateAccountDefault handles this case with default header values.
 
 error
 */

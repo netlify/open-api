@@ -46,8 +46,7 @@ func NewShowServiceInstanceOK() *ShowServiceInstanceOK {
 	return &ShowServiceInstanceOK{}
 }
 
-/*
-ShowServiceInstanceOK handles this case with default header values.
+/*ShowServiceInstanceOK handles this case with default header values.
 
 OK
 */
@@ -82,8 +81,7 @@ func NewShowServiceInstanceDefault(code int) *ShowServiceInstanceDefault {
 	}
 }
 
-/*
-ShowServiceInstanceDefault handles this case with default header values.
+/*ShowServiceInstanceDefault handles this case with default header values.
 
 error
 */
