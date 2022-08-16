@@ -15,6 +15,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strconv"
 	"strings"
 	"sync"
@@ -568,14 +569,15 @@ func walk(dir string, observer DeployObserver, useLargeMedia, ignoreInstallDirs 
 		}
 
 		// Get file ownership
-		fileinfo, _ := os.Stat(path)
-		stat := fileinfo.Sys().(*syscall.Stat_t)
-		uid := int(stat.Uid)
+		if runtime.GOOS != "windows" {
+			fileinfo, _ := os.Stat(path)
+			stat := fileinfo.Sys().(*syscall.Stat_t)
+			uid := int(stat.Uid)
 
-		if uid == 0 {
-			return nil
+			if uid == 0 {
+				return nil
+			}
 		}
-
 		if !info.IsDir() && info.Mode().IsRegular() {
 			osRel, err := filepath.Rel(dir, path)
 			if err != nil {
