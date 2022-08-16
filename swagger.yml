@@ -373,6 +373,51 @@ paths:
             $ref: '#/definitions/envVar'
         default:
           $ref: '#/responses/error'
+    patch:
+      tags:
+        - environmentVariables
+      operationId: setEnvVarValue
+      description: >-
+        [Beta] Updates or creates a new value for an existing environment variable. To use this endpoint, opt in to the beta environment variable experience using the Netlify UI.
+      parameters:
+        - name: account_id
+          description: Scope response to account_id
+          required: true
+          type: string
+          in: path
+        - name: key
+          description: The existing environment variable key name (case-sensitive)
+          required: true
+          type: string
+          in: path
+        - name: site_id
+          description: 'If provided, update an environment variable set on this site'
+          in: query
+          type: string
+        - in: body
+          name: env_var
+          schema:
+            type: object
+            properties:
+              context:
+                description: >-
+                  The deploy context in which this value will be used. `dev` refers to local development when running `netlify dev`.
+                type: string
+                enum:
+                  - dev
+                  - branch-deploy
+                  - deploy-preview
+                  - production
+              value:
+                description: The environment variable's unencrypted value
+                type: string
+      responses:
+        '201':
+          description: 'Created (success)'
+          schema:
+            $ref: '#/definitions/envVar'
+        default:
+          $ref: '#/responses/error'
     delete:
       tags:
         - environmentVariables
@@ -3382,7 +3427,7 @@ parameters:
   retryCount:
     name: X-Nf-Retry-Count
     type: integer
-    in: header    
+    in: header
 x-tagGroups:
   - name: OAuth
     tags:
