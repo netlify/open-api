@@ -958,6 +958,25 @@ paths:
             $ref: '#/definitions/deploy'
         default:
           $ref: '#/responses/error'
+    delete:
+      operationId: deleteSiteDeploy
+      tags: [deploy]
+      parameters:
+        - name: deploy_id
+          type: string
+          in: path
+          required: true
+        - name: site_id
+          type: string
+          in: path
+          required: true
+      responses:
+        '204':
+          description: OK
+          schema:
+            $ref: '#/definitions/deploy'
+        default:
+          $ref: '#/responses/error'
   /deploys/{deploy_id}/cancel:
     post:
       operationId: cancelSiteDeploy
@@ -1143,26 +1162,6 @@ paths:
               $ref: '#/definitions/buildStatus'
         default:
           $ref: '#/responses/error'
-  /sites/{site_id}/deploys/{deploy_id}:
-    delete:
-      operationId: deleteSiteDeploy
-      tags: [deploy]
-      parameters:
-        - name: deploy_id
-          type: string
-          in: path
-          required: true
-        - name: site_id
-          type: string
-          in: path
-          required: true
-      responses:
-        '204':
-          description: OK
-          schema:
-            $ref: '#/definitions/deploy'
-        default:
-          $ref: '#/responses/error'
   /sites/{site_id}/dns:
     parameters:
       - name: site_id
@@ -1218,6 +1217,21 @@ paths:
           required: true
       responses:
         '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/deploy'
+        default:
+          $ref: '#/responses/error'
+    delete:
+      operationId: deleteDeploy
+      tags: [deploy]
+      parameters:
+        - name: deploy_id
+          type: string
+          in: path
+          required: true
+      responses:
+        '204':
           description: OK
           schema:
             $ref: '#/definitions/deploy'
@@ -1284,22 +1298,6 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/file'
-        default:
-          $ref: '#/responses/error'
-  /deploys/{deploy_id}:
-    delete:
-      operationId: deleteDeploy
-      tags: [deploy]
-      parameters:
-        - name: deploy_id
-          type: string
-          in: path
-          required: true
-      responses:
-        '204':
-          description: OK
-          schema:
-            $ref: '#/definitions/deploy'
         default:
           $ref: '#/responses/error'
   /deploys/{deploy_id}/functions/{name}:
