@@ -235,6 +235,8 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 	options.functions = functions
 	options.functionSchedules = schedules
 
+	addFunctionsForFly(functions, files)
+
 	deployFiles := &models.DeployFiles{
 		Files:     options.files.Sums,
 		Draft:     options.IsDraft,
@@ -647,6 +649,13 @@ func addEdgeFunctionsToDeployFiles(dir string, files *deployFiles, observer Depl
 
 		return nil
 	})
+}
+
+func addFunctionsForFly(functions, cdnFiles *deployFiles) {
+	for name, file := range functions.Files {
+		path := fmt.Sprintf(".netlify/internal/fly-functions/%s", name)
+		cdnFiles.Add(path, file)
+	}
 }
 
 func bundle(ctx context.Context, functionDir string, observer DeployObserver) (*deployFiles, []*models.FunctionSchedule, error) {
