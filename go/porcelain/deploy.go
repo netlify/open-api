@@ -235,7 +235,9 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 	options.functions = functions
 	options.functionSchedules = schedules
 
-	addFunctionsForFly(functions, files)
+	if functions != nil {
+		addFunctionsForFly(functions, files)
+	}
 
 	deployFiles := &models.DeployFiles{
 		Files:     options.files.Sums,
