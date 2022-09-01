@@ -236,7 +236,9 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 	options.functionSchedules = schedules
 
 	if functions != nil {
-		addFunctionsForFly(functions, files)
+		if err := addFunctionsForFly(functions, files); err != nil {
+			return nil, fmt.Errorf("failed to add function to CDN files: %w", err)
+		}
 	}
 
 	deployFiles := &models.DeployFiles{
@@ -477,7 +479,16 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 		switch t {
 		case fileUpload:
 			var body io.ReadCloser
-			body, operationError = os.Open(f.Path)
+			if f.Path == "" {
+				// some files come from buffers, not the file system
+				if f.Buffer == nil {
+					operationError = errors.New("file without path or buffer encountered")
+				} else {
+					body = io.NopCloser(f.Buffer)
+				}
+			} else {
+				body, operationError = os.Open(f.Path)
+			}
 			if operationError == nil {
 				defer body.Close()
 				params := operations.NewUploadDeployFileParams().WithDeployID(d.ID).WithPath(f.Name).WithFileBody(body)
@@ -653,11 +664,28 @@ func addEdgeFunctionsToDeployFiles(dir string, files *deployFiles, observer Depl
 	})
 }
 
-func addFunctionsForFly(functions, cdnFiles *deployFiles) {
+func addFunctionsForFly(functions, cdnFiles *deployFiles) error {
 	for name, file := range functions.Files {
 		path := fmt.Sprintf(".netlify/internal/fly-functions/%s", name)
-		cdnFiles.Add(path, file)
+
+		uploadFile := file
+		// copy the file buffer if there is one
+		if file.Path == "" && file.Buffer != nil {
+			buf := bytes.Buffer{}
+			_, err := io.Copy(&buf, file.Buffer)
+			if err != nil {
+				return fmt.Errorf("failed to copy function buffer for copying: %w", err)
+			}
+			file.Buffer = bytes.NewReader(buf.Bytes())
+			newFile := *file
+			newFile.Buffer = bytes.NewReader(buf.Bytes())
+			uploadFile = &newFile
+		}
+
+		cdnFiles.Add(path, uploadFile)
 	}
+
+	return nil
 }
 
 func bundle(ctx context.Context, functionDir string, observer DeployObserver) (*deployFiles, []*models.FunctionSchedule, error) {
