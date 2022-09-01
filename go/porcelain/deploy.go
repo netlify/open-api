@@ -484,7 +484,7 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 				if f.Buffer == nil {
 					operationError = errors.New("file without path or buffer encountered")
 				} else {
-					body = io.NopCloser(f.Buffer)
+					body = ioutil.NopCloser(f.Buffer)
 				}
 			} else {
 				body, operationError = os.Open(f.Path)
