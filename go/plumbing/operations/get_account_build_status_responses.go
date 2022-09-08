@@ -46,7 +46,8 @@ func NewGetAccountBuildStatusOK() *GetAccountBuildStatusOK {
 	return &GetAccountBuildStatusOK{}
 }
 
-/*GetAccountBuildStatusOK handles this case with default header values.
+/*
+GetAccountBuildStatusOK handles this case with default header values.
 
 OK
 */
@@ -79,7 +80,8 @@ func NewGetAccountBuildStatusDefault(code int) *GetAccountBuildStatusDefault {
 	}
 }
 
-/*GetAccountBuildStatusDefault handles this case with default header values.
+/*
+GetAccountBuildStatusDefault handles this case with default header values.
 
 error
 */

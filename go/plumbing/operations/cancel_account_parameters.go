@@ -55,7 +55,8 @@ func NewCancelAccountParamsWithHTTPClient(client *http.Client) *CancelAccountPar
 	}
 }
 
-/*CancelAccountParams contains all the parameters to send to the API endpoint
+/*
+CancelAccountParams contains all the parameters to send to the API endpoint
 for the cancel account operation typically these are written to a http.Request
 */
 type CancelAccountParams struct {

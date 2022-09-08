@@ -55,7 +55,8 @@ func NewGetIndividualDNSRecordParamsWithHTTPClient(client *http.Client) *GetIndi
 	}
 }
 
-/*GetIndividualDNSRecordParams contains all the parameters to send to the API endpoint
+/*
+GetIndividualDNSRecordParams contains all the parameters to send to the API endpoint
 for the get individual Dns record operation typically these are written to a http.Request
 */
 type GetIndividualDNSRecordParams struct {

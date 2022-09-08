@@ -46,7 +46,8 @@ func NewCancelSiteDeployCreated() *CancelSiteDeployCreated {
 	return &CancelSiteDeployCreated{}
 }
 
-/*CancelSiteDeployCreated handles this case with default header values.
+/*
+CancelSiteDeployCreated handles this case with default header values.
 
 Cancelled
 */
@@ -81,7 +82,8 @@ func NewCancelSiteDeployDefault(code int) *CancelSiteDeployDefault {
 	}
 }
 
-/*CancelSiteDeployDefault handles this case with default header values.
+/*
+CancelSiteDeployDefault handles this case with default header values.
 
 error
 */

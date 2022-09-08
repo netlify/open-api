@@ -46,7 +46,8 @@ func NewAddMemberToAccountOK() *AddMemberToAccountOK {
 	return &AddMemberToAccountOK{}
 }
 
-/*AddMemberToAccountOK handles this case with default header values.
+/*
+AddMemberToAccountOK handles this case with default header values.
 
 OK
 */
@@ -79,7 +80,8 @@ func NewAddMemberToAccountDefault(code int) *AddMemberToAccountDefault {
 	}
 }
 
-/*AddMemberToAccountDefault handles this case with default header values.
+/*
+AddMemberToAccountDefault handles this case with default header values.
 
 error
 */

@@ -55,7 +55,8 @@ func NewShowSiteTLSCertificateParamsWithHTTPClient(client *http.Client) *ShowSit
 	}
 }
 
-/*ShowSiteTLSCertificateParams contains all the parameters to send to the API endpoint
+/*
+ShowSiteTLSCertificateParams contains all the parameters to send to the API endpoint
 for the show site TLS certificate operation typically these are written to a http.Request
 */
 type ShowSiteTLSCertificateParams struct {

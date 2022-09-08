@@ -55,7 +55,8 @@ func NewGetSiteSnippetParamsWithHTTPClient(client *http.Client) *GetSiteSnippetP
 	}
 }
 
-/*GetSiteSnippetParams contains all the parameters to send to the API endpoint
+/*
+GetSiteSnippetParams contains all the parameters to send to the API endpoint
 for the get site snippet operation typically these are written to a http.Request
 */
 type GetSiteSnippetParams struct {

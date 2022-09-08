@@ -46,7 +46,8 @@ func NewListSiteSnippetsOK() *ListSiteSnippetsOK {
 	return &ListSiteSnippetsOK{}
 }
 
-/*ListSiteSnippetsOK handles this case with default header values.
+/*
+ListSiteSnippetsOK handles this case with default header values.
 
 OK
 */
@@ -79,7 +80,8 @@ func NewListSiteSnippetsDefault(code int) *ListSiteSnippetsDefault {
 	}
 }
 
-/*ListSiteSnippetsDefault handles this case with default header values.
+/*
+ListSiteSnippetsDefault handles this case with default header values.
 
 error
 */

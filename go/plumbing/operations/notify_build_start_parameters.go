@@ -55,7 +55,8 @@ func NewNotifyBuildStartParamsWithHTTPClient(client *http.Client) *NotifyBuildSt
 	}
 }
 
-/*NotifyBuildStartParams contains all the parameters to send to the API endpoint
+/*
+NotifyBuildStartParams contains all the parameters to send to the API endpoint
 for the notify build start operation typically these are written to a http.Request
 */
 type NotifyBuildStartParams struct {

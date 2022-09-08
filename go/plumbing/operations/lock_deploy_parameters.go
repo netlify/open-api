@@ -55,7 +55,8 @@ func NewLockDeployParamsWithHTTPClient(client *http.Client) *LockDeployParams {
 	}
 }
 
-/*LockDeployParams contains all the parameters to send to the API endpoint
+/*
+LockDeployParams contains all the parameters to send to the API endpoint
 for the lock deploy operation typically these are written to a http.Request
 */
 type LockDeployParams struct {

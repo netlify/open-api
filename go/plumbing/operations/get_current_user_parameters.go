@@ -55,7 +55,8 @@ func NewGetCurrentUserParamsWithHTTPClient(client *http.Client) *GetCurrentUserP
 	}
 }
 
-/*GetCurrentUserParams contains all the parameters to send to the API endpoint
+/*
+GetCurrentUserParams contains all the parameters to send to the API endpoint
 for the get current user operation typically these are written to a http.Request
 */
 type GetCurrentUserParams struct {

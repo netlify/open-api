@@ -55,7 +55,8 @@ func NewDeleteSubmissionParamsWithHTTPClient(client *http.Client) *DeleteSubmiss
 	}
 }
 
-/*DeleteSubmissionParams contains all the parameters to send to the API endpoint
+/*
+DeleteSubmissionParams contains all the parameters to send to the API endpoint
 for the delete submission operation typically these are written to a http.Request
 */
 type DeleteSubmissionParams struct {

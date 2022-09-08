@@ -56,7 +56,8 @@ func NewListSiteBuildsParamsWithHTTPClient(client *http.Client) *ListSiteBuildsP
 	}
 }
 
-/*ListSiteBuildsParams contains all the parameters to send to the API endpoint
+/*
+ListSiteBuildsParams contains all the parameters to send to the API endpoint
 for the list site builds operation typically these are written to a http.Request
 */
 type ListSiteBuildsParams struct {

@@ -57,7 +57,8 @@ func NewCreateSplitTestParamsWithHTTPClient(client *http.Client) *CreateSplitTes
 	}
 }
 
-/*CreateSplitTestParams contains all the parameters to send to the API endpoint
+/*
+CreateSplitTestParams contains all the parameters to send to the API endpoint
 for the create split test operation typically these are written to a http.Request
 */
 type CreateSplitTestParams struct {
