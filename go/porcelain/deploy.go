@@ -111,6 +111,11 @@ type FileBundle struct {
 	// Path OR Buffer should be populated
 	Path   string
 	Buffer io.ReadSeeker
+
+	// Additional Function attributes
+	DisplayName        string `json:"display_name,omitempty"`
+	Bundler            string `json:"bundler,omitempty"`
+	IsInternalFunction *bool  `json:"is_internal_function,omitempty"`
 }
 
 type toolchainSpec struct {
@@ -735,7 +740,7 @@ func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer Dep
 			return nil, nil, fmt.Errorf("manifest file specifies a function path that cannot be found: %s", function.Path)
 		}
 
-		file, err := newFunctionFile(function.Path, fileInfo, function.Runtime, observer)
+		file, err := newFunctionFile(function.Path, fileInfo, function.Runtime, observer, function.DisplayName, function.Bundler, function.IsInternalFunction)
 
 		if err != nil {
 			return nil, nil, err
@@ -784,10 +789,22 @@ func readZipRuntime(filePath string) (string, error) {
 	return jsRuntime, nil
 }
 
-func newFunctionFile(filePath string, i os.FileInfo, runtime string, observer DeployObserver) (*FileBundle, error) {
-	file := &FileBundle{
-		Name:    strings.TrimSuffix(i.Name(), filepath.Ext(i.Name())),
-		Runtime: runtime,
+func newFunctionFile(filePath string, i os.FileInfo, runtime string, observer DeployObserver, funcAttributes ...interface{}) (*FileBundle, error) {
+	file := &FileBundle{}
+
+	if funcAttributes != nil {
+		file = &FileBundle{
+			Name:               strings.TrimSuffix(i.Name(), filepath.Ext(i.Name())),
+			Runtime:            runtime,
+			DisplayName:        funcAttributes[0].(string),
+			Bundler:            funcAttributes[1].(string),
+			IsInternalFunction: getBoolPointerValue(funcAttributes[2].(bool)), // using a bool pointer in struct keeps IsInternalFunction from being set to false if not specified
+		}
+	} else {
+		file = &FileBundle{
+			Name:    strings.TrimSuffix(i.Name(), filepath.Ext(i.Name())),
+			Runtime: runtime,
+		}
 	}
 
 	s := sha256.New()
@@ -844,6 +861,11 @@ func zipFile(i os.FileInfo) bool {
 
 func jsFile(i os.FileInfo) bool {
 	return filepath.Ext(i.Name()) == ".js"
+}
+
+func getBoolPointerValue(b bool) *bool {
+	boolVar := b
+	return &boolVar
 }
 
 func goFile(filePath string, i os.FileInfo, observer DeployObserver) bool {
