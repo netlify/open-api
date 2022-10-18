@@ -3322,6 +3322,8 @@ definitions:
     properties:
       image:
         type: string
+      clear_cache:
+        type: boolean
   buildHookSetup:
     type: object
     properties:
