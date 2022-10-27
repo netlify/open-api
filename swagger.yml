@@ -206,7 +206,7 @@ paths:
             - builds
             - functions
             - runtime
-            - post_processing
+            - post-processing
           required: false
           in: query
         - name: site_id
@@ -258,7 +258,7 @@ paths:
                       - builds
                       - functions
                       - runtime
-                      - post_processing
+                      - post-processing
                 values:
                   type: array
                   items:
@@ -356,7 +356,7 @@ paths:
                     - builds
                     - functions
                     - runtime
-                    - post_processing
+                    - post-processing
               values:
                 type: array
                 items:
@@ -2570,7 +2570,7 @@ definitions:
             - builds
             - functions
             - runtime
-            - post_processing
+            - post-processing
         description: The scopes that this environment variable is set to
       values:
         type: array

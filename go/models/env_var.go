@@ -67,7 +67,7 @@ var envVarScopesItemsEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["builds","functions","runtime","post_processing"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["builds","functions","runtime","post-processing"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
