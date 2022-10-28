@@ -224,7 +224,7 @@ paths:
         default:
           $ref: '#/responses/error'
       description: >-
-        [Beta] Returns all environment variables for an account or site. An
+        Returns all environment variables for an account or site. An
         account corresponds to a team in the Netlify UI. To use this endpoint,
         opt in to the beta environment variable experience using the Netlify UI.
     post:
@@ -232,7 +232,7 @@ paths:
         - environmentVariables
       operationId: createEnvVars
       description: >-
-        [Beta] Creates new environment variables. Granular scopes are available
+        Creates new environment variables. Granular scopes are available
         on Pro plans and above.  To use this endpoint, opt in to the beta environment
         variable experience using the Netlify UI.
       parameters:
@@ -315,14 +315,14 @@ paths:
         default:
           $ref: '#/responses/error'
       description: >-
-        [Beta] Returns an individual environment variable. To use this endpoint,
+        Returns an individual environment variable. To use this endpoint,
         opt in to the beta environment variable experience using the Netlify UI.
     put:
       tags:
         - environmentVariables
       operationId: updateEnvVar
       description: >-
-        [Beta] Updates an existing environment variable and all of its values.
+        Updates an existing environment variable and all of its values.
         Existing values will be replaced by values provided. To use this endpoint,
         opt in to the beta environment variable experience using the Netlify UI.
       parameters:
@@ -378,7 +378,7 @@ paths:
         - environmentVariables
       operationId: setEnvVarValue
       description: >-
-        [Beta] Updates or creates a new value for an existing environment variable. To use this endpoint, opt in to the beta environment variable experience using the Netlify UI.
+        Updates or creates a new value for an existing environment variable. To use this endpoint, opt in to the beta environment variable experience using the Netlify UI.
       parameters:
         - name: account_id
           description: Scope response to account_id
@@ -444,7 +444,7 @@ paths:
         default:
           $ref: '#/responses/error'
       description: >-
-        [Beta] Deletes an environment variable. To use this endpoint,
+        Deletes an environment variable. To use this endpoint,
         opt in to the beta environment variable experience using the Netlify UI.
   /accounts/{account_id}/env/{key}/value/{id}:
     delete:
@@ -480,7 +480,7 @@ paths:
         default:
           $ref: '#/responses/error'
       description: >-
-        [Beta] Deletes a specific environment variable value. To use this endpoint, 
+        Deletes a specific environment variable value. To use this endpoint, 
         opt in to the beta environment variable experience using the Netlify UI.
   /sites/{site_id}/forms:
     get:
