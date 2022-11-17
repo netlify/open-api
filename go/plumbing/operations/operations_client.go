@@ -533,7 +533,7 @@ func (a *Client) CreateDNSZone(params *CreateDNSZoneParams, authInfo runtime.Cli
 }
 
 /*
-  CreateEnvVars Creates new environment variables. Granular scopes are available on Pro plans and above. To use this endpoint, your site must no longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
+  CreateEnvVars Creates new environment variables. Granular scopes are available on Pro plans and above.  To use this endpoint, your site must no longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
 */
 func (a *Client) CreateEnvVars(params *CreateEnvVarsParams, authInfo runtime.ClientAuthInfoWriter) (*CreateEnvVarsCreated, error) {
 	// TODO: Validate the params before sending
@@ -1077,7 +1077,7 @@ func (a *Client) DeleteDNSZone(params *DeleteDNSZoneParams, authInfo runtime.Cli
 }
 
 /*
-  DeleteEnvVar Deletes an environment variable. To use this endpoint, your site must no longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI
+  DeleteEnvVar Deletes an environment variable. To use this endpoint, your site must no longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
 */
 func (a *Client) DeleteEnvVar(params *DeleteEnvVarParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteEnvVarNoContent, error) {
 	// TODO: Validate the params before sending
