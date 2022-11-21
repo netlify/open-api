@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  version: 2.12.0
+  version: 2.12.1
   title: Netlify's API documentation
   description: >-
     Netlify is a hosting service for the programmable web. It understands your
@@ -206,7 +206,7 @@ paths:
             - builds
             - functions
             - runtime
-            - post_processing
+            - post-processing
           required: false
           in: query
         - name: site_id
@@ -224,17 +224,17 @@ paths:
         default:
           $ref: '#/responses/error'
       description: >-
-        [Beta] Returns all environment variables for an account or site. An
-        account corresponds to a team in the Netlify UI. To use this endpoint,
-        opt in to the beta environment variable experience using the Netlify UI.
+        Returns all environment variables for an account or site. An
+        account corresponds to a team in the Netlify UI. To use this endpoint, your 
+        site must no longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
     post:
       tags:
         - environmentVariables
       operationId: createEnvVars
       description: >-
-        [Beta] Creates new environment variables. Granular scopes are available
-        on Pro plans and above.  To use this endpoint, opt in to the beta environment
-        variable experience using the Netlify UI.
+        Creates new environment variables. Granular scopes are available
+        on Pro plans and above.  To use this endpoint, your site must no longer be 
+        using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
       parameters:
         - in: body
           name: env_vars
@@ -258,7 +258,7 @@ paths:
                       - builds
                       - functions
                       - runtime
-                      - post_processing
+                      - post-processing
                 values:
                   type: array
                   items:
@@ -315,16 +315,16 @@ paths:
         default:
           $ref: '#/responses/error'
       description: >-
-        [Beta] Returns an individual environment variable. To use this endpoint,
-        opt in to the beta environment variable experience using the Netlify UI.
+        Returns an individual environment variable. To use this endpoint, your site 
+        must no longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
     put:
       tags:
         - environmentVariables
       operationId: updateEnvVar
       description: >-
-        [Beta] Updates an existing environment variable and all of its values.
-        Existing values will be replaced by values provided. To use this endpoint,
-        opt in to the beta environment variable experience using the Netlify UI.
+        Updates an existing environment variable and all of its values.
+        Existing values will be replaced by values provided. To use this endpoint, your site must 
+        no longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
       parameters:
         - name: account_id
           description: Scope response to account_id
@@ -356,7 +356,7 @@ paths:
                     - builds
                     - functions
                     - runtime
-                    - post_processing
+                    - post-processing
               values:
                 type: array
                 items:
@@ -378,7 +378,8 @@ paths:
         - environmentVariables
       operationId: setEnvVarValue
       description: >-
-        [Beta] Updates or creates a new value for an existing environment variable. To use this endpoint, opt in to the beta environment variable experience using the Netlify UI.
+        Updates or creates a new value for an existing environment variable. To use this endpoint, your site 
+        must no longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
       parameters:
         - name: account_id
           description: Scope response to account_id
@@ -444,8 +445,8 @@ paths:
         default:
           $ref: '#/responses/error'
       description: >-
-        [Beta] Deletes an environment variable. To use this endpoint,
-        opt in to the beta environment variable experience using the Netlify UI.
+        Deletes an environment variable. To use this endpoint, your site must no 
+        longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
   /accounts/{account_id}/env/{key}/value/{id}:
     delete:
       tags:
@@ -480,8 +481,8 @@ paths:
         default:
           $ref: '#/responses/error'
       description: >-
-        [Beta] Deletes a specific environment variable value. To use this endpoint, 
-        opt in to the beta environment variable experience using the Netlify UI.
+        Deletes a specific environment variable value. To use this endpoint, your site 
+        must no longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
   /sites/{site_id}/forms:
     get:
       operationId: listSiteForms
@@ -2570,7 +2571,7 @@ definitions:
             - builds
             - functions
             - runtime
-            - post_processing
+            - post-processing
         description: The scopes that this environment variable is set to
       values:
         type: array
@@ -3322,6 +3323,8 @@ definitions:
     properties:
       image:
         type: string
+      clear_cache:
+        type: boolean
   buildHookSetup:
     type: object
     properties:

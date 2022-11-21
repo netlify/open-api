@@ -15,6 +15,9 @@ import (
 // swagger:model buildSetup
 type BuildSetup struct {
 
+	// clear cache
+	ClearCache bool `json:"clear_cache,omitempty"`
+
 	// image
 	Image string `json:"image,omitempty"`
 }
