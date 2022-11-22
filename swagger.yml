@@ -1668,14 +1668,13 @@ paths:
     post:
       operationId: addMemberToAccount # an account represents a team or a user
       tags: [member]
+      consumes:
+        - application/json
       parameters:
-        - name: role
-          in: query
-          type: string
-          enum: ['Owner', 'Collaborator', 'Controller']
-        - name: email
-          in: query
-          type: string
+        - name: accountAddMemberSetup
+          in: body
+          schema:
+            $ref: '#/definitions/accountAddMemberSetup'
           required: true
       responses:
         '200':
@@ -1684,6 +1683,52 @@ paths:
             type: array
             items:
               $ref: '#/definitions/member'
+        default:
+          $ref: '#/responses/error'
+  /{account_slug}/members/{member_id}:
+    parameters:
+      - name: account_slug
+        in: path
+        type: string
+        required: true
+      - name: member_id
+        in: path
+        type: string
+        required: true
+    get:
+      operationId: getAccountMember # an account represents a team or a user
+      tags: [member]
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/member'
+        default:
+          $ref: '#/responses/error'
+    put:
+      operationId: updateAccountMember # an account represents a team or a user
+      tags: [member]
+      consumes:
+        - application/json
+      parameters:
+        - name: accountUpdateMemberSetup
+          in: body
+          schema:
+            $ref: '#/definitions/accountUpdateMemberSetup'
+          required: true
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/member'
+        default:
+          $ref: '#/responses/error'
+    delete:
+      operationId: removeAccountMember
+      tags: [member]
+      responses:
+        '204':
+          description: Not Content
         default:
           $ref: '#/responses/error'
   /billing/payment_methods:
@@ -3241,6 +3286,27 @@ definitions:
         type: string
       billing_details:
         type: string
+  accountAddMemberSetup:
+    type: object
+    properties:
+      role:
+        type: string
+        enum: ['Owner', 'Collaborator', 'Controller']
+      email:
+        type: string
+  accountUpdateMemberSetup:
+    type: object
+    properties:
+      role:
+        type: string
+        enum: ['Owner', 'Collaborator', 'Controller']
+      site_access:
+        type: string
+        enum: ['all', 'none', 'selected']
+      site_ids:
+        type: array
+        items:
+          type: string
   accountMembership:
     type: object
     properties:
