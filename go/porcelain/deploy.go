@@ -115,7 +115,7 @@ type FileBundle struct {
 	// Additional Function attributes
 	DisplayName        string `json:"display_name,omitempty"`
 	Bundler            string `json:"bundler,omitempty"`
-	IsInternalFunction *bool  `json:"is_internal_function,omitempty"`
+	IsInternal         *bool  `json:"is_internal,omitempty"`
 }
 
 type toolchainSpec struct {
@@ -740,7 +740,7 @@ func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer Dep
 			return nil, nil, fmt.Errorf("manifest file specifies a function path that cannot be found: %s", function.Path)
 		}
 
-		file, err := newFunctionFile(function.Path, fileInfo, function.Runtime, observer, function.DisplayName, function.Bundler, function.IsInternalFunction)
+		file, err := newFunctionFile(function.Path, fileInfo, function.Runtime, observer, function.DisplayName, function.Bundler, function.IsInternal)
 
 		if err != nil {
 			return nil, nil, err
@@ -798,7 +798,7 @@ func newFunctionFile(filePath string, i os.FileInfo, runtime string, observer De
 			Runtime:            runtime,
 			DisplayName:        funcAttributes[0].(string),
 			Bundler:            funcAttributes[1].(string),
-			IsInternalFunction: getBoolPointerValue(funcAttributes[2].(bool)), // using a bool pointer in struct keeps IsInternalFunction from being set to false if not specified
+			IsInternal:         getBoolPointerValue(funcAttributes[2].(bool)), // using a bool pointer in struct keeps IsInternal from being set to false if not specified
 		}
 	} else {
 		file = &FileBundle{
