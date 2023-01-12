@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  version: 2.12.2
+  version: 2.12.1
   title: Netlify's API documentation
   description: >-
     Netlify is a hosting service for the programmable web. It understands your
@@ -225,7 +225,7 @@ paths:
           $ref: '#/responses/error'
       description: >-
         Returns all environment variables for an account or site. An
-        account corresponds to a team in the Netlify UI. To use this endpoint, your
+        account corresponds to a team in the Netlify UI. To use this endpoint, your 
         site must no longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
     post:
       tags:
@@ -233,7 +233,7 @@ paths:
       operationId: createEnvVars
       description: >-
         Creates new environment variables. Granular scopes are available
-        on Pro plans and above.  To use this endpoint, your site must no longer be
+        on Pro plans and above.  To use this endpoint, your site must no longer be 
         using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
       parameters:
         - in: body
@@ -315,7 +315,7 @@ paths:
         default:
           $ref: '#/responses/error'
       description: >-
-        Returns an individual environment variable. To use this endpoint, your site
+        Returns an individual environment variable. To use this endpoint, your site 
         must no longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
     put:
       tags:
@@ -323,7 +323,7 @@ paths:
       operationId: updateEnvVar
       description: >-
         Updates an existing environment variable and all of its values.
-        Existing values will be replaced by values provided. To use this endpoint, your site must
+        Existing values will be replaced by values provided. To use this endpoint, your site must 
         no longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
       parameters:
         - name: account_id
@@ -378,7 +378,7 @@ paths:
         - environmentVariables
       operationId: setEnvVarValue
       description: >-
-        Updates or creates a new value for an existing environment variable. To use this endpoint, your site
+        Updates or creates a new value for an existing environment variable. To use this endpoint, your site 
         must no longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
       parameters:
         - name: account_id
@@ -445,7 +445,7 @@ paths:
         default:
           $ref: '#/responses/error'
       description: >-
-        Deletes an environment variable. To use this endpoint, your site must no
+        Deletes an environment variable. To use this endpoint, your site must no 
         longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
   /accounts/{account_id}/env/{key}/value/{id}:
     delete:
@@ -481,7 +481,7 @@ paths:
         default:
           $ref: '#/responses/error'
       description: >-
-        Deletes a specific environment variable value. To use this endpoint, your site
+        Deletes a specific environment variable value. To use this endpoint, your site 
         must no longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
   /sites/{site_id}/forms:
     get:
@@ -1668,13 +1668,14 @@ paths:
     post:
       operationId: addMemberToAccount # an account represents a team or a user
       tags: [member]
-      consumes:
-        - application/json
       parameters:
-        - name: accountAddMemberSetup
-          in: body
-          schema:
-            $ref: '#/definitions/accountAddMemberSetup'
+        - name: role
+          in: query
+          type: string
+          enum: ['Owner', 'Collaborator', 'Controller']
+        - name: email
+          in: query
+          type: string
           required: true
       responses:
         '200':
@@ -1683,52 +1684,6 @@ paths:
             type: array
             items:
               $ref: '#/definitions/member'
-        default:
-          $ref: '#/responses/error'
-  /{account_slug}/members/{member_id}:
-    parameters:
-      - name: account_slug
-        in: path
-        type: string
-        required: true
-      - name: member_id
-        in: path
-        type: string
-        required: true
-    get:
-      operationId: getAccountMember # an account represents a team or a user
-      tags: [member]
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/member'
-        default:
-          $ref: '#/responses/error'
-    put:
-      operationId: updateAccountMember # an account represents a team or a user
-      tags: [member]
-      consumes:
-        - application/json
-      parameters:
-        - name: accountUpdateMemberSetup
-          in: body
-          schema:
-            $ref: '#/definitions/accountUpdateMemberSetup'
-          required: true
-      responses:
-        '200':
-          description: OK
-          schema:
-            $ref: '#/definitions/member'
-        default:
-          $ref: '#/responses/error'
-    delete:
-      operationId: removeAccountMember
-      tags: [member]
-      responses:
-        '204':
-          description: Not Content
         default:
           $ref: '#/responses/error'
   /billing/payment_methods:
@@ -2936,14 +2891,6 @@ definitions:
         type: string
       error:
         type: boolean
-      section:
-        type: string
-        enum:
-          - initializing
-          - building
-          - deploying
-          - cleanup
-          - postprocessing
   pluginRunData:
     type: object
     properties:
@@ -3286,27 +3233,6 @@ definitions:
         type: string
       billing_details:
         type: string
-  accountAddMemberSetup:
-    type: object
-    properties:
-      role:
-        type: string
-        enum: ['Owner', 'Collaborator', 'Controller']
-      email:
-        type: string
-  accountUpdateMemberSetup:
-    type: object
-    properties:
-      role:
-        type: string
-        enum: ['Owner', 'Collaborator', 'Controller']
-      site_access:
-        type: string
-        enum: ['all', 'none', 'selected']
-      site_ids:
-        type: array
-        items:
-          type: string
   accountMembership:
     type: object
     properties:
