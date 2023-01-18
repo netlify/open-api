@@ -114,8 +114,6 @@ type FileBundle struct {
 
 	// Additional Function attributes
 	DisplayName        string `json:"display_name,omitempty"`
-	Bundler            string `json:"bundler,omitempty"`
-	IsInternal         *bool  `json:"is_internal,omitempty"`
 }
 
 type toolchainSpec struct {
@@ -740,7 +738,7 @@ func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer Dep
 			return nil, nil, fmt.Errorf("manifest file specifies a function path that cannot be found: %s", function.Path)
 		}
 
-		file, err := newFunctionFile(function.Path, fileInfo, function.Runtime, observer, function.DisplayName, function.Bundler, function.IsInternal)
+		file, err := newFunctionFile(function.Path, fileInfo, function.Runtime, observer, function.DisplayName)
 
 		if err != nil {
 			return nil, nil, err
@@ -797,8 +795,6 @@ func newFunctionFile(filePath string, i os.FileInfo, runtime string, observer De
 			Name:               strings.TrimSuffix(i.Name(), filepath.Ext(i.Name())),
 			Runtime:            runtime,
 			DisplayName:        funcAttributes[0].(string),
-			Bundler:            funcAttributes[1].(string),
-			IsInternal:         getBoolPointerValue(funcAttributes[2].(bool)), // using a bool pointer in struct keeps IsInternal from being set to false if not specified
 		}
 	} else {
 		file = &FileBundle{
@@ -861,11 +857,6 @@ func zipFile(i os.FileInfo) bool {
 
 func jsFile(i os.FileInfo) bool {
 	return filepath.Ext(i.Name()) == ".js"
-}
-
-func getBoolPointerValue(b bool) *bool {
-	boolVar := b
-	return &boolVar
 }
 
 func goFile(filePath string, i os.FileInfo, observer DeployObserver) bool {

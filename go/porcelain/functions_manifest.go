@@ -13,6 +13,4 @@ type functionsManifestEntry struct {
 	Runtime            string `json:"runtime"`
 	Schedule           string `json:"schedule"`
 	DisplayName        string `json:"display_name,omitempty"`
-	Bundler            string `json:"bundler,omitempty"`
-	IsInternal         bool   `json:"is_internal,omitempty"`
 }
