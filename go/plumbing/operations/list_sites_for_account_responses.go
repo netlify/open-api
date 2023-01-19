@@ -46,7 +46,8 @@ func NewListSitesForAccountOK() *ListSitesForAccountOK {
 	return &ListSitesForAccountOK{}
 }
 
-/*ListSitesForAccountOK handles this case with default header values.
+/*
+ListSitesForAccountOK handles this case with default header values.
 
 OK
 */
@@ -79,7 +80,8 @@ func NewListSitesForAccountDefault(code int) *ListSitesForAccountDefault {
 	}
 }
 
-/*ListSitesForAccountDefault handles this case with default header values.
+/*
+ListSitesForAccountDefault handles this case with default header values.
 
 error
 */

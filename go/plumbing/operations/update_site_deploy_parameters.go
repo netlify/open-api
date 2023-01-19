@@ -57,7 +57,8 @@ func NewUpdateSiteDeployParamsWithHTTPClient(client *http.Client) *UpdateSiteDep
 	}
 }
 
-/*UpdateSiteDeployParams contains all the parameters to send to the API endpoint
+/*
+UpdateSiteDeployParams contains all the parameters to send to the API endpoint
 for the update site deploy operation typically these are written to a http.Request
 */
 type UpdateSiteDeployParams struct {

@@ -57,7 +57,8 @@ func NewUploadDeployFunctionParamsWithHTTPClient(client *http.Client) *UploadDep
 	}
 }
 
-/*UploadDeployFunctionParams contains all the parameters to send to the API endpoint
+/*
+UploadDeployFunctionParams contains all the parameters to send to the API endpoint
 for the upload deploy function operation typically these are written to a http.Request
 */
 type UploadDeployFunctionParams struct {

@@ -46,7 +46,8 @@ func NewListPaymentMethodsForUserOK() *ListPaymentMethodsForUserOK {
 	return &ListPaymentMethodsForUserOK{}
 }
 
-/*ListPaymentMethodsForUserOK handles this case with default header values.
+/*
+ListPaymentMethodsForUserOK handles this case with default header values.
 
 OK
 */
@@ -79,7 +80,8 @@ func NewListPaymentMethodsForUserDefault(code int) *ListPaymentMethodsForUserDef
 	}
 }
 
-/*ListPaymentMethodsForUserDefault handles this case with default header values.
+/*
+ListPaymentMethodsForUserDefault handles this case with default header values.
 
 error
 */

@@ -57,7 +57,8 @@ func NewSetEnvVarValueParamsWithHTTPClient(client *http.Client) *SetEnvVarValueP
 	}
 }
 
-/*SetEnvVarValueParams contains all the parameters to send to the API endpoint
+/*
+SetEnvVarValueParams contains all the parameters to send to the API endpoint
 for the set env var value operation typically these are written to a http.Request
 */
 type SetEnvVarValueParams struct {

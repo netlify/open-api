@@ -46,7 +46,8 @@ func NewListSiteDeploysOK() *ListSiteDeploysOK {
 	return &ListSiteDeploysOK{}
 }
 
-/*ListSiteDeploysOK handles this case with default header values.
+/*
+ListSiteDeploysOK handles this case with default header values.
 
 OK
 */
@@ -79,7 +80,8 @@ func NewListSiteDeploysDefault(code int) *ListSiteDeploysDefault {
 	}
 }
 
-/*ListSiteDeploysDefault handles this case with default header values.
+/*
+ListSiteDeploysDefault handles this case with default header values.
 
 error
 */

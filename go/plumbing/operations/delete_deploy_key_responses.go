@@ -46,7 +46,8 @@ func NewDeleteDeployKeyNoContent() *DeleteDeployKeyNoContent {
 	return &DeleteDeployKeyNoContent{}
 }
 
-/*DeleteDeployKeyNoContent handles this case with default header values.
+/*
+DeleteDeployKeyNoContent handles this case with default header values.
 
 Not Content
 */
@@ -69,7 +70,8 @@ func NewDeleteDeployKeyDefault(code int) *DeleteDeployKeyDefault {
 	}
 }
 
-/*DeleteDeployKeyDefault handles this case with default header values.
+/*
+DeleteDeployKeyDefault handles this case with default header values.
 
 error
 */

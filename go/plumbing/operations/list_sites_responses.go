@@ -46,7 +46,8 @@ func NewListSitesOK() *ListSitesOK {
 	return &ListSitesOK{}
 }
 
-/*ListSitesOK handles this case with default header values.
+/*
+ListSitesOK handles this case with default header values.
 
 OK
 */
@@ -79,7 +80,8 @@ func NewListSitesDefault(code int) *ListSitesDefault {
 	}
 }
 
-/*ListSitesDefault handles this case with default header values.
+/*
+ListSitesDefault handles this case with default header values.
 
 error
 */

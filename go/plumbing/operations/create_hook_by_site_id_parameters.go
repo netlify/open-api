@@ -57,7 +57,8 @@ func NewCreateHookBySiteIDParamsWithHTTPClient(client *http.Client) *CreateHookB
 	}
 }
 
-/*CreateHookBySiteIDParams contains all the parameters to send to the API endpoint
+/*
+CreateHookBySiteIDParams contains all the parameters to send to the API endpoint
 for the create hook by site Id operation typically these are written to a http.Request
 */
 type CreateHookBySiteIDParams struct {

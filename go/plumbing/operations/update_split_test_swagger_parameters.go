@@ -57,7 +57,8 @@ func NewUpdateSplitTestParamsWithHTTPClient(client *http.Client) *UpdateSplitTes
 	}
 }
 
-/*UpdateSplitTestParams contains all the parameters to send to the API endpoint
+/*
+UpdateSplitTestParams contains all the parameters to send to the API endpoint
 for the update split test operation typically these are written to a http.Request
 */
 type UpdateSplitTestParams struct {

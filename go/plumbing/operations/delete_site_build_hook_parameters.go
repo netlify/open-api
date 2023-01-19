@@ -55,7 +55,8 @@ func NewDeleteSiteBuildHookParamsWithHTTPClient(client *http.Client) *DeleteSite
 	}
 }
 
-/*DeleteSiteBuildHookParams contains all the parameters to send to the API endpoint
+/*
+DeleteSiteBuildHookParams contains all the parameters to send to the API endpoint
 for the delete site build hook operation typically these are written to a http.Request
 */
 type DeleteSiteBuildHookParams struct {

@@ -46,7 +46,8 @@ func NewDeleteServiceInstanceNoContent() *DeleteServiceInstanceNoContent {
 	return &DeleteServiceInstanceNoContent{}
 }
 
-/*DeleteServiceInstanceNoContent handles this case with default header values.
+/*
+DeleteServiceInstanceNoContent handles this case with default header values.
 
 Deleted
 */
@@ -69,7 +70,8 @@ func NewDeleteServiceInstanceDefault(code int) *DeleteServiceInstanceDefault {
 	}
 }
 
-/*DeleteServiceInstanceDefault handles this case with default header values.
+/*
+DeleteServiceInstanceDefault handles this case with default header values.
 
 error
 */

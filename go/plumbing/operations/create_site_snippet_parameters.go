@@ -57,7 +57,8 @@ func NewCreateSiteSnippetParamsWithHTTPClient(client *http.Client) *CreateSiteSn
 	}
 }
 
-/*CreateSiteSnippetParams contains all the parameters to send to the API endpoint
+/*
+CreateSiteSnippetParams contains all the parameters to send to the API endpoint
 for the create site snippet operation typically these are written to a http.Request
 */
 type CreateSiteSnippetParams struct {

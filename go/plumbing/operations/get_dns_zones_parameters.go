@@ -55,7 +55,8 @@ func NewGetDNSZonesParamsWithHTTPClient(client *http.Client) *GetDNSZonesParams 
 	}
 }
 
-/*GetDNSZonesParams contains all the parameters to send to the API endpoint
+/*
+GetDNSZonesParams contains all the parameters to send to the API endpoint
 for the get Dns zones operation typically these are written to a http.Request
 */
 type GetDNSZonesParams struct {

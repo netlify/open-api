@@ -55,7 +55,8 @@ func NewDeleteHookParamsWithHTTPClient(client *http.Client) *DeleteHookParams {
 	}
 }
 
-/*DeleteHookParams contains all the parameters to send to the API endpoint
+/*
+DeleteHookParams contains all the parameters to send to the API endpoint
 for the delete hook operation typically these are written to a http.Request
 */
 type DeleteHookParams struct {

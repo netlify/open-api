@@ -57,7 +57,8 @@ func NewUpdateSiteBuildHookParamsWithHTTPClient(client *http.Client) *UpdateSite
 	}
 }
 
-/*UpdateSiteBuildHookParams contains all the parameters to send to the API endpoint
+/*
+UpdateSiteBuildHookParams contains all the parameters to send to the API endpoint
 for the update site build hook operation typically these are written to a http.Request
 */
 type UpdateSiteBuildHookParams struct {
