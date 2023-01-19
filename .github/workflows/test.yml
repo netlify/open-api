@@ -33,7 +33,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macOS-latest, windows-latest]
-        go_version: [1.14.x, 1.15.x]
+        go_version: [1.17.x, 1.18.x, 1.19.x]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Install Go ${{ matrix.go }}

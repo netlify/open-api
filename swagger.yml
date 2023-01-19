@@ -893,6 +893,36 @@ paths:
         type: string
         in: path
         required: true
+      - name: deploy-previews
+        type: boolean
+        in: query
+      - name: production
+        type: boolean
+        in: query
+      - name: state
+        type: string
+        enum:
+          - new
+          - pending_review
+          - accepted
+          - rejected
+          - enqueued
+          - building
+          - uploading
+          - uploaded
+          - preparing
+          - prepared
+          - processing
+          - ready
+          - error
+          - retrying
+        in: query
+      - name: branch
+        type: string
+        in: query
+      - name: latest-published
+        type: boolean
+        in: query
     get:
       operationId: listSiteDeploys
       tags: [deploy]
