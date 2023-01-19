@@ -46,7 +46,8 @@ func NewDeleteSiteSnippetNoContent() *DeleteSiteSnippetNoContent {
 	return &DeleteSiteSnippetNoContent{}
 }
 
-/*DeleteSiteSnippetNoContent handles this case with default header values.
+/*
+DeleteSiteSnippetNoContent handles this case with default header values.
 
 No content
 */
@@ -69,7 +70,8 @@ func NewDeleteSiteSnippetDefault(code int) *DeleteSiteSnippetDefault {
 	}
 }
 
-/*DeleteSiteSnippetDefault handles this case with default header values.
+/*
+DeleteSiteSnippetDefault handles this case with default header values.
 
 error
 */

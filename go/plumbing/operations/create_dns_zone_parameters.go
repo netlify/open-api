@@ -57,7 +57,8 @@ func NewCreateDNSZoneParamsWithHTTPClient(client *http.Client) *CreateDNSZonePar
 	}
 }
 
-/*CreateDNSZoneParams contains all the parameters to send to the API endpoint
+/*
+CreateDNSZoneParams contains all the parameters to send to the API endpoint
 for the create Dns zone operation typically these are written to a http.Request
 */
 type CreateDNSZoneParams struct {

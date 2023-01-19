@@ -46,7 +46,8 @@ func NewRemoveAccountMemberNoContent() *RemoveAccountMemberNoContent {
 	return &RemoveAccountMemberNoContent{}
 }
 
-/*RemoveAccountMemberNoContent handles this case with default header values.
+/*
+RemoveAccountMemberNoContent handles this case with default header values.
 
 Not Content
 */
@@ -69,7 +70,8 @@ func NewRemoveAccountMemberDefault(code int) *RemoveAccountMemberDefault {
 	}
 }
 
-/*RemoveAccountMemberDefault handles this case with default header values.
+/*
+RemoveAccountMemberDefault handles this case with default header values.
 
 error
 */

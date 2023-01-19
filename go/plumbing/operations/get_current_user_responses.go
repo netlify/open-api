@@ -46,7 +46,8 @@ func NewGetCurrentUserOK() *GetCurrentUserOK {
 	return &GetCurrentUserOK{}
 }
 
-/*GetCurrentUserOK handles this case with default header values.
+/*
+GetCurrentUserOK handles this case with default header values.
 
 OK
 */
@@ -79,7 +80,8 @@ func NewGetCurrentUserDefault(code int) *GetCurrentUserDefault {
 	}
 }
 
-/*GetCurrentUserDefault handles this case with default header values.
+/*
+GetCurrentUserDefault handles this case with default header values.
 
 error
 */

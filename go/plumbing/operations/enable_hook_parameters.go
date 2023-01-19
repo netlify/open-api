@@ -55,7 +55,8 @@ func NewEnableHookParamsWithHTTPClient(client *http.Client) *EnableHookParams {
 	}
 }
 
-/*EnableHookParams contains all the parameters to send to the API endpoint
+/*
+EnableHookParams contains all the parameters to send to the API endpoint
 for the enable hook operation typically these are written to a http.Request
 */
 type EnableHookParams struct {

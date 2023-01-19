@@ -46,7 +46,8 @@ func NewGetEnvVarsOK() *GetEnvVarsOK {
 	return &GetEnvVarsOK{}
 }
 
-/*GetEnvVarsOK handles this case with default header values.
+/*
+GetEnvVarsOK handles this case with default header values.
 
 OK
 */
@@ -79,7 +80,8 @@ func NewGetEnvVarsDefault(code int) *GetEnvVarsDefault {
 	}
 }
 
-/*GetEnvVarsDefault handles this case with default header values.
+/*
+GetEnvVarsDefault handles this case with default header values.
 
 error
 */

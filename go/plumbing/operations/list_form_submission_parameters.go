@@ -56,7 +56,8 @@ func NewListFormSubmissionParamsWithHTTPClient(client *http.Client) *ListFormSub
 	}
 }
 
-/*ListFormSubmissionParams contains all the parameters to send to the API endpoint
+/*
+ListFormSubmissionParams contains all the parameters to send to the API endpoint
 for the list form submission operation typically these are written to a http.Request
 */
 type ListFormSubmissionParams struct {

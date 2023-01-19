@@ -55,7 +55,8 @@ func NewUpdateSiteAssetParamsWithHTTPClient(client *http.Client) *UpdateSiteAsse
 	}
 }
 
-/*UpdateSiteAssetParams contains all the parameters to send to the API endpoint
+/*
+UpdateSiteAssetParams contains all the parameters to send to the API endpoint
 for the update site asset operation typically these are written to a http.Request
 */
 type UpdateSiteAssetParams struct {

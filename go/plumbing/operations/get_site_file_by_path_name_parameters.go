@@ -55,7 +55,8 @@ func NewGetSiteFileByPathNameParamsWithHTTPClient(client *http.Client) *GetSiteF
 	}
 }
 
-/*GetSiteFileByPathNameParams contains all the parameters to send to the API endpoint
+/*
+GetSiteFileByPathNameParams contains all the parameters to send to the API endpoint
 for the get site file by path name operation typically these are written to a http.Request
 */
 type GetSiteFileByPathNameParams struct {

@@ -46,7 +46,8 @@ func NewLockDeployOK() *LockDeployOK {
 	return &LockDeployOK{}
 }
 
-/*LockDeployOK handles this case with default header values.
+/*
+LockDeployOK handles this case with default header values.
 
 OK
 */
@@ -81,7 +82,8 @@ func NewLockDeployDefault(code int) *LockDeployDefault {
 	}
 }
 
-/*LockDeployDefault handles this case with default header values.
+/*
+LockDeployDefault handles this case with default header values.
 
 error
 */

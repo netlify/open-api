@@ -55,7 +55,8 @@ func NewShowServiceInstanceParamsWithHTTPClient(client *http.Client) *ShowServic
 	}
 }
 
-/*ShowServiceInstanceParams contains all the parameters to send to the API endpoint
+/*
+ShowServiceInstanceParams contains all the parameters to send to the API endpoint
 for the show service instance operation typically these are written to a http.Request
 */
 type ShowServiceInstanceParams struct {

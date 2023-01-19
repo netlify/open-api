@@ -46,7 +46,8 @@ func NewCreateEnvVarsCreated() *CreateEnvVarsCreated {
 	return &CreateEnvVarsCreated{}
 }
 
-/*CreateEnvVarsCreated handles this case with default header values.
+/*
+CreateEnvVarsCreated handles this case with default header values.
 
 OK
 */
@@ -79,7 +80,8 @@ func NewCreateEnvVarsDefault(code int) *CreateEnvVarsDefault {
 	}
 }
 
-/*CreateEnvVarsDefault handles this case with default header values.
+/*
+CreateEnvVarsDefault handles this case with default header values.
 
 error
 */

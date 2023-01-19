@@ -46,7 +46,8 @@ func NewRollbackSiteDeployNoContent() *RollbackSiteDeployNoContent {
 	return &RollbackSiteDeployNoContent{}
 }
 
-/*RollbackSiteDeployNoContent handles this case with default header values.
+/*
+RollbackSiteDeployNoContent handles this case with default header values.
 
 No content
 */
@@ -69,7 +70,8 @@ func NewRollbackSiteDeployDefault(code int) *RollbackSiteDeployDefault {
 	}
 }
 
-/*RollbackSiteDeployDefault handles this case with default header values.
+/*
+RollbackSiteDeployDefault handles this case with default header values.
 
 error
 */
