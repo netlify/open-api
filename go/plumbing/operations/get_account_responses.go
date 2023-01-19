@@ -46,7 +46,8 @@ func NewGetAccountOK() *GetAccountOK {
 	return &GetAccountOK{}
 }
 
-/*GetAccountOK handles this case with default header values.
+/*
+GetAccountOK handles this case with default header values.
 
 OK
 */
@@ -79,7 +80,8 @@ func NewGetAccountDefault(code int) *GetAccountDefault {
 	}
 }
 
-/*GetAccountDefault handles this case with default header values.
+/*
+GetAccountDefault handles this case with default header values.
 
 error
 */

@@ -55,7 +55,8 @@ func NewConfigureDNSForSiteParamsWithHTTPClient(client *http.Client) *ConfigureD
 	}
 }
 
-/*ConfigureDNSForSiteParams contains all the parameters to send to the API endpoint
+/*
+ConfigureDNSForSiteParams contains all the parameters to send to the API endpoint
 for the configure DNS for site operation typically these are written to a http.Request
 */
 type ConfigureDNSForSiteParams struct {

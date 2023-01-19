@@ -55,7 +55,8 @@ func NewCreateDeployKeyParamsWithHTTPClient(client *http.Client) *CreateDeployKe
 	}
 }
 
-/*CreateDeployKeyParams contains all the parameters to send to the API endpoint
+/*
+CreateDeployKeyParams contains all the parameters to send to the API endpoint
 for the create deploy key operation typically these are written to a http.Request
 */
 type CreateDeployKeyParams struct {

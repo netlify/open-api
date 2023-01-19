@@ -57,7 +57,8 @@ func NewCreatePluginRunParamsWithHTTPClient(client *http.Client) *CreatePluginRu
 	}
 }
 
-/*CreatePluginRunParams contains all the parameters to send to the API endpoint
+/*
+CreatePluginRunParams contains all the parameters to send to the API endpoint
 for the create plugin run operation typically these are written to a http.Request
 */
 type CreatePluginRunParams struct {

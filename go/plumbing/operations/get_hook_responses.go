@@ -46,7 +46,8 @@ func NewGetHookOK() *GetHookOK {
 	return &GetHookOK{}
 }
 
-/*GetHookOK handles this case with default header values.
+/*
+GetHookOK handles this case with default header values.
 
 OK
 */
@@ -81,7 +82,8 @@ func NewGetHookDefault(code int) *GetHookDefault {
 	}
 }
 
-/*GetHookDefault handles this case with default header values.
+/*
+GetHookDefault handles this case with default header values.
 
 error
 */

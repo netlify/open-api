@@ -46,7 +46,8 @@ func NewGetDNSForSiteOK() *GetDNSForSiteOK {
 	return &GetDNSForSiteOK{}
 }
 
-/*GetDNSForSiteOK handles this case with default header values.
+/*
+GetDNSForSiteOK handles this case with default header values.
 
 OK
 */
@@ -79,7 +80,8 @@ func NewGetDNSForSiteDefault(code int) *GetDNSForSiteDefault {
 	}
 }
 
-/*GetDNSForSiteDefault handles this case with default header values.
+/*
+GetDNSForSiteDefault handles this case with default header values.
 
 error
 */

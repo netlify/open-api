@@ -46,7 +46,8 @@ func NewCreateHookBySiteIDCreated() *CreateHookBySiteIDCreated {
 	return &CreateHookBySiteIDCreated{}
 }
 
-/*CreateHookBySiteIDCreated handles this case with default header values.
+/*
+CreateHookBySiteIDCreated handles this case with default header values.
 
 OK
 */
@@ -81,7 +82,8 @@ func NewCreateHookBySiteIDDefault(code int) *CreateHookBySiteIDDefault {
 	}
 }
 
-/*CreateHookBySiteIDDefault handles this case with default header values.
+/*
+CreateHookBySiteIDDefault handles this case with default header values.
 
 error
 */

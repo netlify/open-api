@@ -55,7 +55,8 @@ func NewDeleteDNSZoneParamsWithHTTPClient(client *http.Client) *DeleteDNSZonePar
 	}
 }
 
-/*DeleteDNSZoneParams contains all the parameters to send to the API endpoint
+/*
+DeleteDNSZoneParams contains all the parameters to send to the API endpoint
 for the delete Dns zone operation typically these are written to a http.Request
 */
 type DeleteDNSZoneParams struct {

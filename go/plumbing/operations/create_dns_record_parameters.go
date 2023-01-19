@@ -57,7 +57,8 @@ func NewCreateDNSRecordParamsWithHTTPClient(client *http.Client) *CreateDNSRecor
 	}
 }
 
-/*CreateDNSRecordParams contains all the parameters to send to the API endpoint
+/*
+CreateDNSRecordParams contains all the parameters to send to the API endpoint
 for the create Dns record operation typically these are written to a http.Request
 */
 type CreateDNSRecordParams struct {

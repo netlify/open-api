@@ -46,7 +46,8 @@ func NewUpdateSplitTestCreated() *UpdateSplitTestCreated {
 	return &UpdateSplitTestCreated{}
 }
 
-/*UpdateSplitTestCreated handles this case with default header values.
+/*
+UpdateSplitTestCreated handles this case with default header values.
 
 Created
 */
@@ -81,7 +82,8 @@ func NewUpdateSplitTestDefault(code int) *UpdateSplitTestDefault {
 	}
 }
 
-/*UpdateSplitTestDefault handles this case with default header values.
+/*
+UpdateSplitTestDefault handles this case with default header values.
 
 error
 */

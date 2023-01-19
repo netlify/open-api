@@ -57,7 +57,8 @@ func NewUpdateSiteMetadataParamsWithHTTPClient(client *http.Client) *UpdateSiteM
 	}
 }
 
-/*UpdateSiteMetadataParams contains all the parameters to send to the API endpoint
+/*
+UpdateSiteMetadataParams contains all the parameters to send to the API endpoint
 for the update site metadata operation typically these are written to a http.Request
 */
 type UpdateSiteMetadataParams struct {

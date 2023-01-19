@@ -46,7 +46,8 @@ func NewGetSplitTestOK() *GetSplitTestOK {
 	return &GetSplitTestOK{}
 }
 
-/*GetSplitTestOK handles this case with default header values.
+/*
+GetSplitTestOK handles this case with default header values.
 
 split_test
 */
@@ -81,7 +82,8 @@ func NewGetSplitTestDefault(code int) *GetSplitTestDefault {
 	}
 }
 
-/*GetSplitTestDefault handles this case with default header values.
+/*
+GetSplitTestDefault handles this case with default header values.
 
 error
 */

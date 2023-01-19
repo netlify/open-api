@@ -55,7 +55,8 @@ func NewUnlinkSiteRepoParamsWithHTTPClient(client *http.Client) *UnlinkSiteRepoP
 	}
 }
 
-/*UnlinkSiteRepoParams contains all the parameters to send to the API endpoint
+/*
+UnlinkSiteRepoParams contains all the parameters to send to the API endpoint
 for the unlink site repo operation typically these are written to a http.Request
 */
 type UnlinkSiteRepoParams struct {

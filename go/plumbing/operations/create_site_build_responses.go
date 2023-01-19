@@ -46,7 +46,8 @@ func NewCreateSiteBuildOK() *CreateSiteBuildOK {
 	return &CreateSiteBuildOK{}
 }
 
-/*CreateSiteBuildOK handles this case with default header values.
+/*
+CreateSiteBuildOK handles this case with default header values.
 
 OK
 */
@@ -81,7 +82,8 @@ func NewCreateSiteBuildDefault(code int) *CreateSiteBuildDefault {
 	}
 }
 
-/*CreateSiteBuildDefault handles this case with default header values.
+/*
+CreateSiteBuildDefault handles this case with default header values.
 
 error
 */

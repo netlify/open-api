@@ -55,7 +55,8 @@ func NewDisableSplitTestParamsWithHTTPClient(client *http.Client) *DisableSplitT
 	}
 }
 
-/*DisableSplitTestParams contains all the parameters to send to the API endpoint
+/*
+DisableSplitTestParams contains all the parameters to send to the API endpoint
 for the disable split test operation typically these are written to a http.Request
 */
 type DisableSplitTestParams struct {

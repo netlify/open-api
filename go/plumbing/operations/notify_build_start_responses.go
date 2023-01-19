@@ -46,7 +46,8 @@ func NewNotifyBuildStartNoContent() *NotifyBuildStartNoContent {
 	return &NotifyBuildStartNoContent{}
 }
 
-/*NotifyBuildStartNoContent handles this case with default header values.
+/*
+NotifyBuildStartNoContent handles this case with default header values.
 
 No content
 */
@@ -69,7 +70,8 @@ func NewNotifyBuildStartDefault(code int) *NotifyBuildStartDefault {
 	}
 }
 
-/*NotifyBuildStartDefault handles this case with default header values.
+/*
+NotifyBuildStartDefault handles this case with default header values.
 
 error
 */
