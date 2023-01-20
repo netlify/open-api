@@ -675,7 +675,7 @@ func (a *Client) CreateServiceInstance(params *CreateServiceInstanceParams, auth
 }
 
 /*
-CreateSite create site API
+CreateSite **Note:** Environment variable keys and values will soon be moved from `build_settings.env` and `repo.env` to a new endpoint.  Please use [createEnvVars](#tag/environmentVariables/operation/createEnvVars) to create environment variables for a site.
 */
 func (a *Client) CreateSite(params *CreateSiteParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteCreated, error) {
 	// TODO: Validate the params before sending
@@ -845,7 +845,7 @@ func (a *Client) CreateSiteDeploy(params *CreateSiteDeployParams, authInfo runti
 }
 
 /*
-CreateSiteInTeam create site in team API
+CreateSiteInTeam **Note:** Environment variable keys and values will soon be moved from `build_settings.env` and `repo.env` to a new endpoint.  Please use [createEnvVars](#tag/environmentVariables/operation/createEnvVars) to create environment variables for a site.
 */
 func (a *Client) CreateSiteInTeam(params *CreateSiteInTeamParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteInTeamCreated, error) {
 	// TODO: Validate the params before sending
@@ -2104,7 +2104,7 @@ func (a *Client) GetServices(params *GetServicesParams, authInfo runtime.ClientA
 }
 
 /*
-GetSite get site API
+GetSite **Note:** Environment variable keys and values will soon be moved from `build_settings.env` and `repo.env` to a new endpoint.  Please use [getEnvVars](#tag/environmentVariables/operation/getEnvVars) to retrieve site environment variables.
 */
 func (a *Client) GetSite(params *GetSiteParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteOK, error) {
 	// TODO: Validate the params before sending
@@ -3158,7 +3158,7 @@ func (a *Client) ListSiteSubmissions(params *ListSiteSubmissionsParams, authInfo
 }
 
 /*
-ListSites list sites API
+ListSites **Note:** Environment variable keys and values will soon be moved from `build_settings.env` and `repo.env` to a new endpoint.  Please use [getEnvVars](#tag/environmentVariables/operation/getEnvVars) to retrieve site environment variables.
 */
 func (a *Client) ListSites(params *ListSitesParams, authInfo runtime.ClientAuthInfoWriter) (*ListSitesOK, error) {
 	// TODO: Validate the params before sending
@@ -3192,7 +3192,7 @@ func (a *Client) ListSites(params *ListSitesParams, authInfo runtime.ClientAuthI
 }
 
 /*
-ListSitesForAccount list sites for account API
+ListSitesForAccount **Note:** Environment variable keys and values will soon be moved from `build_settings.env` and `repo.env` to a new endpoint.  Please use [getEnvVars](#tag/environmentVariables/operation/getEnvVars) to retrieve site environment variables.
 */
 func (a *Client) ListSitesForAccount(params *ListSitesForAccountParams, authInfo runtime.ClientAuthInfoWriter) (*ListSitesForAccountOK, error) {
 	// TODO: Validate the params before sending
@@ -3946,7 +3946,7 @@ func (a *Client) UpdateServiceInstance(params *UpdateServiceInstanceParams, auth
 }
 
 /*
-UpdateSite update site API
+UpdateSite **Note:** Environment variable keys and values will soon be moved from `build_settings.env` and `repo.env` to a new endpoint.  Please use [updateEnvVar](#tag/environmentVariables/operation/updateEnvVar) to update a site's environment variables.
 */
 func (a *Client) UpdateSite(params *UpdateSiteParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateSiteOK, error) {
 	// TODO: Validate the params before sending

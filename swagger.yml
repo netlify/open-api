@@ -74,6 +74,9 @@ paths:
               $ref: '#/definitions/site'
         default:
           $ref: '#/responses/error'
+      description: >-
+        **Note:** Environment variable keys and values will soon be moved from `build_settings.env` and `repo.env` to a new endpoint. 
+        Please use [getEnvVars](#tag/environmentVariables/operation/getEnvVars) to retrieve site environment variables.
     post:
       operationId: createSite
       tags: [site]
@@ -95,6 +98,9 @@ paths:
             $ref: '#/definitions/site'
         default:
           $ref: '#/responses/error'
+      description: >-
+        **Note:** Environment variable keys and values will soon be moved from `build_settings.env` and `repo.env` to a new endpoint. 
+        Please use [createEnvVars](#tag/environmentVariables/operation/createEnvVars) to create environment variables for a site.
   /sites/{site_id}:
     parameters:
       - name: site_id
@@ -111,6 +117,9 @@ paths:
             $ref: '#/definitions/site'
         default:
           $ref: '#/responses/error'
+      description: >-
+        **Note:** Environment variable keys and values will soon be moved from `build_settings.env` and `repo.env` to a new endpoint. 
+        Please use [getEnvVars](#tag/environmentVariables/operation/getEnvVars) to retrieve site environment variables.
     patch:
       operationId: updateSite
       tags: [site]
@@ -129,6 +138,9 @@ paths:
             $ref: '#/definitions/site'
         default:
           $ref: '#/responses/error'
+      description: >-
+        **Note:** Environment variable keys and values will soon be moved from `build_settings.env` and `repo.env` to a new endpoint. 
+        Please use [updateEnvVar](#tag/environmentVariables/operation/updateEnvVar) to update a site's environment variables.
     delete:
       operationId: deleteSite
       tags: [site]
@@ -1655,6 +1667,9 @@ paths:
             $ref: '#/definitions/site'
         default:
           $ref: '#/responses/error'
+      description: >-
+        **Note:** Environment variable keys and values will soon be moved from `build_settings.env` and `repo.env` to a new endpoint. 
+        Please use [createEnvVars](#tag/environmentVariables/operation/createEnvVars) to create environment variables for a site.
     get:
       operationId: listSitesForAccount # an account represents a team or a user
       tags: [site]
@@ -1677,6 +1692,9 @@ paths:
               $ref: '#/definitions/site'
         default:
           $ref: '#/responses/error'
+      description: >-
+        **Note:** Environment variable keys and values will soon be moved from `build_settings.env` and `repo.env` to a new endpoint. 
+        Please use [getEnvVars](#tag/environmentVariables/operation/getEnvVars) to retrieve site environment variables.
   /{account_slug}/members:
     parameters:
       - name: account_slug
