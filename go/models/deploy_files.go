@@ -11,6 +11,7 @@ import (
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
+	"github.com/go-openapi/validate"
 )
 
 // DeployFiles deploy files
@@ -40,7 +41,7 @@ type DeployFiles struct {
 	Functions interface{} `json:"functions,omitempty"`
 
 	// functions config
-	FunctionsConfig interface{} `json:"functions_config,omitempty"`
+	FunctionsConfig map[string]FunctionConfig `json:"functions_config,omitempty"`
 }
 
 // Validate validates this deploy files
@@ -48,6 +49,10 @@ func (m *DeployFiles) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateFunctionSchedules(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateFunctionsConfig(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -73,6 +78,28 @@ func (m *DeployFiles) validateFunctionSchedules(formats strfmt.Registry) error {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("function_schedules" + "." + strconv.Itoa(i))
 				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *DeployFiles) validateFunctionsConfig(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.FunctionsConfig) { // not required
+		return nil
+	}
+
+	for k := range m.FunctionsConfig {
+
+		if err := validate.Required("functions_config"+"."+k, "body", m.FunctionsConfig[k]); err != nil {
+			return err
+		}
+		if val, ok := m.FunctionsConfig[k]; ok {
+			if err := val.Validate(formats); err != nil {
 				return err
 			}
 		}
