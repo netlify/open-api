@@ -2914,6 +2914,9 @@ definitions:
           $ref: '#/definitions/functionSchedule'
       functions_config:
         type: object
+        additionalProperties:
+          type: object
+          $ref: '#/definitions/functionConfig'
       branch:
         type: string
       framework:
@@ -3537,6 +3540,11 @@ definitions:
       name:
         type: string
       cron:
+        type: string
+  functionConfig:
+    type: object
+    properties:
+      display_name:
         type: string
 parameters:
   page:
