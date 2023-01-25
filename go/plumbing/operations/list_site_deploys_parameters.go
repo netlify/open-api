@@ -56,17 +56,28 @@ func NewListSiteDeploysParamsWithHTTPClient(client *http.Client) *ListSiteDeploy
 	}
 }
 
-/*ListSiteDeploysParams contains all the parameters to send to the API endpoint
+/*
+ListSiteDeploysParams contains all the parameters to send to the API endpoint
 for the list site deploys operation typically these are written to a http.Request
 */
 type ListSiteDeploysParams struct {
 
+	/*Branch*/
+	Branch *string
+	/*DeployPreviews*/
+	DeployPreviews *bool
+	/*LatestPublished*/
+	LatestPublished *bool
 	/*Page*/
 	Page *int32
 	/*PerPage*/
 	PerPage *int32
+	/*Production*/
+	Production *bool
 	/*SiteID*/
 	SiteID string
+	/*State*/
+	State *string
 
 	timeout    time.Duration
 	Context    context.Context
@@ -106,6 +117,39 @@ func (o *ListSiteDeploysParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
+// WithBranch adds the branch to the list site deploys params
+func (o *ListSiteDeploysParams) WithBranch(branch *string) *ListSiteDeploysParams {
+	o.SetBranch(branch)
+	return o
+}
+
+// SetBranch adds the branch to the list site deploys params
+func (o *ListSiteDeploysParams) SetBranch(branch *string) {
+	o.Branch = branch
+}
+
+// WithDeployPreviews adds the deployPreviews to the list site deploys params
+func (o *ListSiteDeploysParams) WithDeployPreviews(deployPreviews *bool) *ListSiteDeploysParams {
+	o.SetDeployPreviews(deployPreviews)
+	return o
+}
+
+// SetDeployPreviews adds the deployPreviews to the list site deploys params
+func (o *ListSiteDeploysParams) SetDeployPreviews(deployPreviews *bool) {
+	o.DeployPreviews = deployPreviews
+}
+
+// WithLatestPublished adds the latestPublished to the list site deploys params
+func (o *ListSiteDeploysParams) WithLatestPublished(latestPublished *bool) *ListSiteDeploysParams {
+	o.SetLatestPublished(latestPublished)
+	return o
+}
+
+// SetLatestPublished adds the latestPublished to the list site deploys params
+func (o *ListSiteDeploysParams) SetLatestPublished(latestPublished *bool) {
+	o.LatestPublished = latestPublished
+}
+
 // WithPage adds the page to the list site deploys params
 func (o *ListSiteDeploysParams) WithPage(page *int32) *ListSiteDeploysParams {
 	o.SetPage(page)
@@ -128,6 +172,17 @@ func (o *ListSiteDeploysParams) SetPerPage(perPage *int32) {
 	o.PerPage = perPage
 }
 
+// WithProduction adds the production to the list site deploys params
+func (o *ListSiteDeploysParams) WithProduction(production *bool) *ListSiteDeploysParams {
+	o.SetProduction(production)
+	return o
+}
+
+// SetProduction adds the production to the list site deploys params
+func (o *ListSiteDeploysParams) SetProduction(production *bool) {
+	o.Production = production
+}
+
 // WithSiteID adds the siteID to the list site deploys params
 func (o *ListSiteDeploysParams) WithSiteID(siteID string) *ListSiteDeploysParams {
 	o.SetSiteID(siteID)
@@ -139,6 +194,17 @@ func (o *ListSiteDeploysParams) SetSiteID(siteID string) {
 	o.SiteID = siteID
 }
 
+// WithState adds the state to the list site deploys params
+func (o *ListSiteDeploysParams) WithState(state *string) *ListSiteDeploysParams {
+	o.SetState(state)
+	return o
+}
+
+// SetState adds the state to the list site deploys params
+func (o *ListSiteDeploysParams) SetState(state *string) {
+	o.State = state
+}
+
 // WriteToRequest writes these params to a swagger request
 func (o *ListSiteDeploysParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -146,6 +212,54 @@ func (o *ListSiteDeploysParams) WriteToRequest(r runtime.ClientRequest, reg strf
 		return err
 	}
 	var res []error
+
+	if o.Branch != nil {
+
+		// query param branch
+		var qrBranch string
+		if o.Branch != nil {
+			qrBranch = *o.Branch
+		}
+		qBranch := qrBranch
+		if qBranch != "" {
+			if err := r.SetQueryParam("branch", qBranch); err != nil {
+				return err
+			}
+		}
+
+	}
+
+	if o.DeployPreviews != nil {
+
+		// query param deploy-previews
+		var qrDeployPreviews bool
+		if o.DeployPreviews != nil {
+			qrDeployPreviews = *o.DeployPreviews
+		}
+		qDeployPreviews := swag.FormatBool(qrDeployPreviews)
+		if qDeployPreviews != "" {
+			if err := r.SetQueryParam("deploy-previews", qDeployPreviews); err != nil {
+				return err
+			}
+		}
+
+	}
+
+	if o.LatestPublished != nil {
+
+		// query param latest-published
+		var qrLatestPublished bool
+		if o.LatestPublished != nil {
+			qrLatestPublished = *o.LatestPublished
+		}
+		qLatestPublished := swag.FormatBool(qrLatestPublished)
+		if qLatestPublished != "" {
+			if err := r.SetQueryParam("latest-published", qLatestPublished); err != nil {
+				return err
+			}
+		}
+
+	}
 
 	if o.Page != nil {
 
@@ -179,9 +293,41 @@ func (o *ListSiteDeploysParams) WriteToRequest(r runtime.ClientRequest, reg strf
 
 	}
 
+	if o.Production != nil {
+
+		// query param production
+		var qrProduction bool
+		if o.Production != nil {
+			qrProduction = *o.Production
+		}
+		qProduction := swag.FormatBool(qrProduction)
+		if qProduction != "" {
+			if err := r.SetQueryParam("production", qProduction); err != nil {
+				return err
+			}
+		}
+
+	}
+
 	// path param site_id
 	if err := r.SetPathParam("site_id", o.SiteID); err != nil {
 		return err
+	}
+
+	if o.State != nil {
+
+		// query param state
+		var qrState string
+		if o.State != nil {
+			qrState = *o.State
+		}
+		qState := qrState
+		if qState != "" {
+			if err := r.SetQueryParam("state", qState); err != nil {
+				return err
+			}
+		}
+
 	}
 
 	if len(res) > 0 {

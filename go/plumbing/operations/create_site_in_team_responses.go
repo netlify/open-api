@@ -46,7 +46,8 @@ func NewCreateSiteInTeamCreated() *CreateSiteInTeamCreated {
 	return &CreateSiteInTeamCreated{}
 }
 
-/*CreateSiteInTeamCreated handles this case with default header values.
+/*
+CreateSiteInTeamCreated handles this case with default header values.
 
 Created
 */
@@ -81,7 +82,8 @@ func NewCreateSiteInTeamDefault(code int) *CreateSiteInTeamDefault {
 	}
 }
 
-/*CreateSiteInTeamDefault handles this case with default header values.
+/*
+CreateSiteInTeamDefault handles this case with default header values.
 
 error
 */

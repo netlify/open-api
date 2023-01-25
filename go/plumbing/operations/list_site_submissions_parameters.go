@@ -56,7 +56,8 @@ func NewListSiteSubmissionsParamsWithHTTPClient(client *http.Client) *ListSiteSu
 	}
 }
 
-/*ListSiteSubmissionsParams contains all the parameters to send to the API endpoint
+/*
+ListSiteSubmissionsParams contains all the parameters to send to the API endpoint
 for the list site submissions operation typically these are written to a http.Request
 */
 type ListSiteSubmissionsParams struct {

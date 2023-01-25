@@ -14,6 +14,8 @@ import (
 	"github.com/go-openapi/runtime"
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
+
+	"github.com/netlify/open-api/v2/go/models"
 )
 
 // NewAddMemberToAccountParams creates a new AddMemberToAccountParams object
@@ -55,17 +57,16 @@ func NewAddMemberToAccountParamsWithHTTPClient(client *http.Client) *AddMemberTo
 	}
 }
 
-/*AddMemberToAccountParams contains all the parameters to send to the API endpoint
+/*
+AddMemberToAccountParams contains all the parameters to send to the API endpoint
 for the add member to account operation typically these are written to a http.Request
 */
 type AddMemberToAccountParams struct {
 
+	/*AccountAddMemberSetup*/
+	AccountAddMemberSetup *models.AccountAddMemberSetup
 	/*AccountSlug*/
 	AccountSlug string
-	/*Email*/
-	Email string
-	/*Role*/
-	Role *string
 
 	timeout    time.Duration
 	Context    context.Context
@@ -105,6 +106,17 @@ func (o *AddMemberToAccountParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
+// WithAccountAddMemberSetup adds the accountAddMemberSetup to the add member to account params
+func (o *AddMemberToAccountParams) WithAccountAddMemberSetup(accountAddMemberSetup *models.AccountAddMemberSetup) *AddMemberToAccountParams {
+	o.SetAccountAddMemberSetup(accountAddMemberSetup)
+	return o
+}
+
+// SetAccountAddMemberSetup adds the accountAddMemberSetup to the add member to account params
+func (o *AddMemberToAccountParams) SetAccountAddMemberSetup(accountAddMemberSetup *models.AccountAddMemberSetup) {
+	o.AccountAddMemberSetup = accountAddMemberSetup
+}
+
 // WithAccountSlug adds the accountSlug to the add member to account params
 func (o *AddMemberToAccountParams) WithAccountSlug(accountSlug string) *AddMemberToAccountParams {
 	o.SetAccountSlug(accountSlug)
@@ -116,28 +128,6 @@ func (o *AddMemberToAccountParams) SetAccountSlug(accountSlug string) {
 	o.AccountSlug = accountSlug
 }
 
-// WithEmail adds the email to the add member to account params
-func (o *AddMemberToAccountParams) WithEmail(email string) *AddMemberToAccountParams {
-	o.SetEmail(email)
-	return o
-}
-
-// SetEmail adds the email to the add member to account params
-func (o *AddMemberToAccountParams) SetEmail(email string) {
-	o.Email = email
-}
-
-// WithRole adds the role to the add member to account params
-func (o *AddMemberToAccountParams) WithRole(role *string) *AddMemberToAccountParams {
-	o.SetRole(role)
-	return o
-}
-
-// SetRole adds the role to the add member to account params
-func (o *AddMemberToAccountParams) SetRole(role *string) {
-	o.Role = role
-}
-
 // WriteToRequest writes these params to a swagger request
 func (o *AddMemberToAccountParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -146,34 +136,15 @@ func (o *AddMemberToAccountParams) WriteToRequest(r runtime.ClientRequest, reg s
 	}
 	var res []error
 
-	// path param account_slug
-	if err := r.SetPathParam("account_slug", o.AccountSlug); err != nil {
-		return err
-	}
-
-	// query param email
-	qrEmail := o.Email
-	qEmail := qrEmail
-	if qEmail != "" {
-		if err := r.SetQueryParam("email", qEmail); err != nil {
+	if o.AccountAddMemberSetup != nil {
+		if err := r.SetBodyParam(o.AccountAddMemberSetup); err != nil {
 			return err
 		}
 	}
 
-	if o.Role != nil {
-
-		// query param role
-		var qrRole string
-		if o.Role != nil {
-			qrRole = *o.Role
-		}
-		qRole := qrRole
-		if qRole != "" {
-			if err := r.SetQueryParam("role", qRole); err != nil {
-				return err
-			}
-		}
-
+	// path param account_slug
+	if err := r.SetPathParam("account_slug", o.AccountSlug); err != nil {
+		return err
 	}
 
 	if len(res) > 0 {

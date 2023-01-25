@@ -46,7 +46,8 @@ func NewGetDNSRecordsOK() *GetDNSRecordsOK {
 	return &GetDNSRecordsOK{}
 }
 
-/*GetDNSRecordsOK handles this case with default header values.
+/*
+GetDNSRecordsOK handles this case with default header values.
 
 get all DNS records for a single DNS zone
 */
@@ -79,7 +80,8 @@ func NewGetDNSRecordsDefault(code int) *GetDNSRecordsDefault {
 	}
 }
 
-/*GetDNSRecordsDefault handles this case with default header values.
+/*
+GetDNSRecordsDefault handles this case with default header values.
 
 error
 */

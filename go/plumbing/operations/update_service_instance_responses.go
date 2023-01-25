@@ -46,7 +46,8 @@ func NewUpdateServiceInstanceNoContent() *UpdateServiceInstanceNoContent {
 	return &UpdateServiceInstanceNoContent{}
 }
 
-/*UpdateServiceInstanceNoContent handles this case with default header values.
+/*
+UpdateServiceInstanceNoContent handles this case with default header values.
 
 No Content
 */
@@ -69,7 +70,8 @@ func NewUpdateServiceInstanceDefault(code int) *UpdateServiceInstanceDefault {
 	}
 }
 
-/*UpdateServiceInstanceDefault handles this case with default header values.
+/*
+UpdateServiceInstanceDefault handles this case with default header values.
 
 error
 */

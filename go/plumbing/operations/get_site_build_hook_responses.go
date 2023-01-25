@@ -46,7 +46,8 @@ func NewGetSiteBuildHookOK() *GetSiteBuildHookOK {
 	return &GetSiteBuildHookOK{}
 }
 
-/*GetSiteBuildHookOK handles this case with default header values.
+/*
+GetSiteBuildHookOK handles this case with default header values.
 
 OK
 */
@@ -81,7 +82,8 @@ func NewGetSiteBuildHookDefault(code int) *GetSiteBuildHookDefault {
 	}
 }
 
-/*GetSiteBuildHookDefault handles this case with default header values.
+/*
+GetSiteBuildHookDefault handles this case with default header values.
 
 error
 */

@@ -46,7 +46,8 @@ func NewListFormSubmissionOK() *ListFormSubmissionOK {
 	return &ListFormSubmissionOK{}
 }
 
-/*ListFormSubmissionOK handles this case with default header values.
+/*
+ListFormSubmissionOK handles this case with default header values.
 
 OK
 */
@@ -79,7 +80,8 @@ func NewListFormSubmissionDefault(code int) *ListFormSubmissionDefault {
 	}
 }
 
-/*ListFormSubmissionDefault handles this case with default header values.
+/*
+ListFormSubmissionDefault handles this case with default header values.
 
 error
 */

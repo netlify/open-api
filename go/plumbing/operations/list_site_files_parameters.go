@@ -55,7 +55,8 @@ func NewListSiteFilesParamsWithHTTPClient(client *http.Client) *ListSiteFilesPar
 	}
 }
 
-/*ListSiteFilesParams contains all the parameters to send to the API endpoint
+/*
+ListSiteFilesParams contains all the parameters to send to the API endpoint
 for the list site files operation typically these are written to a http.Request
 */
 type ListSiteFilesParams struct {

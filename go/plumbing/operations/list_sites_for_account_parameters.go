@@ -56,7 +56,8 @@ func NewListSitesForAccountParamsWithHTTPClient(client *http.Client) *ListSitesF
 	}
 }
 
-/*ListSitesForAccountParams contains all the parameters to send to the API endpoint
+/*
+ListSitesForAccountParams contains all the parameters to send to the API endpoint
 for the list sites for account operation typically these are written to a http.Request
 */
 type ListSitesForAccountParams struct {

@@ -57,7 +57,8 @@ func NewCreateSiteBuildParamsWithHTTPClient(client *http.Client) *CreateSiteBuil
 	}
 }
 
-/*CreateSiteBuildParams contains all the parameters to send to the API endpoint
+/*
+CreateSiteBuildParams contains all the parameters to send to the API endpoint
 for the create site build operation typically these are written to a http.Request
 */
 type CreateSiteBuildParams struct {

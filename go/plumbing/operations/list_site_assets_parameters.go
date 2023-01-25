@@ -55,7 +55,8 @@ func NewListSiteAssetsParamsWithHTTPClient(client *http.Client) *ListSiteAssetsP
 	}
 }
 
-/*ListSiteAssetsParams contains all the parameters to send to the API endpoint
+/*
+ListSiteAssetsParams contains all the parameters to send to the API endpoint
 for the list site assets operation typically these are written to a http.Request
 */
 type ListSiteAssetsParams struct {

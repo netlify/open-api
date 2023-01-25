@@ -46,7 +46,8 @@ func NewListSiteFilesOK() *ListSiteFilesOK {
 	return &ListSiteFilesOK{}
 }
 
-/*ListSiteFilesOK handles this case with default header values.
+/*
+ListSiteFilesOK handles this case with default header values.
 
 OK
 */
@@ -79,7 +80,8 @@ func NewListSiteFilesDefault(code int) *ListSiteFilesDefault {
 	}
 }
 
-/*ListSiteFilesDefault handles this case with default header values.
+/*
+ListSiteFilesDefault handles this case with default header values.
 
 error
 */

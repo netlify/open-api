@@ -55,7 +55,8 @@ func NewGetSiteMetadataParamsWithHTTPClient(client *http.Client) *GetSiteMetadat
 	}
 }
 
-/*GetSiteMetadataParams contains all the parameters to send to the API endpoint
+/*
+GetSiteMetadataParams contains all the parameters to send to the API endpoint
 for the get site metadata operation typically these are written to a http.Request
 */
 type GetSiteMetadataParams struct {

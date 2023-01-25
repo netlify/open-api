@@ -46,7 +46,8 @@ func NewGetDNSZonesOK() *GetDNSZonesOK {
 	return &GetDNSZonesOK{}
 }
 
-/*GetDNSZonesOK handles this case with default header values.
+/*
+GetDNSZonesOK handles this case with default header values.
 
 get all DNS zones the user has access to
 */
@@ -79,7 +80,8 @@ func NewGetDNSZonesDefault(code int) *GetDNSZonesDefault {
 	}
 }
 
-/*GetDNSZonesDefault handles this case with default header values.
+/*
+GetDNSZonesDefault handles this case with default header values.
 
 error
 */

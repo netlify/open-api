@@ -46,7 +46,8 @@ func NewUpdateSiteSnippetNoContent() *UpdateSiteSnippetNoContent {
 	return &UpdateSiteSnippetNoContent{}
 }
 
-/*UpdateSiteSnippetNoContent handles this case with default header values.
+/*
+UpdateSiteSnippetNoContent handles this case with default header values.
 
 No content
 */
@@ -69,7 +70,8 @@ func NewUpdateSiteSnippetDefault(code int) *UpdateSiteSnippetDefault {
 	}
 }
 
-/*UpdateSiteSnippetDefault handles this case with default header values.
+/*
+UpdateSiteSnippetDefault handles this case with default header values.
 
 error
 */

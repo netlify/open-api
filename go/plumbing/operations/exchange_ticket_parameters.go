@@ -55,7 +55,8 @@ func NewExchangeTicketParamsWithHTTPClient(client *http.Client) *ExchangeTicketP
 	}
 }
 
-/*ExchangeTicketParams contains all the parameters to send to the API endpoint
+/*
+ExchangeTicketParams contains all the parameters to send to the API endpoint
 for the exchange ticket operation typically these are written to a http.Request
 */
 type ExchangeTicketParams struct {

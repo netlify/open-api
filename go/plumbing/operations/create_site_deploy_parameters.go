@@ -14,6 +14,7 @@ import (
 	"github.com/go-openapi/runtime"
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
+	"github.com/go-openapi/swag"
 
 	"github.com/netlify/open-api/v2/go/models"
 )
@@ -57,15 +58,26 @@ func NewCreateSiteDeployParamsWithHTTPClient(client *http.Client) *CreateSiteDep
 	}
 }
 
-/*CreateSiteDeployParams contains all the parameters to send to the API endpoint
+/*
+CreateSiteDeployParams contains all the parameters to send to the API endpoint
 for the create site deploy operation typically these are written to a http.Request
 */
 type CreateSiteDeployParams struct {
 
+	/*Branch*/
+	Branch *string
 	/*Deploy*/
 	Deploy *models.DeployFiles
+	/*DeployPreviews*/
+	DeployPreviews *bool
+	/*LatestPublished*/
+	LatestPublished *bool
+	/*Production*/
+	Production *bool
 	/*SiteID*/
 	SiteID string
+	/*State*/
+	State *string
 	/*Title*/
 	Title *string
 
@@ -107,6 +119,17 @@ func (o *CreateSiteDeployParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
+// WithBranch adds the branch to the create site deploy params
+func (o *CreateSiteDeployParams) WithBranch(branch *string) *CreateSiteDeployParams {
+	o.SetBranch(branch)
+	return o
+}
+
+// SetBranch adds the branch to the create site deploy params
+func (o *CreateSiteDeployParams) SetBranch(branch *string) {
+	o.Branch = branch
+}
+
 // WithDeploy adds the deploy to the create site deploy params
 func (o *CreateSiteDeployParams) WithDeploy(deploy *models.DeployFiles) *CreateSiteDeployParams {
 	o.SetDeploy(deploy)
@@ -118,6 +141,39 @@ func (o *CreateSiteDeployParams) SetDeploy(deploy *models.DeployFiles) {
 	o.Deploy = deploy
 }
 
+// WithDeployPreviews adds the deployPreviews to the create site deploy params
+func (o *CreateSiteDeployParams) WithDeployPreviews(deployPreviews *bool) *CreateSiteDeployParams {
+	o.SetDeployPreviews(deployPreviews)
+	return o
+}
+
+// SetDeployPreviews adds the deployPreviews to the create site deploy params
+func (o *CreateSiteDeployParams) SetDeployPreviews(deployPreviews *bool) {
+	o.DeployPreviews = deployPreviews
+}
+
+// WithLatestPublished adds the latestPublished to the create site deploy params
+func (o *CreateSiteDeployParams) WithLatestPublished(latestPublished *bool) *CreateSiteDeployParams {
+	o.SetLatestPublished(latestPublished)
+	return o
+}
+
+// SetLatestPublished adds the latestPublished to the create site deploy params
+func (o *CreateSiteDeployParams) SetLatestPublished(latestPublished *bool) {
+	o.LatestPublished = latestPublished
+}
+
+// WithProduction adds the production to the create site deploy params
+func (o *CreateSiteDeployParams) WithProduction(production *bool) *CreateSiteDeployParams {
+	o.SetProduction(production)
+	return o
+}
+
+// SetProduction adds the production to the create site deploy params
+func (o *CreateSiteDeployParams) SetProduction(production *bool) {
+	o.Production = production
+}
+
 // WithSiteID adds the siteID to the create site deploy params
 func (o *CreateSiteDeployParams) WithSiteID(siteID string) *CreateSiteDeployParams {
 	o.SetSiteID(siteID)
@@ -127,6 +183,17 @@ func (o *CreateSiteDeployParams) WithSiteID(siteID string) *CreateSiteDeployPara
 // SetSiteID adds the siteId to the create site deploy params
 func (o *CreateSiteDeployParams) SetSiteID(siteID string) {
 	o.SiteID = siteID
+}
+
+// WithState adds the state to the create site deploy params
+func (o *CreateSiteDeployParams) WithState(state *string) *CreateSiteDeployParams {
+	o.SetState(state)
+	return o
+}
+
+// SetState adds the state to the create site deploy params
+func (o *CreateSiteDeployParams) SetState(state *string) {
+	o.State = state
 }
 
 // WithTitle adds the title to the create site deploy params
@@ -148,15 +215,95 @@ func (o *CreateSiteDeployParams) WriteToRequest(r runtime.ClientRequest, reg str
 	}
 	var res []error
 
+	if o.Branch != nil {
+
+		// query param branch
+		var qrBranch string
+		if o.Branch != nil {
+			qrBranch = *o.Branch
+		}
+		qBranch := qrBranch
+		if qBranch != "" {
+			if err := r.SetQueryParam("branch", qBranch); err != nil {
+				return err
+			}
+		}
+
+	}
+
 	if o.Deploy != nil {
 		if err := r.SetBodyParam(o.Deploy); err != nil {
 			return err
 		}
 	}
 
+	if o.DeployPreviews != nil {
+
+		// query param deploy-previews
+		var qrDeployPreviews bool
+		if o.DeployPreviews != nil {
+			qrDeployPreviews = *o.DeployPreviews
+		}
+		qDeployPreviews := swag.FormatBool(qrDeployPreviews)
+		if qDeployPreviews != "" {
+			if err := r.SetQueryParam("deploy-previews", qDeployPreviews); err != nil {
+				return err
+			}
+		}
+
+	}
+
+	if o.LatestPublished != nil {
+
+		// query param latest-published
+		var qrLatestPublished bool
+		if o.LatestPublished != nil {
+			qrLatestPublished = *o.LatestPublished
+		}
+		qLatestPublished := swag.FormatBool(qrLatestPublished)
+		if qLatestPublished != "" {
+			if err := r.SetQueryParam("latest-published", qLatestPublished); err != nil {
+				return err
+			}
+		}
+
+	}
+
+	if o.Production != nil {
+
+		// query param production
+		var qrProduction bool
+		if o.Production != nil {
+			qrProduction = *o.Production
+		}
+		qProduction := swag.FormatBool(qrProduction)
+		if qProduction != "" {
+			if err := r.SetQueryParam("production", qProduction); err != nil {
+				return err
+			}
+		}
+
+	}
+
 	// path param site_id
 	if err := r.SetPathParam("site_id", o.SiteID); err != nil {
 		return err
+	}
+
+	if o.State != nil {
+
+		// query param state
+		var qrState string
+		if o.State != nil {
+			qrState = *o.State
+		}
+		qState := qrState
+		if qState != "" {
+			if err := r.SetQueryParam("state", qState); err != nil {
+				return err
+			}
+		}
+
 	}
 
 	if o.Title != nil {
