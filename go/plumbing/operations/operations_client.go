@@ -69,6 +69,8 @@ type ClientService interface {
 
 	CreateTicket(params *CreateTicketParams, authInfo runtime.ClientAuthInfoWriter) (*CreateTicketCreated, error)
 
+	DeleteDeploy(params *DeleteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteDeployNoContent, error)
+
 	DeleteDeployKey(params *DeleteDeployKeyParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteDeployKeyNoContent, error)
 
 	DeleteDNSRecord(params *DeleteDNSRecordParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteDNSRecordNoContent, error)
@@ -88,6 +90,8 @@ type ClientService interface {
 	DeleteSiteAsset(params *DeleteSiteAssetParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSiteAssetNoContent, error)
 
 	DeleteSiteBuildHook(params *DeleteSiteBuildHookParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSiteBuildHookNoContent, error)
+
+	DeleteSiteDeploy(params *DeleteSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSiteDeployNoContent, error)
 
 	DeleteSiteForm(params *DeleteSiteFormParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSiteFormNoContent, error)
 
@@ -981,6 +985,40 @@ func (a *Client) CreateTicket(params *CreateTicketParams, authInfo runtime.Clien
 }
 
 /*
+DeleteDeploy delete deploy API
+*/
+func (a *Client) DeleteDeploy(params *DeleteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteDeployNoContent, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewDeleteDeployParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "deleteDeploy",
+		Method:             "DELETE",
+		PathPattern:        "/deploys/{deploy_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &DeleteDeployReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*DeleteDeployNoContent)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*DeleteDeployDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
 DeleteDeployKey delete deploy key API
 */
 func (a *Client) DeleteDeployKey(params *DeleteDeployKeyParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteDeployKeyNoContent, error) {
@@ -1318,6 +1356,40 @@ func (a *Client) DeleteSiteBuildHook(params *DeleteSiteBuildHookParams, authInfo
 	}
 	// unexpected success response
 	unexpectedSuccess := result.(*DeleteSiteBuildHookDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+DeleteSiteDeploy delete site deploy API
+*/
+func (a *Client) DeleteSiteDeploy(params *DeleteSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSiteDeployNoContent, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewDeleteSiteDeployParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "deleteSiteDeploy",
+		Method:             "DELETE",
+		PathPattern:        "/sites/{site_id}/deploys/{deploy_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &DeleteSiteDeployReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*DeleteSiteDeployNoContent)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*DeleteSiteDeployDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
