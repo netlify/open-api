@@ -1015,9 +1015,7 @@ paths:
           required: true
       responses:
         '204':
-          description: OK
-          schema:
-            $ref: '#/definitions/deploy'
+          description: No content
         default:
           $ref: '#/responses/error'
   /deploys/{deploy_id}/cancel:

@@ -49,28 +49,16 @@ func NewDeleteSiteDeployNoContent() *DeleteSiteDeployNoContent {
 /*
 DeleteSiteDeployNoContent handles this case with default header values.
 
-OK
+No content
 */
 type DeleteSiteDeployNoContent struct {
-	Payload *models.Deploy
 }
 
 func (o *DeleteSiteDeployNoContent) Error() string {
-	return fmt.Sprintf("[DELETE /sites/{site_id}/deploys/{deploy_id}][%d] deleteSiteDeployNoContent  %+v", 204, o.Payload)
-}
-
-func (o *DeleteSiteDeployNoContent) GetPayload() *models.Deploy {
-	return o.Payload
+	return fmt.Sprintf("[DELETE /sites/{site_id}/deploys/{deploy_id}][%d] deleteSiteDeployNoContent ", 204)
 }
 
 func (o *DeleteSiteDeployNoContent) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
-
-	o.Payload = new(models.Deploy)
-
-	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
-		return err
-	}
 
 	return nil
 }
