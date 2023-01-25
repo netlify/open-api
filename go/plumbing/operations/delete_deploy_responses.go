@@ -49,28 +49,16 @@ func NewDeleteDeployNoContent() *DeleteDeployNoContent {
 /*
 DeleteDeployNoContent handles this case with default header values.
 
-OK
+No content
 */
 type DeleteDeployNoContent struct {
-	Payload *models.Deploy
 }
 
 func (o *DeleteDeployNoContent) Error() string {
-	return fmt.Sprintf("[DELETE /deploys/{deploy_id}][%d] deleteDeployNoContent  %+v", 204, o.Payload)
-}
-
-func (o *DeleteDeployNoContent) GetPayload() *models.Deploy {
-	return o.Payload
+	return fmt.Sprintf("[DELETE /deploys/{deploy_id}][%d] deleteDeployNoContent ", 204)
 }
 
 func (o *DeleteDeployNoContent) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
-
-	o.Payload = new(models.Deploy)
-
-	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
-		return err
-	}
 
 	return nil
 }
