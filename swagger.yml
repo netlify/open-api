@@ -1001,6 +1001,23 @@ paths:
             $ref: '#/definitions/deploy'
         default:
           $ref: '#/responses/error'
+    delete:
+      operationId: deleteSiteDeploy
+      tags: [deploy]
+      parameters:
+        - name: deploy_id
+          type: string
+          in: path
+          required: true
+        - name: site_id
+          type: string
+          in: path
+          required: true
+      responses:
+        '204':
+          description: No content
+        default:
+          $ref: '#/responses/error'
   /deploys/{deploy_id}/cancel:
     post:
       operationId: cancelSiteDeploy
@@ -1244,6 +1261,19 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/deploy'
+        default:
+          $ref: '#/responses/error'
+    delete:
+      operationId: deleteDeploy
+      tags: [deploy]
+      parameters:
+        - name: deploy_id
+          type: string
+          in: path
+          required: true
+      responses:
+        '204':
+          description: No content
         default:
           $ref: '#/responses/error'
   /deploys/{deploy_id}/lock:
