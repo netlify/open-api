@@ -12,4 +12,5 @@ type functionsManifestEntry struct {
 	Path     string `json:"path"`
 	Runtime  string `json:"runtime"`
 	Schedule string `json:"schedule"`
+	DisplayName string `json:"displayName"`
 }
