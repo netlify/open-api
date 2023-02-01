@@ -266,7 +266,6 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 		"site_id":             options.SiteID,
 		"deploy_files":        len(options.files.Sums),
 		"scheduled_functions": len(schedules),
-		"functions_config":    functionsConfig,
 	}).Debug("Starting to deploy files")
 	authInfo := context.GetAuthInfo(ctx)
 
