@@ -95,6 +95,7 @@ type DeployOptions struct {
 	files             *deployFiles
 	functions         *deployFiles
 	functionSchedules []*models.FunctionSchedule
+	functionsConfig   map[string]models.FunctionConfig
 }
 
 type uploadError struct {
@@ -225,7 +226,7 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 
 	options.files = files
 
-	functions, schedules, err := bundle(ctx, options.FunctionsDir, options.Observer)
+	functions, schedules, functionsConfig, err := bundle(ctx, options.FunctionsDir, options.Observer)
 	if err != nil {
 		if options.Observer != nil {
 			options.Observer.OnFailedWalk()
@@ -234,6 +235,7 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 	}
 	options.functions = functions
 	options.functionSchedules = schedules
+	options.functionsConfig = functionsConfig
 
 	deployFiles := &models.DeployFiles{
 		Files:     options.files.Sums,
@@ -253,6 +255,10 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 
 	if len(schedules) > 0 {
 		deployFiles.FunctionSchedules = schedules
+	}
+
+	if options.functionsConfig != nil {
+		deployFiles.FunctionsConfig = options.functionsConfig
 	}
 
 	l := context.GetLogger(ctx)
@@ -649,9 +655,9 @@ func addEdgeFunctionsToDeployFiles(dir string, files *deployFiles, observer Depl
 	})
 }
 
-func bundle(ctx context.Context, functionDir string, observer DeployObserver) (*deployFiles, []*models.FunctionSchedule, error) {
+func bundle(ctx context.Context, functionDir string, observer DeployObserver) (*deployFiles, []*models.FunctionSchedule, map[string]models.FunctionConfig, error) {
 	if functionDir == "" {
-		return nil, nil, nil
+		return nil, nil, nil, nil
 	}
 
 	manifestFile, err := os.Open(filepath.Join(functionDir, "manifest.json"))
@@ -668,7 +674,7 @@ func bundle(ctx context.Context, functionDir string, observer DeployObserver) (*
 
 	info, err := ioutil.ReadDir(functionDir)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, nil, err
 	}
 
 	for _, i := range info {
@@ -678,23 +684,23 @@ func bundle(ctx context.Context, functionDir string, observer DeployObserver) (*
 		case zipFile(i):
 			runtime, err := readZipRuntime(filePath)
 			if err != nil {
-				return nil, nil, err
+				return nil, nil, nil, err
 			}
 			file, err := newFunctionFile(filePath, i, runtime, observer)
 			if err != nil {
-				return nil, nil, err
+				return nil, nil, nil, err
 			}
 			functions.Add(file.Name, file)
 		case jsFile(i):
 			file, err := newFunctionFile(filePath, i, jsRuntime, observer)
 			if err != nil {
-				return nil, nil, err
+				return nil, nil, nil, err
 			}
 			functions.Add(file.Name, file)
 		case goFile(filePath, i, observer):
 			file, err := newFunctionFile(filePath, i, goRuntime, observer)
 			if err != nil {
-				return nil, nil, err
+				return nil, nil, nil, err
 			}
 			functions.Add(file.Name, file)
 		default:
@@ -704,14 +710,14 @@ func bundle(ctx context.Context, functionDir string, observer DeployObserver) (*
 		}
 	}
 
-	return functions, nil, nil
+	return functions, nil, nil, nil
 }
 
-func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer DeployObserver) (*deployFiles, []*models.FunctionSchedule, error) {
+func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer DeployObserver) (*deployFiles, []*models.FunctionSchedule, map[string]models.FunctionConfig, error) {
 	manifestBytes, err := ioutil.ReadAll(manifestFile)
 
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, nil, err
 	}
 
 	logger := context.GetLogger(ctx)
@@ -722,23 +728,24 @@ func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer Dep
 	err = json.Unmarshal(manifestBytes, &manifest)
 
 	if err != nil {
-		return nil, nil, fmt.Errorf("malformed functions manifest file: %w", err)
+		return nil, nil, nil, fmt.Errorf("malformed functions manifest file: %w", err)
 	}
 
 	schedules := make([]*models.FunctionSchedule, 0, len(manifest.Functions))
 	functions := newDeployFiles()
+	functionsConfig := make(map[string]models.FunctionConfig)
 
 	for _, function := range manifest.Functions {
 		fileInfo, err := os.Stat(function.Path)
 
 		if err != nil {
-			return nil, nil, fmt.Errorf("manifest file specifies a function path that cannot be found: %s", function.Path)
+			return nil, nil, nil, fmt.Errorf("manifest file specifies a function path that cannot be found: %s", function.Path)
 		}
 
 		file, err := newFunctionFile(function.Path, fileInfo, function.Runtime, observer)
 
 		if err != nil {
-			return nil, nil, err
+			return nil, nil, nil, err
 		}
 
 		if function.Schedule != "" {
@@ -748,10 +755,16 @@ func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer Dep
 			})
 		}
 
+		if function.DisplayName != "" {
+			functionsConfig[file.Name] = models.FunctionConfig{
+				DisplayName: function.DisplayName,
+			}
+		}
+
 		functions.Add(file.Name, file)
 	}
 
-	return functions, schedules, nil
+	return functions, schedules, functionsConfig, nil
 }
 
 func readZipRuntime(filePath string) (string, error) {

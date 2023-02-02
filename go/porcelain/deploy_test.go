@@ -306,7 +306,7 @@ func TestUploadFunctions_RetryCountHeader(t *testing.T) {
 	defer os.RemoveAll(dir)
 	require.NoError(t, ioutil.WriteFile(filepath.Join(functionsPath, "foo.js"), []byte("module.exports = () => {}"), 0644))
 
-	files, _, err := bundle(ctx, functionsPath, mockObserver{})
+	files, _, _, err := bundle(ctx, functionsPath, mockObserver{})
 	require.NoError(t, err)
 	d := &models.Deploy{}
 	for _, bundle := range files.Files {
@@ -317,11 +317,12 @@ func TestUploadFunctions_RetryCountHeader(t *testing.T) {
 }
 
 func TestBundle(t *testing.T) {
-	functions, schedules, err := bundle(gocontext.Background(), "../internal/data", mockObserver{})
+	functions, schedules, functionsConfig, err := bundle(gocontext.Background(), "../internal/data", mockObserver{})
 
 	assert.Nil(t, err)
 	assert.Equal(t, 3, len(functions.Files))
 	assert.Empty(t, schedules)
+	assert.Nil(t, functionsConfig)
 
 	jsFunction := functions.Files["hello-js-function-test"]
 	pyFunction := functions.Files["hello-py-function-test"]
@@ -344,6 +345,7 @@ func TestBundleWithManifest(t *testing.T) {
 				"path": "%s",
 				"runtime": "a-runtime",
 				"mainFile": "/some/path/hello-js-function-test.js",
+				"displayName": "Hello Javascript Function",
 				"name": "hello-js-function-test",
 				"schedule": "* * * * *"
 			},
@@ -352,7 +354,7 @@ func TestBundleWithManifest(t *testing.T) {
 				"runtime": "some-other-runtime",
 				"mainFile": "/some/path/hello-py-function-test",
 				"name": "hello-py-function-test"
-			}    
+			}
 		],
 		"version": 1
 	}`, jsFunctionPath, pyFunctionPath)
@@ -361,8 +363,7 @@ func TestBundleWithManifest(t *testing.T) {
 	defer os.Remove(manifestPath)
 	assert.Nil(t, err)
 
-	functions, schedules, err := bundle(gocontext.Background(), "../internal/data", mockObserver{})
-
+	functions, schedules, functionsConfig, err := bundle(gocontext.Background(), "../internal/data", mockObserver{})
 	assert.Nil(t, err)
 
 	assert.Equal(t, 1, len(schedules))
@@ -372,6 +373,9 @@ func TestBundleWithManifest(t *testing.T) {
 	assert.Equal(t, 2, len(functions.Files))
 	assert.Equal(t, "a-runtime", functions.Files["hello-js-function-test"].Runtime)
 	assert.Equal(t, "some-other-runtime", functions.Files["hello-py-function-test"].Runtime)
+
+	assert.Equal(t, 1, len(functionsConfig))
+	assert.Equal(t, "Hello Javascript Function", functionsConfig["hello-js-function-test"].DisplayName)
 }
 
 func TestReadZipRuntime(t *testing.T) {
