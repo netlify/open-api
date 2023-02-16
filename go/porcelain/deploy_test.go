@@ -18,6 +18,7 @@ import (
 	"github.com/netlify/open-api/v2/go/models"
 	"github.com/netlify/open-api/v2/go/plumbing/operations"
 	"github.com/netlify/open-api/v2/go/porcelain/context"
+	ltest "github.com/sirupsen/logrus/hooks/test"
 
 	apiClient "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
@@ -260,6 +261,53 @@ func TestUploadFiles_Cancelation(t *testing.T) {
 	}
 	err = client.uploadFiles(ctx, d, files, nil, fileUpload, time.Minute)
 	require.ErrorIs(t, err, gocontext.Canceled)
+}
+
+func TestUploadFiles_SkipEqualFiles(t *testing.T) {
+	ctx := gocontext.Background()
+
+	logger := context.GetLogger(ctx)
+	loggerHook := ltest.NewLocal(logger.Logger)
+
+	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+		rw.Write([]byte(`{}`))
+	}))
+	defer server.Close()
+
+	hu, _ := url.Parse(server.URL)
+	tr := apiClient.NewWithClient(hu.Host, "/api/v1", []string{"http"}, http.DefaultClient)
+	client := NewRetryable(tr, strfmt.Default, 1)
+	client.uploadLimit = 1
+	ctx = context.WithAuthInfo(ctx, apiClient.BearerToken("token"))
+
+	// Create some files to deploy
+	dir, err := ioutil.TempDir("", "deploy")
+	require.NoError(t, err)
+	defer os.RemoveAll(dir)
+
+	fileBody := []byte("Hello")
+
+	require.NoError(t, ioutil.WriteFile(filepath.Join(dir, "foo.html"), fileBody,0644))
+	require.NoError(t, ioutil.WriteFile(filepath.Join(dir, "bar.html"), fileBody, 0644))
+
+	files, err := walk(dir, nil, false, false)
+
+	require.NoError(t, err)
+	d := &models.Deploy{}
+	for _, bundle := range files.Files {
+		d.Required = append(d.Required, bundle.Sum)
+	}
+	err = client.uploadFiles(ctx, d, files, nil, fileUpload, time.Minute)
+	require.NoError(t, err)
+
+	var logMessages []string
+	for _, entry := range loggerHook.AllEntries() {
+		logMessages = append(logMessages, entry.Message)
+	}
+
+	assert.Contains(t, logMessages, "Uploading file bar.html")
+	assert.Contains(t, logMessages, "Skipping file with content already uploaded: foo.html")
 }
 
 func TestUploadFunctions_RetryCountHeader(t *testing.T) {
