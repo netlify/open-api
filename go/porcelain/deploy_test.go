@@ -269,7 +269,13 @@ func TestUploadFiles_SkipEqualFiles(t *testing.T) {
 	logger := context.GetLogger(ctx)
 	loggerHook := ltest.NewLocal(logger.Logger)
 
+	serverRequests := 0
+
 	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		defer func() {
+			serverRequests++
+		}()
+
 		rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 		rw.Write([]byte(`{}`))
 	}))
@@ -295,8 +301,11 @@ func TestUploadFiles_SkipEqualFiles(t *testing.T) {
 
 	require.NoError(t, err)
 	d := &models.Deploy{}
-	for _, bundle := range files.Files {
-		d.Required = append(d.Required, bundle.Sum)
+	for _, file := range files.Files {
+		d.Required = append(d.Required, file.Sum)
+		// uploadFiles relies on the fact that the list of sums is an array of unique values, as bot
+		// this files have the same SHA we can add only one of them to the Required array
+		break
 	}
 	err = client.uploadFiles(ctx, d, files, nil, fileUpload, time.Minute)
 	require.NoError(t, err)
@@ -306,6 +315,7 @@ func TestUploadFiles_SkipEqualFiles(t *testing.T) {
 		logMessages = append(logMessages, entry.Message)
 	}
 
+	defer assert.Equal(t, serverRequests, 1)
 	assert.Contains(t, logMessages, "Uploading file bar.html")
 	assert.Contains(t, logMessages, "Skipping file with content already uploaded: foo.html")
 }
