@@ -294,8 +294,8 @@ func TestUploadFiles_SkipEqualFiles(t *testing.T) {
 
 	fileBody := []byte("Hello")
 
-	require.NoError(t, ioutil.WriteFile(filepath.Join(dir, "foo.html"), fileBody,0644))
-	require.NoError(t, ioutil.WriteFile(filepath.Join(dir, "bar.html"), fileBody, 0644))
+	require.NoError(t, ioutil.WriteFile(filepath.Join(dir, "a.html"), fileBody, 0644))
+	require.NoError(t, ioutil.WriteFile(filepath.Join(dir, "b.html"), fileBody, 0644))
 
 	files, err := walk(dir, nil, false, false)
 
@@ -303,7 +303,7 @@ func TestUploadFiles_SkipEqualFiles(t *testing.T) {
 	d := &models.Deploy{}
 	for _, file := range files.Files {
 		d.Required = append(d.Required, file.Sum)
-		// uploadFiles relies on the fact that the list of sums is an array of unique values, as bot
+		// uploadFiles relies on the fact that the list of sums is an array of unique values, as both
 		// this files have the same SHA we can add only one of them to the Required array
 		break
 	}
@@ -316,8 +316,8 @@ func TestUploadFiles_SkipEqualFiles(t *testing.T) {
 	}
 
 	defer assert.Equal(t, serverRequests, 1)
-	assert.Contains(t, logMessages, "Uploading file bar.html")
-	assert.Contains(t, logMessages, "Skipping file with content already uploaded: foo.html")
+	assert.Contains(t, logMessages, "Uploading file a.html")
+	assert.Contains(t, logMessages, "Skipping file with content already uploaded: b.html")
 }
 
 func TestUploadFunctions_RetryCountHeader(t *testing.T) {
