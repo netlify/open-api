@@ -17,6 +17,9 @@ type FunctionConfig struct {
 
 	// display name
 	DisplayName string `json:"display_name,omitempty"`
+
+	// generator
+	Generator string `json:"generator,omitempty"`
 }
 
 // Validate validates this function config
