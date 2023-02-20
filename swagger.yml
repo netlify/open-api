@@ -3576,6 +3576,8 @@ definitions:
     properties:
       display_name:
         type: string
+      generator:
+        type: string
 parameters:
   page:
     type: integer

@@ -346,6 +346,7 @@ func TestBundleWithManifest(t *testing.T) {
 				"runtime": "a-runtime",
 				"mainFile": "/some/path/hello-js-function-test.js",
 				"displayName": "Hello Javascript Function",
+				"generator": "@netlify/fake-plugin@1.0.0",
 				"name": "hello-js-function-test",
 				"schedule": "* * * * *"
 			},
@@ -376,6 +377,7 @@ func TestBundleWithManifest(t *testing.T) {
 
 	assert.Equal(t, 1, len(functionsConfig))
 	assert.Equal(t, "Hello Javascript Function", functionsConfig["hello-js-function-test"].DisplayName)
+	assert.Equal(t, "@netlify/fake-plugin@1.0.0", functionsConfig["hello-js-function-test"].Generator)
 }
 
 func TestReadZipRuntime(t *testing.T) {

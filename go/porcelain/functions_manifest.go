@@ -7,10 +7,11 @@ type functionsManifest struct {
 }
 
 type functionsManifestEntry struct {
-	MainFile string `json:"mainFile"`
-	Name     string `json:"name"`
-	Path     string `json:"path"`
-	Runtime  string `json:"runtime"`
-	Schedule string `json:"schedule"`
+	MainFile    string `json:"mainFile"`
+	Name        string `json:"name"`
+	Path        string `json:"path"`
+	Runtime     string `json:"runtime"`
+	Schedule    string `json:"schedule"`
 	DisplayName string `json:"displayName"`
+	Generator   string `json:"generator"`
 }
