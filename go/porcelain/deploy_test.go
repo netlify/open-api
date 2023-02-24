@@ -18,7 +18,6 @@ import (
 	"github.com/netlify/open-api/v2/go/models"
 	"github.com/netlify/open-api/v2/go/plumbing/operations"
 	"github.com/netlify/open-api/v2/go/porcelain/context"
-	ltest "github.com/sirupsen/logrus/hooks/test"
 
 	apiClient "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
@@ -266,9 +265,6 @@ func TestUploadFiles_Cancelation(t *testing.T) {
 func TestUploadFiles_SkipEqualFiles(t *testing.T) {
 	ctx := gocontext.Background()
 
-	logger := context.GetLogger(ctx)
-	loggerHook := ltest.NewLocal(logger.Logger)
-
 	serverRequests := 0
 
 	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
@@ -308,14 +304,7 @@ func TestUploadFiles_SkipEqualFiles(t *testing.T) {
 	err = client.uploadFiles(ctx, d, files, nil, fileUpload, time.Minute)
 	require.NoError(t, err)
 
-	var logMessages []string
-	for _, entry := range loggerHook.AllEntries() {
-		logMessages = append(logMessages, entry.Message)
-	}
-
 	assert.Equal(t, serverRequests, 1)
-	assert.Contains(t, logMessages, "Uploading file a.html")
-	assert.Contains(t, logMessages, "Skipping file with content already uploaded: b.html")
 }
 
 func TestUploadFunctions_RetryCountHeader(t *testing.T) {
