@@ -298,15 +298,13 @@ func TestUploadFiles_SkipEqualFiles(t *testing.T) {
 	require.NoError(t, ioutil.WriteFile(filepath.Join(dir, "b.html"), fileBody, 0644))
 
 	files, err := walk(dir, nil, false, false)
-
 	require.NoError(t, err)
+
 	d := &models.Deploy{}
-	for _, file := range files.Files {
-		d.Required = append(d.Required, file.Sum)
-		// uploadFiles relies on the fact that the list of sums is an array of unique values, as both
-		// this files have the same SHA we can add only one of them to the Required array
-		break
-	}
+	// uploadFiles relies on the fact that the list of sums is an array of unique values, as both
+	// the files have the same SHA we only need one of them for the Required array
+	d.Required = []string{files.Sums["a.html"]}
+
 	err = client.uploadFiles(ctx, d, files, nil, fileUpload, time.Minute)
 	require.NoError(t, err)
 
@@ -315,7 +313,7 @@ func TestUploadFiles_SkipEqualFiles(t *testing.T) {
 		logMessages = append(logMessages, entry.Message)
 	}
 
-	defer assert.Equal(t, serverRequests, 1)
+	assert.Equal(t, serverRequests, 1)
 	assert.Contains(t, logMessages, "Uploading file a.html")
 	assert.Contains(t, logMessages, "Skipping file with content already uploaded: b.html")
 }
