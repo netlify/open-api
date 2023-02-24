@@ -268,9 +268,7 @@ func TestUploadFiles_SkipEqualFiles(t *testing.T) {
 	serverRequests := 0
 
 	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-		defer func() {
-			serverRequests++
-		}()
+		serverRequests++
 
 		rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 		rw.Write([]byte(`{}`))
@@ -296,15 +294,37 @@ func TestUploadFiles_SkipEqualFiles(t *testing.T) {
 	files, err := walk(dir, nil, false, false)
 	require.NoError(t, err)
 
-	d := &models.Deploy{}
-	// uploadFiles relies on the fact that the list of sums is an array of unique values, as both
-	// the files have the same SHA we only need one of them for the Required array
-	d.Required = []string{files.Sums["a.html"]}
+	// Create some fake function bundles to deploy
+	functionsDir, err := ioutil.TempDir("", "deploy-functions")
+	require.NoError(t, err)
+	defer os.RemoveAll(functionsDir)
 
-	err = client.uploadFiles(ctx, d, files, nil, fileUpload, time.Minute)
+	// Get the JS function bundle
+	cwd, _ := os.Getwd()
+	basePath := path.Join(filepath.Dir(cwd), "internal", "data")
+	jsFunctionPath := strings.Replace(filepath.Join(basePath, "hello-js-function-test.zip"), "\\", "/", -1)
+	bundleBody, err := ioutil.ReadFile(jsFunctionPath)
 	require.NoError(t, err)
 
-	assert.Equal(t, serverRequests, 1)
+	require.NoError(t, ioutil.WriteFile(filepath.Join(functionsDir, "a.zip"), bundleBody, 0644))
+	require.NoError(t, ioutil.WriteFile(filepath.Join(functionsDir, "b.zip"), bundleBody, 0644))
+
+	functions, _, _, err := bundle(ctx, functionsDir, mockObserver{})
+	require.NoError(t, err)
+
+	d := &models.Deploy{}
+	// uploadFiles relies on the fact that the list of sums is an array of unique values, as both
+	// the files and bundles have the same SHA we only need one of them for the Required array
+	d.Required = []string{files.Sums["a.html"]}
+	d.RequiredFunctions = []string{functions.Sums["a"]}
+
+	err = client.uploadFilesWithSkipSameFileOptimization(ctx, d, files, nil, fileUpload, time.Minute)
+	require.NoError(t, err)
+	assert.Equal(t, 1, serverRequests)
+
+	err = client.uploadFilesWithSkipSameFileOptimization(ctx, d, functions, nil, functionUpload, time.Minute)
+	require.NoError(t, err)
+	assert.Equal(t, 2, serverRequests)
 }
 
 func TestUploadFunctions_RetryCountHeader(t *testing.T) {
