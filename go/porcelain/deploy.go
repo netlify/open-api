@@ -447,6 +447,7 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 		"deploy_id": d.ID,
 		"file_path": f.Name,
 		"file_sum":  f.Sum,
+		"file_size": f.Size,
 	}).Debug("Uploading file")
 
 	b := backoff.NewExponentialBackOff()
