@@ -330,7 +330,7 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 	}
 
 	// Temporary way to ensure safe rollout of skip uploading files with same digest optimization
-	// We'll
+	// We'll be using a release candidate to safely roll this out and ensure there's no unintended breaking changes
 	if options.SkipSameFileOptimization {
 		if err := n.uploadFilesWithSkipSameFileOptimization(ctx, deploy, options.files, options.Observer, fileUpload, options.UploadTimeout); err != nil {
 			return nil, err
