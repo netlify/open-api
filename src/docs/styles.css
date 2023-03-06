@@ -3,11 +3,6 @@
   --color-fg: #151a1e;
   --color-gray-L300: #e7eaed;
   --color-gray-L800: #151a1e;
-  --color-teal-T900: #054861;
-  --color-teal-T600: #30c8c9;
-  --color-blue-B500: #2250f4;
-  --color-blue-B800: #112caf;
-  --font-family-main: Mulish, sans-serif;
   --font-weight-normal: 300;
   --font-weight-bold: 900;
   --max-width-main: 800px;
@@ -17,7 +12,7 @@
 .footer {
   margin: 2rem;
   border-top: 1px solid var(--color-gray-L300);
-  font-family: Roboto, sans-serif;
+  font-family: Montserrat, sans-serif;
 }
 
 .footer__body {
