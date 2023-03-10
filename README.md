@@ -38,7 +38,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for details on how this client is develop
 
 We have a fully featured JS/Node.js client that implements some of the same 'porcelain' methods that the go client does in addition to the open-api methods.
 
-See [github.com/netlify/js-client](https://github.com/netlify/js-client) for more details.
+See [github.com/netlify/build/tree/main/packages/js-client](https://github.com/netlify/build/tree/main/packages/js-client) for more details.
 
 #### npm module
 
