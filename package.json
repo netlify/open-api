@@ -1,7 +1,7 @@
 {
   "name": "@netlify/open-api",
   "description": "Netlify's open-api definition as a module",
-  "version": "2.15.0",
+  "version": "2.15.1",
   "author": "Netlify",
   "ava": {
     "files": [
