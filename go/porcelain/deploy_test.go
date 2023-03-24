@@ -318,11 +318,11 @@ func TestUploadFiles_SkipEqualFiles(t *testing.T) {
 	d.Required = []string{files.Sums["a.html"]}
 	d.RequiredFunctions = []string{functions.Sums["a"]}
 
-	err = client.uploadFilesWithSkipSameFileOptimization(ctx, d, files, nil, fileUpload, time.Minute)
+	err = client.uploadFiles(ctx, d, files, nil, fileUpload, time.Minute)
 	require.NoError(t, err)
 	assert.Equal(t, 1, serverRequests)
 
-	err = client.uploadFilesWithSkipSameFileOptimization(ctx, d, functions, nil, functionUpload, time.Minute)
+	err = client.uploadFiles(ctx, d, functions, nil, functionUpload, time.Minute)
 	require.NoError(t, err)
 	assert.Equal(t, 2, serverRequests)
 }

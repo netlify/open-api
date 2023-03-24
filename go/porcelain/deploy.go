@@ -92,8 +92,6 @@ type DeployOptions struct {
 
 	Observer DeployObserver
 
-	SkipSameFileOptimization bool
-
 	files             *deployFiles
 	functions         *deployFiles
 	functionSchedules []*models.FunctionSchedule
@@ -329,16 +327,8 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 		return deploy, nil
 	}
 
-	// Temporary way to ensure safe rollout of skip uploading files with same digest optimization
-	// We'll be using a release candidate to safely roll this out and ensure there's no unintended breaking changes
-	if options.SkipSameFileOptimization {
-		if err := n.uploadFilesWithSkipSameFileOptimization(ctx, deploy, options.files, options.Observer, fileUpload, options.UploadTimeout); err != nil {
-			return nil, err
-		}
-	} else {
-		if err := n.uploadFiles(ctx, deploy, options.files, options.Observer, fileUpload, options.UploadTimeout); err != nil {
-			return nil, err
-		}
+	if err := n.uploadFiles(ctx, deploy, options.files, options.Observer, fileUpload, options.UploadTimeout); err != nil {
+		return nil, err
 	}
 
 	if options.functions != nil {
@@ -394,7 +384,7 @@ func (n *Netlify) WaitUntilDeployLive(ctx context.Context, d *models.Deploy) (*m
 	return n.waitForState(ctx, d, "ready")
 }
 
-func (n *Netlify) uploadFilesWithSkipSameFileOptimization(ctx context.Context, d *models.Deploy, files *deployFiles, observer DeployObserver, t uploadType, timeout time.Duration) error {
+func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *deployFiles, observer DeployObserver, t uploadType, timeout time.Duration) error {
 	sharedErr := &uploadError{err: nil, mutex: &sync.Mutex{}}
 	sem := make(chan int, n.uploadLimit)
 	wg := &sync.WaitGroup{}
@@ -437,50 +427,6 @@ func (n *Netlify) uploadFilesWithSkipSameFileOptimization(ctx context.Context, d
 				skippedFiles := files[1:]
 				for _, file := range skippedFiles {
 					log.Infof("Skipping file with content already uploaded: %s", file.Name)
-				}
-			}
-		}
-	}
-
-	return sharedErr.err
-}
-
-func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *deployFiles, observer DeployObserver, t uploadType, timeout time.Duration) error {
-	sharedErr := &uploadError{err: nil, mutex: &sync.Mutex{}}
-	sem := make(chan int, n.uploadLimit)
-	wg := &sync.WaitGroup{}
-	defer wg.Wait()
-
-	var required []string
-	switch t {
-	case fileUpload:
-		required = d.Required
-	case functionUpload:
-		required = d.RequiredFunctions
-	}
-
-	count := 0
-	for _, sha := range required {
-		if files, exist := files.Hashed[sha]; exist {
-			for range files {
-				count++
-			}
-		}
-	}
-
-	log := context.GetLogger(ctx)
-	log.Infof("Uploading %v files", count)
-
-	for _, sha := range required {
-		if files, exist := files.Hashed[sha]; exist {
-			for _, file := range files {
-				select {
-				case sem <- 1:
-					wg.Add(1)
-					go n.uploadFile(ctx, d, file, observer, t, timeout, wg, sem, sharedErr)
-				case <-ctx.Done():
-					log.Info("Context terminated, aborting file upload")
-					return errors.Wrap(ctx.Err(), "aborted file upload early")
 				}
 			}
 		}
