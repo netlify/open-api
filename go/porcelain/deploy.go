@@ -412,14 +412,21 @@ func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *depl
 
 	for _, sha := range required {
 		if files, exist := files.Hashed[sha]; exist {
-			for _, file := range files {
-				select {
-				case sem <- 1:
-					wg.Add(1)
-					go n.uploadFile(ctx, d, file, observer, t, timeout, wg, sem, sharedErr)
-				case <-ctx.Done():
-					log.Info("Context terminated, aborting file upload")
-					return errors.Wrap(ctx.Err(), "aborted file upload early")
+			file := files[0]
+
+			select {
+			case sem <- 1:
+				wg.Add(1)
+				go n.uploadFile(ctx, d, file, observer, t, timeout, wg, sem, sharedErr)
+			case <-ctx.Done():
+				log.Info("Context terminated, aborting file upload")
+				return errors.Wrap(ctx.Err(), "aborted file upload early")
+			}
+
+			if len(files) > 1 {
+				skippedFiles := files[1:]
+				for _, file := range skippedFiles {
+					log.Infof("Skipping file with content already uploaded: %s", file.Name)
 				}
 			}
 		}
