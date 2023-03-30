@@ -11,6 +11,7 @@ type functionsManifestEntry struct {
 	Name        string `json:"name"`
 	Path        string `json:"path"`
 	Runtime     string `json:"runtime"`
+	RuntimeID   string `json:"runtimeID"`
 	Schedule    string `json:"schedule"`
 	DisplayName string `json:"displayName"`
 	Generator   string `json:"generator"`

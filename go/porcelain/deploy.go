@@ -104,10 +104,11 @@ type uploadError struct {
 }
 
 type FileBundle struct {
-	Name    string
-	Sum     string
-	Runtime string
-	Size    *int64 `json:"size,omitempty"`
+	Name      string
+	Sum       string
+	Runtime   string
+	RuntimeID string
+	Size      *int64 `json:"size,omitempty"`
 
 	// Path OR Buffer should be populated
 	Path   string
@@ -499,7 +500,7 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 				_, operationError = n.Operations.UploadDeployFile(params, authInfo)
 			}
 		case functionUpload:
-			params := operations.NewUploadDeployFunctionParams().WithDeployID(d.ID).WithName(f.Name).WithFileBody(f).WithRuntime(&f.Runtime)
+			params := operations.NewUploadDeployFunctionParams().WithDeployID(d.ID).WithName(f.Name).WithFileBody(f).WithRuntime(&f.Runtime).WithRuntimeID(&f.RuntimeID)
 
 			if retryCount > 0 {
 				params = params.WithXNfRetryCount(&retryCount)
@@ -693,19 +694,19 @@ func bundle(ctx context.Context, functionDir string, observer DeployObserver) (*
 			if err != nil {
 				return nil, nil, nil, err
 			}
-			file, err := newFunctionFile(filePath, i, runtime, observer)
+			file, err := newFunctionFile(filePath, i, runtime, "", observer)
 			if err != nil {
 				return nil, nil, nil, err
 			}
 			functions.Add(file.Name, file)
 		case jsFile(i):
-			file, err := newFunctionFile(filePath, i, jsRuntime, observer)
+			file, err := newFunctionFile(filePath, i, jsRuntime, "", observer)
 			if err != nil {
 				return nil, nil, nil, err
 			}
 			functions.Add(file.Name, file)
 		case goFile(filePath, i, observer):
-			file, err := newFunctionFile(filePath, i, goRuntime, observer)
+			file, err := newFunctionFile(filePath, i, goRuntime, "", observer)
 			if err != nil {
 				return nil, nil, nil, err
 			}
@@ -749,7 +750,7 @@ func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer Dep
 			return nil, nil, nil, fmt.Errorf("manifest file specifies a function path that cannot be found: %s", function.Path)
 		}
 
-		file, err := newFunctionFile(function.Path, fileInfo, function.Runtime, observer)
+		file, err := newFunctionFile(function.Path, fileInfo, function.Runtime, function.RuntimeID, observer)
 
 		if err != nil {
 			return nil, nil, nil, err
@@ -805,10 +806,11 @@ func readZipRuntime(filePath string) (string, error) {
 	return jsRuntime, nil
 }
 
-func newFunctionFile(filePath string, i os.FileInfo, runtime string, observer DeployObserver) (*FileBundle, error) {
+func newFunctionFile(filePath string, i os.FileInfo, runtime string, runtimeID string, observer DeployObserver) (*FileBundle, error) {
 	file := &FileBundle{
-		Name:    strings.TrimSuffix(i.Name(), filepath.Ext(i.Name())),
-		Runtime: runtime,
+		Name:      strings.TrimSuffix(i.Name(), filepath.Ext(i.Name())),
+		Runtime:   runtime,
+		RuntimeID: runtimeID,
 	}
 
 	s := sha256.New()
