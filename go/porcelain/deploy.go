@@ -43,6 +43,7 @@ const (
 	lfsVersionString = "version https://git-lfs.github.com/spec/v1"
 
 	edgeFunctionsInternalPath = ".netlify/internal/edge-functions/"
+	edgeRedirectsInternalPath = ".netlify/internal/edge-redirects/"
 )
 
 var installDirs = []string{"node_modules/", "bower_components/"}
@@ -78,6 +79,7 @@ type DeployOptions struct {
 	Dir               string
 	FunctionsDir      string
 	EdgeFunctionsDir  string
+	EdgeRedirectsDir  string
 	BuildDir          string
 	LargeMediaEnabled bool
 
@@ -215,7 +217,17 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 	}
 
 	if options.EdgeFunctionsDir != "" {
-		err = addEdgeFunctionsToDeployFiles(options.EdgeFunctionsDir, files, options.Observer)
+		err = addInternalFilesToDeploy(options.EdgeFunctionsDir, edgeFunctionsInternalPath, files, options.Observer)
+		if err != nil {
+			if options.Observer != nil {
+				options.Observer.OnFailedWalk()
+			}
+			return nil, err
+		}
+	}
+
+	if options.EdgeRedirectsDir != "" {
+		err = addInternalFilesToDeploy(options.EdgeRedirectsDir, edgeRedirectsInternalPath, files, options.Observer)
 		if err != nil {
 			if options.Observer != nil {
 				options.Observer.OnFailedWalk()
@@ -631,7 +643,7 @@ func walk(dir string, observer DeployObserver, useLargeMedia, ignoreInstallDirs 
 	return files, err
 }
 
-func addEdgeFunctionsToDeployFiles(dir string, files *deployFiles, observer DeployObserver) error {
+func addInternalFilesToDeploy(dir, internalPath string, files *deployFiles, observer DeployObserver) error {
 	return filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
@@ -642,7 +654,7 @@ func addEdgeFunctionsToDeployFiles(dir string, files *deployFiles, observer Depl
 			if err != nil {
 				return err
 			}
-			rel := edgeFunctionsInternalPath + forceSlashSeparators(osRel)
+			rel := internalPath + forceSlashSeparators(osRel)
 
 			file, err := createFileBundle(rel, path)
 			if err != nil {
