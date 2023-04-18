@@ -749,7 +749,14 @@ func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer Dep
 			return nil, nil, nil, fmt.Errorf("manifest file specifies a function path that cannot be found: %s", function.Path)
 		}
 
-		file, err := newFunctionFile(function.Path, fileInfo, function.Runtime, observer)
+		var runtime string
+		if function.RuntimeVersion != "" {
+			runtime = function.RuntimeVersion
+		} else {
+			runtime = function.Runtime
+		}
+
+		file, err := newFunctionFile(function.Path, fileInfo, runtime, observer)
 
 		if err != nil {
 			return nil, nil, nil, err
