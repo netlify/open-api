@@ -19,4 +19,4 @@ test: ## Test the go code.
 	go test -v ./...
 
 validate: deps ## Check that the swagger spec is valid.
-	go run github.com/go-swagger/go-swagger/cmd/swagger@v0.30.4 validate $(SWAGGER_SPEC)
+	go run github.com/go-swagger/go-swagger/cmd/swagger@v0.24.0 validate $(SWAGGER_SPEC)

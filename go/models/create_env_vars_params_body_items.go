@@ -61,7 +61,7 @@ func init() {
 }
 
 func (m *CreateEnvVarsParamsBodyItems) validateScopesItemsEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, createEnvVarsParamsBodyItemsScopesItemsEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, createEnvVarsParamsBodyItemsScopesItemsEnum, true); err != nil {
 		return err
 	}
 	return nil

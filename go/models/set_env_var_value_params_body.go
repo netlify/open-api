@@ -70,7 +70,7 @@ const (
 
 // prop value enum
 func (m *SetEnvVarValueParamsBody) validateContextEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, setEnvVarValueParamsBodyTypeContextPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, setEnvVarValueParamsBodyTypeContextPropEnum, true); err != nil {
 		return err
 	}
 	return nil

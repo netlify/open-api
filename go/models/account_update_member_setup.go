@@ -75,7 +75,7 @@ const (
 
 // prop value enum
 func (m *AccountUpdateMemberSetup) validateRoleEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, accountUpdateMemberSetupTypeRolePropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, accountUpdateMemberSetupTypeRolePropEnum, true); err != nil {
 		return err
 	}
 	return nil
@@ -121,7 +121,7 @@ const (
 
 // prop value enum
 func (m *AccountUpdateMemberSetup) validateSiteAccessEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, accountUpdateMemberSetupTypeSiteAccessPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, accountUpdateMemberSetupTypeSiteAccessPropEnum, true); err != nil {
 		return err
 	}
 	return nil
