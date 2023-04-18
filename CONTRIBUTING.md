@@ -8,8 +8,6 @@ The go-client is an [netlify/open-api][open-api] derived http client generated u
 - You have cloned this repo OUTSIDE of the go path. (So go modules work).
 - You have a $GOPATH set up and $GOPATH/bin is added to your \$PATH
 
-See [GMBE:Tools as dependencies](https://github.com/go-modules-by-example/index/tree/master/010_tools) and [GMBE:Using `gobin` to install/run tools](https://github.com/go-modules-by-example/index/tree/master/017_using_gobin) for a deeper explanation of how a tools.go file works.
-
 ## Spec validation
 
 All spec changes must pass go-swagger spec validation.
@@ -53,7 +51,6 @@ under its [MIT license](LICENSE).
 [goreport]: https://goreportcard.com/report/github.com/netlify/go-client
 [git-img]: https://img.shields.io/github/release/netlify/go-client.svg
 [git]: https://github.com/netlify/go-client/releases/latest
-[gobin]: https://github.com/myitcv/gobin
 [modules]: https://github.com/golang/go/wiki/Modules
 [open-api]: https://github.com/netlify/open-api
 [go-swagger]: https://github.com/go-swagger/go-swagger
