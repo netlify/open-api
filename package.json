@@ -6,9 +6,7 @@
   "ava": {
     "files": [
       "src/**/*.test.js"
-    ],
-    "compileEnhancements": false,
-    "babel": false
+    ]
   },
   "bugs": {
     "url": "https://github.com/netlify/open-api/issues"
@@ -19,16 +17,16 @@
     "analytics-plugin-ga": "^0.1.5",
     "ava": "^5.2.0",
     "cp-file": "^7.0.0",
-    "eslint": "^6.3.0",
-    "eslint-config-prettier": "^6.2.0",
-    "eslint-plugin-import": "^2.18.2",
-    "eslint-plugin-node": "^10.0.0",
-    "eslint-plugin-prettier": "^3.1.0",
+    "eslint": "^8.38.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^15.7.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "execa": "^2.0.4",
     "is-plain-obj": "^2.1.0",
     "make-dir": "^3.0.0",
     "npm-run-all": "^4.1.5",
-    "prettier": "^1.18.2",
+    "prettier": "^2.8.7",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "redoc-cli": "^0.13.7",

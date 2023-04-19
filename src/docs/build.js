@@ -10,11 +10,11 @@ const OUTPUT_DIR = `${__dirname}/../../dist`
 const OUTPUT_PATH = `${OUTPUT_DIR}/index.html`
 
 // Build API documentation single self-contained HTML file using `redoc-cli`
-const buildDocs = async function() {
+const buildDocs = async function () {
   await Promise.all([redocCli(), copyAssets(OUTPUT_DIR)])
 }
 
-const redocCli = async function() {
+const redocCli = async function () {
   await execa(
     'redoc-cli',
     [
@@ -27,7 +27,7 @@ const redocCli = async function() {
       `--options.theme.logo.gutter=${LOGO_PADDING}`,
       `--output=${normalize(OUTPUT_PATH)}`,
       'build',
-      SWAGGER_PATH
+      SWAGGER_PATH,
     ],
     { stdio: 'inherit' }
   )

@@ -12,10 +12,10 @@ const JSON_OUTPUT = `${OUTPUT_DIR}/swagger.json`
 
 // Validate `swagger.yml`, dereference the JSON references then serialize to
 // `swagger.json`
-const convertOpenApi = async function() {
+const convertOpenApi = async function () {
   const [openapiDef] = await Promise.all([
     SwaggerParser.validate(YAML_INPUT, { dereference: { circular: false } }),
-    makeDir(OUTPUT_DIR)
+    makeDir(OUTPUT_DIR),
   ])
   const openapiJson = JSON.stringify(openapiDef, null, 2)
   await pWriteFile(JSON_OUTPUT, openapiJson)
