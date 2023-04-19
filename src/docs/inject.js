@@ -8,11 +8,11 @@ const pReadFile = promisify(readFile)
 const pWriteFile = promisify(writeFile)
 
 // Inject HTML content after Redoc has built the documentation
-const injectContent = async function(outputPath) {
+const injectContent = async function (outputPath) {
   const [siteContent, head, footer] = await Promise.all([
     pReadFile(outputPath, 'utf8'),
     pReadFile(HEAD_PATH, 'utf8'),
-    pReadFile(FOOTER_PATH, 'utf8')
+    pReadFile(FOOTER_PATH, 'utf8'),
   ])
 
   const updatedContent = siteContent

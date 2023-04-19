@@ -2,11 +2,10 @@ const test = require('ava')
 const isPlainObj = require('is-plain-obj')
 
 const { version } = require('../package.json')
-
-// eslint-disable-next-line node/no-missing-require
+// eslint-disable-next-line n/no-missing-require
 const openApiDef = require('..')
 
-test('OpenAPI definition normalization', async t => {
+test('OpenAPI definition normalization', async (t) => {
   // Ensure the OpenAPI definition general shape looks normal
   t.true(isPlainObj(openApiDef))
   t.true(isPlainObj(openApiDef.definitions))

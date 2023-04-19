@@ -1,5 +1,4 @@
 {
-  "plugins": ["node", "prettier"],
   "parserOptions": {
     "sourceType": "module"
   },
@@ -8,11 +7,11 @@
     "es6": true
   },
   "extends": [
+    "eslint:recommended",
     "plugin:import/errors",
     "plugin:import/warnings",
-    "eslint:recommended",
-    "plugin:node/recommended",
-    "prettier"
+    "plugin:n/recommended",
+    "plugin:prettier/recommended"
   ],
   "rules": {
     "import/order": [2, { "newlines-between": "always" }]
