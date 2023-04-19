@@ -186,7 +186,7 @@ func TestWalk_EdgeFunctions(t *testing.T) {
 	err = ioutil.WriteFile(filepath.Join(edgeFunctionsDir, "123456789.js"), []byte{}, 0644)
 	require.Nil(t, err)
 
-	err = addEdgeFunctionsToDeployFiles(edgeFunctionsDir, files, mockObserver{})
+	err = addInternalFilesToDeploy(edgeFunctionsDir, edgeFunctionsInternalPath, files, mockObserver{})
 	require.Nil(t, err)
 
 	assert.NotNil(t, files.Files[".netlify/internal/edge-functions/manifest.json"])
@@ -194,9 +194,7 @@ func TestWalk_EdgeFunctions(t *testing.T) {
 }
 
 func TestWalk_PublishedFilesAndEdgeFunctions(t *testing.T) {
-	publishDir, err := ioutil.TempDir("", "publish")
-	require.Nil(t, err)
-	defer os.RemoveAll(publishDir)
+	files := setupPublishedAssets(t)
 
 	netlifyDir, err := ioutil.TempDir("", ".netlify")
 	require.Nil(t, err)
@@ -206,6 +204,48 @@ func TestWalk_PublishedFilesAndEdgeFunctions(t *testing.T) {
 	require.Nil(t, err)
 	defer os.RemoveAll(edgeFunctionsDir)
 
+	err = ioutil.WriteFile(filepath.Join(edgeFunctionsDir, "manifest.json"), []byte{}, 0644)
+	require.Nil(t, err)
+	err = ioutil.WriteFile(filepath.Join(edgeFunctionsDir, "123456789.js"), []byte{}, 0644)
+	require.Nil(t, err)
+
+	err = addInternalFilesToDeploy(edgeFunctionsDir, edgeFunctionsInternalPath, files, mockObserver{})
+	require.Nil(t, err)
+
+	assert.NotNil(t, files.Files["assets/styles.css"])
+	assert.NotNil(t, files.Files["index.html"])
+	assert.NotNil(t, files.Files[".netlify/internal/edge-functions/manifest.json"])
+	assert.NotNil(t, files.Files[".netlify/internal/edge-functions/123456789.js"])
+}
+
+func TestWalk_PublishedFilesAndEdgeRedirects(t *testing.T) {
+	files := setupPublishedAssets(t)
+
+	netlifyDir, err := ioutil.TempDir("", ".netlify")
+	require.Nil(t, err)
+	defer os.RemoveAll(netlifyDir)
+
+	edgeRedirectsDir, err := ioutil.TempDir(netlifyDir, "edge-redirects-dist")
+	require.Nil(t, err)
+	defer os.RemoveAll(edgeRedirectsDir)
+
+	err = ioutil.WriteFile(filepath.Join(edgeRedirectsDir, "manifest.json"), []byte{}, 0644)
+	require.Nil(t, err)
+
+	err = addInternalFilesToDeploy(edgeRedirectsDir, edgeRedirectsInternalPath, files, mockObserver{})
+	require.Nil(t, err)
+
+	assert.NotNil(t, files.Files["assets/styles.css"])
+	assert.NotNil(t, files.Files["index.html"])
+	assert.NotNil(t, files.Files[".netlify/internal/edge-redirects/manifest.json"])
+}
+
+func setupPublishedAssets(t *testing.T) *deployFiles {
+	publishDir, err := ioutil.TempDir("", "publish")
+	require.Nil(t, err)
+
+	t.Cleanup(func() { os.RemoveAll(publishDir) })
+
 	err = os.Mkdir(filepath.Join(publishDir, "assets"), os.ModePerm)
 	require.Nil(t, err)
 	err = ioutil.WriteFile(filepath.Join(publishDir, "assets", "styles.css"), []byte{}, 0644)
@@ -213,21 +253,10 @@ func TestWalk_PublishedFilesAndEdgeFunctions(t *testing.T) {
 	err = ioutil.WriteFile(filepath.Join(publishDir, "index.html"), []byte{}, 0644)
 	require.Nil(t, err)
 
-	err = ioutil.WriteFile(filepath.Join(edgeFunctionsDir, "manifest.json"), []byte{}, 0644)
-	require.Nil(t, err)
-	err = ioutil.WriteFile(filepath.Join(edgeFunctionsDir, "123456789.js"), []byte{}, 0644)
-	require.Nil(t, err)
-
 	files, err := walk(publishDir, mockObserver{}, false, false)
 	require.Nil(t, err)
 
-	err = addEdgeFunctionsToDeployFiles(edgeFunctionsDir, files, mockObserver{})
-	require.Nil(t, err)
-
-	assert.NotNil(t, files.Files["assets/styles.css"])
-	assert.NotNil(t, files.Files["index.html"])
-	assert.NotNil(t, files.Files[".netlify/internal/edge-functions/manifest.json"])
-	assert.NotNil(t, files.Files[".netlify/internal/edge-functions/123456789.js"])
+	return files
 }
 
 func TestUploadFiles_Cancelation(t *testing.T) {
