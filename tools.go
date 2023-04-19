@@ -1,4 +1,4 @@
-// +build tools
+//go:build tools
 
 package tools
 
@@ -7,6 +7,4 @@ package tools
 
 import (
 	_ "github.com/go-swagger/go-swagger/cmd/swagger"
-	_ "github.com/kyoh86/richgo"
-	_ "github.com/myitcv/gobin"
 )

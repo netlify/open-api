@@ -1,5 +1,4 @@
 .PHONY: all build deps generate help test validate
-CHECK_FILES?=$$(go list ./... | grep -v /vendor/)
 SWAGGER_SPEC=swagger.yml
 
 help: ## Show this help.
@@ -11,13 +10,13 @@ build: ## Build the API Go client.
 	go build ./go/...
 
 deps: ## Download dependencies.
-	GO111MODULE=off go get -u github.com/myitcv/gobin && go mod download
+	go mod download
 
 generate: validate ## Generate the API Go client and the JSON document for the UI.
 	go generate
 
 test: ## Test the go code.
-	gobin -m -run github.com/kyoh86/richgo test -v $(CHECK_FILES)
+	go test -v ./...
 
 validate: deps ## Check that the swagger spec is valid.
-	gobin -m -run github.com/go-swagger/go-swagger/cmd/swagger@v0.23.0 validate $(SWAGGER_SPEC)
+	go run github.com/go-swagger/go-swagger/cmd/swagger validate $(SWAGGER_SPEC)

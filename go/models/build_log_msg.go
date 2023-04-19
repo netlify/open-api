@@ -76,7 +76,7 @@ const (
 
 // prop value enum
 func (m *BuildLogMsg) validateSectionEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, buildLogMsgTypeSectionPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, buildLogMsgTypeSectionPropEnum, true); err != nil {
 		return err
 	}
 	return nil
