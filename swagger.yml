@@ -2531,6 +2531,10 @@ definitions:
         type: array
         items:
           type: string
+      branch_deploy_custom_domain:
+        type: string
+      deploy_preview_custom_domain:
+        type: string
       password:
         type: string
       notification_email:

@@ -25,6 +25,9 @@ type Site struct {
 	// admin url
 	AdminURL string `json:"admin_url,omitempty"`
 
+	// branch deploy custom domain
+	BranchDeployCustomDomain string `json:"branch_deploy_custom_domain,omitempty"`
+
 	// build image
 	BuildImage string `json:"build_image,omitempty"`
 
@@ -45,6 +48,9 @@ type Site struct {
 
 	// deploy hook
 	DeployHook string `json:"deploy_hook,omitempty"`
+
+	// deploy preview custom domain
+	DeployPreviewCustomDomain string `json:"deploy_preview_custom_domain,omitempty"`
 
 	// deploy url
 	DeployURL string `json:"deploy_url,omitempty"`
