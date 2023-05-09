@@ -3582,6 +3582,8 @@ definitions:
         type: string
       generator:
         type: string
+      invocation_mode:
+        type: string
 parameters:
   page:
     type: integer

@@ -20,6 +20,9 @@ type FunctionConfig struct {
 
 	// generator
 	Generator string `json:"generator,omitempty"`
+
+	// invocation mode
+	InvocationMode string `json:"invocation_mode,omitempty"`
 }
 
 // Validate validates this function config
