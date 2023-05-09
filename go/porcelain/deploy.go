@@ -781,10 +781,11 @@ func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer Dep
 			})
 		}
 
-		if function.DisplayName != "" || function.Generator != "" {
+		if function.DisplayName != "" || function.Generator != "" || function.InvocationMode != "" {
 			functionsConfig[file.Name] = models.FunctionConfig{
-				DisplayName: function.DisplayName,
-				Generator:   function.Generator,
+				DisplayName:    function.DisplayName,
+				Generator:      function.Generator,
+				InvocationMode: function.InvocationMode,
 			}
 		}
 
