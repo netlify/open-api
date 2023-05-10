@@ -106,14 +106,19 @@ type uploadError struct {
 }
 
 type FileBundle struct {
-	Name    string
-	Sum     string
-	Runtime string
-	Size    *int64 `json:"size,omitempty"`
+	Name             string
+	Sum              string
+	Runtime          string
+	Size             *int64 `json:"size,omitempty"`
+	FunctionMetadata *FunctionMetadata
 
 	// Path OR Buffer should be populated
 	Path   string
 	Buffer io.ReadSeeker
+}
+
+type FunctionMetadata struct {
+	InvocationMode string
 }
 
 type toolchainSpec struct {
@@ -517,6 +522,10 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 				params = params.WithXNfRetryCount(&retryCount)
 			}
 
+			if f.FunctionMetadata != nil {
+				params = params.WithInvocationMode(&f.FunctionMetadata.InvocationMode)
+			}
+
 			if timeout != 0 {
 				params.SetTimeout(timeout)
 			}
@@ -705,19 +714,19 @@ func bundle(ctx context.Context, functionDir string, observer DeployObserver) (*
 			if err != nil {
 				return nil, nil, nil, err
 			}
-			file, err := newFunctionFile(filePath, i, runtime, observer)
+			file, err := newFunctionFile(filePath, i, runtime, nil, observer)
 			if err != nil {
 				return nil, nil, nil, err
 			}
 			functions.Add(file.Name, file)
 		case jsFile(i):
-			file, err := newFunctionFile(filePath, i, jsRuntime, observer)
+			file, err := newFunctionFile(filePath, i, jsRuntime, nil, observer)
 			if err != nil {
 				return nil, nil, nil, err
 			}
 			functions.Add(file.Name, file)
 		case goFile(filePath, i, observer):
-			file, err := newFunctionFile(filePath, i, goRuntime, observer)
+			file, err := newFunctionFile(filePath, i, goRuntime, nil, observer)
 			if err != nil {
 				return nil, nil, nil, err
 			}
@@ -768,7 +777,10 @@ func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer Dep
 			runtime = function.Runtime
 		}
 
-		file, err := newFunctionFile(function.Path, fileInfo, runtime, observer)
+		meta := FunctionMetadata{
+			InvocationMode: function.InvocationMode,
+		}
+		file, err := newFunctionFile(function.Path, fileInfo, runtime, &meta, observer)
 
 		if err != nil {
 			return nil, nil, nil, err
@@ -781,11 +793,11 @@ func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer Dep
 			})
 		}
 
-		if function.DisplayName != "" || function.Generator != "" || function.InvocationMode != "" {
+		// TODO: Move these to the `meta` object above.
+		if function.DisplayName != "" || function.Generator != "" {
 			functionsConfig[file.Name] = models.FunctionConfig{
-				DisplayName:    function.DisplayName,
-				Generator:      function.Generator,
-				InvocationMode: function.InvocationMode,
+				DisplayName: function.DisplayName,
+				Generator:   function.Generator,
 			}
 		}
 
@@ -825,7 +837,7 @@ func readZipRuntime(filePath string) (string, error) {
 	return jsRuntime, nil
 }
 
-func newFunctionFile(filePath string, i os.FileInfo, runtime string, observer DeployObserver) (*FileBundle, error) {
+func newFunctionFile(filePath string, i os.FileInfo, runtime string, metadata *FunctionMetadata, observer DeployObserver) (*FileBundle, error) {
 	file := &FileBundle{
 		Name:    strings.TrimSuffix(i.Name(), filepath.Ext(i.Name())),
 		Runtime: runtime,
@@ -875,6 +887,8 @@ func newFunctionFile(filePath string, i os.FileInfo, runtime string, observer De
 			return nil, err
 		}
 	}
+
+	file.FunctionMetadata = metadata
 
 	return file, nil
 }

@@ -1357,6 +1357,9 @@ paths:
         - name: runtime
           type: string
           in: query
+        - name: invocation_mode
+          in: query
+          type: string
         - name: size
           type: integer
           in: query
@@ -3581,8 +3584,6 @@ definitions:
       display_name:
         type: string
       generator:
-        type: string
-      invocation_mode:
         type: string
 parameters:
   page:

@@ -69,6 +69,8 @@ type UploadDeployFunctionParams struct {
 	DeployID string
 	/*FileBody*/
 	FileBody io.ReadCloser
+	/*InvocationMode*/
+	InvocationMode *string
 	/*Name*/
 	Name string
 	/*Runtime*/
@@ -147,6 +149,17 @@ func (o *UploadDeployFunctionParams) SetFileBody(fileBody io.ReadCloser) {
 	o.FileBody = fileBody
 }
 
+// WithInvocationMode adds the invocationMode to the upload deploy function params
+func (o *UploadDeployFunctionParams) WithInvocationMode(invocationMode *string) *UploadDeployFunctionParams {
+	o.SetInvocationMode(invocationMode)
+	return o
+}
+
+// SetInvocationMode adds the invocationMode to the upload deploy function params
+func (o *UploadDeployFunctionParams) SetInvocationMode(invocationMode *string) {
+	o.InvocationMode = invocationMode
+}
+
 // WithName adds the name to the upload deploy function params
 func (o *UploadDeployFunctionParams) WithName(name string) *UploadDeployFunctionParams {
 	o.SetName(name)
@@ -206,6 +219,22 @@ func (o *UploadDeployFunctionParams) WriteToRequest(r runtime.ClientRequest, reg
 		if err := r.SetBodyParam(o.FileBody); err != nil {
 			return err
 		}
+	}
+
+	if o.InvocationMode != nil {
+
+		// query param invocation_mode
+		var qrInvocationMode string
+		if o.InvocationMode != nil {
+			qrInvocationMode = *o.InvocationMode
+		}
+		qInvocationMode := qrInvocationMode
+		if qInvocationMode != "" {
+			if err := r.SetQueryParam("invocation_mode", qInvocationMode); err != nil {
+				return err
+			}
+		}
+
 	}
 
 	// path param name
