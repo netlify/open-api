@@ -448,7 +448,8 @@ func TestBundleWithManifest(t *testing.T) {
 				"path": "%s",
 				"runtime": "some-other-runtime",
 				"mainFile": "/some/path/hello-py-function-test",
-				"name": "hello-py-function-test"
+				"name": "hello-py-function-test",
+				"invocation_mode": "stream"
 			}
 		],
 		"version": 1
@@ -467,7 +468,9 @@ func TestBundleWithManifest(t *testing.T) {
 
 	assert.Equal(t, 2, len(functions.Files))
 	assert.Equal(t, "a-runtime", functions.Files["hello-js-function-test"].Runtime)
+	assert.Empty(t, functions.Files["hello-js-function-test"].FunctionMetadata.InvocationMode)
 	assert.Equal(t, "some-other-runtime", functions.Files["hello-py-function-test"].Runtime)
+	assert.Equal(t, "stream", functions.Files["hello-py-function-test"].FunctionMetadata.InvocationMode)
 
 	assert.Equal(t, 1, len(functionsConfig))
 	assert.Equal(t, "Hello Javascript Function", functionsConfig["hello-js-function-test"].DisplayName)

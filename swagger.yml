@@ -1357,6 +1357,9 @@ paths:
         - name: runtime
           type: string
           in: query
+        - name: invocation_mode
+          in: query
+          type: string
         - name: size
           type: integer
           in: query
