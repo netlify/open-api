@@ -793,7 +793,6 @@ func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer Dep
 			})
 		}
 
-		// TODO: Move these to the `meta` object above.
 		if function.DisplayName != "" || function.Generator != "" {
 			functionsConfig[file.Name] = models.FunctionConfig{
 				DisplayName: function.DisplayName,
