@@ -15,5 +15,5 @@ type functionsManifestEntry struct {
 	Schedule       string `json:"schedule"`
 	DisplayName    string `json:"displayName"`
 	Generator      string `json:"generator"`
-	InvocationMode string `json:"invocation_mode"`
+	InvocationMode string `json:"invocationMode"`
 }

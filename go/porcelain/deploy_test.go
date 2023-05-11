@@ -449,7 +449,7 @@ func TestBundleWithManifest(t *testing.T) {
 				"runtime": "some-other-runtime",
 				"mainFile": "/some/path/hello-py-function-test",
 				"name": "hello-py-function-test",
-				"invocation_mode": "stream"
+				"invocationMode": "stream"
 			}
 		],
 		"version": 1
