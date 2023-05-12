@@ -414,13 +414,18 @@ paths:
             properties:
               context:
                 description: >-
-                  The deploy context in which this value will be used. `dev` refers to local development when running `netlify dev`.
+                  The deploy context in which this value will be used. `dev` refers to local development when running `netlify dev`. `branch` must be provided with a value in `context_parameter`.
                 type: string
                 enum:
+                  - all
                   - dev
                   - branch-deploy
                   - deploy-preview
                   - production
+                  - branch
+              context_parameter:
+                description: An additional parameter for custom branches. Currently, this is used for providing a branch name when `context=branch`.
+                type: string
               value:
                 description: The environment variable's unencrypted value
                 type: string
@@ -2736,9 +2741,13 @@ definitions:
           - branch-deploy
           - deploy-preview
           - production
+          - branch
         description: >-
           The deploy context in which this value will be used. `dev` refers to
           local development when running `netlify dev`.
+      context_parameter:
+        type: string
+        description: An additional parameter for custom branches. Currently, this is used for specifying a branch name when `context=branch`.
     description: Environment variable value model definition
   envVarUser:
     type: object
