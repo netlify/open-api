@@ -43,7 +43,7 @@ const (
 	lfsVersionString = "version https://git-lfs.github.com/spec/v1"
 
 	edgeFunctionsInternalPath = ".netlify/internal/edge-functions/"
-	edgeRedirectsInternalPath = ".netlify/internal/edge-redirects/"
+	edgeRedirectsInternalPath = ".netlify/deploy-config/"
 )
 
 var installDirs = []string{"node_modules/", "bower_components/"}
