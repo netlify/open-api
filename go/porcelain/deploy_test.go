@@ -229,7 +229,7 @@ func TestWalk_PublishedFilesAndEdgeRedirects(t *testing.T) {
 	require.Nil(t, err)
 	defer os.RemoveAll(edgeRedirectsDir)
 
-	err = ioutil.WriteFile(filepath.Join(edgeRedirectsDir, "manifest.json"), []byte{}, 0644)
+	err = ioutil.WriteFile(filepath.Join(edgeRedirectsDir, "redirects.json"), []byte{}, 0644)
 	require.Nil(t, err)
 
 	err = addInternalFilesToDeploy(edgeRedirectsDir, edgeRedirectsInternalPath, files, mockObserver{})
@@ -237,7 +237,7 @@ func TestWalk_PublishedFilesAndEdgeRedirects(t *testing.T) {
 
 	assert.NotNil(t, files.Files["assets/styles.css"])
 	assert.NotNil(t, files.Files["index.html"])
-	assert.NotNil(t, files.Files[".netlify/internal/edge-redirects/manifest.json"])
+	assert.NotNil(t, files.Files[".netlify/deploy-config/redirects.json"])
 }
 
 func setupPublishedAssets(t *testing.T) *deployFiles {
