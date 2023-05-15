@@ -20,8 +20,11 @@ import (
 type EnvVarValue struct {
 
 	// The deploy context in which this value will be used. `dev` refers to local development when running `netlify dev`.
-	// Enum: [all dev branch-deploy deploy-preview production]
+	// Enum: [all dev branch-deploy deploy-preview production branch]
 	Context string `json:"context,omitempty"`
+
+	// An additional parameter for custom branches. Currently, this is used for specifying a branch name when `context=branch`.
+	ContextParameter string `json:"context_parameter,omitempty"`
 
 	// The environment variable value's universally unique ID
 	ID string `json:"id,omitempty"`
@@ -48,7 +51,7 @@ var envVarValueTypeContextPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["all","dev","branch-deploy","deploy-preview","production"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["all","dev","branch-deploy","deploy-preview","production","branch"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -72,6 +75,9 @@ const (
 
 	// EnvVarValueContextProduction captures enum value "production"
 	EnvVarValueContextProduction string = "production"
+
+	// EnvVarValueContextBranch captures enum value "branch"
+	EnvVarValueContextBranch string = "branch"
 )
 
 // prop value enum
