@@ -1,3 +1,3 @@
-*             @netlify/backend
-docs/         @netlify/backend @netlify/docs
-swagger.yml   @netlify/backend @netlify/docs
+* @netlify/backend
+docs/ @netlify/backend @netlify/department-docs 
+swagger.yml @netlify/backend @netlify/department-docs 
