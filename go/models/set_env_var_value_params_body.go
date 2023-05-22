@@ -19,9 +19,12 @@ import (
 // swagger:model setEnvVarValueParamsBody
 type SetEnvVarValueParamsBody struct {
 
-	// The deploy context in which this value will be used. `dev` refers to local development when running `netlify dev`.
-	// Enum: [dev branch-deploy deploy-preview production]
+	// The deploy context in which this value will be used. `dev` refers to local development when running `netlify dev`. `branch` must be provided with a value in `context_parameter`.
+	// Enum: [all dev branch-deploy deploy-preview production branch]
 	Context string `json:"context,omitempty"`
+
+	// An additional parameter for custom branches. Currently, this is used for providing a branch name when `context=branch`.
+	ContextParameter string `json:"context_parameter,omitempty"`
 
 	// The environment variable's unencrypted value
 	Value string `json:"value,omitempty"`
@@ -45,7 +48,7 @@ var setEnvVarValueParamsBodyTypeContextPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["dev","branch-deploy","deploy-preview","production"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["all","dev","branch-deploy","deploy-preview","production","branch"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -54,6 +57,9 @@ func init() {
 }
 
 const (
+
+	// SetEnvVarValueParamsBodyContextAll captures enum value "all"
+	SetEnvVarValueParamsBodyContextAll string = "all"
 
 	// SetEnvVarValueParamsBodyContextDev captures enum value "dev"
 	SetEnvVarValueParamsBodyContextDev string = "dev"
@@ -66,6 +72,9 @@ const (
 
 	// SetEnvVarValueParamsBodyContextProduction captures enum value "production"
 	SetEnvVarValueParamsBodyContextProduction string = "production"
+
+	// SetEnvVarValueParamsBodyContextBranch captures enum value "branch"
+	SetEnvVarValueParamsBodyContextBranch string = "branch"
 )
 
 // prop value enum
