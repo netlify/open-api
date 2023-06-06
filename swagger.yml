@@ -107,6 +107,9 @@ paths:
         type: string
         in: path
         required: true
+      - name: feature_flags
+        type: string
+        in: query
     get:
       operationId: getSite
       tags: [site]
