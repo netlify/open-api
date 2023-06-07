@@ -7,3 +7,4 @@ dist
 .gobincache
 swagger_flat.json
 swagger_go.json
+.netlify
