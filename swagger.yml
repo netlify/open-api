@@ -108,6 +108,7 @@ paths:
         in: path
         required: true
       - name: feature_flags
+        x-internal: true
         type: string
         in: query
     get:
