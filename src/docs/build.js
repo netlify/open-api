@@ -16,17 +16,17 @@ const buildDocs = async function () {
 
 const redocCli = async function () {
   await execa(
-    'redoc-cli',
+    'redocly',
     [
       `--title=${TITLE}`,
-      '--options.requiredPropsFirst',
-      '--options.sortOperationsAlphabetically',
-      `--options.theme.colors.primary.main=${HEADINGS_TEXT_COLOR}`,
-      `--options.theme.sidebar.backgroundColor=${MENU_BACKGROUND_COLOR}`,
-      `--options.theme.typography.headings.fontFamily=${FONT}`,
-      `--options.theme.logo.gutter=${LOGO_PADDING}`,
+      '--theme.openapi.requiredPropsFirst',
+      '--theme.openapi.sortOperationsAlphabetically',
+      `--theme.openapi.colors.primary.main=${HEADINGS_TEXT_COLOR}`,
+      `--theme.openapi.sidebar.backgroundColor=${MENU_BACKGROUND_COLOR}`,
+      `--theme.openapi.typography.headings.fontFamily=${FONT}`,
+      `--theme.openapi.logo.gutter=${LOGO_PADDING}`,
       `--output=${normalize(OUTPUT_PATH)}`,
-      'build',
+      'build-docs',
       SWAGGER_PATH,
     ],
     { stdio: 'inherit' }

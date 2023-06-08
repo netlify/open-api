@@ -107,13 +107,14 @@ paths:
         type: string
         in: path
         required: true
-      - name: feature_flags
-        x-internal: true
-        type: string
-        in: query
     get:
       operationId: getSite
       tags: [site]
+      parameters:
+        - name: feature_flags
+          x-internal: true
+          type: string
+          in: query
       responses:
         '200':
           description: OK
