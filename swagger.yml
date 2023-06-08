@@ -1389,6 +1389,7 @@ paths:
           $ref: '#/responses/error'
   /sites/{site_id}/plugins/{package}:
     put:
+      x-internal: true
       operationId: updatePlugin
       tags: [x-internal]
       description: 'This is an internal-only endpoint.'
@@ -1414,6 +1415,7 @@ paths:
           $ref: '#/responses/error'
   /sites/{site_id}/plugin_runs/latest:
     get:
+      x-internal: true
       operationId: getLatestPluginRuns
       tags: [x-internal]
       description: 'This is an internal-only endpoint.'
@@ -1442,6 +1444,7 @@ paths:
           $ref: '#/responses/error'
   /deploys/{deploy_id}/plugin_runs:
     post:
+      x-internal: true
       operationId: createPluginRun
       tags: [x-internal]
       description: 'This is an internal-only endpoint.'

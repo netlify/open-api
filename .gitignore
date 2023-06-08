@@ -8,3 +8,4 @@ dist
 swagger_flat.json
 swagger_go.json
 .netlify
+external.yml
