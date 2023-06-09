@@ -11,8 +11,8 @@
   "bugs": {
     "url": "https://github.com/netlify/open-api/issues"
   },
-  "dependencies": {},
   "devDependencies": {
+    "@redocly/cli": "^1.0.0-beta.128",
     "analytics": "^0.2.0",
     "analytics-plugin-ga": "^0.1.5",
     "ava": "^5.2.0",
@@ -27,9 +27,6 @@
     "make-dir": "^3.0.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.8.7",
-    "react": "^16.9.0",
-    "react-dom": "^16.9.0",
-    "redoc-cli": "^0.13.7",
     "swagger-parser": "^8.0.1"
   },
   "files": [],
@@ -49,7 +46,8 @@
     "prepublishOnly": "npm ci && npm test",
     "test": "run-s lint build unit",
     "start": "run-s lint build",
-    "build": "run-s convert redoc",
+    "bundle": "redocly bundle external@latest --output external.yml",
+    "build": "run-s convert bundle redoc",
     "convert": "node src/convert.js",
     "bump-swagger": "node src/bump-swagger.js",
     "redoc": "node src/docs/build.js",
