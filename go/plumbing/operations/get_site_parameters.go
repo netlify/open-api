@@ -61,6 +61,8 @@ for the get site operation typically these are written to a http.Request
 */
 type GetSiteParams struct {
 
+	/*FeatureFlags*/
+	FeatureFlags *string
 	/*SiteID*/
 	SiteID string
 
@@ -102,6 +104,17 @@ func (o *GetSiteParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
+// WithFeatureFlags adds the featureFlags to the get site params
+func (o *GetSiteParams) WithFeatureFlags(featureFlags *string) *GetSiteParams {
+	o.SetFeatureFlags(featureFlags)
+	return o
+}
+
+// SetFeatureFlags adds the featureFlags to the get site params
+func (o *GetSiteParams) SetFeatureFlags(featureFlags *string) {
+	o.FeatureFlags = featureFlags
+}
+
 // WithSiteID adds the siteID to the get site params
 func (o *GetSiteParams) WithSiteID(siteID string) *GetSiteParams {
 	o.SetSiteID(siteID)
@@ -120,6 +133,22 @@ func (o *GetSiteParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Regis
 		return err
 	}
 	var res []error
+
+	if o.FeatureFlags != nil {
+
+		// query param feature_flags
+		var qrFeatureFlags string
+		if o.FeatureFlags != nil {
+			qrFeatureFlags = *o.FeatureFlags
+		}
+		qFeatureFlags := qrFeatureFlags
+		if qFeatureFlags != "" {
+			if err := r.SetQueryParam("feature_flags", qFeatureFlags); err != nil {
+				return err
+			}
+		}
+
+	}
 
 	// path param site_id
 	if err := r.SetPathParam("site_id", o.SiteID); err != nil {
