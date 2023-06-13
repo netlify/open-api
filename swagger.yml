@@ -2951,6 +2951,8 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/functionSchedule'
+      netlify_toml:
+        type: object
   deployFiles:
     type: object
     properties:
