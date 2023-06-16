@@ -46,8 +46,7 @@ func NewDeleteDeployNoContent() *DeleteDeployNoContent {
 	return &DeleteDeployNoContent{}
 }
 
-/*
-DeleteDeployNoContent handles this case with default header values.
+/*DeleteDeployNoContent handles this case with default header values.
 
 No content
 */
@@ -70,8 +69,7 @@ func NewDeleteDeployDefault(code int) *DeleteDeployDefault {
 	}
 }
 
-/*
-DeleteDeployDefault handles this case with default header values.
+/*DeleteDeployDefault handles this case with default header values.
 
 error
 */

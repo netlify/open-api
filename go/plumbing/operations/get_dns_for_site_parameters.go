@@ -55,8 +55,7 @@ func NewGetDNSForSiteParamsWithHTTPClient(client *http.Client) *GetDNSForSitePar
 	}
 }
 
-/*
-GetDNSForSiteParams contains all the parameters to send to the API endpoint
+/*GetDNSForSiteParams contains all the parameters to send to the API endpoint
 for the get DNS for site operation typically these are written to a http.Request
 */
 type GetDNSForSiteParams struct {

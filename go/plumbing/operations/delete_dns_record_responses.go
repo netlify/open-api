@@ -46,8 +46,7 @@ func NewDeleteDNSRecordNoContent() *DeleteDNSRecordNoContent {
 	return &DeleteDNSRecordNoContent{}
 }
 
-/*
-DeleteDNSRecordNoContent handles this case with default header values.
+/*DeleteDNSRecordNoContent handles this case with default header values.
 
 record deleted
 */
@@ -70,8 +69,7 @@ func NewDeleteDNSRecordDefault(code int) *DeleteDNSRecordDefault {
 	}
 }
 
-/*
-DeleteDNSRecordDefault handles this case with default header values.
+/*DeleteDNSRecordDefault handles this case with default header values.
 
 error
 */

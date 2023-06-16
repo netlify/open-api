@@ -46,8 +46,7 @@ func NewGetSiteMetadataOK() *GetSiteMetadataOK {
 	return &GetSiteMetadataOK{}
 }
 
-/*
-GetSiteMetadataOK handles this case with default header values.
+/*GetSiteMetadataOK handles this case with default header values.
 
 OK
 */
@@ -80,8 +79,7 @@ func NewGetSiteMetadataDefault(code int) *GetSiteMetadataDefault {
 	}
 }
 
-/*
-GetSiteMetadataDefault handles this case with default header values.
+/*GetSiteMetadataDefault handles this case with default header values.
 
 error
 */

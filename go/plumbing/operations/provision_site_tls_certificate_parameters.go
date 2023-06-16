@@ -55,8 +55,7 @@ func NewProvisionSiteTLSCertificateParamsWithHTTPClient(client *http.Client) *Pr
 	}
 }
 
-/*
-ProvisionSiteTLSCertificateParams contains all the parameters to send to the API endpoint
+/*ProvisionSiteTLSCertificateParams contains all the parameters to send to the API endpoint
 for the provision site TLS certificate operation typically these are written to a http.Request
 */
 type ProvisionSiteTLSCertificateParams struct {

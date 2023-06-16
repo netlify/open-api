@@ -46,8 +46,7 @@ func NewGetServicesOK() *GetServicesOK {
 	return &GetServicesOK{}
 }
 
-/*
-GetServicesOK handles this case with default header values.
+/*GetServicesOK handles this case with default header values.
 
 services
 */
@@ -80,8 +79,7 @@ func NewGetServicesDefault(code int) *GetServicesDefault {
 	}
 }
 
-/*
-GetServicesDefault handles this case with default header values.
+/*GetServicesDefault handles this case with default header values.
 
 error
 */

@@ -55,8 +55,7 @@ func NewListPaymentMethodsForUserParamsWithHTTPClient(client *http.Client) *List
 	}
 }
 
-/*
-ListPaymentMethodsForUserParams contains all the parameters to send to the API endpoint
+/*ListPaymentMethodsForUserParams contains all the parameters to send to the API endpoint
 for the list payment methods for user operation typically these are written to a http.Request
 */
 type ListPaymentMethodsForUserParams struct {

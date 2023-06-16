@@ -55,8 +55,7 @@ func NewTransferDNSZoneParamsWithHTTPClient(client *http.Client) *TransferDNSZon
 	}
 }
 
-/*
-TransferDNSZoneParams contains all the parameters to send to the API endpoint
+/*TransferDNSZoneParams contains all the parameters to send to the API endpoint
 for the transfer Dns zone operation typically these are written to a http.Request
 */
 type TransferDNSZoneParams struct {

@@ -46,8 +46,7 @@ func NewEnableHookOK() *EnableHookOK {
 	return &EnableHookOK{}
 }
 
-/*
-EnableHookOK handles this case with default header values.
+/*EnableHookOK handles this case with default header values.
 
 OK
 */
@@ -82,8 +81,7 @@ func NewEnableHookDefault(code int) *EnableHookDefault {
 	}
 }
 
-/*
-EnableHookDefault handles this case with default header values.
+/*EnableHookDefault handles this case with default header values.
 
 error
 */

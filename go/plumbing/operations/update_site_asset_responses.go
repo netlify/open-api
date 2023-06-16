@@ -46,8 +46,7 @@ func NewUpdateSiteAssetOK() *UpdateSiteAssetOK {
 	return &UpdateSiteAssetOK{}
 }
 
-/*
-UpdateSiteAssetOK handles this case with default header values.
+/*UpdateSiteAssetOK handles this case with default header values.
 
 Updated
 */
@@ -82,8 +81,7 @@ func NewUpdateSiteAssetDefault(code int) *UpdateSiteAssetDefault {
 	}
 }
 
-/*
-UpdateSiteAssetDefault handles this case with default header values.
+/*UpdateSiteAssetDefault handles this case with default header values.
 
 error
 */

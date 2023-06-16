@@ -46,8 +46,7 @@ func NewListAccountsForUserOK() *ListAccountsForUserOK {
 	return &ListAccountsForUserOK{}
 }
 
-/*
-ListAccountsForUserOK handles this case with default header values.
+/*ListAccountsForUserOK handles this case with default header values.
 
 OK
 */
@@ -80,8 +79,7 @@ func NewListAccountsForUserDefault(code int) *ListAccountsForUserDefault {
 	}
 }
 
-/*
-ListAccountsForUserDefault handles this case with default header values.
+/*ListAccountsForUserDefault handles this case with default header values.
 
 error
 */

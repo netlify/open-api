@@ -55,8 +55,7 @@ func NewRemoveAccountMemberParamsWithHTTPClient(client *http.Client) *RemoveAcco
 	}
 }
 
-/*
-RemoveAccountMemberParams contains all the parameters to send to the API endpoint
+/*RemoveAccountMemberParams contains all the parameters to send to the API endpoint
 for the remove account member operation typically these are written to a http.Request
 */
 type RemoveAccountMemberParams struct {

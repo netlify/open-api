@@ -46,8 +46,7 @@ func NewGetSiteAssetPublicSignatureOK() *GetSiteAssetPublicSignatureOK {
 	return &GetSiteAssetPublicSignatureOK{}
 }
 
-/*
-GetSiteAssetPublicSignatureOK handles this case with default header values.
+/*GetSiteAssetPublicSignatureOK handles this case with default header values.
 
 OK
 */
@@ -82,8 +81,7 @@ func NewGetSiteAssetPublicSignatureDefault(code int) *GetSiteAssetPublicSignatur
 	}
 }
 
-/*
-GetSiteAssetPublicSignatureDefault handles this case with default header values.
+/*GetSiteAssetPublicSignatureDefault handles this case with default header values.
 
 error
 */

@@ -46,8 +46,7 @@ func NewGetSiteAssetInfoOK() *GetSiteAssetInfoOK {
 	return &GetSiteAssetInfoOK{}
 }
 
-/*
-GetSiteAssetInfoOK handles this case with default header values.
+/*GetSiteAssetInfoOK handles this case with default header values.
 
 OK
 */
@@ -82,8 +81,7 @@ func NewGetSiteAssetInfoDefault(code int) *GetSiteAssetInfoDefault {
 	}
 }
 
-/*
-GetSiteAssetInfoDefault handles this case with default header values.
+/*GetSiteAssetInfoDefault handles this case with default header values.
 
 error
 */

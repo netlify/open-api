@@ -46,8 +46,7 @@ func NewGetSiteFileByPathNameOK() *GetSiteFileByPathNameOK {
 	return &GetSiteFileByPathNameOK{}
 }
 
-/*
-GetSiteFileByPathNameOK handles this case with default header values.
+/*GetSiteFileByPathNameOK handles this case with default header values.
 
 OK
 */
@@ -82,8 +81,7 @@ func NewGetSiteFileByPathNameDefault(code int) *GetSiteFileByPathNameDefault {
 	}
 }
 
-/*
-GetSiteFileByPathNameDefault handles this case with default header values.
+/*GetSiteFileByPathNameDefault handles this case with default header values.
 
 error
 */

@@ -46,8 +46,7 @@ func NewShowServiceManifestCreated() *ShowServiceManifestCreated {
 	return &ShowServiceManifestCreated{}
 }
 
-/*
-ShowServiceManifestCreated handles this case with default header values.
+/*ShowServiceManifestCreated handles this case with default header values.
 
 retrieving from provider
 */
@@ -80,8 +79,7 @@ func NewShowServiceManifestDefault(code int) *ShowServiceManifestDefault {
 	}
 }
 
-/*
-ShowServiceManifestDefault handles this case with default header values.
+/*ShowServiceManifestDefault handles this case with default header values.
 
 error
 */

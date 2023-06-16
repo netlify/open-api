@@ -46,8 +46,7 @@ func NewGetSiteSnippetOK() *GetSiteSnippetOK {
 	return &GetSiteSnippetOK{}
 }
 
-/*
-GetSiteSnippetOK handles this case with default header values.
+/*GetSiteSnippetOK handles this case with default header values.
 
 OK
 */
@@ -82,8 +81,7 @@ func NewGetSiteSnippetDefault(code int) *GetSiteSnippetDefault {
 	}
 }
 
-/*
-GetSiteSnippetDefault handles this case with default header values.
+/*GetSiteSnippetDefault handles this case with default header values.
 
 error
 */

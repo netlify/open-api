@@ -46,8 +46,7 @@ func NewConfigureDNSForSiteOK() *ConfigureDNSForSiteOK {
 	return &ConfigureDNSForSiteOK{}
 }
 
-/*
-ConfigureDNSForSiteOK handles this case with default header values.
+/*ConfigureDNSForSiteOK handles this case with default header values.
 
 OK
 */
@@ -80,8 +79,7 @@ func NewConfigureDNSForSiteDefault(code int) *ConfigureDNSForSiteDefault {
 	}
 }
 
-/*
-ConfigureDNSForSiteDefault handles this case with default header values.
+/*ConfigureDNSForSiteDefault handles this case with default header values.
 
 error
 */

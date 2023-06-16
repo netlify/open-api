@@ -46,8 +46,7 @@ func NewGetDeployOK() *GetDeployOK {
 	return &GetDeployOK{}
 }
 
-/*
-GetDeployOK handles this case with default header values.
+/*GetDeployOK handles this case with default header values.
 
 OK
 */
@@ -82,8 +81,7 @@ func NewGetDeployDefault(code int) *GetDeployDefault {
 	}
 }
 
-/*
-GetDeployDefault handles this case with default header values.
+/*GetDeployDefault handles this case with default header values.
 
 error
 */

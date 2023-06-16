@@ -55,8 +55,7 @@ func NewRollbackSiteDeployParamsWithHTTPClient(client *http.Client) *RollbackSit
 	}
 }
 
-/*
-RollbackSiteDeployParams contains all the parameters to send to the API endpoint
+/*RollbackSiteDeployParams contains all the parameters to send to the API endpoint
 for the rollback site deploy operation typically these are written to a http.Request
 */
 type RollbackSiteDeployParams struct {

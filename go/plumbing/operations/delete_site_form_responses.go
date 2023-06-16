@@ -46,8 +46,7 @@ func NewDeleteSiteFormNoContent() *DeleteSiteFormNoContent {
 	return &DeleteSiteFormNoContent{}
 }
 
-/*
-DeleteSiteFormNoContent handles this case with default header values.
+/*DeleteSiteFormNoContent handles this case with default header values.
 
 Deleted
 */
@@ -70,8 +69,7 @@ func NewDeleteSiteFormDefault(code int) *DeleteSiteFormDefault {
 	}
 }
 
-/*
-DeleteSiteFormDefault handles this case with default header values.
+/*DeleteSiteFormDefault handles this case with default header values.
 
 error
 */

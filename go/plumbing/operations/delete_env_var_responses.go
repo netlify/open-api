@@ -46,8 +46,7 @@ func NewDeleteEnvVarNoContent() *DeleteEnvVarNoContent {
 	return &DeleteEnvVarNoContent{}
 }
 
-/*
-DeleteEnvVarNoContent handles this case with default header values.
+/*DeleteEnvVarNoContent handles this case with default header values.
 
 No Content (success)
 */
@@ -70,8 +69,7 @@ func NewDeleteEnvVarDefault(code int) *DeleteEnvVarDefault {
 	}
 }
 
-/*
-DeleteEnvVarDefault handles this case with default header values.
+/*DeleteEnvVarDefault handles this case with default header values.
 
 error
 */

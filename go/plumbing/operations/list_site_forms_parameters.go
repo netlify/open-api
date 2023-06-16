@@ -55,8 +55,7 @@ func NewListSiteFormsParamsWithHTTPClient(client *http.Client) *ListSiteFormsPar
 	}
 }
 
-/*
-ListSiteFormsParams contains all the parameters to send to the API endpoint
+/*ListSiteFormsParams contains all the parameters to send to the API endpoint
 for the list site forms operation typically these are written to a http.Request
 */
 type ListSiteFormsParams struct {

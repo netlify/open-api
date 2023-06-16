@@ -46,8 +46,7 @@ func NewCreateSplitTestCreated() *CreateSplitTestCreated {
 	return &CreateSplitTestCreated{}
 }
 
-/*
-CreateSplitTestCreated handles this case with default header values.
+/*CreateSplitTestCreated handles this case with default header values.
 
 Created
 */
@@ -82,8 +81,7 @@ func NewCreateSplitTestDefault(code int) *CreateSplitTestDefault {
 	}
 }
 
-/*
-CreateSplitTestDefault handles this case with default header values.
+/*CreateSplitTestDefault handles this case with default header values.
 
 error
 */

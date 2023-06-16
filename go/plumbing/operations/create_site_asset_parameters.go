@@ -56,8 +56,7 @@ func NewCreateSiteAssetParamsWithHTTPClient(client *http.Client) *CreateSiteAsse
 	}
 }
 
-/*
-CreateSiteAssetParams contains all the parameters to send to the API endpoint
+/*CreateSiteAssetParams contains all the parameters to send to the API endpoint
 for the create site asset operation typically these are written to a http.Request
 */
 type CreateSiteAssetParams struct {

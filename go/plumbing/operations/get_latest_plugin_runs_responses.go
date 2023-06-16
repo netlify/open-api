@@ -46,8 +46,7 @@ func NewGetLatestPluginRunsOK() *GetLatestPluginRunsOK {
 	return &GetLatestPluginRunsOK{}
 }
 
-/*
-GetLatestPluginRunsOK handles this case with default header values.
+/*GetLatestPluginRunsOK handles this case with default header values.
 
 OK
 */
@@ -80,8 +79,7 @@ func NewGetLatestPluginRunsDefault(code int) *GetLatestPluginRunsDefault {
 	}
 }
 
-/*
-GetLatestPluginRunsDefault handles this case with default header values.
+/*GetLatestPluginRunsDefault handles this case with default header values.
 
 error
 */

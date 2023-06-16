@@ -55,8 +55,7 @@ func NewListSiteSnippetsParamsWithHTTPClient(client *http.Client) *ListSiteSnipp
 	}
 }
 
-/*
-ListSiteSnippetsParams contains all the parameters to send to the API endpoint
+/*ListSiteSnippetsParams contains all the parameters to send to the API endpoint
 for the list site snippets operation typically these are written to a http.Request
 */
 type ListSiteSnippetsParams struct {

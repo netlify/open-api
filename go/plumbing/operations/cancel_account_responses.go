@@ -46,8 +46,7 @@ func NewCancelAccountNoContent() *CancelAccountNoContent {
 	return &CancelAccountNoContent{}
 }
 
-/*
-CancelAccountNoContent handles this case with default header values.
+/*CancelAccountNoContent handles this case with default header values.
 
 Not Content
 */
@@ -70,8 +69,7 @@ func NewCancelAccountDefault(code int) *CancelAccountDefault {
 	}
 }
 
-/*
-CancelAccountDefault handles this case with default header values.
+/*CancelAccountDefault handles this case with default header values.
 
 error
 */

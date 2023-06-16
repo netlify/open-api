@@ -46,8 +46,7 @@ func NewCreateDeployKeyCreated() *CreateDeployKeyCreated {
 	return &CreateDeployKeyCreated{}
 }
 
-/*
-CreateDeployKeyCreated handles this case with default header values.
+/*CreateDeployKeyCreated handles this case with default header values.
 
 Created
 */
@@ -82,8 +81,7 @@ func NewCreateDeployKeyDefault(code int) *CreateDeployKeyDefault {
 	}
 }
 
-/*
-CreateDeployKeyDefault handles this case with default header values.
+/*CreateDeployKeyDefault handles this case with default header values.
 
 error
 */

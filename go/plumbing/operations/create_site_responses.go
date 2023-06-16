@@ -46,8 +46,7 @@ func NewCreateSiteCreated() *CreateSiteCreated {
 	return &CreateSiteCreated{}
 }
 
-/*
-CreateSiteCreated handles this case with default header values.
+/*CreateSiteCreated handles this case with default header values.
 
 Created
 */
@@ -82,8 +81,7 @@ func NewCreateSiteDefault(code int) *CreateSiteDefault {
 	}
 }
 
-/*
-CreateSiteDefault handles this case with default header values.
+/*CreateSiteDefault handles this case with default header values.
 
 error
 */

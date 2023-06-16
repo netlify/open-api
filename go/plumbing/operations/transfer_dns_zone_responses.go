@@ -46,8 +46,7 @@ func NewTransferDNSZoneOK() *TransferDNSZoneOK {
 	return &TransferDNSZoneOK{}
 }
 
-/*
-TransferDNSZoneOK handles this case with default header values.
+/*TransferDNSZoneOK handles this case with default header values.
 
 transfer a DNS zone to another account
 */
@@ -82,8 +81,7 @@ func NewTransferDNSZoneDefault(code int) *TransferDNSZoneDefault {
 	}
 }
 
-/*
-TransferDNSZoneDefault handles this case with default header values.
+/*TransferDNSZoneDefault handles this case with default header values.
 
 error
 */

@@ -46,8 +46,7 @@ func NewListSiteAssetsOK() *ListSiteAssetsOK {
 	return &ListSiteAssetsOK{}
 }
 
-/*
-ListSiteAssetsOK handles this case with default header values.
+/*ListSiteAssetsOK handles this case with default header values.
 
 OK
 */
@@ -80,8 +79,7 @@ func NewListSiteAssetsDefault(code int) *ListSiteAssetsDefault {
 	}
 }
 
-/*
-ListSiteAssetsDefault handles this case with default header values.
+/*ListSiteAssetsDefault handles this case with default header values.
 
 error
 */

@@ -46,8 +46,7 @@ func NewListHooksBySiteIDOK() *ListHooksBySiteIDOK {
 	return &ListHooksBySiteIDOK{}
 }
 
-/*
-ListHooksBySiteIDOK handles this case with default header values.
+/*ListHooksBySiteIDOK handles this case with default header values.
 
 OK
 */
@@ -80,8 +79,7 @@ func NewListHooksBySiteIDDefault(code int) *ListHooksBySiteIDDefault {
 	}
 }
 
-/*
-ListHooksBySiteIDDefault handles this case with default header values.
+/*ListHooksBySiteIDDefault handles this case with default header values.
 
 error
 */

@@ -58,8 +58,7 @@ func NewCreateSiteInTeamParamsWithHTTPClient(client *http.Client) *CreateSiteInT
 	}
 }
 
-/*
-CreateSiteInTeamParams contains all the parameters to send to the API endpoint
+/*CreateSiteInTeamParams contains all the parameters to send to the API endpoint
 for the create site in team operation typically these are written to a http.Request
 */
 type CreateSiteInTeamParams struct {

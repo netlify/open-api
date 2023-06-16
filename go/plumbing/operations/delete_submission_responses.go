@@ -46,8 +46,7 @@ func NewDeleteSubmissionNoContent() *DeleteSubmissionNoContent {
 	return &DeleteSubmissionNoContent{}
 }
 
-/*
-DeleteSubmissionNoContent handles this case with default header values.
+/*DeleteSubmissionNoContent handles this case with default header values.
 
 Deleted
 */
@@ -70,8 +69,7 @@ func NewDeleteSubmissionDefault(code int) *DeleteSubmissionDefault {
 	}
 }
 
-/*
-DeleteSubmissionDefault handles this case with default header values.
+/*DeleteSubmissionDefault handles this case with default header values.
 
 error
 */

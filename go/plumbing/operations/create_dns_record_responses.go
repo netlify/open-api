@@ -46,8 +46,7 @@ func NewCreateDNSRecordCreated() *CreateDNSRecordCreated {
 	return &CreateDNSRecordCreated{}
 }
 
-/*
-CreateDNSRecordCreated handles this case with default header values.
+/*CreateDNSRecordCreated handles this case with default header values.
 
 Created
 */
@@ -82,8 +81,7 @@ func NewCreateDNSRecordDefault(code int) *CreateDNSRecordDefault {
 	}
 }
 
-/*
-CreateDNSRecordDefault handles this case with default header values.
+/*CreateDNSRecordDefault handles this case with default header values.
 
 error
 */

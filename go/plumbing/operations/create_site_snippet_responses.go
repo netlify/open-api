@@ -46,8 +46,7 @@ func NewCreateSiteSnippetCreated() *CreateSiteSnippetCreated {
 	return &CreateSiteSnippetCreated{}
 }
 
-/*
-CreateSiteSnippetCreated handles this case with default header values.
+/*CreateSiteSnippetCreated handles this case with default header values.
 
 OK
 */
@@ -82,8 +81,7 @@ func NewCreateSiteSnippetDefault(code int) *CreateSiteSnippetDefault {
 	}
 }
 
-/*
-CreateSiteSnippetDefault handles this case with default header values.
+/*CreateSiteSnippetDefault handles this case with default header values.
 
 error
 */

@@ -46,8 +46,7 @@ func NewUpdateSiteBuildLogNoContent() *UpdateSiteBuildLogNoContent {
 	return &UpdateSiteBuildLogNoContent{}
 }
 
-/*
-UpdateSiteBuildLogNoContent handles this case with default header values.
+/*UpdateSiteBuildLogNoContent handles this case with default header values.
 
 No content
 */
@@ -70,8 +69,7 @@ func NewUpdateSiteBuildLogDefault(code int) *UpdateSiteBuildLogDefault {
 	}
 }
 
-/*
-UpdateSiteBuildLogDefault handles this case with default header values.
+/*UpdateSiteBuildLogDefault handles this case with default header values.
 
 error
 */

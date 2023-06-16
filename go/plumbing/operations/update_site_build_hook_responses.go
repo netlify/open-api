@@ -46,8 +46,7 @@ func NewUpdateSiteBuildHookNoContent() *UpdateSiteBuildHookNoContent {
 	return &UpdateSiteBuildHookNoContent{}
 }
 
-/*
-UpdateSiteBuildHookNoContent handles this case with default header values.
+/*UpdateSiteBuildHookNoContent handles this case with default header values.
 
 No content
 */
@@ -70,8 +69,7 @@ func NewUpdateSiteBuildHookDefault(code int) *UpdateSiteBuildHookDefault {
 	}
 }
 
-/*
-UpdateSiteBuildHookDefault handles this case with default header values.
+/*UpdateSiteBuildHookDefault handles this case with default header values.
 
 error
 */

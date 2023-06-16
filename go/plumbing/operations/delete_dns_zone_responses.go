@@ -46,8 +46,7 @@ func NewDeleteDNSZoneNoContent() *DeleteDNSZoneNoContent {
 	return &DeleteDNSZoneNoContent{}
 }
 
-/*
-DeleteDNSZoneNoContent handles this case with default header values.
+/*DeleteDNSZoneNoContent handles this case with default header values.
 
 delete a single DNS zone
 */
@@ -70,8 +69,7 @@ func NewDeleteDNSZoneDefault(code int) *DeleteDNSZoneDefault {
 	}
 }
 
-/*
-DeleteDNSZoneDefault handles this case with default header values.
+/*DeleteDNSZoneDefault handles this case with default header values.
 
 error
 */

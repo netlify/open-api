@@ -46,8 +46,7 @@ func NewUpdateSiteOK() *UpdateSiteOK {
 	return &UpdateSiteOK{}
 }
 
-/*
-UpdateSiteOK handles this case with default header values.
+/*UpdateSiteOK handles this case with default header values.
 
 OK
 */
@@ -82,8 +81,7 @@ func NewUpdateSiteDefault(code int) *UpdateSiteDefault {
 	}
 }
 
-/*
-UpdateSiteDefault handles this case with default header values.
+/*UpdateSiteDefault handles this case with default header values.
 
 error
 */

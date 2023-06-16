@@ -46,8 +46,7 @@ func NewCreateAccountCreated() *CreateAccountCreated {
 	return &CreateAccountCreated{}
 }
 
-/*
-CreateAccountCreated handles this case with default header values.
+/*CreateAccountCreated handles this case with default header values.
 
 Created
 */
@@ -82,8 +81,7 @@ func NewCreateAccountDefault(code int) *CreateAccountDefault {
 	}
 }
 
-/*
-CreateAccountDefault handles this case with default header values.
+/*CreateAccountDefault handles this case with default header values.
 
 error
 */

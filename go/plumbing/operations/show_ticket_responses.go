@@ -46,8 +46,7 @@ func NewShowTicketOK() *ShowTicketOK {
 	return &ShowTicketOK{}
 }
 
-/*
-ShowTicketOK handles this case with default header values.
+/*ShowTicketOK handles this case with default header values.
 
 ok
 */
@@ -82,8 +81,7 @@ func NewShowTicketDefault(code int) *ShowTicketDefault {
 	}
 }
 
-/*
-ShowTicketDefault handles this case with default header values.
+/*ShowTicketDefault handles this case with default header values.
 
 error
 */
