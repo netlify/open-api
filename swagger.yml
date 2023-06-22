@@ -280,6 +280,12 @@ paths:
                   type: array
                   items:
                     $ref: '#/definitions/envVarValue'
+                is_secret:
+                  type: boolean
+                  description: >-
+                    [Enterprise only] When true, values in all contexts except `dev` are obscured by asterisks 
+                    in the Netlify API, CLI, and UI. Secret values are unreadable outside of Netlify systems, 
+                    and are not able to be made un-secret. By default, environment variables are not secret.
         - name: account_id
           description: Scope response to account_id
           type: string
@@ -378,6 +384,12 @@ paths:
                 type: array
                 items:
                   $ref: '#/definitions/envVarValue'
+              is_secret:
+                type: boolean
+                description: >-
+                  [Enterprise only] When true, values in all contexts except `dev` are obscured by asterisks 
+                  in the Netlify API, CLI, and UI. Secret values are unreadable outside of Netlify systems, 
+                  and are not able to be made un-secret. By default, environment variables are not secret.
         - name: site_id
           description: 'If provided, update an environment variable set on this site'
           type: string
@@ -2722,6 +2734,12 @@ definitions:
           $ref: '#/definitions/envVarValue'
         description: An array of Value objects containing values and metadata
         x-faker: internet.password
+      is_secret:
+        type: boolean
+        description: >-
+          [Enterprise only] When true, values in all contexts except `dev` are obscured by asterisks 
+          in the Netlify API, CLI, and UI. Secret values are unreadable outside of Netlify systems, 
+          and are not able to be made un-secret. By default, environment variables are not secret.
       updated_at:
         type: string
         format: date-time

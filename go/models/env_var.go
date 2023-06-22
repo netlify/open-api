@@ -20,6 +20,9 @@ import (
 // swagger:model envVar
 type EnvVar struct {
 
+	// [Enterprise only] When true, values in all contexts except `dev` are obscured by asterisks  in the Netlify API, CLI, and UI. Secret values are unreadable outside of Netlify systems,  and are not able to be made un-secret. By default, environment variables are not secret.
+	IsSecret bool `json:"is_secret,omitempty"`
+
 	// The environment variable key, like ALGOLIA_ID (case-sensitive)
 	Key string `json:"key,omitempty"`
 

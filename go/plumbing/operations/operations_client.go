@@ -271,7 +271,7 @@ type ClientService interface {
 }
 
 /*
-AddMemberToAccount add member to account API
+  AddMemberToAccount add member to account API
 */
 func (a *Client) AddMemberToAccount(params *AddMemberToAccountParams, authInfo runtime.ClientAuthInfoWriter) (*AddMemberToAccountOK, error) {
 	// TODO: Validate the params before sending
@@ -305,7 +305,7 @@ func (a *Client) AddMemberToAccount(params *AddMemberToAccountParams, authInfo r
 }
 
 /*
-CancelAccount cancel account API
+  CancelAccount cancel account API
 */
 func (a *Client) CancelAccount(params *CancelAccountParams, authInfo runtime.ClientAuthInfoWriter) (*CancelAccountNoContent, error) {
 	// TODO: Validate the params before sending
@@ -339,7 +339,7 @@ func (a *Client) CancelAccount(params *CancelAccountParams, authInfo runtime.Cli
 }
 
 /*
-CancelSiteDeploy cancel site deploy API
+  CancelSiteDeploy cancel site deploy API
 */
 func (a *Client) CancelSiteDeploy(params *CancelSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*CancelSiteDeployCreated, error) {
 	// TODO: Validate the params before sending
@@ -373,7 +373,7 @@ func (a *Client) CancelSiteDeploy(params *CancelSiteDeployParams, authInfo runti
 }
 
 /*
-ConfigureDNSForSite configure DNS for site API
+  ConfigureDNSForSite configure DNS for site API
 */
 func (a *Client) ConfigureDNSForSite(params *ConfigureDNSForSiteParams, authInfo runtime.ClientAuthInfoWriter) (*ConfigureDNSForSiteOK, error) {
 	// TODO: Validate the params before sending
@@ -407,7 +407,7 @@ func (a *Client) ConfigureDNSForSite(params *ConfigureDNSForSiteParams, authInfo
 }
 
 /*
-CreateAccount create account API
+  CreateAccount create account API
 */
 func (a *Client) CreateAccount(params *CreateAccountParams, authInfo runtime.ClientAuthInfoWriter) (*CreateAccountCreated, error) {
 	// TODO: Validate the params before sending
@@ -441,7 +441,7 @@ func (a *Client) CreateAccount(params *CreateAccountParams, authInfo runtime.Cli
 }
 
 /*
-CreateDeployKey create deploy key API
+  CreateDeployKey create deploy key API
 */
 func (a *Client) CreateDeployKey(params *CreateDeployKeyParams, authInfo runtime.ClientAuthInfoWriter) (*CreateDeployKeyCreated, error) {
 	// TODO: Validate the params before sending
@@ -475,7 +475,7 @@ func (a *Client) CreateDeployKey(params *CreateDeployKeyParams, authInfo runtime
 }
 
 /*
-CreateDNSRecord create Dns record API
+  CreateDNSRecord create Dns record API
 */
 func (a *Client) CreateDNSRecord(params *CreateDNSRecordParams, authInfo runtime.ClientAuthInfoWriter) (*CreateDNSRecordCreated, error) {
 	// TODO: Validate the params before sending
@@ -509,7 +509,7 @@ func (a *Client) CreateDNSRecord(params *CreateDNSRecordParams, authInfo runtime
 }
 
 /*
-CreateDNSZone create Dns zone API
+  CreateDNSZone create Dns zone API
 */
 func (a *Client) CreateDNSZone(params *CreateDNSZoneParams, authInfo runtime.ClientAuthInfoWriter) (*CreateDNSZoneCreated, error) {
 	// TODO: Validate the params before sending
@@ -543,7 +543,7 @@ func (a *Client) CreateDNSZone(params *CreateDNSZoneParams, authInfo runtime.Cli
 }
 
 /*
-CreateEnvVars Creates new environment variables. Granular scopes are available on Pro plans and above.  To use this endpoint, your site must no longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
+  CreateEnvVars Creates new environment variables. Granular scopes are available on Pro plans and above.  To use this endpoint, your site must no longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
 */
 func (a *Client) CreateEnvVars(params *CreateEnvVarsParams, authInfo runtime.ClientAuthInfoWriter) (*CreateEnvVarsCreated, error) {
 	// TODO: Validate the params before sending
@@ -577,7 +577,7 @@ func (a *Client) CreateEnvVars(params *CreateEnvVarsParams, authInfo runtime.Cli
 }
 
 /*
-CreateHookBySiteID create hook by site Id API
+  CreateHookBySiteID create hook by site Id API
 */
 func (a *Client) CreateHookBySiteID(params *CreateHookBySiteIDParams, authInfo runtime.ClientAuthInfoWriter) (*CreateHookBySiteIDCreated, error) {
 	// TODO: Validate the params before sending
@@ -611,7 +611,7 @@ func (a *Client) CreateHookBySiteID(params *CreateHookBySiteIDParams, authInfo r
 }
 
 /*
-CreatePluginRun This is an internal-only endpoint.
+  CreatePluginRun This is an internal-only endpoint.
 */
 func (a *Client) CreatePluginRun(params *CreatePluginRunParams, authInfo runtime.ClientAuthInfoWriter) (*CreatePluginRunCreated, error) {
 	// TODO: Validate the params before sending
@@ -645,7 +645,7 @@ func (a *Client) CreatePluginRun(params *CreatePluginRunParams, authInfo runtime
 }
 
 /*
-CreateServiceInstance create service instance API
+  CreateServiceInstance create service instance API
 */
 func (a *Client) CreateServiceInstance(params *CreateServiceInstanceParams, authInfo runtime.ClientAuthInfoWriter) (*CreateServiceInstanceCreated, error) {
 	// TODO: Validate the params before sending
@@ -679,7 +679,7 @@ func (a *Client) CreateServiceInstance(params *CreateServiceInstanceParams, auth
 }
 
 /*
-CreateSite **Note:** Environment variable keys and values will soon be moved from `build_settings.env` and `repo.env` to a new endpoint. Please use [createEnvVars](#tag/environmentVariables/operation/createEnvVars) to create environment variables for a site.
+  CreateSite **Note:** Environment variable keys and values will soon be moved from `build_settings.env` and `repo.env` to a new endpoint. Please use [createEnvVars](#tag/environmentVariables/operation/createEnvVars) to create environment variables for a site.
 */
 func (a *Client) CreateSite(params *CreateSiteParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteCreated, error) {
 	// TODO: Validate the params before sending
@@ -713,7 +713,7 @@ func (a *Client) CreateSite(params *CreateSiteParams, authInfo runtime.ClientAut
 }
 
 /*
-CreateSiteAsset create site asset API
+  CreateSiteAsset create site asset API
 */
 func (a *Client) CreateSiteAsset(params *CreateSiteAssetParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteAssetCreated, error) {
 	// TODO: Validate the params before sending
@@ -747,7 +747,7 @@ func (a *Client) CreateSiteAsset(params *CreateSiteAssetParams, authInfo runtime
 }
 
 /*
-CreateSiteBuild create site build API
+  CreateSiteBuild create site build API
 */
 func (a *Client) CreateSiteBuild(params *CreateSiteBuildParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteBuildOK, error) {
 	// TODO: Validate the params before sending
@@ -781,7 +781,7 @@ func (a *Client) CreateSiteBuild(params *CreateSiteBuildParams, authInfo runtime
 }
 
 /*
-CreateSiteBuildHook create site build hook API
+  CreateSiteBuildHook create site build hook API
 */
 func (a *Client) CreateSiteBuildHook(params *CreateSiteBuildHookParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteBuildHookCreated, error) {
 	// TODO: Validate the params before sending
@@ -815,7 +815,7 @@ func (a *Client) CreateSiteBuildHook(params *CreateSiteBuildHookParams, authInfo
 }
 
 /*
-CreateSiteDeploy create site deploy API
+  CreateSiteDeploy create site deploy API
 */
 func (a *Client) CreateSiteDeploy(params *CreateSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteDeployOK, error) {
 	// TODO: Validate the params before sending
@@ -849,7 +849,7 @@ func (a *Client) CreateSiteDeploy(params *CreateSiteDeployParams, authInfo runti
 }
 
 /*
-CreateSiteInTeam **Note:** Environment variable keys and values will soon be moved from `build_settings.env` and `repo.env` to a new endpoint. Please use [createEnvVars](#tag/environmentVariables/operation/createEnvVars) to create environment variables for a site.
+  CreateSiteInTeam **Note:** Environment variable keys and values will soon be moved from `build_settings.env` and `repo.env` to a new endpoint. Please use [createEnvVars](#tag/environmentVariables/operation/createEnvVars) to create environment variables for a site.
 */
 func (a *Client) CreateSiteInTeam(params *CreateSiteInTeamParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteInTeamCreated, error) {
 	// TODO: Validate the params before sending
@@ -883,7 +883,7 @@ func (a *Client) CreateSiteInTeam(params *CreateSiteInTeamParams, authInfo runti
 }
 
 /*
-CreateSiteSnippet create site snippet API
+  CreateSiteSnippet create site snippet API
 */
 func (a *Client) CreateSiteSnippet(params *CreateSiteSnippetParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteSnippetCreated, error) {
 	// TODO: Validate the params before sending
@@ -917,7 +917,7 @@ func (a *Client) CreateSiteSnippet(params *CreateSiteSnippetParams, authInfo run
 }
 
 /*
-CreateSplitTest create split test API
+  CreateSplitTest create split test API
 */
 func (a *Client) CreateSplitTest(params *CreateSplitTestParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSplitTestCreated, error) {
 	// TODO: Validate the params before sending
@@ -951,7 +951,7 @@ func (a *Client) CreateSplitTest(params *CreateSplitTestParams, authInfo runtime
 }
 
 /*
-CreateTicket create ticket API
+  CreateTicket create ticket API
 */
 func (a *Client) CreateTicket(params *CreateTicketParams, authInfo runtime.ClientAuthInfoWriter) (*CreateTicketCreated, error) {
 	// TODO: Validate the params before sending
@@ -985,7 +985,7 @@ func (a *Client) CreateTicket(params *CreateTicketParams, authInfo runtime.Clien
 }
 
 /*
-DeleteDeploy delete deploy API
+  DeleteDeploy delete deploy API
 */
 func (a *Client) DeleteDeploy(params *DeleteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteDeployNoContent, error) {
 	// TODO: Validate the params before sending
@@ -1019,7 +1019,7 @@ func (a *Client) DeleteDeploy(params *DeleteDeployParams, authInfo runtime.Clien
 }
 
 /*
-DeleteDeployKey delete deploy key API
+  DeleteDeployKey delete deploy key API
 */
 func (a *Client) DeleteDeployKey(params *DeleteDeployKeyParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteDeployKeyNoContent, error) {
 	// TODO: Validate the params before sending
@@ -1053,7 +1053,7 @@ func (a *Client) DeleteDeployKey(params *DeleteDeployKeyParams, authInfo runtime
 }
 
 /*
-DeleteDNSRecord delete Dns record API
+  DeleteDNSRecord delete Dns record API
 */
 func (a *Client) DeleteDNSRecord(params *DeleteDNSRecordParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteDNSRecordNoContent, error) {
 	// TODO: Validate the params before sending
@@ -1087,7 +1087,7 @@ func (a *Client) DeleteDNSRecord(params *DeleteDNSRecordParams, authInfo runtime
 }
 
 /*
-DeleteDNSZone delete Dns zone API
+  DeleteDNSZone delete Dns zone API
 */
 func (a *Client) DeleteDNSZone(params *DeleteDNSZoneParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteDNSZoneNoContent, error) {
 	// TODO: Validate the params before sending
@@ -1121,7 +1121,7 @@ func (a *Client) DeleteDNSZone(params *DeleteDNSZoneParams, authInfo runtime.Cli
 }
 
 /*
-DeleteEnvVar Deletes an environment variable. To use this endpoint, your site must no longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
+  DeleteEnvVar Deletes an environment variable. To use this endpoint, your site must no longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
 */
 func (a *Client) DeleteEnvVar(params *DeleteEnvVarParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteEnvVarNoContent, error) {
 	// TODO: Validate the params before sending
@@ -1155,7 +1155,7 @@ func (a *Client) DeleteEnvVar(params *DeleteEnvVarParams, authInfo runtime.Clien
 }
 
 /*
-DeleteEnvVarValue Deletes a specific environment variable value. To use this endpoint, your site must no longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
+  DeleteEnvVarValue Deletes a specific environment variable value. To use this endpoint, your site must no longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
 */
 func (a *Client) DeleteEnvVarValue(params *DeleteEnvVarValueParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteEnvVarValueNoContent, error) {
 	// TODO: Validate the params before sending
@@ -1189,7 +1189,7 @@ func (a *Client) DeleteEnvVarValue(params *DeleteEnvVarValueParams, authInfo run
 }
 
 /*
-DeleteHook delete hook API
+  DeleteHook delete hook API
 */
 func (a *Client) DeleteHook(params *DeleteHookParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteHookNoContent, error) {
 	// TODO: Validate the params before sending
@@ -1224,7 +1224,7 @@ func (a *Client) DeleteHook(params *DeleteHookParams, authInfo runtime.ClientAut
 }
 
 /*
-DeleteServiceInstance delete service instance API
+  DeleteServiceInstance delete service instance API
 */
 func (a *Client) DeleteServiceInstance(params *DeleteServiceInstanceParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteServiceInstanceNoContent, error) {
 	// TODO: Validate the params before sending
@@ -1258,7 +1258,7 @@ func (a *Client) DeleteServiceInstance(params *DeleteServiceInstanceParams, auth
 }
 
 /*
-DeleteSite delete site API
+  DeleteSite delete site API
 */
 func (a *Client) DeleteSite(params *DeleteSiteParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSiteNoContent, error) {
 	// TODO: Validate the params before sending
@@ -1292,7 +1292,7 @@ func (a *Client) DeleteSite(params *DeleteSiteParams, authInfo runtime.ClientAut
 }
 
 /*
-DeleteSiteAsset delete site asset API
+  DeleteSiteAsset delete site asset API
 */
 func (a *Client) DeleteSiteAsset(params *DeleteSiteAssetParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSiteAssetNoContent, error) {
 	// TODO: Validate the params before sending
@@ -1326,7 +1326,7 @@ func (a *Client) DeleteSiteAsset(params *DeleteSiteAssetParams, authInfo runtime
 }
 
 /*
-DeleteSiteBuildHook delete site build hook API
+  DeleteSiteBuildHook delete site build hook API
 */
 func (a *Client) DeleteSiteBuildHook(params *DeleteSiteBuildHookParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSiteBuildHookNoContent, error) {
 	// TODO: Validate the params before sending
@@ -1360,7 +1360,7 @@ func (a *Client) DeleteSiteBuildHook(params *DeleteSiteBuildHookParams, authInfo
 }
 
 /*
-DeleteSiteDeploy delete site deploy API
+  DeleteSiteDeploy delete site deploy API
 */
 func (a *Client) DeleteSiteDeploy(params *DeleteSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSiteDeployNoContent, error) {
 	// TODO: Validate the params before sending
@@ -1394,7 +1394,7 @@ func (a *Client) DeleteSiteDeploy(params *DeleteSiteDeployParams, authInfo runti
 }
 
 /*
-DeleteSiteForm delete site form API
+  DeleteSiteForm delete site form API
 */
 func (a *Client) DeleteSiteForm(params *DeleteSiteFormParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSiteFormNoContent, error) {
 	// TODO: Validate the params before sending
@@ -1428,7 +1428,7 @@ func (a *Client) DeleteSiteForm(params *DeleteSiteFormParams, authInfo runtime.C
 }
 
 /*
-DeleteSiteSnippet delete site snippet API
+  DeleteSiteSnippet delete site snippet API
 */
 func (a *Client) DeleteSiteSnippet(params *DeleteSiteSnippetParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSiteSnippetNoContent, error) {
 	// TODO: Validate the params before sending
@@ -1462,7 +1462,7 @@ func (a *Client) DeleteSiteSnippet(params *DeleteSiteSnippetParams, authInfo run
 }
 
 /*
-DeleteSubmission delete submission API
+  DeleteSubmission delete submission API
 */
 func (a *Client) DeleteSubmission(params *DeleteSubmissionParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSubmissionNoContent, error) {
 	// TODO: Validate the params before sending
@@ -1496,7 +1496,7 @@ func (a *Client) DeleteSubmission(params *DeleteSubmissionParams, authInfo runti
 }
 
 /*
-DisableSplitTest disable split test API
+  DisableSplitTest disable split test API
 */
 func (a *Client) DisableSplitTest(params *DisableSplitTestParams, authInfo runtime.ClientAuthInfoWriter) (*DisableSplitTestNoContent, error) {
 	// TODO: Validate the params before sending
@@ -1530,7 +1530,7 @@ func (a *Client) DisableSplitTest(params *DisableSplitTestParams, authInfo runti
 }
 
 /*
-EnableHook enable hook API
+  EnableHook enable hook API
 */
 func (a *Client) EnableHook(params *EnableHookParams, authInfo runtime.ClientAuthInfoWriter) (*EnableHookOK, error) {
 	// TODO: Validate the params before sending
@@ -1564,7 +1564,7 @@ func (a *Client) EnableHook(params *EnableHookParams, authInfo runtime.ClientAut
 }
 
 /*
-EnableSplitTest enable split test API
+  EnableSplitTest enable split test API
 */
 func (a *Client) EnableSplitTest(params *EnableSplitTestParams, authInfo runtime.ClientAuthInfoWriter) (*EnableSplitTestNoContent, error) {
 	// TODO: Validate the params before sending
@@ -1598,7 +1598,7 @@ func (a *Client) EnableSplitTest(params *EnableSplitTestParams, authInfo runtime
 }
 
 /*
-ExchangeTicket exchange ticket API
+  ExchangeTicket exchange ticket API
 */
 func (a *Client) ExchangeTicket(params *ExchangeTicketParams, authInfo runtime.ClientAuthInfoWriter) (*ExchangeTicketCreated, error) {
 	// TODO: Validate the params before sending
@@ -1632,7 +1632,7 @@ func (a *Client) ExchangeTicket(params *ExchangeTicketParams, authInfo runtime.C
 }
 
 /*
-GetAccount get account API
+  GetAccount get account API
 */
 func (a *Client) GetAccount(params *GetAccountParams, authInfo runtime.ClientAuthInfoWriter) (*GetAccountOK, error) {
 	// TODO: Validate the params before sending
@@ -1666,7 +1666,7 @@ func (a *Client) GetAccount(params *GetAccountParams, authInfo runtime.ClientAut
 }
 
 /*
-GetAccountBuildStatus get account build status API
+  GetAccountBuildStatus get account build status API
 */
 func (a *Client) GetAccountBuildStatus(params *GetAccountBuildStatusParams, authInfo runtime.ClientAuthInfoWriter) (*GetAccountBuildStatusOK, error) {
 	// TODO: Validate the params before sending
@@ -1700,7 +1700,7 @@ func (a *Client) GetAccountBuildStatus(params *GetAccountBuildStatusParams, auth
 }
 
 /*
-GetAccountMember get account member API
+  GetAccountMember get account member API
 */
 func (a *Client) GetAccountMember(params *GetAccountMemberParams, authInfo runtime.ClientAuthInfoWriter) (*GetAccountMemberOK, error) {
 	// TODO: Validate the params before sending
@@ -1734,7 +1734,7 @@ func (a *Client) GetAccountMember(params *GetAccountMemberParams, authInfo runti
 }
 
 /*
-GetCurrentUser get current user API
+  GetCurrentUser get current user API
 */
 func (a *Client) GetCurrentUser(params *GetCurrentUserParams, authInfo runtime.ClientAuthInfoWriter) (*GetCurrentUserOK, error) {
 	// TODO: Validate the params before sending
@@ -1768,7 +1768,7 @@ func (a *Client) GetCurrentUser(params *GetCurrentUserParams, authInfo runtime.C
 }
 
 /*
-GetDNSForSite get DNS for site API
+  GetDNSForSite get DNS for site API
 */
 func (a *Client) GetDNSForSite(params *GetDNSForSiteParams, authInfo runtime.ClientAuthInfoWriter) (*GetDNSForSiteOK, error) {
 	// TODO: Validate the params before sending
@@ -1802,7 +1802,7 @@ func (a *Client) GetDNSForSite(params *GetDNSForSiteParams, authInfo runtime.Cli
 }
 
 /*
-GetDeploy get deploy API
+  GetDeploy get deploy API
 */
 func (a *Client) GetDeploy(params *GetDeployParams, authInfo runtime.ClientAuthInfoWriter) (*GetDeployOK, error) {
 	// TODO: Validate the params before sending
@@ -1836,7 +1836,7 @@ func (a *Client) GetDeploy(params *GetDeployParams, authInfo runtime.ClientAuthI
 }
 
 /*
-GetDeployKey get deploy key API
+  GetDeployKey get deploy key API
 */
 func (a *Client) GetDeployKey(params *GetDeployKeyParams, authInfo runtime.ClientAuthInfoWriter) (*GetDeployKeyOK, error) {
 	// TODO: Validate the params before sending
@@ -1870,7 +1870,7 @@ func (a *Client) GetDeployKey(params *GetDeployKeyParams, authInfo runtime.Clien
 }
 
 /*
-GetDNSRecords get Dns records API
+  GetDNSRecords get Dns records API
 */
 func (a *Client) GetDNSRecords(params *GetDNSRecordsParams, authInfo runtime.ClientAuthInfoWriter) (*GetDNSRecordsOK, error) {
 	// TODO: Validate the params before sending
@@ -1904,7 +1904,7 @@ func (a *Client) GetDNSRecords(params *GetDNSRecordsParams, authInfo runtime.Cli
 }
 
 /*
-GetDNSZone get Dns zone API
+  GetDNSZone get Dns zone API
 */
 func (a *Client) GetDNSZone(params *GetDNSZoneParams, authInfo runtime.ClientAuthInfoWriter) (*GetDNSZoneOK, error) {
 	// TODO: Validate the params before sending
@@ -1938,7 +1938,7 @@ func (a *Client) GetDNSZone(params *GetDNSZoneParams, authInfo runtime.ClientAut
 }
 
 /*
-GetDNSZones get Dns zones API
+  GetDNSZones get Dns zones API
 */
 func (a *Client) GetDNSZones(params *GetDNSZonesParams, authInfo runtime.ClientAuthInfoWriter) (*GetDNSZonesOK, error) {
 	// TODO: Validate the params before sending
@@ -1972,7 +1972,7 @@ func (a *Client) GetDNSZones(params *GetDNSZonesParams, authInfo runtime.ClientA
 }
 
 /*
-GetEnvVar Returns an individual environment variable. To use this endpoint, your site must no longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
+  GetEnvVar Returns an individual environment variable. To use this endpoint, your site must no longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
 */
 func (a *Client) GetEnvVar(params *GetEnvVarParams, authInfo runtime.ClientAuthInfoWriter) (*GetEnvVarOK, error) {
 	// TODO: Validate the params before sending
@@ -2006,7 +2006,7 @@ func (a *Client) GetEnvVar(params *GetEnvVarParams, authInfo runtime.ClientAuthI
 }
 
 /*
-GetEnvVars Returns all environment variables for an account or site. An account corresponds to a team in the Netlify UI. To use this endpoint, your site must no longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
+  GetEnvVars Returns all environment variables for an account or site. An account corresponds to a team in the Netlify UI. To use this endpoint, your site must no longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
 */
 func (a *Client) GetEnvVars(params *GetEnvVarsParams, authInfo runtime.ClientAuthInfoWriter) (*GetEnvVarsOK, error) {
 	// TODO: Validate the params before sending
@@ -2040,7 +2040,7 @@ func (a *Client) GetEnvVars(params *GetEnvVarsParams, authInfo runtime.ClientAut
 }
 
 /*
-GetHook get hook API
+  GetHook get hook API
 */
 func (a *Client) GetHook(params *GetHookParams, authInfo runtime.ClientAuthInfoWriter) (*GetHookOK, error) {
 	// TODO: Validate the params before sending
@@ -2074,7 +2074,7 @@ func (a *Client) GetHook(params *GetHookParams, authInfo runtime.ClientAuthInfoW
 }
 
 /*
-GetIndividualDNSRecord get individual Dns record API
+  GetIndividualDNSRecord get individual Dns record API
 */
 func (a *Client) GetIndividualDNSRecord(params *GetIndividualDNSRecordParams, authInfo runtime.ClientAuthInfoWriter) (*GetIndividualDNSRecordOK, error) {
 	// TODO: Validate the params before sending
@@ -2108,7 +2108,7 @@ func (a *Client) GetIndividualDNSRecord(params *GetIndividualDNSRecordParams, au
 }
 
 /*
-GetLatestPluginRuns This is an internal-only endpoint.
+  GetLatestPluginRuns This is an internal-only endpoint.
 */
 func (a *Client) GetLatestPluginRuns(params *GetLatestPluginRunsParams, authInfo runtime.ClientAuthInfoWriter) (*GetLatestPluginRunsOK, error) {
 	// TODO: Validate the params before sending
@@ -2142,7 +2142,7 @@ func (a *Client) GetLatestPluginRuns(params *GetLatestPluginRunsParams, authInfo
 }
 
 /*
-GetServices get services API
+  GetServices get services API
 */
 func (a *Client) GetServices(params *GetServicesParams, authInfo runtime.ClientAuthInfoWriter) (*GetServicesOK, error) {
 	// TODO: Validate the params before sending
@@ -2176,7 +2176,7 @@ func (a *Client) GetServices(params *GetServicesParams, authInfo runtime.ClientA
 }
 
 /*
-GetSite **Note:** Environment variable keys and values will soon be moved from `build_settings.env` and `repo.env` to a new endpoint. Please use [getEnvVars](#tag/environmentVariables/operation/getEnvVars) to retrieve site environment variables.
+  GetSite **Note:** Environment variable keys and values will soon be moved from `build_settings.env` and `repo.env` to a new endpoint. Please use [getEnvVars](#tag/environmentVariables/operation/getEnvVars) to retrieve site environment variables.
 */
 func (a *Client) GetSite(params *GetSiteParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteOK, error) {
 	// TODO: Validate the params before sending
@@ -2210,7 +2210,7 @@ func (a *Client) GetSite(params *GetSiteParams, authInfo runtime.ClientAuthInfoW
 }
 
 /*
-GetSiteAssetInfo get site asset info API
+  GetSiteAssetInfo get site asset info API
 */
 func (a *Client) GetSiteAssetInfo(params *GetSiteAssetInfoParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteAssetInfoOK, error) {
 	// TODO: Validate the params before sending
@@ -2244,7 +2244,7 @@ func (a *Client) GetSiteAssetInfo(params *GetSiteAssetInfoParams, authInfo runti
 }
 
 /*
-GetSiteAssetPublicSignature get site asset public signature API
+  GetSiteAssetPublicSignature get site asset public signature API
 */
 func (a *Client) GetSiteAssetPublicSignature(params *GetSiteAssetPublicSignatureParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteAssetPublicSignatureOK, error) {
 	// TODO: Validate the params before sending
@@ -2278,7 +2278,7 @@ func (a *Client) GetSiteAssetPublicSignature(params *GetSiteAssetPublicSignature
 }
 
 /*
-GetSiteBuild get site build API
+  GetSiteBuild get site build API
 */
 func (a *Client) GetSiteBuild(params *GetSiteBuildParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteBuildOK, error) {
 	// TODO: Validate the params before sending
@@ -2312,7 +2312,7 @@ func (a *Client) GetSiteBuild(params *GetSiteBuildParams, authInfo runtime.Clien
 }
 
 /*
-GetSiteBuildHook get site build hook API
+  GetSiteBuildHook get site build hook API
 */
 func (a *Client) GetSiteBuildHook(params *GetSiteBuildHookParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteBuildHookOK, error) {
 	// TODO: Validate the params before sending
@@ -2346,7 +2346,7 @@ func (a *Client) GetSiteBuildHook(params *GetSiteBuildHookParams, authInfo runti
 }
 
 /*
-GetSiteDeploy get site deploy API
+  GetSiteDeploy get site deploy API
 */
 func (a *Client) GetSiteDeploy(params *GetSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteDeployOK, error) {
 	// TODO: Validate the params before sending
@@ -2380,7 +2380,7 @@ func (a *Client) GetSiteDeploy(params *GetSiteDeployParams, authInfo runtime.Cli
 }
 
 /*
-GetSiteFileByPathName get site file by path name API
+  GetSiteFileByPathName get site file by path name API
 */
 func (a *Client) GetSiteFileByPathName(params *GetSiteFileByPathNameParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteFileByPathNameOK, error) {
 	// TODO: Validate the params before sending
@@ -2414,7 +2414,7 @@ func (a *Client) GetSiteFileByPathName(params *GetSiteFileByPathNameParams, auth
 }
 
 /*
-GetSiteMetadata get site metadata API
+  GetSiteMetadata get site metadata API
 */
 func (a *Client) GetSiteMetadata(params *GetSiteMetadataParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteMetadataOK, error) {
 	// TODO: Validate the params before sending
@@ -2448,7 +2448,7 @@ func (a *Client) GetSiteMetadata(params *GetSiteMetadataParams, authInfo runtime
 }
 
 /*
-GetSiteSnippet get site snippet API
+  GetSiteSnippet get site snippet API
 */
 func (a *Client) GetSiteSnippet(params *GetSiteSnippetParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteSnippetOK, error) {
 	// TODO: Validate the params before sending
@@ -2482,7 +2482,7 @@ func (a *Client) GetSiteSnippet(params *GetSiteSnippetParams, authInfo runtime.C
 }
 
 /*
-GetSplitTest get split test API
+  GetSplitTest get split test API
 */
 func (a *Client) GetSplitTest(params *GetSplitTestParams, authInfo runtime.ClientAuthInfoWriter) (*GetSplitTestOK, error) {
 	// TODO: Validate the params before sending
@@ -2516,7 +2516,7 @@ func (a *Client) GetSplitTest(params *GetSplitTestParams, authInfo runtime.Clien
 }
 
 /*
-GetSplitTests get split tests API
+  GetSplitTests get split tests API
 */
 func (a *Client) GetSplitTests(params *GetSplitTestsParams, authInfo runtime.ClientAuthInfoWriter) (*GetSplitTestsOK, error) {
 	// TODO: Validate the params before sending
@@ -2550,7 +2550,7 @@ func (a *Client) GetSplitTests(params *GetSplitTestsParams, authInfo runtime.Cli
 }
 
 /*
-ListAccountAuditEvents list account audit events API
+  ListAccountAuditEvents list account audit events API
 */
 func (a *Client) ListAccountAuditEvents(params *ListAccountAuditEventsParams, authInfo runtime.ClientAuthInfoWriter) (*ListAccountAuditEventsOK, error) {
 	// TODO: Validate the params before sending
@@ -2584,7 +2584,7 @@ func (a *Client) ListAccountAuditEvents(params *ListAccountAuditEventsParams, au
 }
 
 /*
-ListAccountTypesForUser list account types for user API
+  ListAccountTypesForUser list account types for user API
 */
 func (a *Client) ListAccountTypesForUser(params *ListAccountTypesForUserParams, authInfo runtime.ClientAuthInfoWriter) (*ListAccountTypesForUserOK, error) {
 	// TODO: Validate the params before sending
@@ -2618,7 +2618,7 @@ func (a *Client) ListAccountTypesForUser(params *ListAccountTypesForUserParams, 
 }
 
 /*
-ListAccountsForUser list accounts for user API
+  ListAccountsForUser list accounts for user API
 */
 func (a *Client) ListAccountsForUser(params *ListAccountsForUserParams, authInfo runtime.ClientAuthInfoWriter) (*ListAccountsForUserOK, error) {
 	// TODO: Validate the params before sending
@@ -2652,7 +2652,7 @@ func (a *Client) ListAccountsForUser(params *ListAccountsForUserParams, authInfo
 }
 
 /*
-ListDeployKeys list deploy keys API
+  ListDeployKeys list deploy keys API
 */
 func (a *Client) ListDeployKeys(params *ListDeployKeysParams, authInfo runtime.ClientAuthInfoWriter) (*ListDeployKeysOK, error) {
 	// TODO: Validate the params before sending
@@ -2686,7 +2686,7 @@ func (a *Client) ListDeployKeys(params *ListDeployKeysParams, authInfo runtime.C
 }
 
 /*
-ListFormSubmission list form submission API
+  ListFormSubmission list form submission API
 */
 func (a *Client) ListFormSubmission(params *ListFormSubmissionParams, authInfo runtime.ClientAuthInfoWriter) (*ListFormSubmissionOK, error) {
 	// TODO: Validate the params before sending
@@ -2720,7 +2720,7 @@ func (a *Client) ListFormSubmission(params *ListFormSubmissionParams, authInfo r
 }
 
 /*
-ListFormSubmissions list form submissions API
+  ListFormSubmissions list form submissions API
 */
 func (a *Client) ListFormSubmissions(params *ListFormSubmissionsParams, authInfo runtime.ClientAuthInfoWriter) (*ListFormSubmissionsOK, error) {
 	// TODO: Validate the params before sending
@@ -2754,7 +2754,7 @@ func (a *Client) ListFormSubmissions(params *ListFormSubmissionsParams, authInfo
 }
 
 /*
-ListHookTypes list hook types API
+  ListHookTypes list hook types API
 */
 func (a *Client) ListHookTypes(params *ListHookTypesParams, authInfo runtime.ClientAuthInfoWriter) (*ListHookTypesOK, error) {
 	// TODO: Validate the params before sending
@@ -2788,7 +2788,7 @@ func (a *Client) ListHookTypes(params *ListHookTypesParams, authInfo runtime.Cli
 }
 
 /*
-ListHooksBySiteID list hooks by site Id API
+  ListHooksBySiteID list hooks by site Id API
 */
 func (a *Client) ListHooksBySiteID(params *ListHooksBySiteIDParams, authInfo runtime.ClientAuthInfoWriter) (*ListHooksBySiteIDOK, error) {
 	// TODO: Validate the params before sending
@@ -2822,7 +2822,7 @@ func (a *Client) ListHooksBySiteID(params *ListHooksBySiteIDParams, authInfo run
 }
 
 /*
-ListMembersForAccount list members for account API
+  ListMembersForAccount list members for account API
 */
 func (a *Client) ListMembersForAccount(params *ListMembersForAccountParams, authInfo runtime.ClientAuthInfoWriter) (*ListMembersForAccountOK, error) {
 	// TODO: Validate the params before sending
@@ -2856,7 +2856,7 @@ func (a *Client) ListMembersForAccount(params *ListMembersForAccountParams, auth
 }
 
 /*
-ListPaymentMethodsForUser list payment methods for user API
+  ListPaymentMethodsForUser list payment methods for user API
 */
 func (a *Client) ListPaymentMethodsForUser(params *ListPaymentMethodsForUserParams, authInfo runtime.ClientAuthInfoWriter) (*ListPaymentMethodsForUserOK, error) {
 	// TODO: Validate the params before sending
@@ -2890,7 +2890,7 @@ func (a *Client) ListPaymentMethodsForUser(params *ListPaymentMethodsForUserPara
 }
 
 /*
-ListServiceInstancesForSite list service instances for site API
+  ListServiceInstancesForSite list service instances for site API
 */
 func (a *Client) ListServiceInstancesForSite(params *ListServiceInstancesForSiteParams, authInfo runtime.ClientAuthInfoWriter) (*ListServiceInstancesForSiteOK, error) {
 	// TODO: Validate the params before sending
@@ -2924,7 +2924,7 @@ func (a *Client) ListServiceInstancesForSite(params *ListServiceInstancesForSite
 }
 
 /*
-ListSiteAssets list site assets API
+  ListSiteAssets list site assets API
 */
 func (a *Client) ListSiteAssets(params *ListSiteAssetsParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteAssetsOK, error) {
 	// TODO: Validate the params before sending
@@ -2958,7 +2958,7 @@ func (a *Client) ListSiteAssets(params *ListSiteAssetsParams, authInfo runtime.C
 }
 
 /*
-ListSiteBuildHooks list site build hooks API
+  ListSiteBuildHooks list site build hooks API
 */
 func (a *Client) ListSiteBuildHooks(params *ListSiteBuildHooksParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteBuildHooksOK, error) {
 	// TODO: Validate the params before sending
@@ -2992,7 +2992,7 @@ func (a *Client) ListSiteBuildHooks(params *ListSiteBuildHooksParams, authInfo r
 }
 
 /*
-ListSiteBuilds list site builds API
+  ListSiteBuilds list site builds API
 */
 func (a *Client) ListSiteBuilds(params *ListSiteBuildsParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteBuildsOK, error) {
 	// TODO: Validate the params before sending
@@ -3026,7 +3026,7 @@ func (a *Client) ListSiteBuilds(params *ListSiteBuildsParams, authInfo runtime.C
 }
 
 /*
-ListSiteDeployedBranches list site deployed branches API
+  ListSiteDeployedBranches list site deployed branches API
 */
 func (a *Client) ListSiteDeployedBranches(params *ListSiteDeployedBranchesParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteDeployedBranchesOK, error) {
 	// TODO: Validate the params before sending
@@ -3060,7 +3060,7 @@ func (a *Client) ListSiteDeployedBranches(params *ListSiteDeployedBranchesParams
 }
 
 /*
-ListSiteDeploys list site deploys API
+  ListSiteDeploys list site deploys API
 */
 func (a *Client) ListSiteDeploys(params *ListSiteDeploysParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteDeploysOK, error) {
 	// TODO: Validate the params before sending
@@ -3094,7 +3094,7 @@ func (a *Client) ListSiteDeploys(params *ListSiteDeploysParams, authInfo runtime
 }
 
 /*
-ListSiteFiles list site files API
+  ListSiteFiles list site files API
 */
 func (a *Client) ListSiteFiles(params *ListSiteFilesParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteFilesOK, error) {
 	// TODO: Validate the params before sending
@@ -3128,7 +3128,7 @@ func (a *Client) ListSiteFiles(params *ListSiteFilesParams, authInfo runtime.Cli
 }
 
 /*
-ListSiteForms list site forms API
+  ListSiteForms list site forms API
 */
 func (a *Client) ListSiteForms(params *ListSiteFormsParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteFormsOK, error) {
 	// TODO: Validate the params before sending
@@ -3162,7 +3162,7 @@ func (a *Client) ListSiteForms(params *ListSiteFormsParams, authInfo runtime.Cli
 }
 
 /*
-ListSiteSnippets list site snippets API
+  ListSiteSnippets list site snippets API
 */
 func (a *Client) ListSiteSnippets(params *ListSiteSnippetsParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteSnippetsOK, error) {
 	// TODO: Validate the params before sending
@@ -3196,7 +3196,7 @@ func (a *Client) ListSiteSnippets(params *ListSiteSnippetsParams, authInfo runti
 }
 
 /*
-ListSiteSubmissions list site submissions API
+  ListSiteSubmissions list site submissions API
 */
 func (a *Client) ListSiteSubmissions(params *ListSiteSubmissionsParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteSubmissionsOK, error) {
 	// TODO: Validate the params before sending
@@ -3230,7 +3230,7 @@ func (a *Client) ListSiteSubmissions(params *ListSiteSubmissionsParams, authInfo
 }
 
 /*
-ListSites **Note:** Environment variable keys and values will soon be moved from `build_settings.env` and `repo.env` to a new endpoint. Please use [getEnvVars](#tag/environmentVariables/operation/getEnvVars) to retrieve site environment variables.
+  ListSites **Note:** Environment variable keys and values will soon be moved from `build_settings.env` and `repo.env` to a new endpoint. Please use [getEnvVars](#tag/environmentVariables/operation/getEnvVars) to retrieve site environment variables.
 */
 func (a *Client) ListSites(params *ListSitesParams, authInfo runtime.ClientAuthInfoWriter) (*ListSitesOK, error) {
 	// TODO: Validate the params before sending
@@ -3264,7 +3264,7 @@ func (a *Client) ListSites(params *ListSitesParams, authInfo runtime.ClientAuthI
 }
 
 /*
-ListSitesForAccount **Note:** Environment variable keys and values will soon be moved from `build_settings.env` and `repo.env` to a new endpoint. Please use [getEnvVars](#tag/environmentVariables/operation/getEnvVars) to retrieve site environment variables.
+  ListSitesForAccount **Note:** Environment variable keys and values will soon be moved from `build_settings.env` and `repo.env` to a new endpoint. Please use [getEnvVars](#tag/environmentVariables/operation/getEnvVars) to retrieve site environment variables.
 */
 func (a *Client) ListSitesForAccount(params *ListSitesForAccountParams, authInfo runtime.ClientAuthInfoWriter) (*ListSitesForAccountOK, error) {
 	// TODO: Validate the params before sending
@@ -3298,7 +3298,7 @@ func (a *Client) ListSitesForAccount(params *ListSitesForAccountParams, authInfo
 }
 
 /*
-LockDeploy lock deploy API
+  LockDeploy lock deploy API
 */
 func (a *Client) LockDeploy(params *LockDeployParams, authInfo runtime.ClientAuthInfoWriter) (*LockDeployOK, error) {
 	// TODO: Validate the params before sending
@@ -3332,7 +3332,7 @@ func (a *Client) LockDeploy(params *LockDeployParams, authInfo runtime.ClientAut
 }
 
 /*
-NotifyBuildStart notify build start API
+  NotifyBuildStart notify build start API
 */
 func (a *Client) NotifyBuildStart(params *NotifyBuildStartParams, authInfo runtime.ClientAuthInfoWriter) (*NotifyBuildStartNoContent, error) {
 	// TODO: Validate the params before sending
@@ -3366,7 +3366,7 @@ func (a *Client) NotifyBuildStart(params *NotifyBuildStartParams, authInfo runti
 }
 
 /*
-ProvisionSiteTLSCertificate provision site TLS certificate API
+  ProvisionSiteTLSCertificate provision site TLS certificate API
 */
 func (a *Client) ProvisionSiteTLSCertificate(params *ProvisionSiteTLSCertificateParams, authInfo runtime.ClientAuthInfoWriter) (*ProvisionSiteTLSCertificateOK, error) {
 	// TODO: Validate the params before sending
@@ -3400,7 +3400,7 @@ func (a *Client) ProvisionSiteTLSCertificate(params *ProvisionSiteTLSCertificate
 }
 
 /*
-RemoveAccountMember remove account member API
+  RemoveAccountMember remove account member API
 */
 func (a *Client) RemoveAccountMember(params *RemoveAccountMemberParams, authInfo runtime.ClientAuthInfoWriter) (*RemoveAccountMemberNoContent, error) {
 	// TODO: Validate the params before sending
@@ -3434,7 +3434,7 @@ func (a *Client) RemoveAccountMember(params *RemoveAccountMemberParams, authInfo
 }
 
 /*
-RestoreSiteDeploy restore site deploy API
+  RestoreSiteDeploy restore site deploy API
 */
 func (a *Client) RestoreSiteDeploy(params *RestoreSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*RestoreSiteDeployCreated, error) {
 	// TODO: Validate the params before sending
@@ -3468,7 +3468,7 @@ func (a *Client) RestoreSiteDeploy(params *RestoreSiteDeployParams, authInfo run
 }
 
 /*
-RollbackSiteDeploy rollback site deploy API
+  RollbackSiteDeploy rollback site deploy API
 */
 func (a *Client) RollbackSiteDeploy(params *RollbackSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*RollbackSiteDeployNoContent, error) {
 	// TODO: Validate the params before sending
@@ -3502,7 +3502,7 @@ func (a *Client) RollbackSiteDeploy(params *RollbackSiteDeployParams, authInfo r
 }
 
 /*
-SetEnvVarValue Updates or creates a new value for an existing environment variable. To use this endpoint, your site must no longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
+  SetEnvVarValue Updates or creates a new value for an existing environment variable. To use this endpoint, your site must no longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
 */
 func (a *Client) SetEnvVarValue(params *SetEnvVarValueParams, authInfo runtime.ClientAuthInfoWriter) (*SetEnvVarValueCreated, error) {
 	// TODO: Validate the params before sending
@@ -3536,7 +3536,7 @@ func (a *Client) SetEnvVarValue(params *SetEnvVarValueParams, authInfo runtime.C
 }
 
 /*
-ShowService show service API
+  ShowService show service API
 */
 func (a *Client) ShowService(params *ShowServiceParams, authInfo runtime.ClientAuthInfoWriter) (*ShowServiceOK, error) {
 	// TODO: Validate the params before sending
@@ -3570,7 +3570,7 @@ func (a *Client) ShowService(params *ShowServiceParams, authInfo runtime.ClientA
 }
 
 /*
-ShowServiceInstance show service instance API
+  ShowServiceInstance show service instance API
 */
 func (a *Client) ShowServiceInstance(params *ShowServiceInstanceParams, authInfo runtime.ClientAuthInfoWriter) (*ShowServiceInstanceOK, error) {
 	// TODO: Validate the params before sending
@@ -3604,7 +3604,7 @@ func (a *Client) ShowServiceInstance(params *ShowServiceInstanceParams, authInfo
 }
 
 /*
-ShowServiceManifest show service manifest API
+  ShowServiceManifest show service manifest API
 */
 func (a *Client) ShowServiceManifest(params *ShowServiceManifestParams, authInfo runtime.ClientAuthInfoWriter) (*ShowServiceManifestCreated, error) {
 	// TODO: Validate the params before sending
@@ -3638,7 +3638,7 @@ func (a *Client) ShowServiceManifest(params *ShowServiceManifestParams, authInfo
 }
 
 /*
-ShowSiteTLSCertificate show site TLS certificate API
+  ShowSiteTLSCertificate show site TLS certificate API
 */
 func (a *Client) ShowSiteTLSCertificate(params *ShowSiteTLSCertificateParams, authInfo runtime.ClientAuthInfoWriter) (*ShowSiteTLSCertificateOK, error) {
 	// TODO: Validate the params before sending
@@ -3672,7 +3672,7 @@ func (a *Client) ShowSiteTLSCertificate(params *ShowSiteTLSCertificateParams, au
 }
 
 /*
-ShowTicket show ticket API
+  ShowTicket show ticket API
 */
 func (a *Client) ShowTicket(params *ShowTicketParams, authInfo runtime.ClientAuthInfoWriter) (*ShowTicketOK, error) {
 	// TODO: Validate the params before sending
@@ -3706,7 +3706,7 @@ func (a *Client) ShowTicket(params *ShowTicketParams, authInfo runtime.ClientAut
 }
 
 /*
-TransferDNSZone transfer Dns zone API
+  TransferDNSZone transfer Dns zone API
 */
 func (a *Client) TransferDNSZone(params *TransferDNSZoneParams, authInfo runtime.ClientAuthInfoWriter) (*TransferDNSZoneOK, error) {
 	// TODO: Validate the params before sending
@@ -3740,7 +3740,7 @@ func (a *Client) TransferDNSZone(params *TransferDNSZoneParams, authInfo runtime
 }
 
 /*
-	UnlinkSiteRepo [Beta] Unlinks the repo from the site.
+  UnlinkSiteRepo [Beta] Unlinks the repo from the site.
 
 This action will also:
 - Delete associated deploy keys
@@ -3780,7 +3780,7 @@ func (a *Client) UnlinkSiteRepo(params *UnlinkSiteRepoParams, authInfo runtime.C
 }
 
 /*
-UnlockDeploy unlock deploy API
+  UnlockDeploy unlock deploy API
 */
 func (a *Client) UnlockDeploy(params *UnlockDeployParams, authInfo runtime.ClientAuthInfoWriter) (*UnlockDeployOK, error) {
 	// TODO: Validate the params before sending
@@ -3814,7 +3814,7 @@ func (a *Client) UnlockDeploy(params *UnlockDeployParams, authInfo runtime.Clien
 }
 
 /*
-UpdateAccount update account API
+  UpdateAccount update account API
 */
 func (a *Client) UpdateAccount(params *UpdateAccountParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateAccountOK, error) {
 	// TODO: Validate the params before sending
@@ -3848,7 +3848,7 @@ func (a *Client) UpdateAccount(params *UpdateAccountParams, authInfo runtime.Cli
 }
 
 /*
-UpdateAccountMember update account member API
+  UpdateAccountMember update account member API
 */
 func (a *Client) UpdateAccountMember(params *UpdateAccountMemberParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateAccountMemberOK, error) {
 	// TODO: Validate the params before sending
@@ -3882,7 +3882,7 @@ func (a *Client) UpdateAccountMember(params *UpdateAccountMemberParams, authInfo
 }
 
 /*
-UpdateEnvVar Updates an existing environment variable and all of its values. Existing values will be replaced by values provided. To use this endpoint, your site must no longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
+  UpdateEnvVar Updates an existing environment variable and all of its values. Existing values will be replaced by values provided. To use this endpoint, your site must no longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
 */
 func (a *Client) UpdateEnvVar(params *UpdateEnvVarParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateEnvVarOK, error) {
 	// TODO: Validate the params before sending
@@ -3916,7 +3916,7 @@ func (a *Client) UpdateEnvVar(params *UpdateEnvVarParams, authInfo runtime.Clien
 }
 
 /*
-UpdateHook update hook API
+  UpdateHook update hook API
 */
 func (a *Client) UpdateHook(params *UpdateHookParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateHookOK, error) {
 	// TODO: Validate the params before sending
@@ -3950,7 +3950,7 @@ func (a *Client) UpdateHook(params *UpdateHookParams, authInfo runtime.ClientAut
 }
 
 /*
-UpdatePlugin This is an internal-only endpoint.
+  UpdatePlugin This is an internal-only endpoint.
 */
 func (a *Client) UpdatePlugin(params *UpdatePluginParams, authInfo runtime.ClientAuthInfoWriter) (*UpdatePluginOK, error) {
 	// TODO: Validate the params before sending
@@ -3984,7 +3984,7 @@ func (a *Client) UpdatePlugin(params *UpdatePluginParams, authInfo runtime.Clien
 }
 
 /*
-UpdateServiceInstance update service instance API
+  UpdateServiceInstance update service instance API
 */
 func (a *Client) UpdateServiceInstance(params *UpdateServiceInstanceParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateServiceInstanceNoContent, error) {
 	// TODO: Validate the params before sending
@@ -4018,7 +4018,7 @@ func (a *Client) UpdateServiceInstance(params *UpdateServiceInstanceParams, auth
 }
 
 /*
-UpdateSite **Note:** Environment variable keys and values will soon be moved from `build_settings.env` and `repo.env` to a new endpoint. Please use [updateEnvVar](#tag/environmentVariables/operation/updateEnvVar) to update a site's environment variables.
+  UpdateSite **Note:** Environment variable keys and values will soon be moved from `build_settings.env` and `repo.env` to a new endpoint. Please use [updateEnvVar](#tag/environmentVariables/operation/updateEnvVar) to update a site's environment variables.
 */
 func (a *Client) UpdateSite(params *UpdateSiteParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateSiteOK, error) {
 	// TODO: Validate the params before sending
@@ -4052,7 +4052,7 @@ func (a *Client) UpdateSite(params *UpdateSiteParams, authInfo runtime.ClientAut
 }
 
 /*
-UpdateSiteAsset update site asset API
+  UpdateSiteAsset update site asset API
 */
 func (a *Client) UpdateSiteAsset(params *UpdateSiteAssetParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateSiteAssetOK, error) {
 	// TODO: Validate the params before sending
@@ -4086,7 +4086,7 @@ func (a *Client) UpdateSiteAsset(params *UpdateSiteAssetParams, authInfo runtime
 }
 
 /*
-UpdateSiteBuildHook update site build hook API
+  UpdateSiteBuildHook update site build hook API
 */
 func (a *Client) UpdateSiteBuildHook(params *UpdateSiteBuildHookParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateSiteBuildHookNoContent, error) {
 	// TODO: Validate the params before sending
@@ -4120,7 +4120,7 @@ func (a *Client) UpdateSiteBuildHook(params *UpdateSiteBuildHookParams, authInfo
 }
 
 /*
-UpdateSiteBuildLog update site build log API
+  UpdateSiteBuildLog update site build log API
 */
 func (a *Client) UpdateSiteBuildLog(params *UpdateSiteBuildLogParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateSiteBuildLogNoContent, error) {
 	// TODO: Validate the params before sending
@@ -4154,7 +4154,7 @@ func (a *Client) UpdateSiteBuildLog(params *UpdateSiteBuildLogParams, authInfo r
 }
 
 /*
-UpdateSiteDeploy update site deploy API
+  UpdateSiteDeploy update site deploy API
 */
 func (a *Client) UpdateSiteDeploy(params *UpdateSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateSiteDeployOK, error) {
 	// TODO: Validate the params before sending
@@ -4188,7 +4188,7 @@ func (a *Client) UpdateSiteDeploy(params *UpdateSiteDeployParams, authInfo runti
 }
 
 /*
-UpdateSiteMetadata update site metadata API
+  UpdateSiteMetadata update site metadata API
 */
 func (a *Client) UpdateSiteMetadata(params *UpdateSiteMetadataParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateSiteMetadataNoContent, error) {
 	// TODO: Validate the params before sending
@@ -4222,7 +4222,7 @@ func (a *Client) UpdateSiteMetadata(params *UpdateSiteMetadataParams, authInfo r
 }
 
 /*
-UpdateSiteSnippet update site snippet API
+  UpdateSiteSnippet update site snippet API
 */
 func (a *Client) UpdateSiteSnippet(params *UpdateSiteSnippetParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateSiteSnippetNoContent, error) {
 	// TODO: Validate the params before sending
@@ -4256,7 +4256,7 @@ func (a *Client) UpdateSiteSnippet(params *UpdateSiteSnippetParams, authInfo run
 }
 
 /*
-UpdateSplitTest update split test API
+  UpdateSplitTest update split test API
 */
 func (a *Client) UpdateSplitTest(params *UpdateSplitTestParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateSplitTestCreated, error) {
 	// TODO: Validate the params before sending
@@ -4290,7 +4290,7 @@ func (a *Client) UpdateSplitTest(params *UpdateSplitTestParams, authInfo runtime
 }
 
 /*
-UploadDeployFile upload deploy file API
+  UploadDeployFile upload deploy file API
 */
 func (a *Client) UploadDeployFile(params *UploadDeployFileParams, authInfo runtime.ClientAuthInfoWriter) (*UploadDeployFileOK, error) {
 	// TODO: Validate the params before sending
@@ -4324,7 +4324,7 @@ func (a *Client) UploadDeployFile(params *UploadDeployFileParams, authInfo runti
 }
 
 /*
-UploadDeployFunction upload deploy function API
+  UploadDeployFunction upload deploy function API
 */
 func (a *Client) UploadDeployFunction(params *UploadDeployFunctionParams, authInfo runtime.ClientAuthInfoWriter) (*UploadDeployFunctionOK, error) {
 	// TODO: Validate the params before sending
