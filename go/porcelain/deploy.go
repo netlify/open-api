@@ -418,7 +418,7 @@ func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *depl
 	count := 0
 	for _, sha := range required {
 		if files, exist := files.Hashed[sha]; exist {
-			count = count + len(files)
+			count += len(files)
 		}
 	}
 
