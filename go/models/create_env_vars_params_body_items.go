@@ -20,7 +20,7 @@ import (
 // swagger:model createEnvVarsParamsBodyItems
 type CreateEnvVarsParamsBodyItems struct {
 
-	// [Enterprise only] When true, values in all contexts except `dev` are obscured by asterisks  in the Netlify API, CLI, and UI. Secret values are unreadable outside of Netlify systems,  and are not able to be made un-secret. By default, environment variables are not secret.
+	// Secret values are only readable by code running on Netlify’s systems.  With secrets, only the local development context values are readable from the UI, API, and CLI. By default, environment variable values are not secret. (Enterprise plans only)
 	IsSecret bool `json:"is_secret,omitempty"`
 
 	// The existing or new name of the key, if you wish to rename it (case-sensitive)

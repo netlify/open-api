@@ -283,9 +283,9 @@ paths:
                 is_secret:
                   type: boolean
                   description: >-
-                    [Enterprise only] When true, values in all contexts except `dev` are obscured by asterisks 
-                    in the Netlify API, CLI, and UI. Secret values are unreadable outside of Netlify systems, 
-                    and are not able to be made un-secret. By default, environment variables are not secret.
+                    Secret values are only readable by code running on Netlify’s systems. 
+                    With secrets, only the local development context values are readable from the UI, API, and CLI.
+                    By default, environment variable values are not secret. (Enterprise plans only)
         - name: account_id
           description: Scope response to account_id
           type: string
@@ -387,9 +387,9 @@ paths:
               is_secret:
                 type: boolean
                 description: >-
-                  [Enterprise only] When true, values in all contexts except `dev` are obscured by asterisks 
-                  in the Netlify API, CLI, and UI. Secret values are unreadable outside of Netlify systems, 
-                  and are not able to be made un-secret. By default, environment variables are not secret.
+                  Secret values are only readable by code running on Netlify’s systems. 
+                  With secrets, only the local development context values are readable from the UI, API, and CLI.
+                  By default, environment variable values are not secret. (Enterprise plans only)
         - name: site_id
           description: 'If provided, update an environment variable set on this site'
           type: string
@@ -2737,9 +2737,9 @@ definitions:
       is_secret:
         type: boolean
         description: >-
-          [Enterprise only] When true, values in all contexts except `dev` are obscured by asterisks 
-          in the Netlify API, CLI, and UI. Secret values are unreadable outside of Netlify systems, 
-          and are not able to be made un-secret. By default, environment variables are not secret.
+          Secret values are only readable by code running on Netlify’s systems. 
+          With secrets, only the local development context values are readable from the UI, API, and CLI.
+          By default, environment variable values are not secret. (Enterprise plans only)
       updated_at:
         type: string
         format: date-time
