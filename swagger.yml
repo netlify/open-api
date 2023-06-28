@@ -280,6 +280,12 @@ paths:
                   type: array
                   items:
                     $ref: '#/definitions/envVarValue'
+                is_secret:
+                  type: boolean
+                  description: >-
+                    Secret values are only readable by code running on Netlify’s systems. 
+                    With secrets, only the local development context values are readable from the UI, API, and CLI.
+                    By default, environment variable values are not secret. (Enterprise plans only)
         - name: account_id
           description: Scope response to account_id
           type: string
@@ -378,6 +384,12 @@ paths:
                 type: array
                 items:
                   $ref: '#/definitions/envVarValue'
+              is_secret:
+                type: boolean
+                description: >-
+                  Secret values are only readable by code running on Netlify’s systems. 
+                  With secrets, only the local development context values are readable from the UI, API, and CLI.
+                  By default, environment variable values are not secret. (Enterprise plans only)
         - name: site_id
           description: 'If provided, update an environment variable set on this site'
           type: string
@@ -2722,6 +2734,12 @@ definitions:
           $ref: '#/definitions/envVarValue'
         description: An array of Value objects containing values and metadata
         x-faker: internet.password
+      is_secret:
+        type: boolean
+        description: >-
+          Secret values are only readable by code running on Netlify’s systems. 
+          With secrets, only the local development context values are readable from the UI, API, and CLI.
+          By default, environment variable values are not secret. (Enterprise plans only)
       updated_at:
         type: string
         format: date-time
