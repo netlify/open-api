@@ -405,7 +405,6 @@ func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *depl
 	sharedErr := &uploadError{err: nil, mutex: &sync.Mutex{}}
 	sem := make(chan int, n.uploadLimit)
 	wg := &sync.WaitGroup{}
-	defer wg.Wait()
 
 	var required []string
 	switch t {
@@ -446,6 +445,8 @@ func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *depl
 			}
 		}
 	}
+
+	wg.Wait()
 
 	return sharedErr.err
 }
