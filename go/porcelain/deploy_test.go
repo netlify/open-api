@@ -291,6 +291,36 @@ func TestUploadFiles_Cancelation(t *testing.T) {
 	require.ErrorIs(t, err, gocontext.Canceled)
 }
 
+func TestUploadFiles_Errors(t *testing.T) {
+	ctx := gocontext.Background()
+
+	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, _ *http.Request) {
+		rw.WriteHeader(http.StatusInternalServerError)
+	}))
+	defer server.Close()
+
+	hu, _ := url.Parse(server.URL)
+	tr := apiClient.NewWithClient(hu.Host, "/api/v1", []string{"http"}, http.DefaultClient)
+	client := NewRetryable(tr, strfmt.Default, 1)
+	client.uploadLimit = 1
+	ctx = context.WithAuthInfo(ctx, apiClient.BearerToken("token"))
+
+	// Create some files to deploy
+	dir, err := ioutil.TempDir("", "deploy")
+	require.NoError(t, err)
+	defer os.RemoveAll(dir)
+	require.NoError(t, ioutil.WriteFile(filepath.Join(dir, "foo.html"), []byte("Hello"), 0644))
+
+	files, err := walk(dir, nil, false, false)
+	require.NoError(t, err)
+	d := &models.Deploy{}
+	for _, bundle := range files.Files {
+		d.Required = append(d.Required, bundle.Sum)
+	}
+	err = client.uploadFiles(ctx, d, files, nil, fileUpload, time.Minute)
+	require.Equal(t, err.Error(), "[PUT /deploys/{deploy_id}/files/{path}][500] uploadDeployFile default  &{Code:0 Message:}")
+}
+
 func TestUploadFiles_SkipEqualFiles(t *testing.T) {
 	ctx := gocontext.Background()
 
