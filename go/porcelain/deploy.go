@@ -538,10 +538,14 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 			context.GetLogger(ctx).WithError(operationError).Errorf("Failed to upload file %v", f.Name)
 			apiErr, ok := operationError.(apierrors.Error)
 
-			if ok && apiErr.Code() == 401 {
-				sharedErr.mutex.Lock()
-				sharedErr.err = operationError
-				sharedErr.mutex.Unlock()
+			if ok {
+				if apiErr.Code() == 401 {
+					sharedErr.mutex.Lock()
+					sharedErr.err = operationError
+					sharedErr.mutex.Unlock()
+				} else if apiErr.Code()/100 == 4 {
+					return nil
+				}
 			}
 		}
 
