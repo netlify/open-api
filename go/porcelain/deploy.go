@@ -543,7 +543,9 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 					sharedErr.mutex.Lock()
 					sharedErr.err = operationError
 					sharedErr.mutex.Unlock()
-				} else if apiErr.Code()/100 == 4 {
+				}
+
+				if apiErr.Code()/100 == 4 {
 					return nil
 				}
 			}
