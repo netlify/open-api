@@ -545,6 +545,7 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 					sharedErr.mutex.Unlock()
 				}
 
+				// TODO this changes retry behaviour for the fileUpload case as well. OK?
 				if apiErr.Code()/100 == 4 {
 					return nil
 				}
