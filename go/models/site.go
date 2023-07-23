@@ -94,6 +94,9 @@ type Site struct {
 	// published deploy
 	PublishedDeploy *Deploy `json:"published_deploy,omitempty"`
 
+	// repository settings
+	Repo *RepoInfo `json:"repo,omitempty"`
+
 	// screenshot url
 	ScreenshotURL string `json:"screenshot_url,omitempty"`
 
