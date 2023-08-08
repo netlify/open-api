@@ -3620,6 +3620,19 @@ definitions:
         type: string
       generator:
         type: string
+      routes:
+        type: array
+        items:
+          $ref: '#/definitions/functionRoute'      
+  functionRoute:
+    type: object
+    properties:
+      pattern:
+        type: string
+      literal:
+        type: string
+      expression:
+        type: string          
 parameters:
   page:
     type: integer
