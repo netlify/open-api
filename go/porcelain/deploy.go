@@ -793,10 +793,20 @@ func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer Dep
 			})
 		}
 
-		if function.DisplayName != "" || function.Generator != "" {
+		routes := make([]*models.FunctionRoute, len(function.Routes))
+		for i, route := range function.Routes {
+			routes[i] = &models.FunctionRoute{
+				Pattern:    route.Pattern,
+				Literal:    route.Literal,
+				Expression: route.Expression,
+			}
+		}
+
+		if function.DisplayName != "" || function.Generator != "" || len(routes) > 0 {
 			functionsConfig[file.Name] = models.FunctionConfig{
 				DisplayName: function.DisplayName,
 				Generator:   function.Generator,
+				Routes:      routes,
 			}
 		}
 
