@@ -480,7 +480,8 @@ func TestBundleWithManifest(t *testing.T) {
 					},
 					{
 						"pattern": "/products/:id",
-						"expression": "^/products/(.*)$"
+						"expression": "^/products/(.*)$",
+						"methods": ["GET", "POST"]
 					}
 				]
 			},
@@ -525,6 +526,7 @@ func TestBundleWithManifest(t *testing.T) {
 	assert.Equal(t, "/products/:id", helloJSConfig.Routes[1].Pattern)
 	assert.Empty(t, helloJSConfig.Routes[1].Literal)
 	assert.Equal(t, "^/products/(.*)$", helloJSConfig.Routes[1].Expression)
+	assert.Equal(t, []string{"GET", "POST"}, helloJSConfig.Routes[1].Methods)
 }
 
 func TestReadZipRuntime(t *testing.T) {

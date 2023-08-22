@@ -799,6 +799,7 @@ func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer Dep
 				Pattern:    route.Pattern,
 				Literal:    route.Literal,
 				Expression: route.Expression,
+				Methods:    route.Methods,
 			}
 		}
 
