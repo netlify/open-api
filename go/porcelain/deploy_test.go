@@ -287,7 +287,7 @@ func TestUploadFiles_Cancelation(t *testing.T) {
 	for _, bundle := range files.Files {
 		d.Required = append(d.Required, bundle.Sum)
 	}
-	err = client.uploadFiles(ctx, d, files, nil, fileUpload, time.Minute)
+	err = client.uploadFiles(ctx, d, files, nil, fileUpload, time.Minute, false)
 	require.ErrorIs(t, err, gocontext.Canceled)
 }
 
@@ -317,7 +317,7 @@ func TestUploadFiles_Errors(t *testing.T) {
 	for _, bundle := range files.Files {
 		d.Required = append(d.Required, bundle.Sum)
 	}
-	err = client.uploadFiles(ctx, d, files, nil, fileUpload, time.Minute)
+	err = client.uploadFiles(ctx, d, files, nil, fileUpload, time.Minute, false)
 	require.Equal(t, err.Error(), "[PUT /deploys/{deploy_id}/files/{path}][500] uploadDeployFile default  &{Code:0 Message:}")
 }
 
@@ -377,11 +377,11 @@ func TestUploadFiles_SkipEqualFiles(t *testing.T) {
 	d.Required = []string{files.Sums["a.html"]}
 	d.RequiredFunctions = []string{functions.Sums["a"]}
 
-	err = client.uploadFiles(ctx, d, files, nil, fileUpload, time.Minute)
+	err = client.uploadFiles(ctx, d, files, nil, fileUpload, time.Minute, false)
 	require.NoError(t, err)
 	assert.Equal(t, 1, serverRequests)
 
-	err = client.uploadFiles(ctx, d, functions, nil, functionUpload, time.Minute)
+	err = client.uploadFiles(ctx, d, functions, nil, functionUpload, time.Minute, false)
 	require.NoError(t, err)
 	assert.Equal(t, 2, serverRequests)
 }
@@ -437,7 +437,7 @@ func TestUploadFunctions_RetryCountHeader(t *testing.T) {
 		d.RequiredFunctions = append(d.RequiredFunctions, bundle.Sum)
 	}
 
-	require.NoError(t, client.uploadFiles(apiCtx, d, files, nil, functionUpload, time.Minute))
+	require.NoError(t, client.uploadFiles(apiCtx, d, files, nil, functionUpload, time.Minute, false))
 }
 
 func TestBundle(t *testing.T) {
