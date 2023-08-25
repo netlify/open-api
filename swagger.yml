@@ -3632,7 +3632,12 @@ definitions:
       literal:
         type: string
       expression:
-        type: string          
+        type: string    
+      methods:
+        type: array
+        items:
+          type: string
+          enum: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
 parameters:
   page:
     type: integer

@@ -6,8 +6,13 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"encoding/json"
+	"strconv"
+
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
+	"github.com/go-openapi/validate"
 )
 
 // FunctionRoute function route
@@ -21,12 +26,61 @@ type FunctionRoute struct {
 	// literal
 	Literal string `json:"literal,omitempty"`
 
+	// methods
+	Methods []string `json:"methods"`
+
 	// pattern
 	Pattern string `json:"pattern,omitempty"`
 }
 
 // Validate validates this function route
 func (m *FunctionRoute) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateMethods(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+var functionRouteMethodsItemsEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["GET","POST","PUT","PATCH","DELETE","OPTIONS"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		functionRouteMethodsItemsEnum = append(functionRouteMethodsItemsEnum, v)
+	}
+}
+
+func (m *FunctionRoute) validateMethodsItemsEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, functionRouteMethodsItemsEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *FunctionRoute) validateMethods(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Methods) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.Methods); i++ {
+
+		// value enum
+		if err := m.validateMethodsItemsEnum("methods"+"."+strconv.Itoa(i), "body", m.Methods[i]); err != nil {
+			return err
+		}
+
+	}
+
 	return nil
 }
 
