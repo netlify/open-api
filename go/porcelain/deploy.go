@@ -345,7 +345,7 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 		return deploy, nil
 	}
 
-	skipRetry := options.SkipRetry || false
+	skipRetry := options.SkipRetry
 
 	if err := n.uploadFiles(ctx, deploy, options.files, options.Observer, fileUpload, options.UploadTimeout, skipRetry); err != nil {
 		return nil, err
@@ -406,6 +406,7 @@ func (n *Netlify) WaitUntilDeployLive(ctx context.Context, d *models.Deploy) (*m
 
 func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *deployFiles, observer DeployObserver, t uploadType, timeout time.Duration, skipRetry bool) error {
 	sharedErr := &uploadError{err: nil, mutex: &sync.Mutex{}}
+	permanentErr := &backoff.PermanentError{Err: nil}
 	sem := make(chan int, n.uploadLimit)
 	wg := &sync.WaitGroup{}
 
@@ -434,7 +435,7 @@ func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *depl
 			select {
 			case sem <- 1:
 				wg.Add(1)
-				go n.uploadFile(ctx, d, file, observer, t, timeout, wg, sem, sharedErr, skipRetry)
+				go n.uploadFile(ctx, d, file, observer, t, timeout, wg, sem, sharedErr, permanentErr, skipRetry)
 			case <-ctx.Done():
 				log.Info("Context terminated, aborting file upload")
 				return errors.Wrap(ctx.Err(), "aborted file upload early")
@@ -454,7 +455,7 @@ func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *depl
 	return sharedErr.err
 }
 
-func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundle, c DeployObserver, t uploadType, timeout time.Duration, wg *sync.WaitGroup, sem chan int, sharedErr *uploadError, skipRetry bool) {
+func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundle, c DeployObserver, t uploadType, timeout time.Duration, wg *sync.WaitGroup, sem chan int, sharedErr *uploadError, permanentErr *backoff.PermanentError, skipRetry bool) {
 	defer func() {
 		wg.Done()
 		<-sem
@@ -549,10 +550,7 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 				}
 
 				if skipRetry && (apiErr.Code() == 400 || apiErr.Code() == 422) {
-					sharedErr.mutex.Lock()
-					sharedErr.err = operationError
-					sharedErr.mutex.Unlock()
-					return nil
+					operationError = permanentErr
 				}
 			}
 		}
