@@ -335,7 +335,7 @@ func TestUploadFiles400Errors(t *testing.T) {
 	ctx = context.WithAuthInfo(ctx, apiClient.BearerToken("token"))
 
 	d := &models.Deploy{}
-	err := client.uploadFiles(ctx, d, nil, nil, fileUpload, time.Minute, false)
+	err := client.uploadFiles(ctx, d, nil, nil, fileUpload, time.Minute, true)
 	require.Equal(t, err.Error(), "[PUT /deploys/{deploy_id}/files/{path}][422] uploadDeployFile default  &{Code:422 Message:}")
 }
 
