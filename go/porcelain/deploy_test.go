@@ -332,7 +332,7 @@ func TestUploadFiles400Errors(t *testing.T) {
 	tr := apiClient.NewWithClient(hu.Host, "/api/v1", []string{"http"}, http.DefaultClient)
 	client := NewRetryable(tr, strfmt.Default, 1)
 	client.uploadLimit = 1
-	ctx = context.WithAuthInfo(ctx, apiClient.BearerToken("token"))
+	ctx = context.WithAuthInfo(ctx, apiClient.BearerToken("bad"))
 
 	// Create some files to deploy
 	dir, err := ioutil.TempDir("", "deploy")
@@ -343,8 +343,11 @@ func TestUploadFiles400Errors(t *testing.T) {
 	files, err := walk(dir, nil, false, false)
 	require.NoError(t, err)
 	d := &models.Deploy{}
+	for _, bundle := range files.Files {
+		d.Required = append(d.Required, bundle.Sum)
+	}
 	err = client.uploadFiles(ctx, d, files, nil, fileUpload, time.Minute, true)
-	require.Equal(t, err.Error(), "[PUT /deploys/{deploy_id}/files/{path}][422] uploadDeployFile default  &{Code:422 Message:}")
+	require.Equal(t, err.Error(), "[PUT /deploys/{deploy_id}/files/{path}][401] uploadDeployFile default  &{Code:401 Message: Unauthorized}")
 }
 
 func TestUploadFiles_SkipEqualFiles(t *testing.T) {
