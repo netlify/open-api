@@ -541,14 +541,6 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 			context.GetLogger(ctx).WithError(operationError).Errorf("Failed to upload file %v", f.Name)
 			apiErr, ok := operationError.(apierrors.Error)
 
-			// In testing, we repeatedly get to this line, see "Failed to upload file", but no matter
-			// what we try, ok is always `false`, and the code we're trying to test gets skipped.
-			// There isn't a test case for the original code (the 401 error)
-
-			// The operation error we're receiving is "(*models.Error) is not supported by the TextConsumer, can be resolved by supporting TextUnmarshaler interface"
-			// which seems like a problem with how we're stubbing the response body from the server in the test,
-			// but it's similar to how it's stubbed in
-
 			if ok {
 				if apiErr.Code() == 401 {
 					sharedErr.mutex.Lock()
