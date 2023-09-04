@@ -1076,6 +1076,22 @@ paths:
             $ref: '#/definitions/deploy'
         default:
           $ref: '#/responses/error'
+  /deploys/{deploy_id}/ready:
+    post:
+      operationId: readyDeploy
+      tags: [deploy]
+      parameters:
+        - name: deploy_id
+          type: string
+          in: path
+          required: true
+      responses:
+        '201':
+          description: Ready
+          schema:
+            $ref: '#/definitions/deploy'
+        default:
+          $ref: '#/responses/error'
   /sites/{site_id}/builds:
     parameters:
       - name: site_id
