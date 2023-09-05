@@ -23,8 +23,8 @@ type RestoreSiteDeployReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *RestoreSiteDeployReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-	case 201:
-		result := NewRestoreSiteDeployCreated()
+	case 200:
+		result := NewRestoreSiteDeployOK()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -41,29 +41,29 @@ func (o *RestoreSiteDeployReader) ReadResponse(response runtime.ClientResponse, 
 	}
 }
 
-// NewRestoreSiteDeployCreated creates a RestoreSiteDeployCreated with default headers values
-func NewRestoreSiteDeployCreated() *RestoreSiteDeployCreated {
-	return &RestoreSiteDeployCreated{}
+// NewRestoreSiteDeployOK creates a RestoreSiteDeployOK with default headers values
+func NewRestoreSiteDeployOK() *RestoreSiteDeployOK {
+	return &RestoreSiteDeployOK{}
 }
 
 /*
-RestoreSiteDeployCreated handles this case with default header values.
+RestoreSiteDeployOK handles this case with default header values.
 
 Created
 */
-type RestoreSiteDeployCreated struct {
+type RestoreSiteDeployOK struct {
 	Payload *models.Deploy
 }
 
-func (o *RestoreSiteDeployCreated) Error() string {
-	return fmt.Sprintf("[POST /sites/{site_id}/deploys/{deploy_id}/restore][%d] restoreSiteDeployCreated  %+v", 201, o.Payload)
+func (o *RestoreSiteDeployOK) Error() string {
+	return fmt.Sprintf("[POST /sites/{site_id}/deploys/{deploy_id}/restore][%d] restoreSiteDeployOK  %+v", 200, o.Payload)
 }
 
-func (o *RestoreSiteDeployCreated) GetPayload() *models.Deploy {
+func (o *RestoreSiteDeployOK) GetPayload() *models.Deploy {
 	return o.Payload
 }
 
-func (o *RestoreSiteDeployCreated) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+func (o *RestoreSiteDeployOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	o.Payload = new(models.Deploy)
 

@@ -31,7 +31,7 @@ type ClientService interface {
 
 	CancelAccount(params *CancelAccountParams, authInfo runtime.ClientAuthInfoWriter) (*CancelAccountNoContent, error)
 
-	CancelSiteDeploy(params *CancelSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*CancelSiteDeployCreated, error)
+	CancelSiteDeploy(params *CancelSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*CancelSiteDeployOK, error)
 
 	ConfigureDNSForSite(params *ConfigureDNSForSiteParams, authInfo runtime.ClientAuthInfoWriter) (*ConfigureDNSForSiteOK, error)
 
@@ -211,11 +211,11 @@ type ClientService interface {
 
 	ProvisionSiteTLSCertificate(params *ProvisionSiteTLSCertificateParams, authInfo runtime.ClientAuthInfoWriter) (*ProvisionSiteTLSCertificateOK, error)
 
-	ReadyDeploy(params *ReadyDeployParams, authInfo runtime.ClientAuthInfoWriter) (*ReadyDeployCreated, error)
+	ReadyDeploy(params *ReadyDeployParams, authInfo runtime.ClientAuthInfoWriter) (*ReadyDeployOK, error)
 
 	RemoveAccountMember(params *RemoveAccountMemberParams, authInfo runtime.ClientAuthInfoWriter) (*RemoveAccountMemberNoContent, error)
 
-	RestoreSiteDeploy(params *RestoreSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*RestoreSiteDeployCreated, error)
+	RestoreSiteDeploy(params *RestoreSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*RestoreSiteDeployOK, error)
 
 	RollbackSiteDeploy(params *RollbackSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*RollbackSiteDeployNoContent, error)
 
@@ -343,7 +343,7 @@ func (a *Client) CancelAccount(params *CancelAccountParams, authInfo runtime.Cli
 /*
 CancelSiteDeploy cancel site deploy API
 */
-func (a *Client) CancelSiteDeploy(params *CancelSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*CancelSiteDeployCreated, error) {
+func (a *Client) CancelSiteDeploy(params *CancelSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*CancelSiteDeployOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewCancelSiteDeployParams()
@@ -365,7 +365,7 @@ func (a *Client) CancelSiteDeploy(params *CancelSiteDeployParams, authInfo runti
 	if err != nil {
 		return nil, err
 	}
-	success, ok := result.(*CancelSiteDeployCreated)
+	success, ok := result.(*CancelSiteDeployOK)
 	if ok {
 		return success, nil
 	}
@@ -3404,7 +3404,7 @@ func (a *Client) ProvisionSiteTLSCertificate(params *ProvisionSiteTLSCertificate
 /*
 ReadyDeploy ready deploy API
 */
-func (a *Client) ReadyDeploy(params *ReadyDeployParams, authInfo runtime.ClientAuthInfoWriter) (*ReadyDeployCreated, error) {
+func (a *Client) ReadyDeploy(params *ReadyDeployParams, authInfo runtime.ClientAuthInfoWriter) (*ReadyDeployOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewReadyDeployParams()
@@ -3426,7 +3426,7 @@ func (a *Client) ReadyDeploy(params *ReadyDeployParams, authInfo runtime.ClientA
 	if err != nil {
 		return nil, err
 	}
-	success, ok := result.(*ReadyDeployCreated)
+	success, ok := result.(*ReadyDeployOK)
 	if ok {
 		return success, nil
 	}
@@ -3472,7 +3472,7 @@ func (a *Client) RemoveAccountMember(params *RemoveAccountMemberParams, authInfo
 /*
 RestoreSiteDeploy restore site deploy API
 */
-func (a *Client) RestoreSiteDeploy(params *RestoreSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*RestoreSiteDeployCreated, error) {
+func (a *Client) RestoreSiteDeploy(params *RestoreSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*RestoreSiteDeployOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewRestoreSiteDeployParams()
@@ -3494,7 +3494,7 @@ func (a *Client) RestoreSiteDeploy(params *RestoreSiteDeployParams, authInfo run
 	if err != nil {
 		return nil, err
 	}
-	success, ok := result.(*RestoreSiteDeployCreated)
+	success, ok := result.(*RestoreSiteDeployOK)
 	if ok {
 		return success, nil
 	}

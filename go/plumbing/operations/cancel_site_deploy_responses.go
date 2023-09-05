@@ -23,8 +23,8 @@ type CancelSiteDeployReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *CancelSiteDeployReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-	case 201:
-		result := NewCancelSiteDeployCreated()
+	case 200:
+		result := NewCancelSiteDeployOK()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -41,29 +41,29 @@ func (o *CancelSiteDeployReader) ReadResponse(response runtime.ClientResponse, c
 	}
 }
 
-// NewCancelSiteDeployCreated creates a CancelSiteDeployCreated with default headers values
-func NewCancelSiteDeployCreated() *CancelSiteDeployCreated {
-	return &CancelSiteDeployCreated{}
+// NewCancelSiteDeployOK creates a CancelSiteDeployOK with default headers values
+func NewCancelSiteDeployOK() *CancelSiteDeployOK {
+	return &CancelSiteDeployOK{}
 }
 
 /*
-CancelSiteDeployCreated handles this case with default header values.
+CancelSiteDeployOK handles this case with default header values.
 
 Cancelled
 */
-type CancelSiteDeployCreated struct {
+type CancelSiteDeployOK struct {
 	Payload *models.Deploy
 }
 
-func (o *CancelSiteDeployCreated) Error() string {
-	return fmt.Sprintf("[POST /deploys/{deploy_id}/cancel][%d] cancelSiteDeployCreated  %+v", 201, o.Payload)
+func (o *CancelSiteDeployOK) Error() string {
+	return fmt.Sprintf("[POST /deploys/{deploy_id}/cancel][%d] cancelSiteDeployOK  %+v", 200, o.Payload)
 }
 
-func (o *CancelSiteDeployCreated) GetPayload() *models.Deploy {
+func (o *CancelSiteDeployOK) GetPayload() *models.Deploy {
 	return o.Payload
 }
 
-func (o *CancelSiteDeployCreated) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+func (o *CancelSiteDeployOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	o.Payload = new(models.Deploy)
 

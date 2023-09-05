@@ -23,8 +23,8 @@ type ReadyDeployReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *ReadyDeployReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-	case 201:
-		result := NewReadyDeployCreated()
+	case 200:
+		result := NewReadyDeployOK()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -41,29 +41,29 @@ func (o *ReadyDeployReader) ReadResponse(response runtime.ClientResponse, consum
 	}
 }
 
-// NewReadyDeployCreated creates a ReadyDeployCreated with default headers values
-func NewReadyDeployCreated() *ReadyDeployCreated {
-	return &ReadyDeployCreated{}
+// NewReadyDeployOK creates a ReadyDeployOK with default headers values
+func NewReadyDeployOK() *ReadyDeployOK {
+	return &ReadyDeployOK{}
 }
 
 /*
-ReadyDeployCreated handles this case with default header values.
+ReadyDeployOK handles this case with default header values.
 
 Ready
 */
-type ReadyDeployCreated struct {
+type ReadyDeployOK struct {
 	Payload *models.Deploy
 }
 
-func (o *ReadyDeployCreated) Error() string {
-	return fmt.Sprintf("[POST /deploys/{deploy_id}/ready][%d] readyDeployCreated  %+v", 201, o.Payload)
+func (o *ReadyDeployOK) Error() string {
+	return fmt.Sprintf("[POST /deploys/{deploy_id}/ready][%d] readyDeployOK  %+v", 200, o.Payload)
 }
 
-func (o *ReadyDeployCreated) GetPayload() *models.Deploy {
+func (o *ReadyDeployOK) GetPayload() *models.Deploy {
 	return o.Payload
 }
 
-func (o *ReadyDeployCreated) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+func (o *ReadyDeployOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	o.Payload = new(models.Deploy)
 
