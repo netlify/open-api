@@ -742,7 +742,7 @@ func bundle(ctx context.Context, functionDir string, observer DeployObserver) (*
 }
 
 func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer DeployObserver) (*deployFiles, []*models.FunctionSchedule, map[string]models.FunctionConfig, error) {
-	manifestBytes, err := ioutil.ReadAll(manifestFile)
+	manifestBytes, err := io.ReadAll(manifestFile)
 
 	if err != nil {
 		return nil, nil, nil, err
