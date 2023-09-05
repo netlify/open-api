@@ -1050,7 +1050,7 @@ paths:
           in: path
           required: true
       responses:
-        '201':
+        '200':
           description: Cancelled
           schema:
             $ref: '#/definitions/deploy'
@@ -1070,7 +1070,7 @@ paths:
           in: path
           required: true
       responses:
-        '201':
+        '200':
           description: Created
           schema:
             $ref: '#/definitions/deploy'
@@ -1086,7 +1086,7 @@ paths:
           in: path
           required: true
       responses:
-        '201':
+        '200':
           description: Ready
           schema:
             $ref: '#/definitions/deploy'
