@@ -21,7 +21,6 @@ import (
 	"time"
 
 	"github.com/cenkalti/backoff/v4"
-	apierrors "github.com/go-openapi/errors"
 	"github.com/pkg/errors"
 	"github.com/rsc/goversion/version"
 	"github.com/sirupsen/logrus"
@@ -98,6 +97,11 @@ type DeployOptions struct {
 	functions         *deployFiles
 	functionSchedules []*models.FunctionSchedule
 	functionsConfig   map[string]models.FunctionConfig
+}
+
+type deployApiError interface {
+	error
+	Code() int
 }
 
 type uploadError struct {
@@ -537,7 +541,7 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 
 		if operationError != nil {
 			context.GetLogger(ctx).WithError(operationError).Errorf("Failed to upload file %v", f.Name)
-			apiErr, ok := operationError.(apierrors.Error)
+			apiErr, ok := operationError.(deployApiError)
 
 			if ok && apiErr.Code() == 401 {
 				sharedErr.mutex.Lock()
