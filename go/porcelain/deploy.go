@@ -539,6 +539,7 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 
 		if operationError != nil {
 			context.GetLogger(ctx).WithError(operationError).Errorf("Failed to upload file %v", f.Name)
+
 			apiErr, ok := operationError.(apierrors.Error)
 
 			if ok {
