@@ -774,7 +774,7 @@ func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer Dep
 		meta := FunctionMetadata{
 			InvocationMode: function.InvocationMode,
 		}
-		file, err := newFunctionFile(function.Path, fileInfo, function.RuntimeVersion, function.RuntimeVersion, &meta, observer)
+		file, err := newFunctionFile(function.Path, fileInfo, function.Runtime, function.RuntimeVersion, &meta, observer)
 
 		if err != nil {
 			return nil, nil, nil, err

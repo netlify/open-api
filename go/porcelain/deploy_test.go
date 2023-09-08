@@ -523,7 +523,8 @@ func TestBundleWithManifest(t *testing.T) {
 	assert.Empty(t, functions.Files["hello-js-function-test"].FunctionMetadata.InvocationMode)
 	assert.Equal(t, "some-other-runtime", functions.Files["hello-py-function-test"].Runtime)
 	assert.Equal(t, "stream", functions.Files["hello-py-function-test"].FunctionMetadata.InvocationMode)
-	assert.Equal(t, "provided.al2", functions.Files["hello-go-function-test"].Runtime)
+	assert.Equal(t, "go", functions.Files["hello-go-function-test"].Runtime)
+	assert.Equal(t, "provided.al2", functions.Files["hello-go-function-test"].RuntimeVersion)
 
 	helloJSConfig := functionsConfig["hello-js-function-test"]
 
