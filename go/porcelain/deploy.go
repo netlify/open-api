@@ -869,10 +869,6 @@ func newFunctionFile(filePath string, i os.FileInfo, runtime string, runtimeVers
 			return nil, err
 		}
 
-		if runtime == "go" && file.RuntimeVersion != "" {
-			file.RuntimeVersion = "provided.al2"
-		}
-
 		if _, err = io.Copy(fileHeader, fileEntry); err != nil {
 			return nil, err
 		}
