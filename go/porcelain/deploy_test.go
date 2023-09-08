@@ -444,17 +444,19 @@ func TestBundle(t *testing.T) {
 	functions, schedules, functionsConfig, err := bundle(gocontext.Background(), "../internal/data", mockObserver{})
 
 	assert.Nil(t, err)
-	assert.Equal(t, 3, len(functions.Files))
+	assert.Equal(t, 4, len(functions.Files))
 	assert.Empty(t, schedules)
 	assert.Nil(t, functionsConfig)
 
 	jsFunction := functions.Files["hello-js-function-test"]
 	pyFunction := functions.Files["hello-py-function-test"]
 	rsFunction := functions.Files["hello-rs-function-test"]
+	goFunction := functions.Files["hello-go-function-test"]
 
 	assert.Equal(t, "js", jsFunction.Runtime)
 	assert.Equal(t, "py", pyFunction.Runtime)
 	assert.Equal(t, "rs", rsFunction.Runtime)
+	assert.Equal(t, "go", goFunction.Runtime)
 }
 
 func TestBundleWithManifest(t *testing.T) {
@@ -462,6 +464,7 @@ func TestBundleWithManifest(t *testing.T) {
 	basePath := path.Join(filepath.Dir(cwd), "internal", "data")
 	jsFunctionPath := strings.Replace(filepath.Join(basePath, "hello-js-function-test.zip"), "\\", "/", -1)
 	pyFunctionPath := strings.Replace(filepath.Join(basePath, "hello-py-function-test.zip"), "\\", "/", -1)
+	goFunctionPath := strings.Replace(filepath.Join(basePath, "hello-go-function-test.zip"), "\\", "/", -1)
 	manifestPath := path.Join(basePath, "manifest.json")
 	manifestFile := fmt.Sprintf(`{
 		"functions": [
@@ -491,12 +494,20 @@ func TestBundleWithManifest(t *testing.T) {
 				"mainFile": "/some/path/hello-py-function-test",
 				"name": "hello-py-function-test",
 				"invocationMode": "stream"
+			},
+			{
+				"path": "%s",
+				"runtime": "go",
+				"runtimeVersion": "provided.al2",
+				"mainFile": "/some/path/hello-go-function-test",
+				"name": "hello-go-function-test",
+				"invocationMode": "stream"
 			}
 		],
 		"version": 1
-	}`, jsFunctionPath, pyFunctionPath)
+	}`, jsFunctionPath, pyFunctionPath, goFunctionPath)
 
-	err := ioutil.WriteFile(manifestPath, []byte(manifestFile), 0644)
+	err := os.WriteFile(manifestPath, []byte(manifestFile), 0644)
 	defer os.Remove(manifestPath)
 	assert.Nil(t, err)
 
@@ -507,11 +518,12 @@ func TestBundleWithManifest(t *testing.T) {
 	assert.Equal(t, "hello-js-function-test", schedules[0].Name)
 	assert.Equal(t, "* * * * *", schedules[0].Cron)
 
-	assert.Equal(t, 2, len(functions.Files))
+	assert.Equal(t, 3, len(functions.Files))
 	assert.Equal(t, "a-runtime", functions.Files["hello-js-function-test"].Runtime)
 	assert.Empty(t, functions.Files["hello-js-function-test"].FunctionMetadata.InvocationMode)
 	assert.Equal(t, "some-other-runtime", functions.Files["hello-py-function-test"].Runtime)
 	assert.Equal(t, "stream", functions.Files["hello-py-function-test"].FunctionMetadata.InvocationMode)
+	assert.Equal(t, "provided.al2", functions.Files["hello-go-function-test"].Runtime)
 
 	helloJSConfig := functionsConfig["hello-js-function-test"]
 
