@@ -75,6 +75,8 @@ type UploadDeployFunctionParams struct {
 	Name string
 	/*Runtime*/
 	Runtime *string
+	/*RuntimeVersion*/
+	RuntimeVersion *string
 	/*Size*/
 	Size *int64
 
@@ -182,6 +184,17 @@ func (o *UploadDeployFunctionParams) SetRuntime(runtime *string) {
 	o.Runtime = runtime
 }
 
+// WithRuntimeVersion adds the runtimeVersion to the upload deploy function params
+func (o *UploadDeployFunctionParams) WithRuntimeVersion(runtimeVersion *string) *UploadDeployFunctionParams {
+	o.SetRuntimeVersion(runtimeVersion)
+	return o
+}
+
+// SetRuntimeVersion adds the runtimeVersion to the upload deploy function params
+func (o *UploadDeployFunctionParams) SetRuntimeVersion(runtimeVersion *string) {
+	o.RuntimeVersion = runtimeVersion
+}
+
 // WithSize adds the size to the upload deploy function params
 func (o *UploadDeployFunctionParams) WithSize(size *int64) *UploadDeployFunctionParams {
 	o.SetSize(size)
@@ -252,6 +265,22 @@ func (o *UploadDeployFunctionParams) WriteToRequest(r runtime.ClientRequest, reg
 		qRuntime := qrRuntime
 		if qRuntime != "" {
 			if err := r.SetQueryParam("runtime", qRuntime); err != nil {
+				return err
+			}
+		}
+
+	}
+
+	if o.RuntimeVersion != nil {
+
+		// query param runtimeVersion
+		var qrRuntimeVersion string
+		if o.RuntimeVersion != nil {
+			qrRuntimeVersion = *o.RuntimeVersion
+		}
+		qRuntimeVersion := qrRuntimeVersion
+		if qRuntimeVersion != "" {
+			if err := r.SetQueryParam("runtimeVersion", qRuntimeVersion); err != nil {
 				return err
 			}
 		}

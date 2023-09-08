@@ -109,6 +109,7 @@ type FileBundle struct {
 	Name             string
 	Sum              string
 	Runtime          string
+	RuntimeVersion   string
 	Size             *int64 `json:"size,omitempty"`
 	FunctionMetadata *FunctionMetadata
 
@@ -516,7 +517,7 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 				_, operationError = n.Operations.UploadDeployFile(params, authInfo)
 			}
 		case functionUpload:
-			params := operations.NewUploadDeployFunctionParams().WithDeployID(d.ID).WithName(f.Name).WithFileBody(f).WithRuntime(&f.Runtime)
+			params := operations.NewUploadDeployFunctionParams().WithDeployID(d.ID).WithName(f.Name).WithFileBody(f).WithRuntime(&f.Runtime).WithRuntimeVersion(&f.RuntimeVersion)
 
 			if retryCount > 0 {
 				params = params.WithXNfRetryCount(&retryCount)
@@ -714,19 +715,19 @@ func bundle(ctx context.Context, functionDir string, observer DeployObserver) (*
 			if err != nil {
 				return nil, nil, nil, err
 			}
-			file, err := newFunctionFile(filePath, i, runtime, nil, observer)
+			file, err := newFunctionFile(filePath, i, runtime, "", nil, observer)
 			if err != nil {
 				return nil, nil, nil, err
 			}
 			functions.Add(file.Name, file)
 		case jsFile(i):
-			file, err := newFunctionFile(filePath, i, jsRuntime, nil, observer)
+			file, err := newFunctionFile(filePath, i, jsRuntime, "", nil, observer)
 			if err != nil {
 				return nil, nil, nil, err
 			}
 			functions.Add(file.Name, file)
 		case goFile(filePath, i, observer):
-			file, err := newFunctionFile(filePath, i, goRuntime, nil, observer)
+			file, err := newFunctionFile(filePath, i, goRuntime, "provided.al2", nil, observer)
 			if err != nil {
 				return nil, nil, nil, err
 			}
@@ -770,17 +771,10 @@ func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer Dep
 			return nil, nil, nil, fmt.Errorf("manifest file specifies a function path that cannot be found: %s", function.Path)
 		}
 
-		var runtime string
-		if function.RuntimeVersion != "" {
-			runtime = function.RuntimeVersion
-		} else {
-			runtime = function.Runtime
-		}
-
 		meta := FunctionMetadata{
 			InvocationMode: function.InvocationMode,
 		}
-		file, err := newFunctionFile(function.Path, fileInfo, runtime, &meta, observer)
+		file, err := newFunctionFile(function.Path, fileInfo, function.RuntimeVersion, function.RuntimeVersion, &meta, observer)
 
 		if err != nil {
 			return nil, nil, nil, err
@@ -847,10 +841,11 @@ func readZipRuntime(filePath string) (string, error) {
 	return jsRuntime, nil
 }
 
-func newFunctionFile(filePath string, i os.FileInfo, runtime string, metadata *FunctionMetadata, observer DeployObserver) (*FileBundle, error) {
+func newFunctionFile(filePath string, i os.FileInfo, runtime string, runtimeVersion string, metadata *FunctionMetadata, observer DeployObserver) (*FileBundle, error) {
 	file := &FileBundle{
-		Name:    strings.TrimSuffix(i.Name(), filepath.Ext(i.Name())),
-		Runtime: runtime,
+		Name:           strings.TrimSuffix(i.Name(), filepath.Ext(i.Name())),
+		Runtime:        runtime,
+		RuntimeVersion: runtimeVersion,
 	}
 
 	s := sha256.New()
@@ -872,6 +867,10 @@ func newFunctionFile(filePath string, i os.FileInfo, runtime string, metadata *F
 		fileHeader, err := createHeader(archive, i, runtime)
 		if err != nil {
 			return nil, err
+		}
+
+		if runtime == "go" && file.RuntimeVersion != "" {
+			file.RuntimeVersion = "provided.al2"
 		}
 
 		if _, err = io.Copy(fileHeader, fileEntry); err != nil {
@@ -958,7 +957,7 @@ func createHeader(archive *zip.Writer, i os.FileInfo, runtime string) (io.Writer
 		return archive.CreateHeader(&zip.FileHeader{
 			CreatorVersion: 3 << 8,     // indicates Unix
 			ExternalAttrs:  0777 << 16, // -rwxrwxrwx file permissions
-			Name:           i.Name(),
+			Name:           "bootstrap",
 			Method:         zip.Deflate,
 		})
 	}

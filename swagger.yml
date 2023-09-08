@@ -1379,6 +1379,9 @@ paths:
         - name: runtime
           type: string
           in: query
+        - name: runtimeVersion
+          type: string
+          in: query
         - name: invocation_mode
           in: query
           type: string
