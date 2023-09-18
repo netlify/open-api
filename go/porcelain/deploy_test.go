@@ -330,35 +330,53 @@ func TestUploadFiles400Error_SkipsRetry(t *testing.T) {
 			attempts++
 		}()
 
-		rw.WriteHeader(http.StatusUnprocessableEntity)
 		rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+		rw.WriteHeader(http.StatusUnprocessableEntity)
 		rw.Write([]byte(`{"message": "Unprocessable Entity", "code": 422 }`))
 	}))
 	defer server.Close()
 
-	// // File upload:
-	// hu, _ := url.Parse(server.URL)
-	// tr := apiClient.NewWithClient(hu.Host, "/api/v1", []string{"http"}, http.DefaultClient)
-	// client := NewRetryable(tr, strfmt.Default, 1)
-	// client.uploadLimit = 1
-	// ctx = context.WithAuthInfo(ctx, apiClient.BearerToken("token"))
+	// File upload:
+	hu, _ := url.Parse(server.URL)
+	tr := apiClient.NewWithClient(hu.Host, "/api/v1", []string{"http"}, http.DefaultClient)
+	client := NewRetryable(tr, strfmt.Default, 1)
+	client.uploadLimit = 1
+	ctx = context.WithAuthInfo(ctx, apiClient.BearerToken("token"))
 
-	// // Create some files to deploy
-	// dir, err := ioutil.TempDir("", "deploy")
-	// require.NoError(t, err)
-	// defer os.RemoveAll(dir)
-	// require.NoError(t, ioutil.WriteFile(filepath.Join(dir, "foo.html"), []byte("Hello"), 0644))
+	// Create some files to deploy
+	dir, err := ioutil.TempDir("", "deploy")
+	require.NoError(t, err)
+	defer os.RemoveAll(dir)
+	require.NoError(t, ioutil.WriteFile(filepath.Join(dir, "foo.html"), []byte("Hello"), 0644))
 
-	// files, err := walk(dir, nil, false, false)
-	// require.NoError(t, err)
-	// d := &models.Deploy{}
-	// for _, bundle := range files.Files {
-	// 	d.Required = append(d.Required, bundle.Sum)
-	// }
-	// // Set SkipRetry to true
-	// err = client.uploadFiles(ctx, d, files, nil, fileUpload, time.Minute, true)
+	files, err := walk(dir, nil, false, false)
+	require.NoError(t, err)
+	d := &models.Deploy{}
+	for _, bundle := range files.Files {
+		d.Required = append(d.Required, bundle.Sum)
+	}
+	// Set SkipRetry to true
+	err = client.uploadFiles(ctx, d, files, nil, fileUpload, time.Minute, true)
+	require.Equal(t, err, "[PUT /deploys/{deploy_id}/files/{path}][422] uploadDeployFile default  &{Code:422 Message: Unprocessable Entity}")
+	require.Equal(t, attempts, 1)
+}
 
-	// // Function upload:
+func TestUploadFunctions422Error_SkipsRetry(t *testing.T) {
+	attempts := 0
+	ctx := gocontext.Background()
+
+	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, _ *http.Request) {
+		defer func() {
+			attempts++
+		}()
+
+		rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+		rw.WriteHeader(http.StatusUnprocessableEntity)
+		rw.Write([]byte(`{"message": "Unprocessable Entity", "code": 422 }`))
+	}))
+	defer server.Close()
+
+	// Function upload:
 	hu, _ := url.Parse(server.URL)
 	tr := apiClient.NewWithClient(hu.Host, "/api/v1", []string{"http"}, http.DefaultClient)
 	client := NewRetryable(tr, strfmt.Default, 1)
@@ -379,7 +397,7 @@ func TestUploadFiles400Error_SkipsRetry(t *testing.T) {
 		d.RequiredFunctions = append(d.RequiredFunctions, bundle.Sum)
 	}
 	// Set SkipRetry to true
-	require.NoError(t, client.uploadFiles(apiCtx, d, files, nil, functionUpload, time.Minute, true))
+	err = client.uploadFiles(apiCtx, d, files, nil, functionUpload, time.Minute, true)
 	require.Equal(t, err, "[PUT /deploys/{deploy_id}/files/{path}][422] uploadDeployFile default  &{Code:422 Message: Unprocessable Entity}")
 	require.Equal(t, attempts, 1)
 }
@@ -393,8 +411,8 @@ func TestUploadFiles400Error_NoSkipRetry(t *testing.T) {
 			attempts++
 		}()
 
-		rw.WriteHeader(http.StatusUnprocessableEntity)
 		rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+		rw.WriteHeader(http.StatusUnprocessableEntity)
 		rw.Write([]byte(`{"message": "Unprocessable Entity", "code": 422 }`))
 		return
 	}))
@@ -420,7 +438,7 @@ func TestUploadFiles400Error_NoSkipRetry(t *testing.T) {
 	}
 	// Set SkipRetry to false
 	err = client.uploadFiles(ctx, d, files, nil, fileUpload, time.Minute, false)
-	// require.Equal(t, err, "[PUT /deploys/{deploy_id}/files/{path}][422] uploadDeployFile default  &{Code:422 Message: Unprocessable Entity}")
+	require.Equal(t, err, "[PUT /deploys/{deploy_id}/files/{path}][422] uploadDeployFile default  &{Code:422 Message: Unprocessable Entity}")
 	require.Equal(t, attempts, 12)
 }
 
