@@ -21,7 +21,6 @@ import (
 	"time"
 
 	"github.com/cenkalti/backoff/v4"
-	apierrors "github.com/go-openapi/errors"
 	"github.com/pkg/errors"
 	"github.com/rsc/goversion/version"
 	"github.com/sirupsen/logrus"
@@ -99,6 +98,11 @@ type DeployOptions struct {
 	functions         *deployFiles
 	functionSchedules []*models.FunctionSchedule
 	functionsConfig   map[string]models.FunctionConfig
+}
+
+type deployApiError interface {
+	error
+	Code() int
 }
 
 type uploadError struct {
@@ -473,6 +477,7 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 		"deploy_id": d.ID,
 		"file_path": f.Name,
 		"file_sum":  f.Sum,
+		"file_size": f.Size,
 	}).Debug("Uploading file")
 
 	b := backoff.NewExponentialBackOff()
@@ -539,7 +544,7 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 
 		if operationError != nil {
 			context.GetLogger(ctx).WithError(operationError).Errorf("Failed to upload file %v", f.Name)
-			apiErr, ok := operationError.(apierrors.Error)
+			apiErr, ok := operationError.(deployApiError)
 
 			if ok {
 				if apiErr.Code() == 401 {
@@ -801,10 +806,21 @@ func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer Dep
 			})
 		}
 
-		if function.DisplayName != "" || function.Generator != "" {
+		routes := make([]*models.FunctionRoute, len(function.Routes))
+		for i, route := range function.Routes {
+			routes[i] = &models.FunctionRoute{
+				Pattern:    route.Pattern,
+				Literal:    route.Literal,
+				Expression: route.Expression,
+				Methods:    route.Methods,
+			}
+		}
+
+		if function.DisplayName != "" || function.Generator != "" || len(routes) > 0 {
 			functionsConfig[file.Name] = models.FunctionConfig{
 				DisplayName: function.DisplayName,
 				Generator:   function.Generator,
+				Routes:      routes,
 			}
 		}
 

@@ -593,7 +593,18 @@ func TestBundleWithManifest(t *testing.T) {
 				"displayName": "Hello Javascript Function",
 				"generator": "@netlify/fake-plugin@1.0.0",
 				"name": "hello-js-function-test",
-				"schedule": "* * * * *"
+				"schedule": "* * * * *",
+				"routes": [
+					{
+						"pattern": "/products",
+						"literal": "/products"
+					},
+					{
+						"pattern": "/products/:id",
+						"expression": "^/products/(.*)$",
+						"methods": ["GET", "POST"]
+					}
+				]
 			},
 			{
 				"path": "%s",
@@ -623,9 +634,20 @@ func TestBundleWithManifest(t *testing.T) {
 	assert.Equal(t, "some-other-runtime", functions.Files["hello-py-function-test"].Runtime)
 	assert.Equal(t, "stream", functions.Files["hello-py-function-test"].FunctionMetadata.InvocationMode)
 
+	helloJSConfig := functionsConfig["hello-js-function-test"]
+
 	assert.Equal(t, 1, len(functionsConfig))
-	assert.Equal(t, "Hello Javascript Function", functionsConfig["hello-js-function-test"].DisplayName)
-	assert.Equal(t, "@netlify/fake-plugin@1.0.0", functionsConfig["hello-js-function-test"].Generator)
+	assert.Equal(t, "Hello Javascript Function", helloJSConfig.DisplayName)
+	assert.Equal(t, "@netlify/fake-plugin@1.0.0", helloJSConfig.Generator)
+
+	assert.Equal(t, "/products", helloJSConfig.Routes[0].Pattern)
+	assert.Equal(t, "/products", helloJSConfig.Routes[0].Literal)
+	assert.Empty(t, helloJSConfig.Routes[0].Expression)
+
+	assert.Equal(t, "/products/:id", helloJSConfig.Routes[1].Pattern)
+	assert.Empty(t, helloJSConfig.Routes[1].Literal)
+	assert.Equal(t, "^/products/(.*)$", helloJSConfig.Routes[1].Expression)
+	assert.Equal(t, []string{"GET", "POST"}, helloJSConfig.Routes[1].Methods)
 }
 
 func TestReadZipRuntime(t *testing.T) {
