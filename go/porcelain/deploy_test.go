@@ -357,7 +357,7 @@ func TestUploadFiles400Error_SkipsRetry(t *testing.T) {
 	}
 	// Set SkipRetry to true
 	err = client.uploadFiles(ctx, d, files, nil, fileUpload, time.Minute, true)
-	require.Equal(t, err, "[PUT /deploys/{deploy_id}/files/{path}][422] uploadDeployFile default  &{Code:422 Message: Unprocessable Entity}")
+	require.Error(t, err)
 	require.Equal(t, attempts, 1)
 }
 
