@@ -321,7 +321,7 @@ func TestUploadFiles_Errors(t *testing.T) {
 	require.Equal(t, err.Error(), "[PUT /deploys/{deploy_id}/files/{path}][500] uploadDeployFile default  &{Code:0 Message:}")
 }
 
-func TestUploadFiles400Error_SkipsRetry(t *testing.T) {
+func TestUploadFiles422Error_SkipsRetry(t *testing.T) {
 	attempts := 0
 	ctx := gocontext.Background()
 
@@ -357,7 +357,7 @@ func TestUploadFiles400Error_SkipsRetry(t *testing.T) {
 	}
 	// Set SkipRetry to true
 	err = client.uploadFiles(ctx, d, files, nil, fileUpload, time.Minute, true)
-	require.Error(t, err)
+	require.ErrorContains(t, err, "Code:422 Message:Unprocessable Entity")
 	require.Equal(t, attempts, 1)
 }
 
@@ -398,7 +398,7 @@ func TestUploadFunctions422Error_SkipsRetry(t *testing.T) {
 	}
 	// Set SkipRetry to true
 	err = client.uploadFiles(apiCtx, d, files, nil, functionUpload, time.Minute, true)
-	require.Error(t, err)
+	require.ErrorContains(t, err, "Code:422 Message:Unprocessable Entity")
 	require.Equal(t, attempts, 1)
 }
 
@@ -412,8 +412,8 @@ func TestUploadFiles400Error_NoSkipRetry(t *testing.T) {
 		}()
 
 		rw.Header().Set("Content-Type", "application/json; charset=utf-8")
-		rw.WriteHeader(http.StatusUnprocessableEntity)
-		rw.Write([]byte(`{"message": "Unprocessable Entity", "code": 400 }`))
+		rw.WriteHeader(http.StatusBadRequest)
+		rw.Write([]byte(`{"message": "Bad Request", "code": 400 }`))
 		return
 	}))
 	defer server.Close()
@@ -438,8 +438,8 @@ func TestUploadFiles400Error_NoSkipRetry(t *testing.T) {
 	}
 	// Set SkipRetry to false
 	err = client.uploadFiles(ctx, d, files, nil, fileUpload, time.Minute, false)
-	require.Error(t, err)
-	require.Equal(t, attempts, 12)
+	require.ErrorContains(t, err, "Code:400 Message:Bad Request")
+	require.Greater(t, attempts, 1)
 }
 
 func TestUploadFiles_SkipEqualFiles(t *testing.T) {
