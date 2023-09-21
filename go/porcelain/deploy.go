@@ -31,8 +31,9 @@ import (
 )
 
 const (
-	jsRuntime = "js"
-	goRuntime = "go"
+	jsRuntime    = "js"
+	goRuntime    = "go"
+	amazonLinux2 = "provided.al2"
 
 	preProcessingTimeout = time.Minute * 5
 
@@ -885,6 +886,10 @@ func newFunctionFile(filePath string, i os.FileInfo, runtime string, metadata *F
 		if err := archive.Close(); err != nil {
 			return nil, err
 		}
+
+		if runtime == goRuntime {
+			file.Runtime = amazonLinux2
+		}
 	}
 
 	fileBuffer := new(bytes.Buffer)
@@ -962,7 +967,7 @@ func createHeader(archive *zip.Writer, i os.FileInfo, runtime string) (io.Writer
 		return archive.CreateHeader(&zip.FileHeader{
 			CreatorVersion: 3 << 8,     // indicates Unix
 			ExternalAttrs:  0777 << 16, // -rwxrwxrwx file permissions
-			Name:           i.Name(),
+			Name:           "bootstrap",
 			Method:         zip.Deflate,
 		})
 	}
