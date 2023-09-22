@@ -132,14 +132,61 @@ func TestWaitUntilDeployLive_Timeout(t *testing.T) {
 	}))
 	defer server.Close()
 
-	hu, _ := url.Parse(server.URL)
+	hu, err := url.Parse(server.URL)
+	require.NoError(t, err)
 	tr := apiClient.NewWithClient(hu.Host, "/api/v1", []string{"http"}, http.DefaultClient)
 	client := NewRetryable(tr, strfmt.Default, 1)
 
 	ctx := context.WithAuthInfo(gocontext.Background(), apiClient.BearerToken("token"))
 	ctx, _ = gocontext.WithTimeout(ctx, 50*time.Millisecond)
-	_, err := client.WaitUntilDeployLive(ctx, &models.Deploy{})
+	_, err = client.WaitUntilDeployLive(ctx, &models.Deploy{})
 	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "timed out")
+}
+
+func TestWaitUntilDeployProcessed_Success(t *testing.T) {
+	reqNum := 0
+	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		reqNum++
+		rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+
+		// validate the polling actually works
+		if reqNum > 1 {
+			rw.Write([]byte(`{ "state": "processed" }`))
+		} else {
+			rw.Write([]byte(`{ "state": "processing" }`))
+		}
+	}))
+	defer server.Close()
+
+	hu, err := url.Parse(server.URL)
+	require.NoError(t, err)
+	tr := apiClient.NewWithClient(hu.Host, "/api/v1", []string{"http"}, http.DefaultClient)
+	client := NewRetryable(tr, strfmt.Default, 1)
+
+	ctx := context.WithAuthInfo(gocontext.Background(), apiClient.BearerToken("token"))
+	ctx, _ = gocontext.WithTimeout(ctx, 30*time.Second)
+	d, err := client.WaitUntilDeployProcessed(ctx, &models.Deploy{})
+	require.NoError(t, err)
+	assert.Equal(t, "processed", d.State)
+}
+
+func TestWaitUntilDeployProcessed_Timeout(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+		rw.Write([]byte(`{ "state": "processing" }`))
+	}))
+	defer server.Close()
+
+	hu, err := url.Parse(server.URL)
+	require.NoError(t, err)
+	tr := apiClient.NewWithClient(hu.Host, "/api/v1", []string{"http"}, http.DefaultClient)
+	client := NewRetryable(tr, strfmt.Default, 1)
+
+	ctx := context.WithAuthInfo(gocontext.Background(), apiClient.BearerToken("token"))
+	ctx, _ = gocontext.WithTimeout(ctx, 50*time.Millisecond)
+	_, err = client.WaitUntilDeployProcessed(ctx, &models.Deploy{})
+	require.Error(t, err)
 	assert.Contains(t, err.Error(), "timed out")
 }
 

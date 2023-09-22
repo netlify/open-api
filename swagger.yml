@@ -935,6 +935,7 @@ paths:
           - preparing
           - prepared
           - processing
+          - processed
           - ready
           - error
           - retrying
