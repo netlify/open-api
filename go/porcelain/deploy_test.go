@@ -287,7 +287,7 @@ func TestUploadFiles_Cancelation(t *testing.T) {
 	for _, bundle := range files.Files {
 		d.Required = append(d.Required, bundle.Sum)
 	}
-	err = client.uploadFiles(ctx, d, files, nil, fileUpload, time.Minute)
+	err = client.uploadFiles(ctx, d, files, nil, fileUpload, time.Minute, false)
 	require.ErrorIs(t, err, gocontext.Canceled)
 }
 
@@ -317,8 +317,129 @@ func TestUploadFiles_Errors(t *testing.T) {
 	for _, bundle := range files.Files {
 		d.Required = append(d.Required, bundle.Sum)
 	}
-	err = client.uploadFiles(ctx, d, files, nil, fileUpload, time.Minute)
+	err = client.uploadFiles(ctx, d, files, nil, fileUpload, time.Minute, false)
 	require.Equal(t, err.Error(), "[PUT /deploys/{deploy_id}/files/{path}][500] uploadDeployFile default  &{Code:0 Message:}")
+}
+
+func TestUploadFiles422Error_SkipsRetry(t *testing.T) {
+	attempts := 0
+	ctx := gocontext.Background()
+
+	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, _ *http.Request) {
+		defer func() {
+			attempts++
+		}()
+
+		rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+		rw.WriteHeader(http.StatusUnprocessableEntity)
+		rw.Write([]byte(`{"message": "Unprocessable Entity", "code": 422 }`))
+	}))
+	defer server.Close()
+
+	// File upload:
+	hu, _ := url.Parse(server.URL)
+	tr := apiClient.NewWithClient(hu.Host, "/api/v1", []string{"http"}, http.DefaultClient)
+	client := NewRetryable(tr, strfmt.Default, 1)
+	client.uploadLimit = 1
+	ctx = context.WithAuthInfo(ctx, apiClient.BearerToken("token"))
+
+	// Create some files to deploy
+	dir, err := ioutil.TempDir("", "deploy")
+	require.NoError(t, err)
+	defer os.RemoveAll(dir)
+	require.NoError(t, ioutil.WriteFile(filepath.Join(dir, "foo.html"), []byte("Hello"), 0644))
+
+	files, err := walk(dir, nil, false, false)
+	require.NoError(t, err)
+	d := &models.Deploy{}
+	for _, bundle := range files.Files {
+		d.Required = append(d.Required, bundle.Sum)
+	}
+	// Set SkipRetry to true
+	err = client.uploadFiles(ctx, d, files, nil, fileUpload, time.Minute, true)
+	require.ErrorContains(t, err, "Code:422 Message:Unprocessable Entity")
+	require.Equal(t, attempts, 1)
+}
+
+func TestUploadFunctions422Error_SkipsRetry(t *testing.T) {
+	attempts := 0
+	ctx := gocontext.Background()
+
+	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, _ *http.Request) {
+		defer func() {
+			attempts++
+		}()
+
+		rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+		rw.WriteHeader(http.StatusUnprocessableEntity)
+		rw.Write([]byte(`{"message": "Unprocessable Entity", "code": 422 }`))
+	}))
+	defer server.Close()
+
+	// Function upload:
+	hu, _ := url.Parse(server.URL)
+	tr := apiClient.NewWithClient(hu.Host, "/api/v1", []string{"http"}, http.DefaultClient)
+	client := NewRetryable(tr, strfmt.Default, 1)
+	client.uploadLimit = 1
+	apiCtx := context.WithAuthInfo(ctx, apiClient.BearerToken("token"))
+
+	dir, err := ioutil.TempDir("", "deploy")
+	functionsPath := filepath.Join(dir, ".netlify", "functions")
+	os.MkdirAll(functionsPath, os.ModePerm)
+	require.NoError(t, err)
+	defer os.RemoveAll(dir)
+	require.NoError(t, ioutil.WriteFile(filepath.Join(functionsPath, "foo.js"), []byte("module.exports = () => {}"), 0644))
+
+	files, _, _, err := bundle(ctx, functionsPath, mockObserver{})
+	require.NoError(t, err)
+	d := &models.Deploy{}
+	for _, bundle := range files.Files {
+		d.RequiredFunctions = append(d.RequiredFunctions, bundle.Sum)
+	}
+	// Set SkipRetry to true
+	err = client.uploadFiles(apiCtx, d, files, nil, functionUpload, time.Minute, true)
+	require.ErrorContains(t, err, "Code:422 Message:Unprocessable Entity")
+	require.Equal(t, attempts, 1)
+}
+
+func TestUploadFiles400Error_NoSkipRetry(t *testing.T) {
+	attempts := 0
+	ctx := gocontext.Background()
+
+	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, _ *http.Request) {
+		defer func() {
+			attempts++
+		}()
+
+		rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+		rw.WriteHeader(http.StatusBadRequest)
+		rw.Write([]byte(`{"message": "Bad Request", "code": 400 }`))
+		return
+	}))
+	defer server.Close()
+
+	hu, _ := url.Parse(server.URL)
+	tr := apiClient.NewWithClient(hu.Host, "/api/v1", []string{"http"}, http.DefaultClient)
+	client := NewRetryable(tr, strfmt.Default, 1)
+	client.uploadLimit = 1
+	ctx = context.WithAuthInfo(ctx, apiClient.BearerToken("token"))
+
+	// Create some files to deploy
+	dir, err := ioutil.TempDir("", "deploy")
+	require.NoError(t, err)
+	defer os.RemoveAll(dir)
+	require.NoError(t, ioutil.WriteFile(filepath.Join(dir, "foo.html"), []byte("Hello"), 0644))
+
+	files, err := walk(dir, nil, false, false)
+	require.NoError(t, err)
+	d := &models.Deploy{}
+	for _, bundle := range files.Files {
+		d.Required = append(d.Required, bundle.Sum)
+	}
+	// Set SkipRetry to false
+	err = client.uploadFiles(ctx, d, files, nil, fileUpload, time.Minute, false)
+	require.ErrorContains(t, err, "Code:400 Message:Bad Request")
+	require.Greater(t, attempts, 1)
 }
 
 func TestUploadFiles_SkipEqualFiles(t *testing.T) {
@@ -377,11 +498,11 @@ func TestUploadFiles_SkipEqualFiles(t *testing.T) {
 	d.Required = []string{files.Sums["a.html"]}
 	d.RequiredFunctions = []string{functions.Sums["a"]}
 
-	err = client.uploadFiles(ctx, d, files, nil, fileUpload, time.Minute)
+	err = client.uploadFiles(ctx, d, files, nil, fileUpload, time.Minute, false)
 	require.NoError(t, err)
 	assert.Equal(t, 1, serverRequests)
 
-	err = client.uploadFiles(ctx, d, functions, nil, functionUpload, time.Minute)
+	err = client.uploadFiles(ctx, d, functions, nil, functionUpload, time.Minute, false)
 	require.NoError(t, err)
 	assert.Equal(t, 2, serverRequests)
 }
@@ -437,7 +558,7 @@ func TestUploadFunctions_RetryCountHeader(t *testing.T) {
 		d.RequiredFunctions = append(d.RequiredFunctions, bundle.Sum)
 	}
 
-	require.NoError(t, client.uploadFiles(apiCtx, d, files, nil, functionUpload, time.Minute))
+	require.NoError(t, client.uploadFiles(apiCtx, d, files, nil, functionUpload, time.Minute, false))
 }
 
 func TestBundle(t *testing.T) {
