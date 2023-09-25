@@ -7,16 +7,17 @@ type functionsManifest struct {
 }
 
 type functionsManifestEntry struct {
-	MainFile       string          `json:"mainFile"`
-	Name           string          `json:"name"`
-	Path           string          `json:"path"`
-	Runtime        string          `json:"runtime"`
-	RuntimeVersion string          `json:"runtimeVersion"`
-	Schedule       string          `json:"schedule"`
-	DisplayName    string          `json:"displayName"`
-	Generator      string          `json:"generator"`
-	InvocationMode string          `json:"invocationMode"`
-	Routes         []functionRoute `json:"routes"`
+	MainFile       string                 `json:"mainFile"`
+	Name           string                 `json:"name"`
+	Path           string                 `json:"path"`
+	Runtime        string                 `json:"runtime"`
+	RuntimeVersion string                 `json:"runtimeVersion"`
+	Schedule       string                 `json:"schedule"`
+	DisplayName    string                 `json:"displayName"`
+	Generator      string                 `json:"generator"`
+	BuildData      map[string]interface{} `json:"buildData"`
+	InvocationMode string                 `json:"invocationMode"`
+	Routes         []functionRoute        `json:"routes"`
 }
 
 type functionRoute struct {
