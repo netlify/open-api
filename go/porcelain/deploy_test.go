@@ -639,6 +639,7 @@ func TestBundleWithManifest(t *testing.T) {
 				"mainFile": "/some/path/hello-js-function-test.js",
 				"displayName": "Hello Javascript Function",
 				"generator": "@netlify/fake-plugin@1.0.0",
+				"buildData": { "runtimeAPIVersion": 2 },
 				"name": "hello-js-function-test",
 				"schedule": "* * * * *",
 				"routes": [
@@ -686,6 +687,7 @@ func TestBundleWithManifest(t *testing.T) {
 	assert.Equal(t, 1, len(functionsConfig))
 	assert.Equal(t, "Hello Javascript Function", helloJSConfig.DisplayName)
 	assert.Equal(t, "@netlify/fake-plugin@1.0.0", helloJSConfig.Generator)
+	assert.EqualValues(t, 2, helloJSConfig.BuildData.(map[string]interface{})["runtimeAPIVersion"])
 
 	assert.Equal(t, "/products", helloJSConfig.Routes[0].Pattern)
 	assert.Equal(t, "/products", helloJSConfig.Routes[0].Literal)
