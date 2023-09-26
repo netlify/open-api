@@ -2611,17 +2611,6 @@ definitions:
       processing_settings:
         type: object
         properties:
-          skip:
-            type: boolean
-          css:
-            $ref: '#/definitions/minifyOptions'
-          js:
-            $ref: '#/definitions/minifyOptions'
-          images:
-            type: object
-            properties:
-              optimize:
-                type: boolean
           html:
             type: object
             properties:
@@ -3511,13 +3500,6 @@ definitions:
         type: integer
       used:
         type: integer
-  minifyOptions:
-    type: object
-    properties:
-      bundle:
-        type: boolean
-      minify:
-        type: boolean
   buildSetup:
     type: object
     properties:
