@@ -63,6 +63,10 @@ type NotifyBuildStartParams struct {
 
 	/*BuildID*/
 	BuildID string
+	/*BuildVersion*/
+	BuildVersion *string
+	/*BuildbotVersion*/
+	BuildbotVersion *string
 
 	timeout    time.Duration
 	Context    context.Context
@@ -113,6 +117,28 @@ func (o *NotifyBuildStartParams) SetBuildID(buildID string) {
 	o.BuildID = buildID
 }
 
+// WithBuildVersion adds the buildVersion to the notify build start params
+func (o *NotifyBuildStartParams) WithBuildVersion(buildVersion *string) *NotifyBuildStartParams {
+	o.SetBuildVersion(buildVersion)
+	return o
+}
+
+// SetBuildVersion adds the buildVersion to the notify build start params
+func (o *NotifyBuildStartParams) SetBuildVersion(buildVersion *string) {
+	o.BuildVersion = buildVersion
+}
+
+// WithBuildbotVersion adds the buildbotVersion to the notify build start params
+func (o *NotifyBuildStartParams) WithBuildbotVersion(buildbotVersion *string) *NotifyBuildStartParams {
+	o.SetBuildbotVersion(buildbotVersion)
+	return o
+}
+
+// SetBuildbotVersion adds the buildbotVersion to the notify build start params
+func (o *NotifyBuildStartParams) SetBuildbotVersion(buildbotVersion *string) {
+	o.BuildbotVersion = buildbotVersion
+}
+
 // WriteToRequest writes these params to a swagger request
 func (o *NotifyBuildStartParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -124,6 +150,38 @@ func (o *NotifyBuildStartParams) WriteToRequest(r runtime.ClientRequest, reg str
 	// path param build_id
 	if err := r.SetPathParam("build_id", o.BuildID); err != nil {
 		return err
+	}
+
+	if o.BuildVersion != nil {
+
+		// query param build_version
+		var qrBuildVersion string
+		if o.BuildVersion != nil {
+			qrBuildVersion = *o.BuildVersion
+		}
+		qBuildVersion := qrBuildVersion
+		if qBuildVersion != "" {
+			if err := r.SetQueryParam("build_version", qBuildVersion); err != nil {
+				return err
+			}
+		}
+
+	}
+
+	if o.BuildbotVersion != nil {
+
+		// query param buildbot_version
+		var qrBuildbotVersion string
+		if o.BuildbotVersion != nil {
+			qrBuildbotVersion = *o.BuildbotVersion
+		}
+		qBuildbotVersion := qrBuildbotVersion
+		if qBuildbotVersion != "" {
+			if err := r.SetQueryParam("buildbot_version", qBuildbotVersion); err != nil {
+				return err
+			}
+		}
+
 	}
 
 	if len(res) > 0 {
