@@ -1200,6 +1200,14 @@ paths:
         type: string
         in: path
         required: true
+      - name: buildbot_version
+        type: string
+        in: query
+        required: false
+      - name: build_version
+        type: string
+        in: query
+        required: false
     post:
       operationId: notifyBuildStart
       tags: [build]
