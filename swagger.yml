@@ -3002,6 +3002,8 @@ definitions:
         type: string
       framework:
         type: string
+      await_ready_signal:
+        type: boolean
   pluginParams:
     type: object
     properties:
