@@ -3785,7 +3785,7 @@ tags:
   - name: snippet
     x-displayName: Snippet
   - name: purge
-    x-displayName: Purge cache
+    x-displayName: Cache purge
   - name: dnsZone
     x-displayName: DNS zone
   - name: sniCertificate

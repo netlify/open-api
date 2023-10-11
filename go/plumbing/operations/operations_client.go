@@ -211,6 +211,8 @@ type ClientService interface {
 
 	ProvisionSiteTLSCertificate(params *ProvisionSiteTLSCertificateParams, authInfo runtime.ClientAuthInfoWriter) (*ProvisionSiteTLSCertificateOK, error)
 
+	PurgeSiteCache(params *PurgeSiteCacheParams, authInfo runtime.ClientAuthInfoWriter) (*PurgeSiteCacheAccepted, error)
+
 	RemoveAccountMember(params *RemoveAccountMemberParams, authInfo runtime.ClientAuthInfoWriter) (*RemoveAccountMemberNoContent, error)
 
 	RestoreSiteDeploy(params *RestoreSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*RestoreSiteDeployCreated, error)
@@ -3397,6 +3399,41 @@ func (a *Client) ProvisionSiteTLSCertificate(params *ProvisionSiteTLSCertificate
 	// unexpected success response
 	unexpectedSuccess := result.(*ProvisionSiteTLSCertificateDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+PurgeSiteCache purge site cache API
+*/
+func (a *Client) PurgeSiteCache(params *PurgeSiteCacheParams, authInfo runtime.ClientAuthInfoWriter) (*PurgeSiteCacheAccepted, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewPurgeSiteCacheParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "purgeSiteCache",
+		Method:             "POST",
+		PathPattern:        "/purge",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &PurgeSiteCacheReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*PurgeSiteCacheAccepted)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for purgeSiteCache: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
 }
 
 /*
