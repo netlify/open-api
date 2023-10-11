@@ -719,6 +719,25 @@ paths:
             $ref: '#/definitions/file'
         default:
           $ref: '#/responses/error'
+  /purge:
+    post:
+      operationId: purgeSiteCache
+      tags: [purge]
+      consumes:
+        - application/json
+      parameters:
+        - name: payload
+          in: body
+          schema:
+            $ref: '#/definitions/purge'
+          required: true
+      responses:
+        '202':
+          description: OK
+        '400':
+          description: Invalid request parameters
+        '404':
+          description: Site not found
   /sites/{site_id}/snippets:
     parameters:
       - name: site_id
@@ -2901,6 +2920,21 @@ definitions:
         type: string
       goal_position:
         type: string
+  purge:
+    type: object
+    properties:
+      site_id:
+        type: string
+      site_slug:
+        type: string
+      domain:
+        type: string
+      deploy_alias:
+        type: string
+      cache_tags:
+        type: array
+        items:
+          type: string
   deploy:
     type: object
     properties:
@@ -3685,6 +3719,7 @@ x-tagGroups:
       - environmentVariables
       - file
       - metadata
+      - purge
       - snippet
   - name: Domain names
     tags:
@@ -3749,6 +3784,8 @@ tags:
     x-displayName: Metadata
   - name: snippet
     x-displayName: Snippet
+  - name: purge
+    x-displayName: Purge cache
   - name: dnsZone
     x-displayName: DNS zone
   - name: sniCertificate
