@@ -456,7 +456,7 @@ func TestBundle(t *testing.T) {
 	assert.Equal(t, "js", jsFunction.Runtime)
 	assert.Equal(t, "py", pyFunction.Runtime)
 	assert.Equal(t, "rs", rsFunction.Runtime)
-	assert.Equal(t, "provided.al2", goFunction.Runtime)
+	assert.Equal(t, "go", goFunction.Runtime)
 }
 
 func TestBundleWithManifest(t *testing.T) {
@@ -464,6 +464,7 @@ func TestBundleWithManifest(t *testing.T) {
 	basePath := path.Join(filepath.Dir(cwd), "internal", "data")
 	jsFunctionPath := strings.Replace(filepath.Join(basePath, "hello-js-function-test.zip"), "\\", "/", -1)
 	pyFunctionPath := strings.Replace(filepath.Join(basePath, "hello-py-function-test.zip"), "\\", "/", -1)
+	goFunctionPath := strings.Replace(filepath.Join(basePath, "hello-go-binary-function"), "\\", "/", -1)
 	manifestPath := path.Join(basePath, "manifest.json")
 	manifestFile := fmt.Sprintf(`{
 		"functions": [
@@ -493,10 +494,16 @@ func TestBundleWithManifest(t *testing.T) {
 				"mainFile": "/some/path/hello-py-function-test",
 				"name": "hello-py-function-test",
 				"invocationMode": "stream"
+			},	
+			{
+				"path": "%s",
+				"runtime": "go",
+				"runtimeVersion": "provided.al2",
+				"name": "hello-go-binary-function"
 			}
 		],
 		"version": 1
-	}`, jsFunctionPath, pyFunctionPath)
+	}`, jsFunctionPath, pyFunctionPath, goFunctionPath)
 
 	err := ioutil.WriteFile(manifestPath, []byte(manifestFile), 0644)
 	defer os.Remove(manifestPath)
@@ -509,11 +516,13 @@ func TestBundleWithManifest(t *testing.T) {
 	assert.Equal(t, "hello-js-function-test", schedules[0].Name)
 	assert.Equal(t, "* * * * *", schedules[0].Cron)
 
-	assert.Equal(t, 2, len(functions.Files))
+	assert.Equal(t, 3, len(functions.Files))
 	assert.Equal(t, "a-runtime", functions.Files["hello-js-function-test"].Runtime)
 	assert.Empty(t, functions.Files["hello-js-function-test"].FunctionMetadata.InvocationMode)
 	assert.Equal(t, "some-other-runtime", functions.Files["hello-py-function-test"].Runtime)
 	assert.Equal(t, "stream", functions.Files["hello-py-function-test"].FunctionMetadata.InvocationMode)
+	assert.Equal(t, "provided.al2", functions.Files["hello-go-binary-function"].Runtime)
+	assert.Empty(t, functions.Files["hello-go-binary-function"].FunctionMetadata.InvocationMode)
 
 	helloJSConfig := functionsConfig["hello-js-function-test"]
 

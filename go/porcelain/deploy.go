@@ -886,10 +886,6 @@ func newFunctionFile(filePath string, i os.FileInfo, runtime string, metadata *F
 		if err := archive.Close(); err != nil {
 			return nil, err
 		}
-
-		if runtime == goRuntime {
-			file.Runtime = amazonLinux2
-		}
 	}
 
 	fileBuffer := new(bytes.Buffer)
@@ -964,6 +960,13 @@ func ignoreFile(rel string, ignoreInstallDirs bool) bool {
 
 func createHeader(archive *zip.Writer, i os.FileInfo, runtime string) (io.Writer, error) {
 	if runtime == goRuntime {
+		return archive.CreateHeader(&zip.FileHeader{
+			CreatorVersion: 3 << 8,     // indicates Unix
+			ExternalAttrs:  0777 << 16, // -rwxrwxrwx file permissions
+			Name:           i.Name(),
+			Method:         zip.Deflate,
+		})
+	} else if runtime == amazonLinux2 {
 		return archive.CreateHeader(&zip.FileHeader{
 			CreatorVersion: 3 << 8,     // indicates Unix
 			ExternalAttrs:  0777 << 16, // -rwxrwxrwx file permissions
