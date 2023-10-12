@@ -211,7 +211,7 @@ type ClientService interface {
 
 	ProvisionSiteTLSCertificate(params *ProvisionSiteTLSCertificateParams, authInfo runtime.ClientAuthInfoWriter) (*ProvisionSiteTLSCertificateOK, error)
 
-	PurgeSiteCache(params *PurgeSiteCacheParams, authInfo runtime.ClientAuthInfoWriter) (*PurgeSiteCacheAccepted, error)
+	PurgeCache(params *PurgeCacheParams, authInfo runtime.ClientAuthInfoWriter) (*PurgeCacheAccepted, error)
 
 	RemoveAccountMember(params *RemoveAccountMemberParams, authInfo runtime.ClientAuthInfoWriter) (*RemoveAccountMemberNoContent, error)
 
@@ -3402,23 +3402,23 @@ func (a *Client) ProvisionSiteTLSCertificate(params *ProvisionSiteTLSCertificate
 }
 
 /*
-PurgeSiteCache purge site cache API
+PurgeCache purge cache API
 */
-func (a *Client) PurgeSiteCache(params *PurgeSiteCacheParams, authInfo runtime.ClientAuthInfoWriter) (*PurgeSiteCacheAccepted, error) {
+func (a *Client) PurgeCache(params *PurgeCacheParams, authInfo runtime.ClientAuthInfoWriter) (*PurgeCacheAccepted, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
-		params = NewPurgeSiteCacheParams()
+		params = NewPurgeCacheParams()
 	}
 
 	result, err := a.transport.Submit(&runtime.ClientOperation{
-		ID:                 "purgeSiteCache",
+		ID:                 "purgeCache",
 		Method:             "POST",
 		PathPattern:        "/purge",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"https"},
 		Params:             params,
-		Reader:             &PurgeSiteCacheReader{formats: a.formats},
+		Reader:             &PurgeCacheReader{formats: a.formats},
 		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
@@ -3426,13 +3426,13 @@ func (a *Client) PurgeSiteCache(params *PurgeSiteCacheParams, authInfo runtime.C
 	if err != nil {
 		return nil, err
 	}
-	success, ok := result.(*PurgeSiteCacheAccepted)
+	success, ok := result.(*PurgeCacheAccepted)
 	if ok {
 		return success, nil
 	}
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for purgeSiteCache: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	msg := fmt.Sprintf("unexpected success response for purgeCache: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 

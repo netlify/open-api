@@ -721,7 +721,7 @@ paths:
           $ref: '#/responses/error'
   /purge:
     post:
-      operationId: purgeSiteCache
+      operationId: purgeCache
       tags: [purge]
       consumes:
         - application/json
