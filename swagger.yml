@@ -2667,6 +2667,8 @@ definitions:
         type: string
       prerender:
         type: string
+      functions_region:
+        type: string
   siteSetup:
     allOf:
       - $ref: '#/definitions/site'
