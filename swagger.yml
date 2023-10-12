@@ -722,6 +722,8 @@ paths:
   /purge:
     post:
       operationId: purgeCache
+      description: >-
+        Purges cached content from Netlify's CDN. Support purging by Cache-Tags.
       tags: [purge]
       consumes:
         - application/json

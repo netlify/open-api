@@ -3402,7 +3402,7 @@ func (a *Client) ProvisionSiteTLSCertificate(params *ProvisionSiteTLSCertificate
 }
 
 /*
-PurgeCache purge cache API
+PurgeCache Purges cached content from Netlify's CDN. Support purging by Cache-Tags.
 */
 func (a *Client) PurgeCache(params *PurgeCacheParams, authInfo runtime.ClientAuthInfoWriter) (*PurgeCacheAccepted, error) {
 	// TODO: Validate the params before sending
