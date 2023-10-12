@@ -15,6 +15,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strconv"
 	"strings"
 	"sync"
@@ -919,7 +920,7 @@ func jsFile(i os.FileInfo) bool {
 func goFile(filePath string, i os.FileInfo, observer DeployObserver) bool {
 	warner, hasWarner := observer.(DeployWarner)
 
-	if m := i.Mode(); m&0111 == 0 { // check if it's an executable file
+	if m := i.Mode(); m&0111 == 0 && runtime.GOOS != "windows" { // check if it's an executable file. skip on windows, since it doesn't have that mode
 		if hasWarner {
 			warner.OnWalkWarning(filePath, "Go binary does not have executable permissions")
 		}
