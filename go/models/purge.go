@@ -18,12 +18,6 @@ type Purge struct {
 	// cache tags
 	CacheTags []string `json:"cache_tags"`
 
-	// deploy alias
-	DeployAlias string `json:"deploy_alias,omitempty"`
-
-	// domain
-	Domain string `json:"domain,omitempty"`
-
 	// site id
 	SiteID string `json:"site_id,omitempty"`
 

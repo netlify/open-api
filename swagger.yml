@@ -2931,10 +2931,6 @@ definitions:
         type: string
       site_slug:
         type: string
-      domain:
-        type: string
-      deploy_alias:
-        type: string
       cache_tags:
         type: array
         items:
