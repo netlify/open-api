@@ -18,6 +18,9 @@ import (
 // swagger:model functionConfig
 type FunctionConfig struct {
 
+	// build data
+	BuildData interface{} `json:"build_data,omitempty"`
+
 	// display name
 	DisplayName string `json:"display_name,omitempty"`
 

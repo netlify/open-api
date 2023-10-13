@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  version: 2.21.1
+  version: 2.23.0
   title: Netlify's API documentation
   description: >-
     Netlify is a hosting service for the programmable web. It understands your
@@ -283,7 +283,7 @@ paths:
                 is_secret:
                   type: boolean
                   description: >-
-                    Secret values are only readable by code running on Netlify’s systems. 
+                    Secret values are only readable by code running on Netlify’s systems.
                     With secrets, only the local development context values are readable from the UI, API, and CLI.
                     By default, environment variable values are not secret. (Enterprise plans only)
         - name: account_id
@@ -387,7 +387,7 @@ paths:
               is_secret:
                 type: boolean
                 description: >-
-                  Secret values are only readable by code running on Netlify’s systems. 
+                  Secret values are only readable by code running on Netlify’s systems.
                   With secrets, only the local development context values are readable from the UI, API, and CLI.
                   By default, environment variable values are not secret. (Enterprise plans only)
         - name: site_id
@@ -935,6 +935,7 @@ paths:
           - preparing
           - prepared
           - processing
+          - processed
           - ready
           - error
           - retrying
@@ -1199,6 +1200,14 @@ paths:
         type: string
         in: path
         required: true
+      - name: buildbot_version
+        type: string
+        in: query
+        required: false
+      - name: build_version
+        type: string
+        in: query
+        required: false
     post:
       operationId: notifyBuildStart
       tags: [build]
@@ -2639,6 +2648,8 @@ definitions:
         type: string
       prerender:
         type: string
+      functions_region:
+        type: string
   siteSetup:
     allOf:
       - $ref: '#/definitions/site'
@@ -2737,7 +2748,7 @@ definitions:
       is_secret:
         type: boolean
         description: >-
-          Secret values are only readable by code running on Netlify’s systems. 
+          Secret values are only readable by code running on Netlify’s systems.
           With secrets, only the local development context values are readable from the UI, API, and CLI.
           By default, environment variable values are not secret. (Enterprise plans only)
       updated_at:
@@ -3620,10 +3631,12 @@ definitions:
         type: string
       generator:
         type: string
+      build_data:
+        type: object
       routes:
         type: array
         items:
-          $ref: '#/definitions/functionRoute'      
+          $ref: '#/definitions/functionRoute'
   functionRoute:
     type: object
     properties:
@@ -3632,7 +3645,7 @@ definitions:
       literal:
         type: string
       expression:
-        type: string    
+        type: string
       methods:
         type: array
         items:
