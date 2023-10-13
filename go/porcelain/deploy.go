@@ -15,6 +15,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strconv"
 	"strings"
 	"sync"
@@ -31,8 +32,9 @@ import (
 )
 
 const (
-	jsRuntime = "js"
-	goRuntime = "go"
+	jsRuntime    = "js"
+	goRuntime    = "go"
+	amazonLinux2 = "provided.al2"
 
 	preProcessingTimeout = time.Minute * 5
 
@@ -933,7 +935,7 @@ func jsFile(i os.FileInfo) bool {
 func goFile(filePath string, i os.FileInfo, observer DeployObserver) bool {
 	warner, hasWarner := observer.(DeployWarner)
 
-	if m := i.Mode(); m&0111 == 0 { // check if it's an executable file
+	if m := i.Mode(); m&0111 == 0 && runtime.GOOS != "windows" { // check if it's an executable file. skip on windows, since it doesn't have that mode
 		if hasWarner {
 			warner.OnWalkWarning(filePath, "Go binary does not have executable permissions")
 		}
@@ -978,6 +980,13 @@ func createHeader(archive *zip.Writer, i os.FileInfo, runtime string) (io.Writer
 			CreatorVersion: 3 << 8,     // indicates Unix
 			ExternalAttrs:  0777 << 16, // -rwxrwxrwx file permissions
 			Name:           i.Name(),
+			Method:         zip.Deflate,
+		})
+	} else if runtime == amazonLinux2 {
+		return archive.CreateHeader(&zip.FileHeader{
+			CreatorVersion: 3 << 8,     // indicates Unix
+			ExternalAttrs:  0777 << 16, // -rwxrwxrwx file permissions
+			Name:           "bootstrap",
 			Method:         zip.Deflate,
 		})
 	}
