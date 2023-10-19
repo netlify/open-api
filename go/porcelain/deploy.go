@@ -83,6 +83,7 @@ type DeployOptions struct {
 	EdgeRedirectsDir  string
 	BuildDir          string
 	LargeMediaEnabled bool
+	AwaitReadySignal  bool
 
 	IsDraft   bool
 	SkipRetry bool
@@ -262,10 +263,11 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 	options.functionsConfig = functionsConfig
 
 	deployFiles := &models.DeployFiles{
-		Files:     options.files.Sums,
-		Draft:     options.IsDraft,
-		Async:     n.overCommitted(options.files),
-		Framework: options.Framework,
+		Files:            options.files.Sums,
+		Draft:            options.IsDraft,
+		Async:            n.overCommitted(options.files),
+		Framework:        options.Framework,
+		AwaitReadySignal: options.AwaitReadySignal,
 	}
 	if options.functions != nil {
 		deployFiles.Functions = options.functions.Sums

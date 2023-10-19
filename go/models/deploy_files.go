@@ -22,6 +22,9 @@ type DeployFiles struct {
 	// async
 	Async bool `json:"async,omitempty"`
 
+	// await ready signal
+	AwaitReadySignal bool `json:"await_ready_signal,omitempty"`
+
 	// branch
 	Branch string `json:"branch,omitempty"`
 
