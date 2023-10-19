@@ -746,7 +746,7 @@ func bundle(ctx context.Context, functionDir string, observer DeployObserver) (*
 			}
 			functions.Add(file.Name, file)
 		case goFile(filePath, i, observer):
-			file, err := newFunctionFile(filePath, i, goRuntime, nil, observer)
+			file, err := newFunctionFile(filePath, i, amazonLinux2, nil, observer)
 			if err != nil {
 				return nil, nil, nil, err
 			}
@@ -975,14 +975,7 @@ func ignoreFile(rel string, ignoreInstallDirs bool) bool {
 }
 
 func createHeader(archive *zip.Writer, i os.FileInfo, runtime string) (io.Writer, error) {
-	if runtime == goRuntime {
-		return archive.CreateHeader(&zip.FileHeader{
-			CreatorVersion: 3 << 8,     // indicates Unix
-			ExternalAttrs:  0777 << 16, // -rwxrwxrwx file permissions
-			Name:           i.Name(),
-			Method:         zip.Deflate,
-		})
-	} else if runtime == amazonLinux2 {
+	if runtime == goRuntime || runtime == amazonLinux2 {
 		return archive.CreateHeader(&zip.FileHeader{
 			CreatorVersion: 3 << 8,     // indicates Unix
 			ExternalAttrs:  0777 << 16, // -rwxrwxrwx file permissions
