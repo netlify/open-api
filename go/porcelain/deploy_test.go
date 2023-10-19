@@ -624,7 +624,7 @@ func TestBundle(t *testing.T) {
 	assert.Equal(t, "js", jsFunction.Runtime)
 	assert.Equal(t, "py", pyFunction.Runtime)
 	assert.Equal(t, "rs", rsFunction.Runtime)
-	assert.Equal(t, "go", goFunction.Runtime)
+	assert.Equal(t, "provided.al2", goFunction.Runtime)
 }
 
 func TestBundleWithManifest(t *testing.T) {
