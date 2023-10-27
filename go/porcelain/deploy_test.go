@@ -612,7 +612,7 @@ func TestBundle(t *testing.T) {
 	functions, schedules, functionsConfig, err := bundle(gocontext.Background(), "../internal/data", mockObserver{})
 
 	assert.Nil(t, err)
-	assert.Equal(t, 4, len(functions.Files))
+	assert.Equal(t, 5, len(functions.Files))
 	assert.Empty(t, schedules)
 	assert.Nil(t, functionsConfig)
 
@@ -620,11 +620,15 @@ func TestBundle(t *testing.T) {
 	pyFunction := functions.Files["hello-py-function-test"]
 	rsFunction := functions.Files["hello-rs-function-test"]
 	goFunction := functions.Files["hello-go-binary-function"]
+	goBackgroundFunction := functions.Files["hello-go-binary-function-background"]
 
 	assert.Equal(t, "js", jsFunction.Runtime)
 	assert.Equal(t, "py", pyFunction.Runtime)
 	assert.Equal(t, "rs", rsFunction.Runtime)
 	assert.Equal(t, "provided.al2", goFunction.Runtime)
+	assert.Equal(t, "provided.al2", goBackgroundFunction.Runtime)
+
+	assert.NotEqual(t, goFunction.Sum, goBackgroundFunction.Sum)
 }
 
 func TestBundleWithManifest(t *testing.T) {

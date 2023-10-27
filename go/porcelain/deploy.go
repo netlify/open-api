@@ -979,6 +979,7 @@ func createHeader(archive *zip.Writer, i os.FileInfo, runtime string) (io.Writer
 		return archive.CreateHeader(&zip.FileHeader{
 			CreatorVersion: 3 << 8,     // indicates Unix
 			ExternalAttrs:  0777 << 16, // -rwxrwxrwx file permissions
+			Comment:        i.Name(),
 			Name:           "bootstrap",
 			Method:         zip.Deflate,
 		})
