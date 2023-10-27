@@ -34,6 +34,9 @@ type DeployFiles struct {
 	// framework
 	Framework string `json:"framework,omitempty"`
 
+	// framework version
+	FrameworkVersion string `json:"framework_version,omitempty"`
+
 	// function schedules
 	FunctionSchedules []*FunctionSchedule `json:"function_schedules"`
 
