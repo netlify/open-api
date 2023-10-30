@@ -981,8 +981,13 @@ func createHeader(archive *zip.Writer, i os.FileInfo, runtime string) (io.Writer
 		return archive.CreateHeader(&zip.FileHeader{
 			CreatorVersion: 3 << 8,     // indicates Unix
 			ExternalAttrs:  0777 << 16, // -rwxrwxrwx file permissions
-			Name:           "bootstrap",
-			Method:         zip.Deflate,
+
+			// we need to make sure we don't have two ZIP files with the exact same contents - otherwise, our upload deduplication mechanism will do weird things.
+			// adding in the function name as a comment ensures that every function ZIP is unique
+			Comment: i.Name(),
+
+			Name:   "bootstrap",
+			Method: zip.Deflate,
 		})
 	}
 	return archive.Create(i.Name())
