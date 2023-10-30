@@ -91,6 +91,7 @@ type DeployOptions struct {
 	Branch            string
 	CommitRef         string
 	Framework         string
+	FrameworkVersion  string
 	UploadTimeout     time.Duration
 	PreProcessTimeout time.Duration
 
@@ -262,10 +263,11 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 	options.functionsConfig = functionsConfig
 
 	deployFiles := &models.DeployFiles{
-		Files:     options.files.Sums,
-		Draft:     options.IsDraft,
-		Async:     n.overCommitted(options.files),
-		Framework: options.Framework,
+		Files:            options.files.Sums,
+		Draft:            options.IsDraft,
+		Async:            n.overCommitted(options.files),
+		Framework:        options.Framework,
+		FrameworkVersion: options.FrameworkVersion,
 	}
 	if options.functions != nil {
 		deployFiles.Functions = options.functions.Sums

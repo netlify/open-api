@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  version: 2.23.2
+  version: 2.24.0
   title: Netlify's API documentation
   description: >-
     Netlify is a hosting service for the programmable web. It understands your
@@ -3035,6 +3035,8 @@ definitions:
       branch:
         type: string
       framework:
+        type: string
+      framework_version:
         type: string
   pluginParams:
     type: object
