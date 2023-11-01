@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  version: 2.22.0
+  version: 2.24.1
   title: Netlify's API documentation
   description: >-
     Netlify is a hosting service for the programmable web. It understands your
@@ -719,6 +719,27 @@ paths:
             $ref: '#/definitions/file'
         default:
           $ref: '#/responses/error'
+  /purge:
+    post:
+      operationId: purgeCache
+      description: >-
+        Purges cached content from Netlify's CDN. Supports purging by Cache-Tag.
+      tags: [purge]
+      consumes:
+        - application/json
+      parameters:
+        - name: payload
+          in: body
+          schema:
+            $ref: '#/definitions/purge'
+          required: true
+      responses:
+        '202':
+          description: OK
+        '400':
+          description: Invalid request parameters
+        '404':
+          description: Site not found
   /sites/{site_id}/snippets:
     parameters:
       - name: site_id
@@ -1200,6 +1221,14 @@ paths:
         type: string
         in: path
         required: true
+      - name: buildbot_version
+        type: string
+        in: query
+        required: false
+      - name: build_version
+        type: string
+        in: query
+        required: false
     post:
       operationId: notifyBuildStart
       tags: [build]
@@ -2629,6 +2658,8 @@ definitions:
         type: string
       prerender:
         type: string
+      functions_region:
+        type: string
   siteSetup:
     allOf:
       - $ref: '#/definitions/site'
@@ -2882,6 +2913,17 @@ definitions:
         type: string
       goal_position:
         type: string
+  purge:
+    type: object
+    properties:
+      site_id:
+        type: string
+      site_slug:
+        type: string
+      cache_tags:
+        type: array
+        items:
+          type: string
   deploy:
     type: object
     properties:
@@ -2982,6 +3024,8 @@ definitions:
       branch:
         type: string
       framework:
+        type: string
+      framework_version:
         type: string
   pluginParams:
     type: object
@@ -3659,6 +3703,7 @@ x-tagGroups:
       - environmentVariables
       - file
       - metadata
+      - purge
       - snippet
   - name: Domain names
     tags:
@@ -3723,6 +3768,8 @@ tags:
     x-displayName: Metadata
   - name: snippet
     x-displayName: Snippet
+  - name: purge
+    x-displayName: Cache purge
   - name: dnsZone
     x-displayName: DNS zone
   - name: sniCertificate

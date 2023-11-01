@@ -61,6 +61,9 @@ type Site struct {
 	// force ssl
 	ForceSsl bool `json:"force_ssl,omitempty"`
 
+	// functions region
+	FunctionsRegion string `json:"functions_region,omitempty"`
+
 	// git provider
 	GitProvider string `json:"git_provider,omitempty"`
 

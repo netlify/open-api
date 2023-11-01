@@ -15,6 +15,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strconv"
 	"strings"
 	"sync"
@@ -31,8 +32,9 @@ import (
 )
 
 const (
-	jsRuntime = "js"
-	goRuntime = "go"
+	jsRuntime    = "js"
+	goRuntime    = "go"
+	amazonLinux2 = "provided.al2"
 
 	preProcessingTimeout = time.Minute * 5
 
@@ -89,6 +91,7 @@ type DeployOptions struct {
 	Branch            string
 	CommitRef         string
 	Framework         string
+	FrameworkVersion  string
 	UploadTimeout     time.Duration
 	PreProcessTimeout time.Duration
 
@@ -260,10 +263,11 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 	options.functionsConfig = functionsConfig
 
 	deployFiles := &models.DeployFiles{
-		Files:     options.files.Sums,
-		Draft:     options.IsDraft,
-		Async:     n.overCommitted(options.files),
-		Framework: options.Framework,
+		Files:            options.files.Sums,
+		Draft:            options.IsDraft,
+		Async:            n.overCommitted(options.files),
+		Framework:        options.Framework,
+		FrameworkVersion: options.FrameworkVersion,
 	}
 	if options.functions != nil {
 		deployFiles.Functions = options.functions.Sums
@@ -744,7 +748,7 @@ func bundle(ctx context.Context, functionDir string, observer DeployObserver) (*
 			}
 			functions.Add(file.Name, file)
 		case goFile(filePath, i, observer):
-			file, err := newFunctionFile(filePath, i, goRuntime, nil, observer)
+			file, err := newFunctionFile(filePath, i, amazonLinux2, nil, observer)
 			if err != nil {
 				return nil, nil, nil, err
 			}
@@ -933,7 +937,7 @@ func jsFile(i os.FileInfo) bool {
 func goFile(filePath string, i os.FileInfo, observer DeployObserver) bool {
 	warner, hasWarner := observer.(DeployWarner)
 
-	if m := i.Mode(); m&0111 == 0 { // check if it's an executable file
+	if m := i.Mode(); m&0111 == 0 && runtime.GOOS != "windows" { // check if it's an executable file. skip on windows, since it doesn't have that mode
 		if hasWarner {
 			warner.OnWalkWarning(filePath, "Go binary does not have executable permissions")
 		}
@@ -973,12 +977,17 @@ func ignoreFile(rel string, ignoreInstallDirs bool) bool {
 }
 
 func createHeader(archive *zip.Writer, i os.FileInfo, runtime string) (io.Writer, error) {
-	if runtime == goRuntime {
+	if runtime == goRuntime || runtime == amazonLinux2 {
 		return archive.CreateHeader(&zip.FileHeader{
 			CreatorVersion: 3 << 8,     // indicates Unix
 			ExternalAttrs:  0777 << 16, // -rwxrwxrwx file permissions
-			Name:           i.Name(),
-			Method:         zip.Deflate,
+
+			// we need to make sure we don't have two ZIP files with the exact same contents - otherwise, our upload deduplication mechanism will do weird things.
+			// adding in the function name as a comment ensures that every function ZIP is unique
+			Comment: i.Name(),
+
+			Name:   "bootstrap",
+			Method: zip.Deflate,
 		})
 	}
 	return archive.Create(i.Name())
