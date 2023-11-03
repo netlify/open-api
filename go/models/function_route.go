@@ -31,6 +31,9 @@ type FunctionRoute struct {
 
 	// pattern
 	Pattern string `json:"pattern,omitempty"`
+
+	// prefer static
+	PreferStatic bool `json:"prefer_static,omitempty"`
 }
 
 // Validate validates this function route

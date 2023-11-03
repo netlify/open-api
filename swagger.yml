@@ -3667,6 +3667,8 @@ definitions:
         items:
           type: string
           enum: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
+      prefer_static:
+        type: boolean
 parameters:
   page:
     type: integer
