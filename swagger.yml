@@ -307,6 +307,48 @@ paths:
               $ref: '#/definitions/envVar'
         default:
           $ref: '#/responses/error'
+  /api/v1/sites/{site_id}/env:
+    get:
+      tags:
+        - environmentVariables
+      operationId: getSiteEnvVars
+      parameters:
+        - name: context_name
+          description: Filter by deploy context
+          required: false
+          in: query
+          type: string
+          enum:
+            - all
+            - dev
+            - branch-deploy
+            - deploy-preview
+            - production
+        - name: scope
+          description: Filter by scope
+          required: false
+          in: query
+          type: string
+          enum:
+            - builds
+            - functions
+            - runtime
+            - post_processing
+        - name: site_id
+          description: Scope response to site_id
+          required: true
+          type: string
+          in: path
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/envVar'
+        default:
+          $ref: '#/responses/error'
+      description: Returns all environment variables for a site.
   /accounts/{account_id}/env/{key}:
     get:
       tags:
