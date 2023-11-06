@@ -151,6 +151,8 @@ type ClientService interface {
 
 	GetSiteDeploy(params *GetSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteDeployOK, error)
 
+	GetSiteEnvVars(params *GetSiteEnvVarsParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteEnvVarsOK, error)
+
 	GetSiteFileByPathName(params *GetSiteFileByPathNameParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteFileByPathNameOK, error)
 
 	GetSiteMetadata(params *GetSiteMetadataParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteMetadataOK, error)
@@ -2378,6 +2380,40 @@ func (a *Client) GetSiteDeploy(params *GetSiteDeployParams, authInfo runtime.Cli
 	}
 	// unexpected success response
 	unexpectedSuccess := result.(*GetSiteDeployDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+GetSiteEnvVars Returns all environment variables for a site.
+*/
+func (a *Client) GetSiteEnvVars(params *GetSiteEnvVarsParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteEnvVarsOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetSiteEnvVarsParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "getSiteEnvVars",
+		Method:             "GET",
+		PathPattern:        "/api/v1/sites/{site_id}/env",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &GetSiteEnvVarsReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*GetSiteEnvVarsOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*GetSiteEnvVarsDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
