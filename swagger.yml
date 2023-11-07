@@ -242,16 +242,13 @@ paths:
           $ref: '#/responses/error'
       description: >-
         Returns all environment variables for an account or site. An
-        account corresponds to a team in the Netlify UI. To use this endpoint, your
-        site must no longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
+        account corresponds to a team in the Netlify UI.
     post:
       tags:
         - environmentVariables
       operationId: createEnvVars
       description: >-
-        Creates new environment variables. Granular scopes are available
-        on Pro plans and above.  To use this endpoint, your site must no longer be
-        using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
+        Creates new environment variables. Granular scopes are available on Pro plans and above.
       parameters:
         - in: body
           name: env_vars
@@ -380,16 +377,14 @@ paths:
         default:
           $ref: '#/responses/error'
       description: >-
-        Returns an individual environment variable. To use this endpoint, your site
-        must no longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
+        Returns an individual environment variable.
     put:
       tags:
         - environmentVariables
       operationId: updateEnvVar
       description: >-
         Updates an existing environment variable and all of its values.
-        Existing values will be replaced by values provided. To use this endpoint, your site must
-        no longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
+        Existing values will be replaced by values provided.
       parameters:
         - name: account_id
           description: Scope response to account_id
@@ -449,8 +444,7 @@ paths:
         - environmentVariables
       operationId: setEnvVarValue
       description: >-
-        Updates or creates a new value for an existing environment variable. To use this endpoint, your site
-        must no longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
+        Updates or creates a new value for an existing environment variable.
       parameters:
         - name: account_id
           description: Scope response to account_id
@@ -521,8 +515,7 @@ paths:
         default:
           $ref: '#/responses/error'
       description: >-
-        Deletes an environment variable. To use this endpoint, your site must no
-        longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
+        Deletes an environment variable.
   /accounts/{account_id}/env/{key}/value/{id}:
     delete:
       tags:
@@ -557,8 +550,7 @@ paths:
         default:
           $ref: '#/responses/error'
       description: >-
-        Deletes a specific environment variable value. To use this endpoint, your site
-        must no longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
+        Deletes a specific environment variable value.
   /sites/{site_id}/forms:
     get:
       operationId: listSiteForms
