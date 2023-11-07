@@ -652,7 +652,8 @@ func TestBundleWithManifest(t *testing.T) {
 				"routes": [
 					{
 						"pattern": "/products",
-						"literal": "/products"
+						"literal": "/products",
+						"prefer_static": true
 					},
 					{
 						"pattern": "/products/:id",
@@ -707,9 +708,11 @@ func TestBundleWithManifest(t *testing.T) {
 	assert.Equal(t, "/products", helloJSConfig.Routes[0].Pattern)
 	assert.Equal(t, "/products", helloJSConfig.Routes[0].Literal)
 	assert.Empty(t, helloJSConfig.Routes[0].Expression)
+	assert.True(t, helloJSConfig.Routes[0].PreferStatic)
 
 	assert.Equal(t, "/products/:id", helloJSConfig.Routes[1].Pattern)
 	assert.Empty(t, helloJSConfig.Routes[1].Literal)
+	assert.False(t, helloJSConfig.Routes[1].PreferStatic)
 	assert.Equal(t, "^/products/(.*)$", helloJSConfig.Routes[1].Expression)
 	assert.Equal(t, []string{"GET", "POST"}, helloJSConfig.Routes[1].Methods)
 }

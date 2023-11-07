@@ -21,8 +21,9 @@ type functionsManifestEntry struct {
 }
 
 type functionRoute struct {
-	Pattern    string   `json:"pattern"`
-	Literal    string   `json:"literal"`
-	Expression string   `json:"expression"`
-	Methods    []string `json:"methods"`
+	Pattern      string   `json:"pattern"`
+	Literal      string   `json:"literal"`
+	Expression   string   `json:"expression"`
+	Methods      []string `json:"methods"`
+	PreferStatic bool     `json:"prefer_static"`
 }

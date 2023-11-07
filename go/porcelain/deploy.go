@@ -818,10 +818,11 @@ func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer Dep
 		routes := make([]*models.FunctionRoute, len(function.Routes))
 		for i, route := range function.Routes {
 			routes[i] = &models.FunctionRoute{
-				Pattern:    route.Pattern,
-				Literal:    route.Literal,
-				Expression: route.Expression,
-				Methods:    route.Methods,
+				Pattern:      route.Pattern,
+				Literal:      route.Literal,
+				Expression:   route.Expression,
+				Methods:      route.Methods,
+				PreferStatic: route.PreferStatic,
 			}
 		}
 
