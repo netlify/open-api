@@ -221,6 +221,8 @@ type ClientService interface {
 
 	RollbackSiteDeploy(params *RollbackSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*RollbackSiteDeployNoContent, error)
 
+	SearchSiteFunctions(params *SearchSiteFunctionsParams, authInfo runtime.ClientAuthInfoWriter) (*SearchSiteFunctionsOK, error)
+
 	SetEnvVarValue(params *SetEnvVarValueParams, authInfo runtime.ClientAuthInfoWriter) (*SetEnvVarValueCreated, error)
 
 	ShowService(params *ShowServiceParams, authInfo runtime.ClientAuthInfoWriter) (*ShowServiceOK, error)
@@ -3571,6 +3573,40 @@ func (a *Client) RollbackSiteDeploy(params *RollbackSiteDeployParams, authInfo r
 	}
 	// unexpected success response
 	unexpectedSuccess := result.(*RollbackSiteDeployDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+SearchSiteFunctions search site functions API
+*/
+func (a *Client) SearchSiteFunctions(params *SearchSiteFunctionsParams, authInfo runtime.ClientAuthInfoWriter) (*SearchSiteFunctionsOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewSearchSiteFunctionsParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "searchSiteFunctions",
+		Method:             "GET",
+		PathPattern:        "/sites/{site_id}/functions",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &SearchSiteFunctionsReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*SearchSiteFunctionsOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*SearchSiteFunctionsDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 

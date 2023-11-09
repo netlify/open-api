@@ -559,6 +559,30 @@ paths:
       description: >-
         Deletes a specific environment variable value. To use this endpoint, your site
         must no longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
+
+  /sites/{site_id}/functions:
+    get:
+      operationId: searchSiteFunctions
+      tags: [function]
+      parameters:
+        - name: site_id
+          type: string
+          in: path
+          required: true
+        - name: filter
+          type: string
+          in: query
+          required: false
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/siteFunction'
+        default:
+          $ref: '#/responses/error'
+
   /sites/{site_id}/forms:
     get:
       operationId: listSiteForms
@@ -3711,6 +3735,25 @@ definitions:
           enum: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
       prefer_static:
         type: boolean
+  siteFunction:
+    type: object
+    properties:
+      branch:
+        type: string
+      created_at:
+        type: string
+        format: dateTime
+      functions:
+        type: array
+        items:
+          type: object
+      id:
+        type: string
+      log_type:
+        type: string
+      provider:
+        type: string
+
 parameters:
   page:
     type: integer
