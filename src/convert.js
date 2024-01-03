@@ -14,9 +14,7 @@ const JSON_OUTPUT = `${OUTPUT_DIR}/swagger.json`
 const convertOpenApi = async function () {
   const [openapiDef] = await Promise.all([
     SwaggerParser.validate(YAML_INPUT, { dereference: { circular: false } }),
-    mkdir(OUTPUT_DIR, { recursive: true }, () => {
-      console.log(`${OUTPUT_DIR} created`)
-    }),
+    mkdir(OUTPUT_DIR, { recursive: true }, () => {}),
   ])
   const openapiJson = JSON.stringify(openapiDef, null, 2)
   await pWriteFile(JSON_OUTPUT, openapiJson)
