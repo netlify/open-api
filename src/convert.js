@@ -1,9 +1,6 @@
-const { writeFile, mkdir } = require('fs')
-const { promisify } = require('util')
+const { writeFile, mkdir } = require('fs/promises')
 
 const SwaggerParser = require('swagger-parser')
-
-const pWriteFile = promisify(writeFile)
 
 const YAML_INPUT = `${__dirname}/../swagger.yml`
 const OUTPUT_DIR = `${__dirname}/../dist`
@@ -17,7 +14,7 @@ const convertOpenApi = async function () {
     mkdir(OUTPUT_DIR, { recursive: true }, () => {}),
   ])
   const openapiJson = JSON.stringify(openapiDef, null, 2)
-  await pWriteFile(JSON_OUTPUT, openapiJson)
+  await writeFile(JSON_OUTPUT, openapiJson)
 }
 
 convertOpenApi()
