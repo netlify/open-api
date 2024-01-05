@@ -15,13 +15,13 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
 
 	"github.com/cenkalti/backoff/v4"
-	apierrors "github.com/go-openapi/errors"
 	"github.com/pkg/errors"
 	"github.com/rsc/goversion/version"
 	"github.com/sirupsen/logrus"
@@ -32,8 +32,9 @@ import (
 )
 
 const (
-	jsRuntime = "js"
-	goRuntime = "go"
+	jsRuntime    = "js"
+	goRuntime    = "go"
+	amazonLinux2 = "provided.al2"
 
 	preProcessingTimeout = time.Minute * 5
 
@@ -83,12 +84,14 @@ type DeployOptions struct {
 	BuildDir          string
 	LargeMediaEnabled bool
 
-	IsDraft bool
+	IsDraft   bool
+	SkipRetry bool
 
 	Title             string
 	Branch            string
 	CommitRef         string
 	Framework         string
+	FrameworkVersion  string
 	UploadTimeout     time.Duration
 	PreProcessTimeout time.Duration
 
@@ -98,6 +101,11 @@ type DeployOptions struct {
 	functions         *deployFiles
 	functionSchedules []*models.FunctionSchedule
 	functionsConfig   map[string]models.FunctionConfig
+}
+
+type deployApiError interface {
+	error
+	Code() int
 }
 
 type uploadError struct {
@@ -255,10 +263,11 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 	options.functionsConfig = functionsConfig
 
 	deployFiles := &models.DeployFiles{
-		Files:     options.files.Sums,
-		Draft:     options.IsDraft,
-		Async:     n.overCommitted(options.files),
-		Framework: options.Framework,
+		Files:            options.files.Sums,
+		Draft:            options.IsDraft,
+		Async:            n.overCommitted(options.files),
+		Framework:        options.Framework,
+		FrameworkVersion: options.FrameworkVersion,
 	}
 	if options.functions != nil {
 		deployFiles.Functions = options.functions.Sums
@@ -344,12 +353,14 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 		return deploy, nil
 	}
 
-	if err := n.uploadFiles(ctx, deploy, options.files, options.Observer, fileUpload, options.UploadTimeout); err != nil {
+	skipRetry := options.SkipRetry
+
+	if err := n.uploadFiles(ctx, deploy, options.files, options.Observer, fileUpload, options.UploadTimeout, skipRetry); err != nil {
 		return nil, err
 	}
 
 	if options.functions != nil {
-		if err := n.uploadFiles(ctx, deploy, options.functions, options.Observer, functionUpload, options.UploadTimeout); err != nil {
+		if err := n.uploadFiles(ctx, deploy, options.functions, options.Observer, functionUpload, options.UploadTimeout, skipRetry); err != nil {
 			return nil, err
 		}
 	}
@@ -396,12 +407,17 @@ func (n *Netlify) WaitUntilDeployReady(ctx context.Context, d *models.Deploy) (*
 	return n.waitForState(ctx, d, "prepared", "ready")
 }
 
-// WaitUntilDeployLive blocks until the deploy is in the "ready" state. At this point, the deploy is ready to recieve traffic.
+// WaitUntilDeployLive blocks until the deploy is in the "ready" state. At this point, the deploy is ready to receive traffic to all of its URLs.
 func (n *Netlify) WaitUntilDeployLive(ctx context.Context, d *models.Deploy) (*models.Deploy, error) {
 	return n.waitForState(ctx, d, "ready")
 }
 
-func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *deployFiles, observer DeployObserver, t uploadType, timeout time.Duration) error {
+// WaitUntilDeployProcessed blocks until the deploy is in the "processed" state. At this point, the deploy is ready to receive traffic via its permalink.
+func (n *Netlify) WaitUntilDeployProcessed(ctx context.Context, d *models.Deploy) (*models.Deploy, error) {
+	return n.waitForState(ctx, d, "processed")
+}
+
+func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *deployFiles, observer DeployObserver, t uploadType, timeout time.Duration, skipRetry bool) error {
 	sharedErr := &uploadError{err: nil, mutex: &sync.Mutex{}}
 	sem := make(chan int, n.uploadLimit)
 	wg := &sync.WaitGroup{}
@@ -431,7 +447,7 @@ func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *depl
 			select {
 			case sem <- 1:
 				wg.Add(1)
-				go n.uploadFile(ctx, d, file, observer, t, timeout, wg, sem, sharedErr)
+				go n.uploadFile(ctx, d, file, observer, t, timeout, wg, sem, sharedErr, skipRetry)
 			case <-ctx.Done():
 				log.Info("Context terminated, aborting file upload")
 				return errors.Wrap(ctx.Err(), "aborted file upload early")
@@ -451,7 +467,7 @@ func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *depl
 	return sharedErr.err
 }
 
-func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundle, c DeployObserver, t uploadType, timeout time.Duration, wg *sync.WaitGroup, sem chan int, sharedErr *uploadError) {
+func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundle, c DeployObserver, t uploadType, timeout time.Duration, wg *sync.WaitGroup, sem chan int, sharedErr *uploadError, skipRetry bool) {
 	defer func() {
 		wg.Done()
 		<-sem
@@ -537,12 +553,18 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 
 		if operationError != nil {
 			context.GetLogger(ctx).WithError(operationError).Errorf("Failed to upload file %v", f.Name)
-			apiErr, ok := operationError.(apierrors.Error)
+			apiErr, ok := operationError.(deployApiError)
 
-			if ok && apiErr.Code() == 401 {
-				sharedErr.mutex.Lock()
-				sharedErr.err = operationError
-				sharedErr.mutex.Unlock()
+			if ok {
+				if apiErr.Code() == 401 {
+					sharedErr.mutex.Lock()
+					sharedErr.err = operationError
+					sharedErr.mutex.Unlock()
+				}
+
+				if skipRetry && (apiErr.Code() == 400 || apiErr.Code() == 422) {
+					operationError = backoff.Permanent(operationError)
+				}
 			}
 		}
 
@@ -726,7 +748,7 @@ func bundle(ctx context.Context, functionDir string, observer DeployObserver) (*
 			}
 			functions.Add(file.Name, file)
 		case goFile(filePath, i, observer):
-			file, err := newFunctionFile(filePath, i, goRuntime, nil, observer)
+			file, err := newFunctionFile(filePath, i, amazonLinux2, nil, observer)
 			if err != nil {
 				return nil, nil, nil, err
 			}
@@ -793,10 +815,23 @@ func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer Dep
 			})
 		}
 
-		if function.DisplayName != "" || function.Generator != "" {
+		routes := make([]*models.FunctionRoute, len(function.Routes))
+		for i, route := range function.Routes {
+			routes[i] = &models.FunctionRoute{
+				Pattern:      route.Pattern,
+				Literal:      route.Literal,
+				Expression:   route.Expression,
+				Methods:      route.Methods,
+				PreferStatic: route.PreferStatic,
+			}
+		}
+
+		if function.DisplayName != "" || function.Generator != "" || len(routes) > 0 || len(function.BuildData) > 0 {
 			functionsConfig[file.Name] = models.FunctionConfig{
 				DisplayName: function.DisplayName,
 				Generator:   function.Generator,
+				Routes:      routes,
+				BuildData:   function.BuildData,
 			}
 		}
 
@@ -903,7 +938,7 @@ func jsFile(i os.FileInfo) bool {
 func goFile(filePath string, i os.FileInfo, observer DeployObserver) bool {
 	warner, hasWarner := observer.(DeployWarner)
 
-	if m := i.Mode(); m&0111 == 0 { // check if it's an executable file
+	if m := i.Mode(); m&0111 == 0 && runtime.GOOS != "windows" { // check if it's an executable file. skip on windows, since it doesn't have that mode
 		if hasWarner {
 			warner.OnWalkWarning(filePath, "Go binary does not have executable permissions")
 		}
@@ -943,12 +978,17 @@ func ignoreFile(rel string, ignoreInstallDirs bool) bool {
 }
 
 func createHeader(archive *zip.Writer, i os.FileInfo, runtime string) (io.Writer, error) {
-	if runtime == goRuntime {
+	if runtime == goRuntime || runtime == amazonLinux2 {
 		return archive.CreateHeader(&zip.FileHeader{
 			CreatorVersion: 3 << 8,     // indicates Unix
 			ExternalAttrs:  0777 << 16, // -rwxrwxrwx file permissions
-			Name:           i.Name(),
-			Method:         zip.Deflate,
+
+			// we need to make sure we don't have two ZIP files with the exact same contents - otherwise, our upload deduplication mechanism will do weird things.
+			// adding in the function name as a comment ensures that every function ZIP is unique
+			Comment: i.Name(),
+
+			Name:   "bootstrap",
+			Method: zip.Deflate,
 		})
 	}
 	return archive.Create(i.Name())

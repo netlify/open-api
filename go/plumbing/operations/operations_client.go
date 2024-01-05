@@ -151,6 +151,8 @@ type ClientService interface {
 
 	GetSiteDeploy(params *GetSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteDeployOK, error)
 
+	GetSiteEnvVars(params *GetSiteEnvVarsParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteEnvVarsOK, error)
+
 	GetSiteFileByPathName(params *GetSiteFileByPathNameParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteFileByPathNameOK, error)
 
 	GetSiteMetadata(params *GetSiteMetadataParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteMetadataOK, error)
@@ -211,11 +213,15 @@ type ClientService interface {
 
 	ProvisionSiteTLSCertificate(params *ProvisionSiteTLSCertificateParams, authInfo runtime.ClientAuthInfoWriter) (*ProvisionSiteTLSCertificateOK, error)
 
+	PurgeCache(params *PurgeCacheParams, authInfo runtime.ClientAuthInfoWriter) (*PurgeCacheAccepted, error)
+
 	RemoveAccountMember(params *RemoveAccountMemberParams, authInfo runtime.ClientAuthInfoWriter) (*RemoveAccountMemberNoContent, error)
 
 	RestoreSiteDeploy(params *RestoreSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*RestoreSiteDeployCreated, error)
 
 	RollbackSiteDeploy(params *RollbackSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*RollbackSiteDeployNoContent, error)
+
+	SearchSiteFunctions(params *SearchSiteFunctionsParams, authInfo runtime.ClientAuthInfoWriter) (*SearchSiteFunctionsOK, error)
 
 	SetEnvVarValue(params *SetEnvVarValueParams, authInfo runtime.ClientAuthInfoWriter) (*SetEnvVarValueCreated, error)
 
@@ -679,7 +685,7 @@ func (a *Client) CreateServiceInstance(params *CreateServiceInstanceParams, auth
 }
 
 /*
-CreateSite **Note:** Environment variable keys and values will soon be moved from `build_settings.env` and `repo.env` to a new endpoint. Please use [createEnvVars](#tag/environmentVariables/operation/createEnvVars) to create environment variables for a site.
+CreateSite **Note:** Environment variable keys and values have moved from `build_settings.env` and `repo.env` to a new endpoint. Please use [createEnvVars](#tag/environmentVariables/operation/createEnvVars) to create environment variables for a site.
 */
 func (a *Client) CreateSite(params *CreateSiteParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteCreated, error) {
 	// TODO: Validate the params before sending
@@ -849,7 +855,7 @@ func (a *Client) CreateSiteDeploy(params *CreateSiteDeployParams, authInfo runti
 }
 
 /*
-CreateSiteInTeam **Note:** Environment variable keys and values will soon be moved from `build_settings.env` and `repo.env` to a new endpoint. Please use [createEnvVars](#tag/environmentVariables/operation/createEnvVars) to create environment variables for a site.
+CreateSiteInTeam **Note:** Environment variable keys and values have moved from `build_settings.env` and `repo.env` to a new endpoint. Please use [createEnvVars](#tag/environmentVariables/operation/createEnvVars) to create environment variables for a site.
 */
 func (a *Client) CreateSiteInTeam(params *CreateSiteInTeamParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteInTeamCreated, error) {
 	// TODO: Validate the params before sending
@@ -2176,7 +2182,7 @@ func (a *Client) GetServices(params *GetServicesParams, authInfo runtime.ClientA
 }
 
 /*
-GetSite **Note:** Environment variable keys and values will soon be moved from `build_settings.env` and `repo.env` to a new endpoint. Please use [getEnvVars](#tag/environmentVariables/operation/getEnvVars) to retrieve site environment variables.
+GetSite **Note:** Environment variable keys and values have moved from `build_settings.env` and `repo.env` to a new endpoint. Please use [getEnvVars](#tag/environmentVariables/operation/getEnvVars) to retrieve site environment variables.
 */
 func (a *Client) GetSite(params *GetSiteParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteOK, error) {
 	// TODO: Validate the params before sending
@@ -2376,6 +2382,40 @@ func (a *Client) GetSiteDeploy(params *GetSiteDeployParams, authInfo runtime.Cli
 	}
 	// unexpected success response
 	unexpectedSuccess := result.(*GetSiteDeployDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+GetSiteEnvVars Returns all environment variables for a site. This convenience method behaves the same as `getEnvVars` but doesn't require an `account_id` as input.
+*/
+func (a *Client) GetSiteEnvVars(params *GetSiteEnvVarsParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteEnvVarsOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetSiteEnvVarsParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "getSiteEnvVars",
+		Method:             "GET",
+		PathPattern:        "/api/v1/sites/{site_id}/env",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &GetSiteEnvVarsReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*GetSiteEnvVarsOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*GetSiteEnvVarsDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
@@ -3230,7 +3270,7 @@ func (a *Client) ListSiteSubmissions(params *ListSiteSubmissionsParams, authInfo
 }
 
 /*
-ListSites **Note:** Environment variable keys and values will soon be moved from `build_settings.env` and `repo.env` to a new endpoint. Please use [getEnvVars](#tag/environmentVariables/operation/getEnvVars) to retrieve site environment variables.
+ListSites **Note:** Environment variable keys and values have moved from `build_settings.env` and `repo.env` to a new endpoint. Please use [getEnvVars](#tag/environmentVariables/operation/getEnvVars) to retrieve site environment variables.
 */
 func (a *Client) ListSites(params *ListSitesParams, authInfo runtime.ClientAuthInfoWriter) (*ListSitesOK, error) {
 	// TODO: Validate the params before sending
@@ -3264,7 +3304,7 @@ func (a *Client) ListSites(params *ListSitesParams, authInfo runtime.ClientAuthI
 }
 
 /*
-ListSitesForAccount **Note:** Environment variable keys and values will soon be moved from `build_settings.env` and `repo.env` to a new endpoint. Please use [getEnvVars](#tag/environmentVariables/operation/getEnvVars) to retrieve site environment variables.
+ListSitesForAccount **Note:** Environment variable keys and values have moved from `build_settings.env` and `repo.env` to a new endpoint. Please use [getEnvVars](#tag/environmentVariables/operation/getEnvVars) to retrieve site environment variables.
 */
 func (a *Client) ListSitesForAccount(params *ListSitesForAccountParams, authInfo runtime.ClientAuthInfoWriter) (*ListSitesForAccountOK, error) {
 	// TODO: Validate the params before sending
@@ -3400,6 +3440,41 @@ func (a *Client) ProvisionSiteTLSCertificate(params *ProvisionSiteTLSCertificate
 }
 
 /*
+PurgeCache Purges cached content from Netlify's CDN. Supports purging by Cache-Tag.
+*/
+func (a *Client) PurgeCache(params *PurgeCacheParams, authInfo runtime.ClientAuthInfoWriter) (*PurgeCacheAccepted, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewPurgeCacheParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "purgeCache",
+		Method:             "POST",
+		PathPattern:        "/purge",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &PurgeCacheReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*PurgeCacheAccepted)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for purgeCache: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
 RemoveAccountMember remove account member API
 */
 func (a *Client) RemoveAccountMember(params *RemoveAccountMemberParams, authInfo runtime.ClientAuthInfoWriter) (*RemoveAccountMemberNoContent, error) {
@@ -3498,6 +3573,40 @@ func (a *Client) RollbackSiteDeploy(params *RollbackSiteDeployParams, authInfo r
 	}
 	// unexpected success response
 	unexpectedSuccess := result.(*RollbackSiteDeployDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+SearchSiteFunctions search site functions API
+*/
+func (a *Client) SearchSiteFunctions(params *SearchSiteFunctionsParams, authInfo runtime.ClientAuthInfoWriter) (*SearchSiteFunctionsOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewSearchSiteFunctionsParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "searchSiteFunctions",
+		Method:             "GET",
+		PathPattern:        "/sites/{site_id}/functions",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &SearchSiteFunctionsReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*SearchSiteFunctionsOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*SearchSiteFunctionsDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
@@ -4018,7 +4127,7 @@ func (a *Client) UpdateServiceInstance(params *UpdateServiceInstanceParams, auth
 }
 
 /*
-UpdateSite **Note:** Environment variable keys and values will soon be moved from `build_settings.env` and `repo.env` to a new endpoint. Please use [updateEnvVar](#tag/environmentVariables/operation/updateEnvVar) to update a site's environment variables.
+UpdateSite **Note:** Environment variable keys and values have moved from `build_settings.env` and `repo.env` to a new endpoint. Please use [updateEnvVar](#tag/environmentVariables/operation/updateEnvVar) to update a site's environment variables.
 */
 func (a *Client) UpdateSite(params *UpdateSiteParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateSiteOK, error) {
 	// TODO: Validate the params before sending

@@ -1,7 +1,7 @@
 {
   "name": "@netlify/open-api",
   "description": "Netlify's open-api definition as a module",
-  "version": "2.19.1",
+  "version": "2.26.0",
   "author": "Netlify",
   "ava": {
     "files": [
@@ -27,7 +27,8 @@
     "make-dir": "^3.0.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.8.7",
-    "swagger-parser": "^8.0.1"
+    "swagger-parser": "^8.0.1",
+    "swagger2openapi": "^7.0.8"
   },
   "files": [],
   "homepage": "https://github.com/netlify/open-api#readme",
@@ -48,6 +49,7 @@
     "start": "run-s lint build",
     "bundle": "redocly bundle external@latest --output external.yml",
     "build": "run-s convert bundle redoc",
+    "postbuild": "swagger2openapi external.yml -o dist/openapi.json",
     "convert": "node src/convert.js",
     "bump-swagger": "node src/bump-swagger.js",
     "redoc": "node src/docs/build.js",

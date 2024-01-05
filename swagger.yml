@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  version: 2.19.1
+  version: 2.26.0
   title: Netlify's API documentation
   description: >-
     Netlify is a hosting service for the programmable web. It understands your
@@ -75,7 +75,7 @@ paths:
         default:
           $ref: '#/responses/error'
       description: >-
-        **Note:** Environment variable keys and values will soon be moved from `build_settings.env` and `repo.env` to a new endpoint.
+        **Note:** Environment variable keys and values have moved from `build_settings.env` and `repo.env` to a new endpoint.
         Please use [getEnvVars](#tag/environmentVariables/operation/getEnvVars) to retrieve site environment variables.
     post:
       operationId: createSite
@@ -99,7 +99,7 @@ paths:
         default:
           $ref: '#/responses/error'
       description: >-
-        **Note:** Environment variable keys and values will soon be moved from `build_settings.env` and `repo.env` to a new endpoint.
+        **Note:** Environment variable keys and values have moved from `build_settings.env` and `repo.env` to a new endpoint.
         Please use [createEnvVars](#tag/environmentVariables/operation/createEnvVars) to create environment variables for a site.
   /sites/{site_id}:
     parameters:
@@ -123,7 +123,7 @@ paths:
         default:
           $ref: '#/responses/error'
       description: >-
-        **Note:** Environment variable keys and values will soon be moved from `build_settings.env` and `repo.env` to a new endpoint.
+        **Note:** Environment variable keys and values have moved from `build_settings.env` and `repo.env` to a new endpoint.
         Please use [getEnvVars](#tag/environmentVariables/operation/getEnvVars) to retrieve site environment variables.
     patch:
       operationId: updateSite
@@ -144,7 +144,7 @@ paths:
         default:
           $ref: '#/responses/error'
       description: >-
-        **Note:** Environment variable keys and values will soon be moved from `build_settings.env` and `repo.env` to a new endpoint.
+        **Note:** Environment variable keys and values have moved from `build_settings.env` and `repo.env` to a new endpoint.
         Please use [updateEnvVar](#tag/environmentVariables/operation/updateEnvVar) to update a site's environment variables.
     delete:
       operationId: deleteSite
@@ -283,7 +283,7 @@ paths:
                 is_secret:
                   type: boolean
                   description: >-
-                    Secret values are only readable by code running on Netlify’s systems. 
+                    Secret values are only readable by code running on Netlify’s systems.
                     With secrets, only the local development context values are readable from the UI, API, and CLI.
                     By default, environment variable values are not secret. (Enterprise plans only)
         - name: account_id
@@ -307,6 +307,48 @@ paths:
               $ref: '#/definitions/envVar'
         default:
           $ref: '#/responses/error'
+  /api/v1/sites/{site_id}/env:
+    get:
+      tags:
+        - environmentVariables
+      operationId: getSiteEnvVars
+      parameters:
+        - name: context_name
+          description: Filter by deploy context
+          required: false
+          in: query
+          type: string
+          enum:
+            - all
+            - dev
+            - branch-deploy
+            - deploy-preview
+            - production
+        - name: scope
+          description: Filter by scope
+          required: false
+          in: query
+          type: string
+          enum:
+            - builds
+            - functions
+            - runtime
+            - post_processing
+        - name: site_id
+          description: Scope response to site_id
+          required: true
+          type: string
+          in: path
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/envVar'
+        default:
+          $ref: '#/responses/error'
+      description: Returns all environment variables for a site. This convenience method behaves the same as `getEnvVars` but doesn't require an `account_id` as input.
   /accounts/{account_id}/env/{key}:
     get:
       tags:
@@ -387,7 +429,7 @@ paths:
               is_secret:
                 type: boolean
                 description: >-
-                  Secret values are only readable by code running on Netlify’s systems. 
+                  Secret values are only readable by code running on Netlify’s systems.
                   With secrets, only the local development context values are readable from the UI, API, and CLI.
                   By default, environment variable values are not secret. (Enterprise plans only)
         - name: site_id
@@ -517,6 +559,30 @@ paths:
       description: >-
         Deletes a specific environment variable value. To use this endpoint, your site
         must no longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
+
+  /sites/{site_id}/functions:
+    get:
+      operationId: searchSiteFunctions
+      tags: [function]
+      parameters:
+        - name: site_id
+          type: string
+          in: path
+          required: true
+        - name: filter
+          type: string
+          in: query
+          required: false
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/siteFunction'
+        default:
+          $ref: '#/responses/error'
+
   /sites/{site_id}/forms:
     get:
       operationId: listSiteForms
@@ -719,6 +785,27 @@ paths:
             $ref: '#/definitions/file'
         default:
           $ref: '#/responses/error'
+  /purge:
+    post:
+      operationId: purgeCache
+      description: >-
+        Purges cached content from Netlify's CDN. Supports purging by Cache-Tag.
+      tags: [purge]
+      consumes:
+        - application/json
+      parameters:
+        - name: payload
+          in: body
+          schema:
+            $ref: '#/definitions/purge'
+          required: true
+      responses:
+        '202':
+          description: OK
+        '400':
+          description: Invalid request parameters
+        '404':
+          description: Site not found
   /sites/{site_id}/snippets:
     parameters:
       - name: site_id
@@ -935,6 +1022,7 @@ paths:
           - preparing
           - prepared
           - processing
+          - processed
           - ready
           - error
           - retrying
@@ -1199,6 +1287,14 @@ paths:
         type: string
         in: path
         required: true
+      - name: buildbot_version
+        type: string
+        in: query
+        required: false
+      - name: build_version
+        type: string
+        in: query
+        required: false
     post:
       operationId: notifyBuildStart
       tags: [build]
@@ -1726,7 +1822,7 @@ paths:
         default:
           $ref: '#/responses/error'
       description: >-
-        **Note:** Environment variable keys and values will soon be moved from `build_settings.env` and `repo.env` to a new endpoint.
+        **Note:** Environment variable keys and values have moved from `build_settings.env` and `repo.env` to a new endpoint.
         Please use [createEnvVars](#tag/environmentVariables/operation/createEnvVars) to create environment variables for a site.
     get:
       operationId: listSitesForAccount # an account represents a team or a user
@@ -1751,7 +1847,7 @@ paths:
         default:
           $ref: '#/responses/error'
       description: >-
-        **Note:** Environment variable keys and values will soon be moved from `build_settings.env` and `repo.env` to a new endpoint.
+        **Note:** Environment variable keys and values have moved from `build_settings.env` and `repo.env` to a new endpoint.
         Please use [getEnvVars](#tag/environmentVariables/operation/getEnvVars) to retrieve site environment variables.
   /{account_slug}/members:
     parameters:
@@ -2610,17 +2706,6 @@ definitions:
       processing_settings:
         type: object
         properties:
-          skip:
-            type: boolean
-          css:
-            $ref: '#/definitions/minifyOptions'
-          js:
-            $ref: '#/definitions/minifyOptions'
-          images:
-            type: object
-            properties:
-              optimize:
-                type: boolean
           html:
             type: object
             properties:
@@ -2638,6 +2723,8 @@ definitions:
       build_image:
         type: string
       prerender:
+        type: string
+      functions_region:
         type: string
   siteSetup:
     allOf:
@@ -2737,7 +2824,7 @@ definitions:
       is_secret:
         type: boolean
         description: >-
-          Secret values are only readable by code running on Netlify’s systems. 
+          Secret values are only readable by code running on Netlify’s systems.
           With secrets, only the local development context values are readable from the UI, API, and CLI.
           By default, environment variable values are not secret. (Enterprise plans only)
       updated_at:
@@ -2892,6 +2979,17 @@ definitions:
         type: string
       goal_position:
         type: string
+  purge:
+    type: object
+    properties:
+      site_id:
+        type: string
+      site_slug:
+        type: string
+      cache_tags:
+        type: array
+        items:
+          type: string
   deploy:
     type: object
     properties:
@@ -2992,6 +3090,8 @@ definitions:
       branch:
         type: string
       framework:
+        type: string
+      framework_version:
         type: string
   pluginParams:
     type: object
@@ -3510,13 +3610,6 @@ definitions:
         type: integer
       used:
         type: integer
-  minifyOptions:
-    type: object
-    properties:
-      bundle:
-        type: boolean
-      minify:
-        type: boolean
   buildSetup:
     type: object
     properties:
@@ -3620,6 +3713,47 @@ definitions:
         type: string
       generator:
         type: string
+      build_data:
+        type: object
+      routes:
+        type: array
+        items:
+          $ref: '#/definitions/functionRoute'
+  functionRoute:
+    type: object
+    properties:
+      pattern:
+        type: string
+      literal:
+        type: string
+      expression:
+        type: string
+      methods:
+        type: array
+        items:
+          type: string
+          enum: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
+      prefer_static:
+        type: boolean
+  siteFunction:
+    type: object
+    properties:
+      branch:
+        type: string
+      created_at:
+        type: string
+        format: dateTime
+      functions:
+        type: array
+        items:
+          type: object
+      id:
+        type: string
+      log_type:
+        type: string
+      provider:
+        type: string
+
 parameters:
   page:
     type: integer
@@ -3656,6 +3790,7 @@ x-tagGroups:
       - environmentVariables
       - file
       - metadata
+      - purge
       - snippet
   - name: Domain names
     tags:
@@ -3720,6 +3855,8 @@ tags:
     x-displayName: Metadata
   - name: snippet
     x-displayName: Snippet
+  - name: purge
+    x-displayName: Cache purge
   - name: dnsZone
     x-displayName: DNS zone
   - name: sniCertificate
