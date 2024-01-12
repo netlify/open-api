@@ -2935,6 +2935,10 @@ definitions:
         type: array
         items:
           type: string
+      cache_ids:
+        type: array
+        items:
+          type: string
   deploy:
     type: object
     properties:

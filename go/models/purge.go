@@ -15,6 +15,9 @@ import (
 // swagger:model purge
 type Purge struct {
 
+	// cache ids
+	CacheIds []string `json:"cache_ids"`
+
 	// cache tags
 	CacheTags []string `json:"cache_tags"`
 
