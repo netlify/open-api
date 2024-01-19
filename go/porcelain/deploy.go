@@ -209,10 +209,6 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 	}
 
 	largeMediaEnabled := options.LargeMediaEnabled
-	if !largeMediaEnabled && deploy != nil {
-		largeMediaEnabled = deploy.SiteCapabilities.LargeMediaEnabled
-	}
-
 	ignoreInstallDirs := options.Dir == options.BuildDir
 
 	context.GetLogger(ctx).Infof("Getting files info with large media flag: %v", largeMediaEnabled)

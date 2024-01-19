@@ -84,9 +84,6 @@ type Deploy struct {
 	// screenshot url
 	ScreenshotURL string `json:"screenshot_url,omitempty"`
 
-	// site capabilities
-	SiteCapabilities *DeploySiteCapabilities `json:"site_capabilities,omitempty"`
-
 	// site id
 	SiteID string `json:"site_id,omitempty"`
 
@@ -120,10 +117,6 @@ func (m *Deploy) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateSiteCapabilities(formats); err != nil {
-		res = append(res, err)
-	}
-
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
@@ -150,24 +143,6 @@ func (m *Deploy) validateFunctionSchedules(formats strfmt.Registry) error {
 			}
 		}
 
-	}
-
-	return nil
-}
-
-func (m *Deploy) validateSiteCapabilities(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.SiteCapabilities) { // not required
-		return nil
-	}
-
-	if m.SiteCapabilities != nil {
-		if err := m.SiteCapabilities.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("site_capabilities")
-			}
-			return err
-		}
 	}
 
 	return nil
