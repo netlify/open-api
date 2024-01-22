@@ -3056,11 +3056,6 @@ definitions:
         type: boolean
       review_url:
         type: string
-      site_capabilities:
-        type: object
-        properties:
-          large_media_enabled:
-            type: boolean
       framework:
         type: string
       function_schedules:
