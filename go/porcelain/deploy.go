@@ -822,12 +822,14 @@ func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer Dep
 			}
 		}
 
-		if function.DisplayName != "" || function.Generator != "" || len(routes) > 0 || len(function.BuildData) > 0 {
+		hasConfig := function.DisplayName != "" || function.Generator != "" || len(routes) > 0 || len(function.BuildData) > 0 || function.Priority != 0
+		if hasConfig {
 			functionsConfig[file.Name] = models.FunctionConfig{
 				DisplayName: function.DisplayName,
 				Generator:   function.Generator,
 				Routes:      routes,
 				BuildData:   function.BuildData,
+				Priority:    int64(function.Priority),
 			}
 		}
 
