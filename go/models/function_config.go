@@ -27,6 +27,9 @@ type FunctionConfig struct {
 	// generator
 	Generator string `json:"generator,omitempty"`
 
+	// priority
+	Priority int64 `json:"priority,omitempty"`
+
 	// routes
 	Routes []*FunctionRoute `json:"routes"`
 }

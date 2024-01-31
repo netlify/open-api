@@ -3714,6 +3714,8 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/functionRoute'
+      priority:
+        type: integer 
   functionRoute:
     type: object
     properties:
