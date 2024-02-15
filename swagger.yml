@@ -3511,7 +3511,7 @@ definitions:
     properties:
       role:
         type: string
-        enum: ['Owner', 'Collaborator', 'Billing Admin']
+        enum: ['Owner', 'Developer', 'Billing Admin', 'Reviewer']
       email:
         type: string
   accountUpdateMemberSetup:
@@ -3519,7 +3519,7 @@ definitions:
     properties:
       role:
         type: string
-        enum: ['Owner', 'Collaborator', 'Billing Admin']
+        enum: ['Owner', 'Developer', 'Billing Admin', 'Reviewer']
       site_access:
         type: string
         enum: ['all', 'none', 'selected']
@@ -3715,7 +3715,7 @@ definitions:
         items:
           $ref: '#/definitions/functionRoute'
       priority:
-        type: integer 
+        type: integer
   functionRoute:
     type: object
     properties:
