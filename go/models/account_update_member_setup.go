@@ -20,7 +20,7 @@ import (
 type AccountUpdateMemberSetup struct {
 
 	// role
-	// Enum: [Owner Collaborator Controller]
+	// Enum: [Owner Collaborator Billing Admin]
 	Role string `json:"role,omitempty"`
 
 	// site access
@@ -53,7 +53,7 @@ var accountUpdateMemberSetupTypeRolePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["Owner","Collaborator","Controller"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["Owner","Collaborator","Billing Admin"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -69,8 +69,8 @@ const (
 	// AccountUpdateMemberSetupRoleCollaborator captures enum value "Collaborator"
 	AccountUpdateMemberSetupRoleCollaborator string = "Collaborator"
 
-	// AccountUpdateMemberSetupRoleController captures enum value "Controller"
-	AccountUpdateMemberSetupRoleController string = "Controller"
+	// AccountUpdateMemberSetupRoleBillingAdmin captures enum value "Billing Admin"
+	AccountUpdateMemberSetupRoleBillingAdmin string = "Billing Admin"
 )
 
 // prop value enum
