@@ -3511,7 +3511,7 @@ definitions:
     properties:
       role:
         type: string
-        enum: ['Owner', 'Collaborator', 'Controller']
+        enum: ['Owner', 'Collaborator', 'Billing Admin']
       email:
         type: string
   accountUpdateMemberSetup:
@@ -3519,7 +3519,7 @@ definitions:
     properties:
       role:
         type: string
-        enum: ['Owner', 'Collaborator', 'Controller']
+        enum: ['Owner', 'Collaborator', 'Billing Admin']
       site_access:
         type: string
         enum: ['all', 'none', 'selected']
