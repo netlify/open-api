@@ -61,6 +61,10 @@ type ClientService interface {
 
 	CreateSiteDeploy(params *CreateSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteDeployOK, error)
 
+	CreateSiteDevServer(params *CreateSiteDevServerParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteDevServerOK, error)
+
+	CreateSiteDevServerHook(params *CreateSiteDevServerHookParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteDevServerHookCreated, error)
+
 	CreateSiteInTeam(params *CreateSiteInTeamParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteInTeamCreated, error)
 
 	CreateSiteSnippet(params *CreateSiteSnippetParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteSnippetCreated, error)
@@ -92,6 +96,10 @@ type ClientService interface {
 	DeleteSiteBuildHook(params *DeleteSiteBuildHookParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSiteBuildHookNoContent, error)
 
 	DeleteSiteDeploy(params *DeleteSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSiteDeployNoContent, error)
+
+	DeleteSiteDevServerHook(params *DeleteSiteDevServerHookParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSiteDevServerHookNoContent, error)
+
+	DeleteSiteDevServers(params *DeleteSiteDevServersParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSiteDevServersAccepted, error)
 
 	DeleteSiteForm(params *DeleteSiteFormParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSiteFormNoContent, error)
 
@@ -151,6 +159,10 @@ type ClientService interface {
 
 	GetSiteDeploy(params *GetSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteDeployOK, error)
 
+	GetSiteDevServer(params *GetSiteDevServerParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteDevServerOK, error)
+
+	GetSiteDevServerHook(params *GetSiteDevServerHookParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteDevServerHookOK, error)
+
 	GetSiteEnvVars(params *GetSiteEnvVarsParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteEnvVarsOK, error)
 
 	GetSiteFileByPathName(params *GetSiteFileByPathNameParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteFileByPathNameOK, error)
@@ -194,6 +206,10 @@ type ClientService interface {
 	ListSiteDeployedBranches(params *ListSiteDeployedBranchesParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteDeployedBranchesOK, error)
 
 	ListSiteDeploys(params *ListSiteDeploysParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteDeploysOK, error)
+
+	ListSiteDevServerHooks(params *ListSiteDevServerHooksParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteDevServerHooksOK, error)
+
+	ListSiteDevServers(params *ListSiteDevServersParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteDevServersOK, error)
 
 	ListSiteFiles(params *ListSiteFilesParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteFilesOK, error)
 
@@ -262,6 +278,8 @@ type ClientService interface {
 	UpdateSiteBuildLog(params *UpdateSiteBuildLogParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateSiteBuildLogNoContent, error)
 
 	UpdateSiteDeploy(params *UpdateSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateSiteDeployOK, error)
+
+	UpdateSiteDevServerHook(params *UpdateSiteDevServerHookParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateSiteDevServerHookNoContent, error)
 
 	UpdateSiteMetadata(params *UpdateSiteMetadataParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateSiteMetadataNoContent, error)
 
@@ -855,6 +873,74 @@ func (a *Client) CreateSiteDeploy(params *CreateSiteDeployParams, authInfo runti
 }
 
 /*
+CreateSiteDevServer create site dev server API
+*/
+func (a *Client) CreateSiteDevServer(params *CreateSiteDevServerParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteDevServerOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewCreateSiteDevServerParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "createSiteDevServer",
+		Method:             "POST",
+		PathPattern:        "/sites/{site_id}/dev_servers",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &CreateSiteDevServerReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*CreateSiteDevServerOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*CreateSiteDevServerDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+CreateSiteDevServerHook create site dev server hook API
+*/
+func (a *Client) CreateSiteDevServerHook(params *CreateSiteDevServerHookParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteDevServerHookCreated, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewCreateSiteDevServerHookParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "createSiteDevServerHook",
+		Method:             "POST",
+		PathPattern:        "/sites/{site_id}/dev_server_hooks",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &CreateSiteDevServerHookReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*CreateSiteDevServerHookCreated)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*CreateSiteDevServerHookDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
 CreateSiteInTeam **Note:** Environment variable keys and values have moved from `build_settings.env` and `repo.env` to a new endpoint. Please use [createEnvVars](#tag/environmentVariables/operation/createEnvVars) to create environment variables for a site.
 */
 func (a *Client) CreateSiteInTeam(params *CreateSiteInTeamParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteInTeamCreated, error) {
@@ -1396,6 +1482,74 @@ func (a *Client) DeleteSiteDeploy(params *DeleteSiteDeployParams, authInfo runti
 	}
 	// unexpected success response
 	unexpectedSuccess := result.(*DeleteSiteDeployDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+DeleteSiteDevServerHook delete site dev server hook API
+*/
+func (a *Client) DeleteSiteDevServerHook(params *DeleteSiteDevServerHookParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSiteDevServerHookNoContent, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewDeleteSiteDevServerHookParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "deleteSiteDevServerHook",
+		Method:             "DELETE",
+		PathPattern:        "/sites/{site_id}/dev_server_hooks/{id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &DeleteSiteDevServerHookReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*DeleteSiteDevServerHookNoContent)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*DeleteSiteDevServerHookDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+DeleteSiteDevServers delete site dev servers API
+*/
+func (a *Client) DeleteSiteDevServers(params *DeleteSiteDevServersParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSiteDevServersAccepted, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewDeleteSiteDevServersParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "deleteSiteDevServers",
+		Method:             "DELETE",
+		PathPattern:        "/sites/{site_id}/dev_servers",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &DeleteSiteDevServersReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*DeleteSiteDevServersAccepted)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*DeleteSiteDevServersDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
@@ -2386,6 +2540,75 @@ func (a *Client) GetSiteDeploy(params *GetSiteDeployParams, authInfo runtime.Cli
 }
 
 /*
+GetSiteDevServer get site dev server API
+*/
+func (a *Client) GetSiteDevServer(params *GetSiteDevServerParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteDevServerOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetSiteDevServerParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "getSiteDevServer",
+		Method:             "GET",
+		PathPattern:        "/sites/{site_id}/dev_servers/{dev_server_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &GetSiteDevServerReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*GetSiteDevServerOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for getSiteDevServer: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+GetSiteDevServerHook get site dev server hook API
+*/
+func (a *Client) GetSiteDevServerHook(params *GetSiteDevServerHookParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteDevServerHookOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetSiteDevServerHookParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "getSiteDevServerHook",
+		Method:             "GET",
+		PathPattern:        "/sites/{site_id}/dev_server_hooks/{id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &GetSiteDevServerHookReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*GetSiteDevServerHookOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*GetSiteDevServerHookDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
 GetSiteEnvVars Returns all environment variables for a site. This convenience method behaves the same as `getEnvVars` but doesn't require an `account_id` as input.
 */
 func (a *Client) GetSiteEnvVars(params *GetSiteEnvVarsParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteEnvVarsOK, error) {
@@ -3130,6 +3353,74 @@ func (a *Client) ListSiteDeploys(params *ListSiteDeploysParams, authInfo runtime
 	}
 	// unexpected success response
 	unexpectedSuccess := result.(*ListSiteDeploysDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+ListSiteDevServerHooks list site dev server hooks API
+*/
+func (a *Client) ListSiteDevServerHooks(params *ListSiteDevServerHooksParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteDevServerHooksOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewListSiteDevServerHooksParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "listSiteDevServerHooks",
+		Method:             "GET",
+		PathPattern:        "/sites/{site_id}/dev_server_hooks",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &ListSiteDevServerHooksReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*ListSiteDevServerHooksOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*ListSiteDevServerHooksDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+ListSiteDevServers list site dev servers API
+*/
+func (a *Client) ListSiteDevServers(params *ListSiteDevServersParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteDevServersOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewListSiteDevServersParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "listSiteDevServers",
+		Method:             "GET",
+		PathPattern:        "/sites/{site_id}/dev_servers",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &ListSiteDevServersReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*ListSiteDevServersOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*ListSiteDevServersDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
@@ -4293,6 +4584,40 @@ func (a *Client) UpdateSiteDeploy(params *UpdateSiteDeployParams, authInfo runti
 	}
 	// unexpected success response
 	unexpectedSuccess := result.(*UpdateSiteDeployDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+UpdateSiteDevServerHook update site dev server hook API
+*/
+func (a *Client) UpdateSiteDevServerHook(params *UpdateSiteDevServerHookParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateSiteDevServerHookNoContent, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewUpdateSiteDevServerHookParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "updateSiteDevServerHook",
+		Method:             "PUT",
+		PathPattern:        "/sites/{site_id}/dev_server_hooks/{id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &UpdateSiteDevServerHookReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*UpdateSiteDevServerHookNoContent)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*UpdateSiteDevServerHookDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
