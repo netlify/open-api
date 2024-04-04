@@ -2533,6 +2533,157 @@ paths:
         default:
           $ref: '#/responses/error'
   # end dns_zones/{zone_id or zone name}/dns_records/{dns_record_id}
+  # begin sites/{site_id}/dev_servers
+  /sites/{site_id}/dev_servers:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+    get:
+      operationId: listSiteDevServers
+      tags: [devServer]
+      parameters:
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/perPage'
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/devServer'
+        default:
+          $ref: '#/responses/error'
+    post:
+      operationId: createSiteDevServer
+      tags: [devServer]
+      parameters:
+        - name: branch
+          type: string
+          in: query
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/devServer'
+        default:
+          $ref: '#/responses/error'
+    delete:
+      operationId: deleteSiteDevServers
+      tags: [devServer]
+      parameters:
+        - name: branch
+          type: string
+          in: query
+      responses:
+        '202':
+          description: OK
+        default:
+          $ref: '#/responses/error'
+  # end sites/{site_id}/dev_servers
+  # begin sites/{site_id}/dev_servers/{dev_server_id}
+  /sites/{site_id}/dev_servers/{dev_server_id}:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+      - name: dev_server_id
+        type: string
+        in: path
+        required: true
+    get:
+      operationId: getSiteDevServer
+      tags: [devServer]
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/devServer'
+  # end sites/{site_id}/dev_servers/{dev_server_id}
+  /sites/{site_id}/dev_server_hooks:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+    get:
+      operationId: listSiteDevServerHooks
+      tags: [devServerHook]
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/devServerHook'
+        default:
+          $ref: '#/responses/error'
+    post:
+      operationId: createSiteDevServerHook
+      tags: [devServerHook]
+      consumes:
+        - application/json
+      parameters:
+        - name: devServerHook
+          in: body
+          schema:
+            $ref: '#/definitions/devServerHookSetup'
+          required: true
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/devServerHook'
+        default:
+          $ref: '#/responses/error'
+  /sites/{site_id}/dev_server_hooks/{id}:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+      - name: id
+        type: string
+        in: path
+        required: true
+    get:
+      operationId: getSiteDevServerHook
+      tags: [devServerHook]
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/devServerHook'
+        default:
+          $ref: '#/responses/error'
+    put:
+      operationId: updateSiteDevServerHook
+      tags: [devServerHook]
+      consumes:
+        - application/json
+      parameters:
+        - name: devServerHook
+          in: body
+          schema:
+            $ref: '#/definitions/devServerHookSetup'
+          required: true
+      responses:
+        '204':
+          description: No content
+        default:
+          $ref: '#/responses/error'
+    delete:
+      operationId: deleteSiteDevServerHook
+      tags: [devServerHook]
+      responses:
+        '204':
+          description: No content
+        default:
+          $ref: '#/responses/error'
 definitions:
   splitTestSetup:
     type: object
@@ -3790,7 +3941,72 @@ definitions:
         type: string
       provider:
         type: string
-
+  devServer:
+    type: object
+    properties:
+      id:
+        type: string
+      site_id:
+        type: string
+      branch:
+        type: string
+      url:
+        type: string
+      state:
+        type: string
+      created_at:
+        type: string
+        format: dateTime
+      updated_at:
+        type: string
+        format: dateTime
+      starting_at:
+        type: string
+        format: dateTime
+      error_at:
+        type: string
+        format: dateTime
+      live_at:
+        type: string
+        format: dateTime
+      done_at:
+        type: string
+        format: dateTime
+      title:
+        type: string
+  devServerHook:
+    type: object
+    properties:
+      id:
+        type: string
+      title:
+        type: string
+      branch:
+        type: string
+      url:
+        type: string
+      site_id:
+        type: string
+      created_at:
+        type: string
+        format: dateTime
+      type:
+        type: string
+        enum:
+          - new_dev_server
+          - content_refresh
+  devServerHookSetup:
+    type: object
+    properties:
+      title:
+        type: string
+      branch:
+        type: string
+      type:
+        type: string
+        enum:
+          - new_dev_server
+          - content_refresh
 parameters:
   page:
     type: integer
@@ -3842,11 +4058,15 @@ x-tagGroups:
     tags:
       - build
       - buildLogMsg
+  - name: Dev servers
+    tags:
+      - devServer
   - name: Webhooks and notifications
     tags:
       - hook
       - hookType
       - buildHook
+      - devServerHook
   - name: Services
     tags:
       - service
@@ -3930,3 +4150,7 @@ tags:
     x-displayName: Asset
   - name: assetPublicSignature
     x-displayName: Asset public signature
+  - name: devServer
+    x-displayName: Dev server
+  - name: devServerHook
+    x-displayName: Dev server hook
