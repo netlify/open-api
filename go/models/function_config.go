@@ -32,6 +32,9 @@ type FunctionConfig struct {
 
 	// routes
 	Routes []*FunctionRoute `json:"routes"`
+
+	// traffic rules
+	TrafficRules *TrafficRulesConfig `json:"traffic_rules,omitempty"`
 }
 
 // Validate validates this function config
@@ -39,6 +42,10 @@ func (m *FunctionConfig) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateRoutes(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTrafficRules(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -68,6 +75,24 @@ func (m *FunctionConfig) validateRoutes(formats strfmt.Registry) error {
 			}
 		}
 
+	}
+
+	return nil
+}
+
+func (m *FunctionConfig) validateTrafficRules(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.TrafficRules) { // not required
+		return nil
+	}
+
+	if m.TrafficRules != nil {
+		if err := m.TrafficRules.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("traffic_rules")
+			}
+			return err
+		}
 	}
 
 	return nil
