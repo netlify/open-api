@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  version: 2.28.0
+  version: 2.29.0
   title: Netlify's API documentation
   description: >-
     Netlify is a hosting service for the programmable web. It understands your
@@ -3867,6 +3867,8 @@ definitions:
           $ref: '#/definitions/functionRoute'
       priority:
         type: integer
+      traffic_rules:
+        $ref: '#/definitions/trafficRulesConfig'
   functionRoute:
     type: object
     properties:
@@ -3883,6 +3885,44 @@ definitions:
           enum: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
       prefer_static:
         type: boolean
+  trafficRulesConfig:
+    type: object
+    properties:
+      action:
+        type: object
+        properties:
+          type:
+            type: string
+          config:
+            type: object
+            properties:
+              to:
+                type: string
+              rate_limit_config:
+                $ref: '#/definitions/trafficRulesRateLimitConfig'
+              aggregate:
+                $ref: '#/definitions/trafficRulesAggregateConfig'
+  trafficRulesRateLimitConfig:
+    type: object
+    properties:
+      algorithm:
+        type: string
+        enum: ['sliding_window']
+      window_size:
+        type: integer
+      window_limit:
+        type: integer
+  trafficRulesAggregateConfig:
+    type: object
+    properties:
+      keys:
+        type: array
+        items:
+          type: object
+          properties:
+            type:
+              type: string
+              enum: ['ip', 'domain']
   siteFunction:
     type: object
     properties:
