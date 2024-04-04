@@ -1,5 +1,7 @@
 package porcelain
 
+import "github.com/netlify/open-api/v2/go/models"
+
 // https://github.com/netlify/zip-it-and-ship-it/blob/main/src/manifest.ts
 type functionsManifest struct {
 	Functions []functionsManifestEntry `json:"functions"`
@@ -19,6 +21,7 @@ type functionsManifestEntry struct {
 	InvocationMode string                 `json:"invocationMode"`
 	Routes         []functionRoute        `json:"routes"`
 	Priority       int                    `json:"priority"`
+	TrafficRules   *functionTrafficRules  `json:"trafficRules"`
 }
 
 type functionRoute struct {
@@ -27,4 +30,19 @@ type functionRoute struct {
 	Expression   string   `json:"expression"`
 	Methods      []string `json:"methods"`
 	PreferStatic bool     `json:"prefer_static"`
+}
+
+type functionTrafficRules struct {
+	Action struct {
+		Type   string `json:"type"`
+		Config struct {
+			RateLimitConfig struct {
+				Algorithm   string `json:"algorithm"`
+				WindowSize  int    `json:"windowSize"`
+				WindowLimit int    `json:"windowLimit"`
+			}
+			Aggregate *models.TrafficRulesAggregateConfig
+			To        string `json:"to"`
+		}
+	}
 }

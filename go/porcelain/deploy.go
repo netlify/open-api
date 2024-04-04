@@ -822,15 +822,34 @@ func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer Dep
 			}
 		}
 
-		hasConfig := function.DisplayName != "" || function.Generator != "" || len(routes) > 0 || len(function.BuildData) > 0 || function.Priority != 0
+		hasConfig := function.DisplayName != "" || function.Generator != "" || len(routes) > 0 || len(function.BuildData) > 0 || function.Priority != 0 || function.TrafficRules != nil
 		if hasConfig {
-			functionsConfig[file.Name] = models.FunctionConfig{
+			cfg := models.FunctionConfig{
 				DisplayName: function.DisplayName,
 				Generator:   function.Generator,
 				Routes:      routes,
 				BuildData:   function.BuildData,
 				Priority:    int64(function.Priority),
 			}
+
+			if function.TrafficRules != nil {
+				cfg.TrafficRules = &models.TrafficRulesConfig{
+					Action: &models.TrafficRulesConfigAction{
+						Type: function.TrafficRules.Action.Type,
+						Config: &models.TrafficRulesConfigActionConfig{
+							Aggregate: function.TrafficRules.Action.Config.Aggregate,
+							RateLimitConfig: &models.TrafficRulesRateLimitConfig{
+								Algorithm:   function.TrafficRules.Action.Config.RateLimitConfig.Algorithm,
+								WindowSize:  int64(function.TrafficRules.Action.Config.RateLimitConfig.WindowSize),
+								WindowLimit: int64(function.TrafficRules.Action.Config.RateLimitConfig.WindowLimit),
+							},
+							To: function.TrafficRules.Action.Config.To,
+						},
+					},
+				}
+			}
+
+			functionsConfig[file.Name] = cfg
 		}
 
 		functions.Add(file.Name, file)
