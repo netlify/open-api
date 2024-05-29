@@ -1478,6 +1478,9 @@ paths:
         - name: invocation_mode
           in: query
           type: string
+        - name: timeout
+          in: query
+          type: integer
         - name: size
           type: integer
           in: query
@@ -3859,8 +3862,6 @@ definitions:
         type: string
       generator:
         type: string
-      timeout:
-        type: integer
       build_data:
         type: object
       routes:

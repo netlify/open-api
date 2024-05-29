@@ -17,7 +17,7 @@ type functionsManifestEntry struct {
 	Schedule       string                 `json:"schedule"`
 	DisplayName    string                 `json:"displayName"`
 	Generator      string                 `json:"generator"`
-	Timeout        int                    `json:"timeout"`
+	Timeout        int64                  `json:"timeout"`
 	BuildData      map[string]interface{} `json:"buildData"`
 	InvocationMode string                 `json:"invocationMode"`
 	Routes         []functionRoute        `json:"routes"`

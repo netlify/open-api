@@ -33,9 +33,6 @@ type FunctionConfig struct {
 	// routes
 	Routes []*FunctionRoute `json:"routes"`
 
-	// timeout
-	Timeout int64 `json:"timeout,omitempty"`
-
 	// traffic rules
 	TrafficRules *TrafficRulesConfig `json:"traffic_rules,omitempty"`
 }

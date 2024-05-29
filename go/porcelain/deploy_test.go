@@ -694,6 +694,7 @@ func TestBundleWithManifest(t *testing.T) {
 	assert.Equal(t, 3, len(functions.Files))
 	assert.Equal(t, "a-runtime", functions.Files["hello-js-function-test"].Runtime)
 	assert.Empty(t, functions.Files["hello-js-function-test"].FunctionMetadata.InvocationMode)
+	assert.Equal(t, int64(60), functions.Files["hello-js-function-test"].FunctionMetadata.Timeout)
 	assert.Equal(t, "some-other-runtime", functions.Files["hello-py-function-test"].Runtime)
 	assert.Equal(t, "stream", functions.Files["hello-py-function-test"].FunctionMetadata.InvocationMode)
 	assert.Equal(t, "provided.al2", functions.Files["hello-go-binary-function"].Runtime)
@@ -704,7 +705,6 @@ func TestBundleWithManifest(t *testing.T) {
 	assert.Equal(t, 1, len(functionsConfig))
 	assert.Equal(t, "Hello Javascript Function", helloJSConfig.DisplayName)
 	assert.Equal(t, "@netlify/fake-plugin@1.0.0", helloJSConfig.Generator)
-	assert.Equal(t, int64(60), helloJSConfig.Timeout)
 	assert.EqualValues(t, 2, helloJSConfig.BuildData.(map[string]interface{})["runtimeAPIVersion"])
 
 	assert.Equal(t, "/products", helloJSConfig.Routes[0].Pattern)
