@@ -822,7 +822,7 @@ func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer Dep
 			}
 		}
 
-		hasConfig := function.DisplayName != "" || function.Generator != "" || len(routes) > 0 || len(function.BuildData) > 0 || function.Priority != 0 || function.TrafficRules != nil
+		hasConfig := function.DisplayName != "" || function.Generator != "" || len(routes) > 0 || len(function.BuildData) > 0 || function.Priority != 0 || function.TrafficRules != nil || function.Timeout != 0
 		if hasConfig {
 			cfg := models.FunctionConfig{
 				DisplayName: function.DisplayName,
@@ -830,6 +830,7 @@ func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer Dep
 				Routes:      routes,
 				BuildData:   function.BuildData,
 				Priority:    int64(function.Priority),
+				Timeout:     int64(function.Timeout),
 			}
 
 			if function.TrafficRules != nil {

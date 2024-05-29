@@ -3859,6 +3859,8 @@ definitions:
         type: string
       generator:
         type: string
+      timeout:
+        type: integer
       build_data:
         type: object
       routes:
