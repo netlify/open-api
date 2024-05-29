@@ -646,6 +646,7 @@ func TestBundleWithManifest(t *testing.T) {
 				"mainFile": "/some/path/hello-js-function-test.js",
 				"displayName": "Hello Javascript Function",
 				"generator": "@netlify/fake-plugin@1.0.0",
+				"timeout": 60,
 				"buildData": { "runtimeAPIVersion": 2 },
 				"name": "hello-js-function-test",
 				"schedule": "* * * * *",
@@ -693,6 +694,7 @@ func TestBundleWithManifest(t *testing.T) {
 	assert.Equal(t, 3, len(functions.Files))
 	assert.Equal(t, "a-runtime", functions.Files["hello-js-function-test"].Runtime)
 	assert.Empty(t, functions.Files["hello-js-function-test"].FunctionMetadata.InvocationMode)
+	assert.Equal(t, int64(60), functions.Files["hello-js-function-test"].FunctionMetadata.Timeout)
 	assert.Equal(t, "some-other-runtime", functions.Files["hello-py-function-test"].Runtime)
 	assert.Equal(t, "stream", functions.Files["hello-py-function-test"].FunctionMetadata.InvocationMode)
 	assert.Equal(t, "provided.al2", functions.Files["hello-go-binary-function"].Runtime)

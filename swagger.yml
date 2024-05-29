@@ -1478,6 +1478,9 @@ paths:
         - name: invocation_mode
           in: query
           type: string
+        - name: timeout
+          in: query
+          type: integer
         - name: size
           type: integer
           in: query

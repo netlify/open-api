@@ -24,7 +24,7 @@ func NewUploadDeployFunctionParams() *UploadDeployFunctionParams {
 	var ()
 	return &UploadDeployFunctionParams{
 
-		timeout: cr.DefaultTimeout,
+		requestTimeout: cr.DefaultTimeout,
 	}
 }
 
@@ -34,7 +34,7 @@ func NewUploadDeployFunctionParamsWithTimeout(timeout time.Duration) *UploadDepl
 	var ()
 	return &UploadDeployFunctionParams{
 
-		timeout: timeout,
+		requestTimeout: timeout,
 	}
 }
 
@@ -77,21 +77,23 @@ type UploadDeployFunctionParams struct {
 	Runtime *string
 	/*Size*/
 	Size *int64
+	/*Timeout*/
+	Timeout *int64
 
-	timeout    time.Duration
-	Context    context.Context
-	HTTPClient *http.Client
+	requestTimeout time.Duration
+	Context        context.Context
+	HTTPClient     *http.Client
 }
 
-// WithTimeout adds the timeout to the upload deploy function params
-func (o *UploadDeployFunctionParams) WithTimeout(timeout time.Duration) *UploadDeployFunctionParams {
-	o.SetTimeout(timeout)
+// WithRequestTimeout adds the timeout to the upload deploy function params
+func (o *UploadDeployFunctionParams) WithRequestTimeout(timeout time.Duration) *UploadDeployFunctionParams {
+	o.SetRequestTimeout(timeout)
 	return o
 }
 
-// SetTimeout adds the timeout to the upload deploy function params
-func (o *UploadDeployFunctionParams) SetTimeout(timeout time.Duration) {
-	o.timeout = timeout
+// SetRequestTimeout adds the timeout to the upload deploy function params
+func (o *UploadDeployFunctionParams) SetRequestTimeout(timeout time.Duration) {
+	o.requestTimeout = timeout
 }
 
 // WithContext adds the context to the upload deploy function params
@@ -193,10 +195,21 @@ func (o *UploadDeployFunctionParams) SetSize(size *int64) {
 	o.Size = size
 }
 
+// WithTimeout adds the timeout to the upload deploy function params
+func (o *UploadDeployFunctionParams) WithTimeout(timeout *int64) *UploadDeployFunctionParams {
+	o.SetTimeout(timeout)
+	return o
+}
+
+// SetTimeout adds the timeout to the upload deploy function params
+func (o *UploadDeployFunctionParams) SetTimeout(timeout *int64) {
+	o.Timeout = timeout
+}
+
 // WriteToRequest writes these params to a swagger request
 func (o *UploadDeployFunctionParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
-	if err := r.SetTimeout(o.timeout); err != nil {
+	if err := r.SetTimeout(o.requestTimeout); err != nil {
 		return err
 	}
 	var res []error
@@ -268,6 +281,22 @@ func (o *UploadDeployFunctionParams) WriteToRequest(r runtime.ClientRequest, reg
 		qSize := swag.FormatInt64(qrSize)
 		if qSize != "" {
 			if err := r.SetQueryParam("size", qSize); err != nil {
+				return err
+			}
+		}
+
+	}
+
+	if o.Timeout != nil {
+
+		// query param timeout
+		var qrTimeout int64
+		if o.Timeout != nil {
+			qrTimeout = *o.Timeout
+		}
+		qTimeout := swag.FormatInt64(qrTimeout)
+		if qTimeout != "" {
+			if err := r.SetQueryParam("timeout", qTimeout); err != nil {
 				return err
 			}
 		}

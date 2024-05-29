@@ -127,6 +127,7 @@ type FileBundle struct {
 
 type FunctionMetadata struct {
 	InvocationMode string
+	Timeout        int64
 }
 
 type toolchainSpec struct {
@@ -536,10 +537,11 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 
 			if f.FunctionMetadata != nil {
 				params = params.WithInvocationMode(&f.FunctionMetadata.InvocationMode)
+				params = params.WithTimeout(&f.FunctionMetadata.Timeout)
 			}
 
 			if timeout != 0 {
-				params.SetTimeout(timeout)
+				params.SetRequestTimeout(timeout)
 			}
 			_, operationError = n.Operations.UploadDeployFunction(params, authInfo)
 			if operationError != nil {
@@ -797,6 +799,7 @@ func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer Dep
 
 		meta := FunctionMetadata{
 			InvocationMode: function.InvocationMode,
+			Timeout:        function.Timeout,
 		}
 		file, err := newFunctionFile(function.Path, fileInfo, runtime, &meta, observer)
 
@@ -822,7 +825,7 @@ func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer Dep
 			}
 		}
 
-		hasConfig := function.DisplayName != "" || function.Generator != "" || len(routes) > 0 || len(function.BuildData) > 0 || function.Priority != 0 || function.TrafficRules != nil
+		hasConfig := function.DisplayName != "" || function.Generator != "" || len(routes) > 0 || len(function.BuildData) > 0 || function.Priority != 0 || function.TrafficRules != nil || function.Timeout != 0
 		if hasConfig {
 			cfg := models.FunctionConfig{
 				DisplayName: function.DisplayName,
