@@ -2607,6 +2607,25 @@ paths:
           schema:
             $ref: '#/definitions/devServer'
   # end sites/{site_id}/dev_servers/{dev_server_id}
+  # begin sites/{site_id}/dev_servers/{dev_server_id}/activity
+  /sites/{site_id}/dev_servers/{dev_server_id}/activity:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+      - name: dev_server_id
+        type: string
+        in: path
+        required: true
+    post:
+      x-internal: true
+      operationId: markDevServerActivity
+      tags: [devServer]
+      responses:
+        '200':
+          description: OK
+  # end sites/{site_id}/dev_servers/{dev_server_id}/activity
   /sites/{site_id}/dev_server_hooks:
     parameters:
       - name: site_id
