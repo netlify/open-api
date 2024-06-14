@@ -3887,6 +3887,10 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/functionRoute'
+      excluded_routes:
+        type: array
+        items:
+          $ref: '#/definitions/excludedFunctionRoute'          
       priority:
         type: integer
       traffic_rules:
@@ -3907,6 +3911,15 @@ definitions:
           enum: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
       prefer_static:
         type: boolean
+  excludedFunctionRoute:
+    type: object
+    properties:
+      pattern:
+        type: string
+      literal:
+        type: string
+      expression:
+        type: string    
   trafficRulesConfig:
     type: object
     properties:

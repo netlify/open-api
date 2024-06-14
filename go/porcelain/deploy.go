@@ -825,14 +825,24 @@ func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer Dep
 			}
 		}
 
-		hasConfig := function.DisplayName != "" || function.Generator != "" || len(routes) > 0 || len(function.BuildData) > 0 || function.Priority != 0 || function.TrafficRules != nil || function.Timeout != 0
+		excludedRoutes := make([]*models.ExcludedFunctionRoute, len(function.ExcludedRoutes))
+		for i, route := range function.ExcludedRoutes {
+			excludedRoutes[i] = &models.ExcludedFunctionRoute{
+				Pattern:    route.Pattern,
+				Literal:    route.Literal,
+				Expression: route.Expression,
+			}
+		}
+
+		hasConfig := function.DisplayName != "" || function.Generator != "" || len(routes) > 0 || len(excludedRoutes) > 0 || len(function.BuildData) > 0 || function.Priority != 0 || function.TrafficRules != nil || function.Timeout != 0
 		if hasConfig {
 			cfg := models.FunctionConfig{
-				DisplayName: function.DisplayName,
-				Generator:   function.Generator,
-				Routes:      routes,
-				BuildData:   function.BuildData,
-				Priority:    int64(function.Priority),
+				DisplayName:    function.DisplayName,
+				Generator:      function.Generator,
+				Routes:         routes,
+				ExcludedRoutes: excludedRoutes,
+				BuildData:      function.BuildData,
+				Priority:       int64(function.Priority),
 			}
 
 			if function.TrafficRules != nil {

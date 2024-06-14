@@ -24,6 +24,9 @@ type FunctionConfig struct {
 	// display name
 	DisplayName string `json:"display_name,omitempty"`
 
+	// excluded routes
+	ExcludedRoutes []*ExcludedFunctionRoute `json:"excluded_routes"`
+
 	// generator
 	Generator string `json:"generator,omitempty"`
 
@@ -41,6 +44,10 @@ type FunctionConfig struct {
 func (m *FunctionConfig) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateExcludedRoutes(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateRoutes(formats); err != nil {
 		res = append(res, err)
 	}
@@ -52,6 +59,31 @@ func (m *FunctionConfig) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *FunctionConfig) validateExcludedRoutes(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ExcludedRoutes) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.ExcludedRoutes); i++ {
+		if swag.IsZero(m.ExcludedRoutes[i]) { // not required
+			continue
+		}
+
+		if m.ExcludedRoutes[i] != nil {
+			if err := m.ExcludedRoutes[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("excluded_routes" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
 	return nil
 }
 
