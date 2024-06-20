@@ -21,7 +21,7 @@ type functionsManifestEntry struct {
 	BuildData      map[string]interface{}  `json:"buildData"`
 	InvocationMode string                  `json:"invocationMode"`
 	Routes         []functionRoute         `json:"routes"`
-	ExcludedRoutes []excludedFunctionRoute `json:"excluded_routes"`
+	ExcludedRoutes []excludedFunctionRoute `json:"excludedRoutes"`
 	Priority       int                     `json:"priority"`
 	TrafficRules   *functionTrafficRules   `json:"trafficRules"`
 }
