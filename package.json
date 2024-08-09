@@ -28,11 +28,15 @@
     "execa": "^2.0.4",
     "is-plain-obj": "^2.1.0",
     "npm-run-all": "^4.1.5",
+    "openapi-typescript": "^5.4.2",
     "prettier": "^2.8.7",
     "swagger-parser": "^8.0.1",
     "swagger2openapi": "^7.0.8"
   },
-  "files": [],
+  "files": [
+    "dist/index.d.ts",
+    "dist/swagger.json"
+  ],
   "homepage": "https://github.com/netlify/open-api#readme",
   "keywords": [
     "netlify",
@@ -41,17 +45,18 @@
   ],
   "license": "MIT",
   "main": "dist/swagger.json",
+  "types": "dist/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/netlify/open-api.git"
   },
   "scripts": {
-    "prepublishOnly": "npm ci && npm test",
+    "prepublishOnly": "npm test",
     "test": "run-s lint build unit",
     "start": "run-s lint build",
     "bundle": "redocly bundle external@latest --output external.yml",
     "build": "run-s convert bundle redoc",
-    "postbuild": "swagger2openapi external.yml -o dist/openapi.json",
+    "postbuild": "swagger2openapi external.yml -o dist/openapi.json && openapi-typescript dist/openapi.json -o dist/index.d.ts --alphabetize --empty-objects-unknown",
     "convert": "node src/convert.js",
     "bump-swagger": "node src/bump-swagger.js",
     "redoc": "node src/docs/build.js",

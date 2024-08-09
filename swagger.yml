@@ -3883,7 +3883,7 @@ definitions:
       excluded_routes:
         type: array
         items:
-          $ref: '#/definitions/excludedFunctionRoute'          
+          $ref: '#/definitions/excludedFunctionRoute'
       priority:
         type: integer
       traffic_rules:
@@ -3912,7 +3912,7 @@ definitions:
       literal:
         type: string
       expression:
-        type: string    
+        type: string
   trafficRulesConfig:
     type: object
     properties:
