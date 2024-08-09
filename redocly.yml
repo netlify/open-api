@@ -3,3 +3,5 @@ apis:
     root: ./swagger.yml
     decorators:
       remove-x-internal: on
+    x-openapi-ts:
+      output: ./index.d.ts
