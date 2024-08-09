@@ -569,7 +569,7 @@ func (a *Client) CreateDNSZone(params *CreateDNSZoneParams, authInfo runtime.Cli
 }
 
 /*
-CreateEnvVars Creates new environment variables. Granular scopes are available on Pro plans and above.  To use this endpoint, your site must no longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
+CreateEnvVars Creates new environment variables. Granular scopes are available on Pro plans and above.
 */
 func (a *Client) CreateEnvVars(params *CreateEnvVarsParams, authInfo runtime.ClientAuthInfoWriter) (*CreateEnvVarsCreated, error) {
 	// TODO: Validate the params before sending
@@ -1215,7 +1215,7 @@ func (a *Client) DeleteDNSZone(params *DeleteDNSZoneParams, authInfo runtime.Cli
 }
 
 /*
-DeleteEnvVar Deletes an environment variable. To use this endpoint, your site must no longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
+DeleteEnvVar Deletes an environment variable
 */
 func (a *Client) DeleteEnvVar(params *DeleteEnvVarParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteEnvVarNoContent, error) {
 	// TODO: Validate the params before sending
@@ -1249,7 +1249,7 @@ func (a *Client) DeleteEnvVar(params *DeleteEnvVarParams, authInfo runtime.Clien
 }
 
 /*
-DeleteEnvVarValue Deletes a specific environment variable value. To use this endpoint, your site must no longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
+DeleteEnvVarValue Deletes a specific environment variable value.
 */
 func (a *Client) DeleteEnvVarValue(params *DeleteEnvVarValueParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteEnvVarValueNoContent, error) {
 	// TODO: Validate the params before sending
@@ -2134,7 +2134,7 @@ func (a *Client) GetDNSZones(params *GetDNSZonesParams, authInfo runtime.ClientA
 }
 
 /*
-GetEnvVar Returns an individual environment variable. To use this endpoint, your site must no longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
+GetEnvVar Returns an individual environment variable.
 */
 func (a *Client) GetEnvVar(params *GetEnvVarParams, authInfo runtime.ClientAuthInfoWriter) (*GetEnvVarOK, error) {
 	// TODO: Validate the params before sending
@@ -2168,7 +2168,7 @@ func (a *Client) GetEnvVar(params *GetEnvVarParams, authInfo runtime.ClientAuthI
 }
 
 /*
-GetEnvVars Returns all environment variables for an account or site. An account corresponds to a team in the Netlify UI. To use this endpoint, your site must no longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
+GetEnvVars Returns all environment variables for an account or site. An account corresponds to a team in the Netlify UI.
 */
 func (a *Client) GetEnvVars(params *GetEnvVarsParams, authInfo runtime.ClientAuthInfoWriter) (*GetEnvVarsOK, error) {
 	// TODO: Validate the params before sending
@@ -3939,7 +3939,7 @@ func (a *Client) SearchSiteFunctions(params *SearchSiteFunctionsParams, authInfo
 }
 
 /*
-SetEnvVarValue Updates or creates a new value for an existing environment variable. To use this endpoint, your site must no longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
+SetEnvVarValue Updates or creates a new value for an existing environment variable.
 */
 func (a *Client) SetEnvVarValue(params *SetEnvVarValueParams, authInfo runtime.ClientAuthInfoWriter) (*SetEnvVarValueCreated, error) {
 	// TODO: Validate the params before sending
@@ -4319,7 +4319,7 @@ func (a *Client) UpdateAccountMember(params *UpdateAccountMemberParams, authInfo
 }
 
 /*
-UpdateEnvVar Updates an existing environment variable and all of its values. Existing values will be replaced by values provided. To use this endpoint, your site must no longer be using the <a href="https://docs.netlify.com/environment-variables/classic-experience/">classic environment variables experience</a>.  Migrate now with the Netlify UI.
+UpdateEnvVar Updates an existing environment variable and all of its values. Existing values will be replaced by values provided.
 */
 func (a *Client) UpdateEnvVar(params *UpdateEnvVarParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateEnvVarOK, error) {
 	// TODO: Validate the params before sending
