@@ -2857,6 +2857,8 @@ definitions:
         type: string
       published_deploy:
         $ref: '#/definitions/deploy'
+      account_id:
+        type: string
       account_name:
         type: string
       account_slug:

@@ -16,6 +16,9 @@ import (
 // swagger:model site
 type Site struct {
 
+	// account id
+	AccountID string `json:"account_id,omitempty"`
+
 	// account name
 	AccountName string `json:"account_name,omitempty"`
 
