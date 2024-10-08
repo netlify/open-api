@@ -283,7 +283,7 @@ paths:
                   description: >-
                     Secret values are only readable by code running on Netlify’s systems.
                     With secrets, only the local development context values are readable from the UI, API, and CLI.
-                    By default, environment variable values are not secret. (Enterprise plans only)
+                    By default, environment variable values are not secret.
         - name: account_id
           description: Scope response to account_id
           type: string
@@ -427,7 +427,7 @@ paths:
                 description: >-
                   Secret values are only readable by code running on Netlify’s systems.
                   With secrets, only the local development context values are readable from the UI, API, and CLI.
-                  By default, environment variable values are not secret. (Enterprise plans only)
+                  By default, environment variable values are not secret.
         - name: site_id
           description: 'If provided, update an environment variable set on this site'
           type: string
@@ -2994,7 +2994,7 @@ definitions:
         description: >-
           Secret values are only readable by code running on Netlify’s systems.
           With secrets, only the local development context values are readable from the UI, API, and CLI.
-          By default, environment variable values are not secret. (Enterprise plans only)
+          By default, environment variable values are not secret.
       updated_at:
         type: string
         format: date-time
