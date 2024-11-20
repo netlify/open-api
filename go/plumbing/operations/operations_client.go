@@ -121,6 +121,8 @@ type ClientService interface {
 
 	GetAccountMember(params *GetAccountMemberParams, authInfo runtime.ClientAuthInfoWriter) (*GetAccountMemberOK, error)
 
+	GetAllCertificates(params *GetAllCertificatesParams, authInfo runtime.ClientAuthInfoWriter) (*GetAllCertificatesOK, error)
+
 	GetCurrentUser(params *GetCurrentUserParams, authInfo runtime.ClientAuthInfoWriter) (*GetCurrentUserOK, error)
 
 	GetDNSForSite(params *GetDNSForSiteParams, authInfo runtime.ClientAuthInfoWriter) (*GetDNSForSiteOK, error)
@@ -1893,6 +1895,41 @@ func (a *Client) GetAccountMember(params *GetAccountMemberParams, authInfo runti
 	// unexpected success response
 	unexpectedSuccess := result.(*GetAccountMemberDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+GetAllCertificates get all certificates API
+*/
+func (a *Client) GetAllCertificates(params *GetAllCertificatesParams, authInfo runtime.ClientAuthInfoWriter) (*GetAllCertificatesOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetAllCertificatesParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "getAllCertificates",
+		Method:             "GET",
+		PathPattern:        "/sites/{site_id}/ssl/certificates",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &GetAllCertificatesReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*GetAllCertificatesOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for getAllCertificates: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
 }
 
 /*
