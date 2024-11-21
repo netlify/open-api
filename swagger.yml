@@ -14,7 +14,7 @@ info:
     explore. For more detailed instructions for common uses, please visit the
     [online documentation](https://www.netlify.com/docs/api/). Visit our
     Community forum to join the conversation about
-    [understanding and using Netlify’s API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).
+    [understanding and using Netlify's API](https://community.netlify.com/t/common-issue-understanding-and-using-netlifys-api/160).
 
 
     Additionally, we have two API clients for your convenience:
@@ -194,6 +194,30 @@ paths:
             $ref: '#/definitions/sniCertificate'
         default:
           $ref: '#/responses/error'
+  /sites/{site_id}/ssl/certificates:
+    get:
+      operationId: getAllCertificates
+      tags: [sniCertificate]
+      parameters:
+        - name: site_id
+          type: string
+          in: path
+          required: true
+        - name: domain
+          type: string
+          in: query
+          required: true
+      responses:
+        '200':
+          description: Array of SNI Certificates
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/sniCertificate'
+        '404':
+          description: Not Found
+        '422':
+          description: Unprocessable Entity
   /accounts/{account_id}/env:
     get:
       tags:
@@ -281,7 +305,7 @@ paths:
                 is_secret:
                   type: boolean
                   description: >-
-                    Secret values are only readable by code running on Netlify’s systems.
+                    Secret values are only readable by code running on Netlify's systems.
                     With secrets, only the local development context values are readable from the UI, API, and CLI.
                     By default, environment variable values are not secret.
         - name: account_id
@@ -425,7 +449,7 @@ paths:
               is_secret:
                 type: boolean
                 description: >-
-                  Secret values are only readable by code running on Netlify’s systems.
+                  Secret values are only readable by code running on Netlify's systems.
                   With secrets, only the local development context values are readable from the UI, API, and CLI.
                   By default, environment variable values are not secret.
         - name: site_id
@@ -2992,7 +3016,7 @@ definitions:
       is_secret:
         type: boolean
         description: >-
-          Secret values are only readable by code running on Netlify’s systems.
+          Secret values are only readable by code running on Netlify's systems.
           With secrets, only the local development context values are readable from the UI, API, and CLI.
           By default, environment variable values are not secret.
       updated_at:
