@@ -14,12 +14,13 @@ import (
 	"github.com/go-openapi/runtime"
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
+	"github.com/go-openapi/swag"
 )
 
 // NewListAccountsForUserParams creates a new ListAccountsForUserParams object
 // with the default values initialized.
 func NewListAccountsForUserParams() *ListAccountsForUserParams {
-
+	var ()
 	return &ListAccountsForUserParams{
 
 		timeout: cr.DefaultTimeout,
@@ -29,7 +30,7 @@ func NewListAccountsForUserParams() *ListAccountsForUserParams {
 // NewListAccountsForUserParamsWithTimeout creates a new ListAccountsForUserParams object
 // with the default values initialized, and the ability to set a timeout on a request
 func NewListAccountsForUserParamsWithTimeout(timeout time.Duration) *ListAccountsForUserParams {
-
+	var ()
 	return &ListAccountsForUserParams{
 
 		timeout: timeout,
@@ -39,7 +40,7 @@ func NewListAccountsForUserParamsWithTimeout(timeout time.Duration) *ListAccount
 // NewListAccountsForUserParamsWithContext creates a new ListAccountsForUserParams object
 // with the default values initialized, and the ability to set a context for a request
 func NewListAccountsForUserParamsWithContext(ctx context.Context) *ListAccountsForUserParams {
-
+	var ()
 	return &ListAccountsForUserParams{
 
 		Context: ctx,
@@ -49,7 +50,7 @@ func NewListAccountsForUserParamsWithContext(ctx context.Context) *ListAccountsF
 // NewListAccountsForUserParamsWithHTTPClient creates a new ListAccountsForUserParams object
 // with the default values initialized, and the ability to set a custom HTTPClient for a request
 func NewListAccountsForUserParamsWithHTTPClient(client *http.Client) *ListAccountsForUserParams {
-
+	var ()
 	return &ListAccountsForUserParams{
 		HTTPClient: client,
 	}
@@ -60,6 +61,10 @@ ListAccountsForUserParams contains all the parameters to send to the API endpoin
 for the list accounts for user operation typically these are written to a http.Request
 */
 type ListAccountsForUserParams struct {
+
+	/*Minimal*/
+	Minimal *bool
+
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
@@ -98,6 +103,17 @@ func (o *ListAccountsForUserParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
+// WithMinimal adds the minimal to the list accounts for user params
+func (o *ListAccountsForUserParams) WithMinimal(minimal *bool) *ListAccountsForUserParams {
+	o.SetMinimal(minimal)
+	return o
+}
+
+// SetMinimal adds the minimal to the list accounts for user params
+func (o *ListAccountsForUserParams) SetMinimal(minimal *bool) {
+	o.Minimal = minimal
+}
+
 // WriteToRequest writes these params to a swagger request
 func (o *ListAccountsForUserParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -105,6 +121,22 @@ func (o *ListAccountsForUserParams) WriteToRequest(r runtime.ClientRequest, reg 
 		return err
 	}
 	var res []error
+
+	if o.Minimal != nil {
+
+		// query param minimal
+		var qrMinimal bool
+		if o.Minimal != nil {
+			qrMinimal = *o.Minimal
+		}
+		qMinimal := swag.FormatBool(qrMinimal)
+		if qMinimal != "" {
+			if err := r.SetQueryParam("minimal", qMinimal); err != nil {
+				return err
+			}
+		}
+
+	}
 
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
