@@ -1983,6 +1983,11 @@ paths:
     get:
       operationId: listAccountsForUser
       tags: [accountMembership]
+      parameters:
+        - name: minimal
+          x-internal: true
+          type: boolean
+          in: query
       responses:
         '200':
           description: OK
