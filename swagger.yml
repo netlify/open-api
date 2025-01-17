@@ -2275,9 +2275,7 @@ paths:
         '200':
           description: OK
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/user'
+            $ref: '#/definitions/user'
         default:
           $ref: '#/responses/error'
   # end users
