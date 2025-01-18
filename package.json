@@ -12,7 +12,7 @@
     "url": "https://github.com/netlify/open-api/issues"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=14.8.0"
   },
   "devDependencies": {
     "@redocly/cli": "^1.0.0-beta.128",
@@ -56,7 +56,7 @@
     "start": "run-s lint build",
     "bundle": "redocly bundle external@latest --output external.yml",
     "build": "run-s convert bundle redoc",
-    "postbuild": "swagger2openapi external.yml -o dist/openapi.json && openapi-typescript dist/openapi.json -o dist/index.d.ts --alphabetize --empty-objects-unknown",
+    "postbuild": "swagger2openapi external.yml -o dist/openapi.json && node src/typegen.js",
     "convert": "node src/convert.js",
     "bump-swagger": "node src/bump-swagger.js",
     "redoc": "node src/docs/build.js",
