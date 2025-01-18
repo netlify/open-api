@@ -1,11 +1,9 @@
 const fs = require('fs')
 
-const converter = require('swagger2openapi')
-
 async function typegen() {
   const openapiTS = (await import('openapi-typescript')).default
-  const swaggerYmlString = fs.readFileSync('external.yml', 'utf-8')
-  const { openapi } = await converter.convertStr(swaggerYmlString, {})
+  const openapiJsonString = fs.readFileSync('dist/openapi.json', 'utf-8')
+  const openapi = JSON.parse(openapiJsonString)
 
   addDocsLinksToOperationDescriptions(openapi)
 
