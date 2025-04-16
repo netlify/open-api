@@ -1411,6 +1411,34 @@ paths:
           description: No content
         default:
           $ref: '#/responses/error'
+  /deploys/{deploy_id}/validations_report:
+    patch:
+      operationId: updateDeployValidations
+      tags: [deploy]
+      description: Updates the deploy validations report for a deploy.
+      x-internal: true
+      x-controller: api/v1/deploys
+      x-action: validations_report
+      parameters:
+        - name: deploy_id
+          description: The ID of the deploy
+          type: string
+          in: path
+          required: true
+        - name: report
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              secrets_scan:
+                type: object
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DeployValidationsReport'
+
   /deploys/{deploy_id}/lock:
     post:
       operationId: lockDeploy
@@ -2727,6 +2755,30 @@ paths:
         default:
           $ref: '#/responses/error'
 definitions:
+  DeployValidationsReport:
+    type: object
+    properties:
+      id:
+        type: string
+        description: The id of the deploy validations report
+      deploy_id:
+        type: string
+        description: The id of the deploy
+      secret_scan_result:
+        $ref: '#/definitions/DeployValidationsReport_SecretScanResult'
+
+  DeployValidationsReport_SecretScanResult:
+    type: object
+    properties:
+      scannedFilesCount:
+        type: integer
+        description: The number of files scanned
+      secretsScanMatches:
+        type: array
+        items:
+          type: string
+        description: The list of secrets scan matches
+
   splitTestSetup:
     type: object
     properties:
@@ -3226,6 +3278,8 @@ definitions:
           type: string
       error_message:
         type: string
+      deploy_validations_report:
+        $ref: '#/definitions/DeployValidationsReport'
       branch:
         type: string
       commit_ref:

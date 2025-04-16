@@ -265,6 +265,8 @@ type ClientService interface {
 
 	UpdateAccountMember(params *UpdateAccountMemberParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateAccountMemberOK, error)
 
+	UpdateDeployValidations(params *UpdateDeployValidationsParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateDeployValidationsOK, error)
+
 	UpdateEnvVar(params *UpdateEnvVarParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateEnvVarOK, error)
 
 	UpdateHook(params *UpdateHookParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateHookOK, error)
@@ -4353,6 +4355,41 @@ func (a *Client) UpdateAccountMember(params *UpdateAccountMemberParams, authInfo
 	// unexpected success response
 	unexpectedSuccess := result.(*UpdateAccountMemberDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+UpdateDeployValidations Updates the deploy validations report for a deploy.
+*/
+func (a *Client) UpdateDeployValidations(params *UpdateDeployValidationsParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateDeployValidationsOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewUpdateDeployValidationsParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "updateDeployValidations",
+		Method:             "PATCH",
+		PathPattern:        "/deploys/{deploy_id}/validations_report",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &UpdateDeployValidationsReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*UpdateDeployValidationsOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for updateDeployValidations: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
 }
 
 /*
