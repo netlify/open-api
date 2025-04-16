@@ -45,9 +45,6 @@ type Deploy struct {
 	// deploy url
 	DeployURL string `json:"deploy_url,omitempty"`
 
-	// deploy validations report
-	DeployValidationsReport *DeployValidationsReport `json:"deploy_validations_report,omitempty"`
-
 	// draft
 	Draft bool `json:"draft,omitempty"`
 
@@ -116,10 +113,6 @@ type Deploy struct {
 func (m *Deploy) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.validateDeployValidationsReport(formats); err != nil {
-		res = append(res, err)
-	}
-
 	if err := m.validateFunctionSchedules(formats); err != nil {
 		res = append(res, err)
 	}
@@ -127,24 +120,6 @@ func (m *Deploy) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
-	return nil
-}
-
-func (m *Deploy) validateDeployValidationsReport(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.DeployValidationsReport) { // not required
-		return nil
-	}
-
-	if m.DeployValidationsReport != nil {
-		if err := m.DeployValidationsReport.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("deploy_validations_report")
-			}
-			return err
-		}
-	}
-
 	return nil
 }
 

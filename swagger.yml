@@ -3278,8 +3278,6 @@ definitions:
           type: string
       error_message:
         type: string
-      deploy_validations_report:
-        $ref: '#/definitions/DeployValidationsReport'
       branch:
         type: string
       commit_ref:
