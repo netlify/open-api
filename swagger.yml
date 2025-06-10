@@ -2054,9 +2054,7 @@ paths:
         '200':
           description: OK
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/accountMembership'
+            $ref: '#/definitions/accountMembership'
         default:
           $ref: '#/responses/error'
     put:
