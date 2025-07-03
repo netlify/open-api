@@ -52,21 +52,23 @@ GetAccountOK handles this case with default header values.
 OK
 */
 type GetAccountOK struct {
-	Payload []*models.AccountMembership
+	Payload *models.AccountMembership
 }
 
 func (o *GetAccountOK) Error() string {
 	return fmt.Sprintf("[GET /accounts/{account_id}][%d] getAccountOK  %+v", 200, o.Payload)
 }
 
-func (o *GetAccountOK) GetPayload() []*models.AccountMembership {
+func (o *GetAccountOK) GetPayload() *models.AccountMembership {
 	return o.Payload
 }
 
 func (o *GetAccountOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
+	o.Payload = new(models.AccountMembership)
+
 	// response payload
-	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
 		return err
 	}
 
