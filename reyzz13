@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Top Up Robux | Roblox Store</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- AOS Animation -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+  <style>
+    body {
+      background-color: #111827;
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .glass {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(8px);
+    }
+
+    .btn {
+      @apply bg-red-600 hover:bg-red-700 text-white py-3 px-6 rounded-xl transition duration-300;
+    }
+
+    .roblox-logo {
+      width: 100px;
+      filter: drop-shadow(0 0 6px #ef4444aa);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="text-center py-20 bg-black">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Roblox_Logo_2022.svg" alt="Roblox Logo" class="roblox-logo mx-auto mb-4" data-aos="zoom-in">
+    <h1 class="text-5xl font-bold" data-aos="fade-down">Top Up Robux</h1>
+    <p class="text-gray-300 mt-4" data-aos="fade-up" data-aos-delay="300">
+      Isi saldo Robux kamu dengan cepat dan aman!
+    </p>
+    <a href="#form-topup" class="btn mt-6 inline-block" data-aos="zoom-in-up" data-aos-delay="600">Top Up Sekarang</a>
+  </header>
+
+  <!-- Form Top Up -->
+  <section id="form-topup" class="py-16 px-6">
+    <div class="max-w-xl mx-auto glass p-8 rounded-2xl shadow-lg" data-aos="fade-up">
+      <h2 class="text-2xl font-bold mb-6">Form Top Up Robux</h2>
+      <form>
+        <div class="mb-4">
+          <label class="block mb-2">Username Roblox</label>
+          <input type="text" placeholder="Masukkan username Roblox kamu" class="w-full p-3 rounded bg-gray-800 text-white focus:outline-none" required>
+        </div>
+
+        <div class="mb-4">
+          <label class="block mb-2">Jumlah Robux</label>
+          <select class="w-full p-3 rounded bg-gray-800 text-white" required>
+            <option value="">Pilih jumlah Robux</option>
+            <option value="50">50 Robux - Rp10.000</option>
+            <option value="100">100 Robux - Rp18.000</option>
+            <option value="200">200 Robux - Rp35.000</option>
+            <option value="500">500 Robux - Rp80.000</option>
+          </select>
+        </div>
+
+        <div class="mb-6">
+          <label class="block mb-2">Metode Pembayaran</label>
+          <select class="w-full p-3 rounded bg-gray-800 text-white" required>
+            <option value="">Pilih metode</option>
+            <option value="dana">DANA</option>
+            <option value="gopay">GoPay</option>
+            <option value="ovo">OVO</option>
+            <option value="bank">Transfer Bank</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn w-full">Bayar & Top Up</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Promo -->
+  <section class="py-16 bg-gray-900 text-center">
+    <h3 class="text-3xl font-bold mb-4" data-aos="fade-up">Promo Spesial Minggu Ini</h3>
+    <p class="text-gray-400 mb-6" data-aos="fade-up" data-aos-delay="200">Top up 200 Robux ke atas, gratis bonus item kosmetik!</p>
+    <img src="https://static.wikia.nocookie.net/roblox/images/9/9e/Robux_icon.png" class="w-20 mx-auto" alt="Robux Icon" data-aos="zoom-in">
+  </section>
+
+  <!-- Footer -->
+  <footer class="text-center py-6 bg-black text-gray-500">
+    &copy; 2025 RobloxStore.id - Layanan Top Up Robux Aman dan Cepat
+  </footer>
+
+  <!-- AOS Script -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>AOS.init({ duration: 800, once: true });</script>
+</body>
+</html>
