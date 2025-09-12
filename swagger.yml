@@ -2752,6 +2752,19 @@ paths:
           description: No content
         default:
           $ref: '#/responses/error'
+  /ai-gateway/providers:
+    get:
+      responses:
+        '200':
+          description: The mapping of providers and supported models
+          schema:
+            type: object
+            properties:
+              providers:
+                additionalProperties:
+                  type: object
+                  $ref: '#/definitions/providerDefinition'
+
 definitions:
   DeployValidationsReport:
     type: object
@@ -4114,6 +4127,18 @@ definitions:
         enum:
           - new_dev_server
           - content_refresh
+  providerDefinition:
+    type: object
+    properties:
+      token_env_var:
+        type: string
+      url_env_var:
+        type: string
+      models:
+        type: array
+        items:
+          type: string
+
 parameters:
   page:
     type: integer
