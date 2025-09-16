@@ -27,6 +27,8 @@ type Client struct {
 
 // ClientService is the interface for Client methods
 type ClientService interface {
+	GetAiGatewayProviders(params *GetAiGatewayProvidersParams, authInfo runtime.ClientAuthInfoWriter) (*GetAiGatewayProvidersOK, error)
+
 	AddMemberToAccount(params *AddMemberToAccountParams, authInfo runtime.ClientAuthInfoWriter) (*AddMemberToAccountOK, error)
 
 	CancelAccount(params *CancelAccountParams, authInfo runtime.ClientAuthInfoWriter) (*CancelAccountNoContent, error)
@@ -298,6 +300,41 @@ type ClientService interface {
 	UploadDeployFunction(params *UploadDeployFunctionParams, authInfo runtime.ClientAuthInfoWriter) (*UploadDeployFunctionOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
+}
+
+/*
+GetAiGatewayProviders get ai gateway providers API
+*/
+func (a *Client) GetAiGatewayProviders(params *GetAiGatewayProvidersParams, authInfo runtime.ClientAuthInfoWriter) (*GetAiGatewayProvidersOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetAiGatewayProvidersParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "GetAiGatewayProviders",
+		Method:             "GET",
+		PathPattern:        "/ai-gateway/providers",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &GetAiGatewayProvidersReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*GetAiGatewayProvidersOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for GetAiGatewayProviders: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
 }
 
 /*
