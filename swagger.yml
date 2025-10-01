@@ -2108,6 +2108,332 @@ paths:
         default:
           $ref: '#/responses/error'
 
+  # begin agent_runners
+  /agent_runners:
+    get:
+      operationId: listAgentRunners
+      tags: [agentRunner]
+      parameters:
+        - name: account_id
+          type: string
+          in: query
+          required: true
+        - name: site_id
+          type: string
+          in: query
+          required: true
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/perPage'
+        - name: state
+          type: string
+          in: query
+          enum: ['live', 'error']
+        - name: title
+          type: string
+          in: query
+        - name: branch
+          type: string
+          in: query
+        - name: result_branch
+          type: string
+          in: query
+        - name: from
+          type: integer
+          in: query
+        - name: to
+          type: integer
+          in: query
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/agentRunner'
+        default:
+          $ref: '#/responses/error'
+    post:
+      operationId: createAgentRunner
+      tags: [agentRunner]
+      parameters:
+        - name: site_id
+          type: string
+          in: query
+          required: true
+        - name: deploy_id
+          type: string
+          in: query
+        - name: branch
+          type: string
+          in: query
+        - name: prompt
+          type: string
+          in: query
+        - name: agent
+          type: string
+          in: query
+        - name: model
+          type: string
+          in: query
+        - name: parent_agent_runner_id
+          type: string
+          in: query
+        - name: dev_server_image
+          type: string
+          in: query
+        - name: file_keys
+          type: array
+          in: query
+          items:
+            type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/agentRunner'
+        '404':
+          description: Not Found
+        '422':
+          description: Unprocessable Entity
+        default:
+          $ref: '#/responses/error'
+  /agent_runners/upload_url:
+    post:
+      x-internal: true
+      operationId: createAgentRunnerUploadUrl
+      tags: [agentRunner]
+      parameters:
+        - name: account_id
+          type: string
+          in: query
+          required: true
+        - name: filename
+          type: string
+          in: query
+          required: true
+        - name: content_type
+          type: string
+          in: query
+          required: true
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '422':
+          description: Unprocessable Entity
+        default:
+          $ref: '#/responses/error'
+  /agent_runners/{agent_runner_id}:
+    parameters:
+      - name: agent_runner_id
+        type: string
+        in: path
+        required: true
+    get:
+      operationId: getAgentRunner
+      tags: [agentRunner]
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/agentRunner'
+        default:
+          $ref: '#/responses/error'
+    patch:
+      operationId: updateAgentRunner
+      tags: [agentRunner]
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/agentRunner'
+        default:
+          $ref: '#/responses/error'
+    delete:
+      operationId: deleteAgentRunner
+      tags: [agentRunner]
+      responses:
+        '202':
+          description: Accepted
+        default:
+          $ref: '#/responses/error'
+  /agent_runners/{agent_runner_id}/archive:
+    parameters:
+      - name: agent_runner_id
+        type: string
+        in: path
+        required: true
+    post:
+      operationId: archiveAgentRunner
+      tags: [agentRunner]
+      responses:
+        '202':
+          description: Accepted
+        '404':
+          description: Not Found
+        '422':
+          description: Unprocessable Entity
+        default:
+          $ref: '#/responses/error'
+  /agent_runners/{agent_runner_id}/pull_request:
+    parameters:
+      - name: agent_runner_id
+        type: string
+        in: path
+        required: true
+    post:
+      x-internal: true
+      operationId: agentRunnerPullRequest
+      tags: [agentRunner]
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '409':
+          description: Conflict
+        '422':
+          description: Unprocessable Entity
+        default:
+          $ref: '#/responses/error'
+  /agent_runners/{agent_runner_id}/commit:
+    parameters:
+      - name: agent_runner_id
+        type: string
+        in: path
+        required: true
+    post:
+      x-internal: true
+      operationId: agentRunnerCommitToBranch
+      tags: [agentRunner]
+      parameters:
+        - name: target_branch
+          type: string
+          in: query
+          required: true
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '409':
+          description: Conflict
+        '422':
+          description: Unprocessable Entity
+        default:
+          $ref: '#/responses/error'
+  # end agent_runners
+
+  # begin agent_runner_sessions
+  /agent_runners/{agent_runner_id}/sessions:
+    parameters:
+      - name: agent_runner_id
+        type: string
+        in: path
+        required: true
+    get:
+      operationId: listAgentRunnerSessions
+      tags: [agentRunnerSession]
+      parameters:
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/perPage'
+        - name: state
+          type: string
+          in: query
+          enum: ['live', 'error']
+        - name: from
+          type: integer
+          in: query
+        - name: to
+          type: integer
+          in: query
+        - name: order_by
+          type: string
+          in: query
+          enum: ['asc', 'desc']
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/agentRunnerSession'
+        default:
+          $ref: '#/responses/error'
+    post:
+      operationId: createAgentRunnerSession
+      tags: [agentRunnerSession]
+      parameters:
+        - name: prompt
+          type: string
+          in: query
+        - name: agent
+          type: string
+          in: query
+        - name: model
+          type: string
+          in: query
+        - name: file_keys
+          type: array
+          in: query
+          items:
+            type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/agentRunnerSession'
+        '404':
+          description: Not Found
+        '422':
+          description: Unprocessable Entity
+        default:
+          $ref: '#/responses/error'
+  /agent_runners/{agent_runner_id}/sessions/{agent_runner_session_id}:
+    parameters:
+      - name: agent_runner_id
+        type: string
+        in: path
+        required: true
+      - name: agent_runner_session_id
+        type: string
+        in: path
+        required: true
+    get:
+      operationId: getAgentRunnerSession
+      tags: [agentRunnerSession]
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/agentRunnerSession'
+        default:
+          $ref: '#/responses/error'
+    patch:
+      operationId: updateAgentRunnerSession
+      tags: [agentRunnerSession]
+      parameters:
+        - name: is_published
+          type: boolean
+          in: query
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/agentRunnerSession'
+        default:
+          $ref: '#/responses/error'
+    delete:
+      operationId: deleteAgentRunnerSession
+      tags: [agentRunnerSession]
+      responses:
+        '202':
+          description: Accepted
+        default:
+          $ref: '#/responses/error'
+  # end agent_runner_sessions
+
   # begin submission
   /submissions/{submission_id}:
     parameters:
@@ -3856,6 +4182,148 @@ definitions:
             type: string
         additionalProperties:
           type: object
+  agentRunner:
+    type: object
+    properties:
+      id:
+        type: string
+      site_id:
+        type: string
+      parent_agent_runner_id:
+        type: string
+      state:
+        type: string
+      created_at:
+        type: string
+        format: dateTime
+      updated_at:
+        type: string
+        format: dateTime
+      done_at:
+        type: string
+        format: dateTime
+      title:
+        type: string
+      branch:
+        type: string
+      result_branch:
+        type: string
+      pr_url:
+        type: string
+      pr_branch:
+        type: string
+      pr_state:
+        type: string
+      pr_number:
+        type: integer
+      pr_is_being_created:
+        type: boolean
+      pr_error:
+        type: string
+      current_task:
+        type: string
+      result_diff:
+        type: string
+      sha:
+        type: string
+      merge_commit_sha:
+        type: string
+      merge_commit_error:
+        type: string
+      merge_commit_is_being_created:
+        type: boolean
+      base_deploy_id:
+        type: string
+      attached_file_keys:
+        type: array
+        items:
+          type: string
+      active_session_created_at:
+        type: string
+        format: dateTime
+      latest_session_deploy_id:
+        type: string
+      latest_session_deploy_url:
+        type: string
+      user:
+        $ref: '#/definitions/agentRunnerUser'
+  agentRunnerSession:
+    type: object
+    properties:
+      id:
+        type: string
+      agent_runner_id:
+        type: string
+      dev_server_id:
+        type: string
+      state:
+        type: string
+      created_at:
+        type: string
+        format: dateTime
+      updated_at:
+        type: string
+        format: dateTime
+      done_at:
+        type: string
+        format: dateTime
+      title:
+        type: string
+      prompt:
+        type: string
+      agent_config:
+        $ref: '#/definitions/agentRunnerSessionConfig'
+      result:
+        type: string
+      result_diff:
+        type: string
+      commit_sha:
+        type: string
+      deploy_id:
+        type: string
+      deploy_url:
+        type: string
+      duration:
+        type: integer
+      steps:
+        type: array
+        items:
+          $ref: '#/definitions/agentRunnerSessionStep'
+      user:
+        $ref: '#/definitions/agentRunnerUser'
+      attached_file_keys:
+        type: array
+        items:
+          type: string
+      result_zip_file_name:
+        type: string
+      is_published:
+        type: boolean
+  agentRunnerSessionStep:
+    type: object
+    properties:
+      title:
+        type: string
+      message:
+        type: string
+  agentRunnerSessionConfig:
+    type: object
+    properties:
+      agent:
+        type: string
+      model:
+        type: string
+  agentRunnerUser:
+    type: object
+    properties:
+      id:
+        type: string
+      full_name:
+        type: string
+      email:
+        type: string
+      avatar_url:
+        type: string
   accountUsageCapability:
     type: object
     properties:
