@@ -31,6 +31,12 @@ type ClientService interface {
 
 	AddMemberToAccount(params *AddMemberToAccountParams, authInfo runtime.ClientAuthInfoWriter) (*AddMemberToAccountOK, error)
 
+	AgentRunnerCommitToBranch(params *AgentRunnerCommitToBranchParams, authInfo runtime.ClientAuthInfoWriter) (*AgentRunnerCommitToBranchOK, error)
+
+	AgentRunnerPullRequest(params *AgentRunnerPullRequestParams, authInfo runtime.ClientAuthInfoWriter) (*AgentRunnerPullRequestOK, error)
+
+	ArchiveAgentRunner(params *ArchiveAgentRunnerParams, authInfo runtime.ClientAuthInfoWriter) (*ArchiveAgentRunnerAccepted, error)
+
 	CancelAccount(params *CancelAccountParams, authInfo runtime.ClientAuthInfoWriter) (*CancelAccountNoContent, error)
 
 	CancelSiteDeploy(params *CancelSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*CancelSiteDeployCreated, error)
@@ -38,6 +44,12 @@ type ClientService interface {
 	ConfigureDNSForSite(params *ConfigureDNSForSiteParams, authInfo runtime.ClientAuthInfoWriter) (*ConfigureDNSForSiteOK, error)
 
 	CreateAccount(params *CreateAccountParams, authInfo runtime.ClientAuthInfoWriter) (*CreateAccountCreated, error)
+
+	CreateAgentRunner(params *CreateAgentRunnerParams, authInfo runtime.ClientAuthInfoWriter) (*CreateAgentRunnerOK, error)
+
+	CreateAgentRunnerSession(params *CreateAgentRunnerSessionParams, authInfo runtime.ClientAuthInfoWriter) (*CreateAgentRunnerSessionOK, error)
+
+	CreateAgentRunnerUploadURL(params *CreateAgentRunnerUploadURLParams, authInfo runtime.ClientAuthInfoWriter) (*CreateAgentRunnerUploadURLOK, error)
 
 	CreateDeployKey(params *CreateDeployKeyParams, authInfo runtime.ClientAuthInfoWriter) (*CreateDeployKeyCreated, error)
 
@@ -74,6 +86,10 @@ type ClientService interface {
 	CreateSplitTest(params *CreateSplitTestParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSplitTestCreated, error)
 
 	CreateTicket(params *CreateTicketParams, authInfo runtime.ClientAuthInfoWriter) (*CreateTicketCreated, error)
+
+	DeleteAgentRunner(params *DeleteAgentRunnerParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteAgentRunnerAccepted, error)
+
+	DeleteAgentRunnerSession(params *DeleteAgentRunnerSessionParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteAgentRunnerSessionAccepted, error)
 
 	DeleteDeploy(params *DeleteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteDeployNoContent, error)
 
@@ -122,6 +138,10 @@ type ClientService interface {
 	GetAccountBuildStatus(params *GetAccountBuildStatusParams, authInfo runtime.ClientAuthInfoWriter) (*GetAccountBuildStatusOK, error)
 
 	GetAccountMember(params *GetAccountMemberParams, authInfo runtime.ClientAuthInfoWriter) (*GetAccountMemberOK, error)
+
+	GetAgentRunner(params *GetAgentRunnerParams, authInfo runtime.ClientAuthInfoWriter) (*GetAgentRunnerOK, error)
+
+	GetAgentRunnerSession(params *GetAgentRunnerSessionParams, authInfo runtime.ClientAuthInfoWriter) (*GetAgentRunnerSessionOK, error)
 
 	GetAllCertificates(params *GetAllCertificatesParams, authInfo runtime.ClientAuthInfoWriter) (*GetAllCertificatesOK, error)
 
@@ -184,6 +204,10 @@ type ClientService interface {
 	ListAccountTypesForUser(params *ListAccountTypesForUserParams, authInfo runtime.ClientAuthInfoWriter) (*ListAccountTypesForUserOK, error)
 
 	ListAccountsForUser(params *ListAccountsForUserParams, authInfo runtime.ClientAuthInfoWriter) (*ListAccountsForUserOK, error)
+
+	ListAgentRunnerSessions(params *ListAgentRunnerSessionsParams, authInfo runtime.ClientAuthInfoWriter) (*ListAgentRunnerSessionsOK, error)
+
+	ListAgentRunners(params *ListAgentRunnersParams, authInfo runtime.ClientAuthInfoWriter) (*ListAgentRunnersOK, error)
 
 	ListDeployKeys(params *ListDeployKeysParams, authInfo runtime.ClientAuthInfoWriter) (*ListDeployKeysOK, error)
 
@@ -266,6 +290,10 @@ type ClientService interface {
 	UpdateAccount(params *UpdateAccountParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateAccountOK, error)
 
 	UpdateAccountMember(params *UpdateAccountMemberParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateAccountMemberOK, error)
+
+	UpdateAgentRunner(params *UpdateAgentRunnerParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateAgentRunnerOK, error)
+
+	UpdateAgentRunnerSession(params *UpdateAgentRunnerSessionParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateAgentRunnerSessionOK, error)
 
 	UpdateDeployValidations(params *UpdateDeployValidationsParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateDeployValidationsOK, error)
 
@@ -368,6 +396,108 @@ func (a *Client) AddMemberToAccount(params *AddMemberToAccountParams, authInfo r
 	}
 	// unexpected success response
 	unexpectedSuccess := result.(*AddMemberToAccountDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+AgentRunnerCommitToBranch agent runner commit to branch API
+*/
+func (a *Client) AgentRunnerCommitToBranch(params *AgentRunnerCommitToBranchParams, authInfo runtime.ClientAuthInfoWriter) (*AgentRunnerCommitToBranchOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewAgentRunnerCommitToBranchParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "agentRunnerCommitToBranch",
+		Method:             "POST",
+		PathPattern:        "/agent_runners/{agent_runner_id}/commit",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &AgentRunnerCommitToBranchReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*AgentRunnerCommitToBranchOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*AgentRunnerCommitToBranchDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+AgentRunnerPullRequest agent runner pull request API
+*/
+func (a *Client) AgentRunnerPullRequest(params *AgentRunnerPullRequestParams, authInfo runtime.ClientAuthInfoWriter) (*AgentRunnerPullRequestOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewAgentRunnerPullRequestParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "agentRunnerPullRequest",
+		Method:             "POST",
+		PathPattern:        "/agent_runners/{agent_runner_id}/pull_request",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &AgentRunnerPullRequestReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*AgentRunnerPullRequestOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*AgentRunnerPullRequestDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+ArchiveAgentRunner archive agent runner API
+*/
+func (a *Client) ArchiveAgentRunner(params *ArchiveAgentRunnerParams, authInfo runtime.ClientAuthInfoWriter) (*ArchiveAgentRunnerAccepted, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewArchiveAgentRunnerParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "archiveAgentRunner",
+		Method:             "POST",
+		PathPattern:        "/agent_runners/{agent_runner_id}/archive",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &ArchiveAgentRunnerReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*ArchiveAgentRunnerAccepted)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*ArchiveAgentRunnerDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
@@ -504,6 +634,108 @@ func (a *Client) CreateAccount(params *CreateAccountParams, authInfo runtime.Cli
 	}
 	// unexpected success response
 	unexpectedSuccess := result.(*CreateAccountDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+CreateAgentRunner create agent runner API
+*/
+func (a *Client) CreateAgentRunner(params *CreateAgentRunnerParams, authInfo runtime.ClientAuthInfoWriter) (*CreateAgentRunnerOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewCreateAgentRunnerParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "createAgentRunner",
+		Method:             "POST",
+		PathPattern:        "/agent_runners",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &CreateAgentRunnerReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*CreateAgentRunnerOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*CreateAgentRunnerDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+CreateAgentRunnerSession create agent runner session API
+*/
+func (a *Client) CreateAgentRunnerSession(params *CreateAgentRunnerSessionParams, authInfo runtime.ClientAuthInfoWriter) (*CreateAgentRunnerSessionOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewCreateAgentRunnerSessionParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "createAgentRunnerSession",
+		Method:             "POST",
+		PathPattern:        "/agent_runners/{agent_runner_id}/sessions",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &CreateAgentRunnerSessionReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*CreateAgentRunnerSessionOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*CreateAgentRunnerSessionDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+CreateAgentRunnerUploadURL create agent runner upload Url API
+*/
+func (a *Client) CreateAgentRunnerUploadURL(params *CreateAgentRunnerUploadURLParams, authInfo runtime.ClientAuthInfoWriter) (*CreateAgentRunnerUploadURLOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewCreateAgentRunnerUploadURLParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "createAgentRunnerUploadUrl",
+		Method:             "POST",
+		PathPattern:        "/agent_runners/upload_url",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &CreateAgentRunnerUploadURLReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*CreateAgentRunnerUploadURLOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*CreateAgentRunnerUploadURLDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
@@ -1116,6 +1348,74 @@ func (a *Client) CreateTicket(params *CreateTicketParams, authInfo runtime.Clien
 	}
 	// unexpected success response
 	unexpectedSuccess := result.(*CreateTicketDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+DeleteAgentRunner delete agent runner API
+*/
+func (a *Client) DeleteAgentRunner(params *DeleteAgentRunnerParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteAgentRunnerAccepted, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewDeleteAgentRunnerParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "deleteAgentRunner",
+		Method:             "DELETE",
+		PathPattern:        "/agent_runners/{agent_runner_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &DeleteAgentRunnerReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*DeleteAgentRunnerAccepted)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*DeleteAgentRunnerDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+DeleteAgentRunnerSession delete agent runner session API
+*/
+func (a *Client) DeleteAgentRunnerSession(params *DeleteAgentRunnerSessionParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteAgentRunnerSessionAccepted, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewDeleteAgentRunnerSessionParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "deleteAgentRunnerSession",
+		Method:             "DELETE",
+		PathPattern:        "/agent_runners/{agent_runner_id}/sessions/{agent_runner_session_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &DeleteAgentRunnerSessionReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*DeleteAgentRunnerSessionAccepted)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*DeleteAgentRunnerSessionDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
@@ -1933,6 +2233,74 @@ func (a *Client) GetAccountMember(params *GetAccountMemberParams, authInfo runti
 	}
 	// unexpected success response
 	unexpectedSuccess := result.(*GetAccountMemberDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+GetAgentRunner get agent runner API
+*/
+func (a *Client) GetAgentRunner(params *GetAgentRunnerParams, authInfo runtime.ClientAuthInfoWriter) (*GetAgentRunnerOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetAgentRunnerParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "getAgentRunner",
+		Method:             "GET",
+		PathPattern:        "/agent_runners/{agent_runner_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &GetAgentRunnerReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*GetAgentRunnerOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*GetAgentRunnerDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+GetAgentRunnerSession get agent runner session API
+*/
+func (a *Client) GetAgentRunnerSession(params *GetAgentRunnerSessionParams, authInfo runtime.ClientAuthInfoWriter) (*GetAgentRunnerSessionOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetAgentRunnerSessionParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "getAgentRunnerSession",
+		Method:             "GET",
+		PathPattern:        "/agent_runners/{agent_runner_id}/sessions/{agent_runner_session_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &GetAgentRunnerSessionReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*GetAgentRunnerSessionOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*GetAgentRunnerSessionDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
@@ -2989,6 +3357,74 @@ func (a *Client) ListAccountsForUser(params *ListAccountsForUserParams, authInfo
 	}
 	// unexpected success response
 	unexpectedSuccess := result.(*ListAccountsForUserDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+ListAgentRunnerSessions list agent runner sessions API
+*/
+func (a *Client) ListAgentRunnerSessions(params *ListAgentRunnerSessionsParams, authInfo runtime.ClientAuthInfoWriter) (*ListAgentRunnerSessionsOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewListAgentRunnerSessionsParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "listAgentRunnerSessions",
+		Method:             "GET",
+		PathPattern:        "/agent_runners/{agent_runner_id}/sessions",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &ListAgentRunnerSessionsReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*ListAgentRunnerSessionsOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*ListAgentRunnerSessionsDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+ListAgentRunners list agent runners API
+*/
+func (a *Client) ListAgentRunners(params *ListAgentRunnersParams, authInfo runtime.ClientAuthInfoWriter) (*ListAgentRunnersOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewListAgentRunnersParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "listAgentRunners",
+		Method:             "GET",
+		PathPattern:        "/agent_runners",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &ListAgentRunnersReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*ListAgentRunnersOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*ListAgentRunnersDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
@@ -4391,6 +4827,74 @@ func (a *Client) UpdateAccountMember(params *UpdateAccountMemberParams, authInfo
 	}
 	// unexpected success response
 	unexpectedSuccess := result.(*UpdateAccountMemberDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+UpdateAgentRunner update agent runner API
+*/
+func (a *Client) UpdateAgentRunner(params *UpdateAgentRunnerParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateAgentRunnerOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewUpdateAgentRunnerParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "updateAgentRunner",
+		Method:             "PATCH",
+		PathPattern:        "/agent_runners/{agent_runner_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &UpdateAgentRunnerReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*UpdateAgentRunnerOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*UpdateAgentRunnerDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+UpdateAgentRunnerSession update agent runner session API
+*/
+func (a *Client) UpdateAgentRunnerSession(params *UpdateAgentRunnerSessionParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateAgentRunnerSessionOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewUpdateAgentRunnerSessionParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "updateAgentRunnerSession",
+		Method:             "PATCH",
+		PathPattern:        "/agent_runners/{agent_runner_id}/sessions/{agent_runner_session_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &UpdateAgentRunnerSessionReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*UpdateAgentRunnerSessionOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*UpdateAgentRunnerSessionDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
