@@ -4640,6 +4640,10 @@ definitions:
       url:
         type: string
         description: AI gateway base url
+      expires_at:
+        type: integer
+        format: int64
+        description: Unix timestamp when the token expires
 
 parameters:
   page:

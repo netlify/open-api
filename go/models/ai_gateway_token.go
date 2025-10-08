@@ -15,6 +15,9 @@ import (
 // swagger:model aiGatewayToken
 type AiGatewayToken struct {
 
+	// Unix timestamp when the token expires
+	ExpiresAt int64 `json:"expires_at,omitempty"`
+
 	// The AI Gateway authentication token
 	Token string `json:"token,omitempty"`
 
