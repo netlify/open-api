@@ -3080,6 +3080,9 @@ paths:
           $ref: '#/responses/error'
   /ai-gateway/providers:
     get:
+      operationId: getAIGatewayProviders
+      tags: [aiGateway]
+      security: []
       responses:
         '200':
           description: The mapping of providers and supported models
@@ -3090,6 +3093,28 @@ paths:
                 additionalProperties:
                   type: object
                   $ref: '#/definitions/providerDefinition'
+        default:
+          $ref: '#/responses/error'
+  /api/v1/sites/{site_id}/ai-gateway/token:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+        description: The site ID
+    get:
+      operationId: getAIGatewayToken
+      tags: [aiGateway]
+      responses:
+        '200':
+          description: AI Gateway token for the site
+          schema:
+            $ref: '#/definitions/aiGatewayToken'
+        '404':
+          description: AI Gateway not available for this site
+        default:
+          $ref: '#/responses/error'
+      description: Returns an AI Gateway token for a specific site
 
 definitions:
   DeployValidationsReport:
@@ -4606,6 +4631,19 @@ definitions:
         type: array
         items:
           type: string
+  aiGatewayToken:
+    type: object
+    properties:
+      token:
+        type: string
+        description: The AI Gateway authentication token
+      url:
+        type: string
+        description: AI gateway base url
+      expires_at:
+        type: integer
+        format: int64
+        description: Unix timestamp when the token expires
 
 parameters:
   page:
