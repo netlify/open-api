@@ -299,6 +299,8 @@ type ClientService interface {
 
 	UpdateDeployValidations(params *UpdateDeployValidationsParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateDeployValidationsOK, error)
 
+	UpdateDevServerState(params *UpdateDevServerStateParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateDevServerStateOK, error)
+
 	UpdateEnvVar(params *UpdateEnvVarParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateEnvVarOK, error)
 
 	UpdateHook(params *UpdateHookParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateHookOK, error)
@@ -4964,6 +4966,41 @@ func (a *Client) UpdateDeployValidations(params *UpdateDeployValidationsParams, 
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for updateDeployValidations: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+UpdateDevServerState update dev server state API
+*/
+func (a *Client) UpdateDevServerState(params *UpdateDevServerStateParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateDevServerStateOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewUpdateDevServerStateParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "updateDevServerState",
+		Method:             "POST",
+		PathPattern:        "/sites/{site_id}/dev_servers/{dev_server_id}/state",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &UpdateDevServerStateReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*UpdateDevServerStateOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for updateDevServerState: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 
