@@ -1312,6 +1312,10 @@ paths:
         type: string
         in: query
         required: false
+      - name: task_id
+        type: string
+        in: query
+        required: false
     post:
       operationId: notifyBuildStart
       tags: [build]
@@ -2998,6 +3002,43 @@ paths:
         '200':
           description: OK
   # end sites/{site_id}/dev_servers/{dev_server_id}/activity
+  # begin sites/{site_id}/dev_servers/{dev_server_id}/state
+  /sites/{site_id}/dev_servers/{dev_server_id}/state:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+      - name: dev_server_id
+        type: string
+        in: path
+        required: true
+    post:
+      operationId: updateDevServerState
+      tags: [devServer]
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            required:
+              - state
+            properties:
+              state:
+                type: string
+              task_id:
+                type: string
+              error:
+                type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/devServer'
+        '409':
+          description: Conflict
+  # end sites/{site_id}/dev_servers/{dev_server_id}/state
   /sites/{site_id}/dev_server_hooks:
     parameters:
       - name: site_id
