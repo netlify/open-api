@@ -67,6 +67,8 @@ type NotifyBuildStartParams struct {
 	BuildVersion *string
 	/*BuildbotVersion*/
 	BuildbotVersion *string
+	/*TaskID*/
+	TaskID *string
 
 	timeout    time.Duration
 	Context    context.Context
@@ -139,6 +141,17 @@ func (o *NotifyBuildStartParams) SetBuildbotVersion(buildbotVersion *string) {
 	o.BuildbotVersion = buildbotVersion
 }
 
+// WithTaskID adds the taskID to the notify build start params
+func (o *NotifyBuildStartParams) WithTaskID(taskID *string) *NotifyBuildStartParams {
+	o.SetTaskID(taskID)
+	return o
+}
+
+// SetTaskID adds the taskId to the notify build start params
+func (o *NotifyBuildStartParams) SetTaskID(taskID *string) {
+	o.TaskID = taskID
+}
+
 // WriteToRequest writes these params to a swagger request
 func (o *NotifyBuildStartParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -178,6 +191,22 @@ func (o *NotifyBuildStartParams) WriteToRequest(r runtime.ClientRequest, reg str
 		qBuildbotVersion := qrBuildbotVersion
 		if qBuildbotVersion != "" {
 			if err := r.SetQueryParam("buildbot_version", qBuildbotVersion); err != nil {
+				return err
+			}
+		}
+
+	}
+
+	if o.TaskID != nil {
+
+		// query param task_id
+		var qrTaskID string
+		if o.TaskID != nil {
+			qrTaskID = *o.TaskID
+		}
+		qTaskID := qrTaskID
+		if qTaskID != "" {
+			if err := r.SetQueryParam("task_id", qTaskID); err != nil {
 				return err
 			}
 		}
