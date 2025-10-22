@@ -6,6 +6,8 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"encoding/json"
+
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
@@ -22,6 +24,7 @@ type UpdateDevServerStateParamsBody struct {
 
 	// state
 	// Required: true
+	// Enum: [starting live error done]
 	State *string `json:"state"`
 
 	// task id
@@ -42,9 +45,49 @@ func (m *UpdateDevServerStateParamsBody) Validate(formats strfmt.Registry) error
 	return nil
 }
 
+var updateDevServerStateParamsBodyTypeStatePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["starting","live","error","done"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		updateDevServerStateParamsBodyTypeStatePropEnum = append(updateDevServerStateParamsBodyTypeStatePropEnum, v)
+	}
+}
+
+const (
+
+	// UpdateDevServerStateParamsBodyStateStarting captures enum value "starting"
+	UpdateDevServerStateParamsBodyStateStarting string = "starting"
+
+	// UpdateDevServerStateParamsBodyStateLive captures enum value "live"
+	UpdateDevServerStateParamsBodyStateLive string = "live"
+
+	// UpdateDevServerStateParamsBodyStateError captures enum value "error"
+	UpdateDevServerStateParamsBodyStateError string = "error"
+
+	// UpdateDevServerStateParamsBodyStateDone captures enum value "done"
+	UpdateDevServerStateParamsBodyStateDone string = "done"
+)
+
+// prop value enum
+func (m *UpdateDevServerStateParamsBody) validateStateEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, updateDevServerStateParamsBodyTypeStatePropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (m *UpdateDevServerStateParamsBody) validateState(formats strfmt.Registry) error {
 
 	if err := validate.Required("state", "body", m.State); err != nil {
+		return err
+	}
+
+	// value enum
+	if err := m.validateStateEnum("state", "body", *m.State); err != nil {
 		return err
 	}
 

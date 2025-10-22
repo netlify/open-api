@@ -3027,6 +3027,11 @@ paths:
             properties:
               state:
                 type: string
+                enum:
+                  - starting
+                  - live
+                  - error
+                  - done
               task_id:
                 type: string
               error:
