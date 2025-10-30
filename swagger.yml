@@ -3381,6 +3381,9 @@ definitions:
         type: string
       functions_region:
         type: string
+      prevent_non_git_prod_deploys:
+        type: boolean
+        default: false
   siteSetup:
     allOf:
       - $ref: '#/definitions/site'
