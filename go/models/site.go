@@ -94,6 +94,9 @@ type Site struct {
 	// prerender
 	Prerender string `json:"prerender,omitempty"`
 
+	// prevent non git prod deploys
+	PreventNonGitProdDeploys *bool `json:"prevent_non_git_prod_deploys,omitempty"`
+
 	// processing settings
 	ProcessingSettings *SiteProcessingSettings `json:"processing_settings,omitempty"`
 
