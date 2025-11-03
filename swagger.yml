@@ -1349,7 +1349,7 @@ paths:
         in: path
         required: true
     get:
-      operationId: getDNSForSite
+      operationId: getDnsForSite
       tags: [dnsZone]
       responses:
         '200':
@@ -1361,7 +1361,7 @@ paths:
         default:
           $ref: '#/responses/error'
     put:
-      operationId: configureDNSForSite
+      operationId: configureDnsForSite
       tags: [dnsZone]
       responses:
         '200':
