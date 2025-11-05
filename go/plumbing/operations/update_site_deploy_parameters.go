@@ -63,6 +63,8 @@ for the update site deploy operation typically these are written to a http.Reque
 */
 type UpdateSiteDeployParams struct {
 
+	/*CommitRef*/
+	CommitRef *string
 	/*Deploy*/
 	Deploy *models.DeployFiles
 	/*DeployID*/
@@ -108,6 +110,17 @@ func (o *UpdateSiteDeployParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
+// WithCommitRef adds the commitRef to the update site deploy params
+func (o *UpdateSiteDeployParams) WithCommitRef(commitRef *string) *UpdateSiteDeployParams {
+	o.SetCommitRef(commitRef)
+	return o
+}
+
+// SetCommitRef adds the commitRef to the update site deploy params
+func (o *UpdateSiteDeployParams) SetCommitRef(commitRef *string) {
+	o.CommitRef = commitRef
+}
+
 // WithDeploy adds the deploy to the update site deploy params
 func (o *UpdateSiteDeployParams) WithDeploy(deploy *models.DeployFiles) *UpdateSiteDeployParams {
 	o.SetDeploy(deploy)
@@ -148,6 +161,22 @@ func (o *UpdateSiteDeployParams) WriteToRequest(r runtime.ClientRequest, reg str
 		return err
 	}
 	var res []error
+
+	if o.CommitRef != nil {
+
+		// query param commit_ref
+		var qrCommitRef string
+		if o.CommitRef != nil {
+			qrCommitRef = *o.CommitRef
+		}
+		qCommitRef := qrCommitRef
+		if qCommitRef != "" {
+			if err := r.SetQueryParam("commit_ref", qCommitRef); err != nil {
+				return err
+			}
+		}
+
+	}
 
 	if o.Deploy != nil {
 		if err := r.SetBodyParam(o.Deploy); err != nil {

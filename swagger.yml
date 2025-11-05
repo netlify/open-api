@@ -1116,6 +1116,9 @@ paths:
           type: string
           in: path
           required: true
+        - name: commit_ref
+          type: string
+          in: query
         - name: deploy
           in: body
           schema:
