@@ -3144,7 +3144,7 @@ paths:
                   $ref: '#/definitions/providerDefinition'
         default:
           $ref: '#/responses/error'
-  /api/v1/sites/{site_id}/ai-gateway/token:
+  /sites/{site_id}/ai-gateway/token:
     parameters:
       - name: site_id
         type: string
