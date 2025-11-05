@@ -62,7 +62,7 @@ type GetAIGatewayTokenOK struct {
 }
 
 func (o *GetAIGatewayTokenOK) Error() string {
-	return fmt.Sprintf("[GET /api/v1/sites/{site_id}/ai-gateway/token][%d] getAIGatewayTokenOK  %+v", 200, o.Payload)
+	return fmt.Sprintf("[GET /sites/{site_id}/ai-gateway/token][%d] getAIGatewayTokenOK  %+v", 200, o.Payload)
 }
 
 func (o *GetAIGatewayTokenOK) GetPayload() *models.AiGatewayToken {
@@ -95,7 +95,7 @@ type GetAIGatewayTokenNotFound struct {
 }
 
 func (o *GetAIGatewayTokenNotFound) Error() string {
-	return fmt.Sprintf("[GET /api/v1/sites/{site_id}/ai-gateway/token][%d] getAIGatewayTokenNotFound ", 404)
+	return fmt.Sprintf("[GET /sites/{site_id}/ai-gateway/token][%d] getAIGatewayTokenNotFound ", 404)
 }
 
 func (o *GetAIGatewayTokenNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -127,7 +127,7 @@ func (o *GetAIGatewayTokenDefault) Code() int {
 }
 
 func (o *GetAIGatewayTokenDefault) Error() string {
-	return fmt.Sprintf("[GET /api/v1/sites/{site_id}/ai-gateway/token][%d] getAIGatewayToken default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[GET /sites/{site_id}/ai-gateway/token][%d] getAIGatewayToken default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *GetAIGatewayTokenDefault) GetPayload() *models.Error {

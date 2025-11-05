@@ -2148,7 +2148,7 @@ func (a *Client) GetAIGatewayToken(params *GetAIGatewayTokenParams, authInfo run
 	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "getAIGatewayToken",
 		Method:             "GET",
-		PathPattern:        "/api/v1/sites/{site_id}/ai-gateway/token",
+		PathPattern:        "/sites/{site_id}/ai-gateway/token",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"https"},
