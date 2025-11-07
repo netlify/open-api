@@ -29,6 +29,12 @@ func (o *ProvisionSiteTLSCertificateReader) ReadResponse(response runtime.Client
 			return nil, err
 		}
 		return result, nil
+	case 422:
+		result := NewProvisionSiteTLSCertificateUnprocessableEntity()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	default:
 		result := NewProvisionSiteTLSCertificateDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -71,6 +77,28 @@ func (o *ProvisionSiteTLSCertificateOK) readResponse(response runtime.ClientResp
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
 		return err
 	}
+
+	return nil
+}
+
+// NewProvisionSiteTLSCertificateUnprocessableEntity creates a ProvisionSiteTLSCertificateUnprocessableEntity with default headers values
+func NewProvisionSiteTLSCertificateUnprocessableEntity() *ProvisionSiteTLSCertificateUnprocessableEntity {
+	return &ProvisionSiteTLSCertificateUnprocessableEntity{}
+}
+
+/*
+ProvisionSiteTLSCertificateUnprocessableEntity handles this case with default header values.
+
+Unprocessable Entity. Returns errors such as: "certificate parameter is required when updating an existing certificate" (when updating without params), "No custom domain configured", or "bad dns for custom domain"
+*/
+type ProvisionSiteTLSCertificateUnprocessableEntity struct {
+}
+
+func (o *ProvisionSiteTLSCertificateUnprocessableEntity) Error() string {
+	return fmt.Sprintf("[POST /sites/{site_id}/ssl][%d] provisionSiteTlsCertificateUnprocessableEntity ", 422)
+}
+
+func (o *ProvisionSiteTLSCertificateUnprocessableEntity) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	return nil
 }

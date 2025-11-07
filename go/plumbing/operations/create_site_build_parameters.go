@@ -14,8 +14,7 @@ import (
 	"github.com/go-openapi/runtime"
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
-
-	"github.com/netlify/open-api/v2/go/models"
+	"github.com/go-openapi/swag"
 )
 
 // NewCreateSiteBuildParams creates a new CreateSiteBuildParams object
@@ -63,10 +62,33 @@ for the create site build operation typically these are written to a http.Reques
 */
 type CreateSiteBuildParams struct {
 
-	/*Build*/
-	Build *models.BuildSetup
+	/*Branch
+	  The branch to build; defaults to main branch
+
+	*/
+	Branch *string
+	/*ClearCache
+	  Whether to clear the build cache before building
+
+	*/
+	ClearCache *bool
+	/*Image
+	  The build image tag to use for the build
+
+	*/
+	Image *string
 	/*SiteID*/
 	SiteID string
+	/*TemplateID
+	  The build template to use for the build
+
+	*/
+	TemplateID *string
+	/*Title
+	  The title of the build
+
+	*/
+	Title *string
 
 	timeout    time.Duration
 	Context    context.Context
@@ -106,15 +128,37 @@ func (o *CreateSiteBuildParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithBuild adds the build to the create site build params
-func (o *CreateSiteBuildParams) WithBuild(build *models.BuildSetup) *CreateSiteBuildParams {
-	o.SetBuild(build)
+// WithBranch adds the branch to the create site build params
+func (o *CreateSiteBuildParams) WithBranch(branch *string) *CreateSiteBuildParams {
+	o.SetBranch(branch)
 	return o
 }
 
-// SetBuild adds the build to the create site build params
-func (o *CreateSiteBuildParams) SetBuild(build *models.BuildSetup) {
-	o.Build = build
+// SetBranch adds the branch to the create site build params
+func (o *CreateSiteBuildParams) SetBranch(branch *string) {
+	o.Branch = branch
+}
+
+// WithClearCache adds the clearCache to the create site build params
+func (o *CreateSiteBuildParams) WithClearCache(clearCache *bool) *CreateSiteBuildParams {
+	o.SetClearCache(clearCache)
+	return o
+}
+
+// SetClearCache adds the clearCache to the create site build params
+func (o *CreateSiteBuildParams) SetClearCache(clearCache *bool) {
+	o.ClearCache = clearCache
+}
+
+// WithImage adds the image to the create site build params
+func (o *CreateSiteBuildParams) WithImage(image *string) *CreateSiteBuildParams {
+	o.SetImage(image)
+	return o
+}
+
+// SetImage adds the image to the create site build params
+func (o *CreateSiteBuildParams) SetImage(image *string) {
+	o.Image = image
 }
 
 // WithSiteID adds the siteID to the create site build params
@@ -128,6 +172,28 @@ func (o *CreateSiteBuildParams) SetSiteID(siteID string) {
 	o.SiteID = siteID
 }
 
+// WithTemplateID adds the templateID to the create site build params
+func (o *CreateSiteBuildParams) WithTemplateID(templateID *string) *CreateSiteBuildParams {
+	o.SetTemplateID(templateID)
+	return o
+}
+
+// SetTemplateID adds the templateId to the create site build params
+func (o *CreateSiteBuildParams) SetTemplateID(templateID *string) {
+	o.TemplateID = templateID
+}
+
+// WithTitle adds the title to the create site build params
+func (o *CreateSiteBuildParams) WithTitle(title *string) *CreateSiteBuildParams {
+	o.SetTitle(title)
+	return o
+}
+
+// SetTitle adds the title to the create site build params
+func (o *CreateSiteBuildParams) SetTitle(title *string) {
+	o.Title = title
+}
+
 // WriteToRequest writes these params to a swagger request
 func (o *CreateSiteBuildParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -136,15 +202,89 @@ func (o *CreateSiteBuildParams) WriteToRequest(r runtime.ClientRequest, reg strf
 	}
 	var res []error
 
-	if o.Build != nil {
-		if err := r.SetBodyParam(o.Build); err != nil {
-			return err
+	if o.Branch != nil {
+
+		// query param branch
+		var qrBranch string
+		if o.Branch != nil {
+			qrBranch = *o.Branch
 		}
+		qBranch := qrBranch
+		if qBranch != "" {
+			if err := r.SetQueryParam("branch", qBranch); err != nil {
+				return err
+			}
+		}
+
+	}
+
+	if o.ClearCache != nil {
+
+		// query param clear_cache
+		var qrClearCache bool
+		if o.ClearCache != nil {
+			qrClearCache = *o.ClearCache
+		}
+		qClearCache := swag.FormatBool(qrClearCache)
+		if qClearCache != "" {
+			if err := r.SetQueryParam("clear_cache", qClearCache); err != nil {
+				return err
+			}
+		}
+
+	}
+
+	if o.Image != nil {
+
+		// query param image
+		var qrImage string
+		if o.Image != nil {
+			qrImage = *o.Image
+		}
+		qImage := qrImage
+		if qImage != "" {
+			if err := r.SetQueryParam("image", qImage); err != nil {
+				return err
+			}
+		}
+
 	}
 
 	// path param site_id
 	if err := r.SetPathParam("site_id", o.SiteID); err != nil {
 		return err
+	}
+
+	if o.TemplateID != nil {
+
+		// query param template_id
+		var qrTemplateID string
+		if o.TemplateID != nil {
+			qrTemplateID = *o.TemplateID
+		}
+		qTemplateID := qrTemplateID
+		if qTemplateID != "" {
+			if err := r.SetQueryParam("template_id", qTemplateID); err != nil {
+				return err
+			}
+		}
+
+	}
+
+	if o.Title != nil {
+
+		// query param title
+		var qrTitle string
+		if o.Title != nil {
+			qrTitle = *o.Title
+		}
+		qTitle := qrTitle
+		if qTitle != "" {
+			if err := r.SetQueryParam("title", qTitle); err != nil {
+				return err
+			}
+		}
+
 	}
 
 	if len(res) > 0 {

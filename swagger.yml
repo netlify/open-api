@@ -158,6 +158,22 @@ paths:
     post:
       operationId: provisionSiteTLSCertificate
       tags: [sniCertificate]
+      description: >-
+        Provisions or updates a TLS certificate for the site.
+
+
+        **Creating a certificate (site has no certificate):**
+
+        - Omit certificate params to initiate Let's Encrypt provisioning
+
+        - Provide certificate, key, and ca_certificates to upload a custom certificate
+
+
+        **Updating a certificate (site already has a certificate):**
+
+        - REQUIRES certificate, key, and ca_certificates to replace with a new custom certificate
+
+        - Use POST /api/v1/sites/{site_id}/ssl/renew to renew an existing Let's Encrypt certificate
       parameters:
         - name: site_id
           type: string
@@ -166,17 +182,23 @@ paths:
         - name: certificate
           type: string
           in: query
+          description: PEM-encoded certificate. Required when updating an existing certificate.
         - name: key
           type: string
           in: query
+          description: PEM-encoded private key. Required when updating an existing certificate.
         - name: ca_certificates
           type: string
           in: query
+          description: PEM-encoded CA certificate chain. Required when updating an existing certificate.
       responses:
         '200':
           description: OK
           schema:
             $ref: '#/definitions/sniCertificate'
+        '422':
+          description: >-
+            Unprocessable Entity. Returns errors such as: "certificate parameter is required when updating an existing certificate" (when updating without params), "No custom domain configured", or "bad dns for custom domain"
         default:
           $ref: '#/responses/error'
     get:
@@ -1208,17 +1230,44 @@ paths:
     post:
       operationId: createSiteBuild
       tags: [build]
+      description: 'Runs a build for a site. The build will be scheduled to run at the first opportunity, but it might not start immediately if insufficient account build capacity is available. Files for build could be also uploaded as a zipped site.'
       parameters:
-        - name: build
-          in: body
-          schema:
-            $ref: '#/definitions/buildSetup'
+        - name: branch
+          description: The branch to build; defaults to main branch
           required: false
+          in: query
+          type: string
+        - name: clear_cache
+          description: Whether to clear the build cache before building
+          required: false
+          in: query
+          type: boolean
+        - name: image
+          description: The build image tag to use for the build
+          required: false
+          in: query
+          type: string
+        - name: template_id
+          description: The build template to use for the build
+          required: false
+          in: query
+          type: string
+        - name: title
+          description: The title of the build
+          required: false
+          in: query
+          type: string
       responses:
         '200':
           description: OK
           schema:
             $ref: '#/definitions/build'
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '422':
+          description: Unprocessable Entity
         default:
           $ref: '#/responses/error'
   /sites/{site_id}/deployed-branches:

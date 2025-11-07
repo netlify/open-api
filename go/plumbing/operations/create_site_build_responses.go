@@ -29,6 +29,24 @@ func (o *CreateSiteBuildReader) ReadResponse(response runtime.ClientResponse, co
 			return nil, err
 		}
 		return result, nil
+	case 400:
+		result := NewCreateSiteBuildBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 404:
+		result := NewCreateSiteBuildNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 422:
+		result := NewCreateSiteBuildUnprocessableEntity()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	default:
 		result := NewCreateSiteBuildDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -71,6 +89,72 @@ func (o *CreateSiteBuildOK) readResponse(response runtime.ClientResponse, consum
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
 		return err
 	}
+
+	return nil
+}
+
+// NewCreateSiteBuildBadRequest creates a CreateSiteBuildBadRequest with default headers values
+func NewCreateSiteBuildBadRequest() *CreateSiteBuildBadRequest {
+	return &CreateSiteBuildBadRequest{}
+}
+
+/*
+CreateSiteBuildBadRequest handles this case with default header values.
+
+Bad Request
+*/
+type CreateSiteBuildBadRequest struct {
+}
+
+func (o *CreateSiteBuildBadRequest) Error() string {
+	return fmt.Sprintf("[POST /sites/{site_id}/builds][%d] createSiteBuildBadRequest ", 400)
+}
+
+func (o *CreateSiteBuildBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	return nil
+}
+
+// NewCreateSiteBuildNotFound creates a CreateSiteBuildNotFound with default headers values
+func NewCreateSiteBuildNotFound() *CreateSiteBuildNotFound {
+	return &CreateSiteBuildNotFound{}
+}
+
+/*
+CreateSiteBuildNotFound handles this case with default header values.
+
+Not Found
+*/
+type CreateSiteBuildNotFound struct {
+}
+
+func (o *CreateSiteBuildNotFound) Error() string {
+	return fmt.Sprintf("[POST /sites/{site_id}/builds][%d] createSiteBuildNotFound ", 404)
+}
+
+func (o *CreateSiteBuildNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	return nil
+}
+
+// NewCreateSiteBuildUnprocessableEntity creates a CreateSiteBuildUnprocessableEntity with default headers values
+func NewCreateSiteBuildUnprocessableEntity() *CreateSiteBuildUnprocessableEntity {
+	return &CreateSiteBuildUnprocessableEntity{}
+}
+
+/*
+CreateSiteBuildUnprocessableEntity handles this case with default header values.
+
+Unprocessable Entity
+*/
+type CreateSiteBuildUnprocessableEntity struct {
+}
+
+func (o *CreateSiteBuildUnprocessableEntity) Error() string {
+	return fmt.Sprintf("[POST /sites/{site_id}/builds][%d] createSiteBuildUnprocessableEntity ", 422)
+}
+
+func (o *CreateSiteBuildUnprocessableEntity) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	return nil
 }
