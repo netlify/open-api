@@ -1015,7 +1015,7 @@ func (a *Client) CreateSiteAsset(params *CreateSiteAssetParams, authInfo runtime
 }
 
 /*
-CreateSiteBuild create site build API
+CreateSiteBuild Runs a build for a site. The build will be scheduled to run at the first opportunity, but it might not start immediately if insufficient account build capacity is available. Files for build could be also uploaded as a zipped site.
 */
 func (a *Client) CreateSiteBuild(params *CreateSiteBuildParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteBuildOK, error) {
 	// TODO: Validate the params before sending
@@ -4282,7 +4282,15 @@ func (a *Client) NotifyBuildStart(params *NotifyBuildStartParams, authInfo runti
 }
 
 /*
-ProvisionSiteTLSCertificate provision site TLS certificate API
+	ProvisionSiteTLSCertificate Provisions or updates a TLS certificate for the site.
+
+**Creating a certificate (site has no certificate):**
+- Omit certificate params to initiate Let's Encrypt provisioning
+- Provide certificate, key, and ca_certificates to upload a custom certificate
+
+**Updating a certificate (site already has a certificate):**
+- REQUIRES certificate, key, and ca_certificates to replace with a new custom certificate
+- Use POST /api/v1/sites/{site_id}/ssl/renew to renew an existing Let's Encrypt certificate
 */
 func (a *Client) ProvisionSiteTLSCertificate(params *ProvisionSiteTLSCertificateParams, authInfo runtime.ClientAuthInfoWriter) (*ProvisionSiteTLSCertificateOK, error) {
 	// TODO: Validate the params before sending

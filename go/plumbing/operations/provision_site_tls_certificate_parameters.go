@@ -61,11 +61,20 @@ for the provision site TLS certificate operation typically these are written to 
 */
 type ProvisionSiteTLSCertificateParams struct {
 
-	/*CaCertificates*/
+	/*CaCertificates
+	  PEM-encoded CA certificate chain. Required when updating an existing certificate.
+
+	*/
 	CaCertificates *string
-	/*Certificate*/
+	/*Certificate
+	  PEM-encoded certificate. Required when updating an existing certificate.
+
+	*/
 	Certificate *string
-	/*Key*/
+	/*Key
+	  PEM-encoded private key. Required when updating an existing certificate.
+
+	*/
 	Key *string
 	/*SiteID*/
 	SiteID string
