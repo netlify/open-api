@@ -3768,6 +3768,8 @@ definitions:
         type: string
       framework:
         type: string
+      skew_protection_token:
+        type: string
       function_schedules:
         type: array
         items:

@@ -87,6 +87,9 @@ type Deploy struct {
 	// site id
 	SiteID string `json:"site_id,omitempty"`
 
+	// skew protection token
+	SkewProtectionToken string `json:"skew_protection_token,omitempty"`
+
 	// skipped
 	Skipped bool `json:"skipped,omitempty"`
 
