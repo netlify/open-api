@@ -20,7 +20,7 @@ import (
 type SetEnvVarValueParamsBody struct {
 
 	// The deploy context in which this value will be used. `dev` refers to local development when running `netlify dev`. `branch` must be provided with a value in `context_parameter`.
-	// Enum: [all dev branch-deploy deploy-preview production branch]
+	// Enum: [all dev dev-server branch-deploy deploy-preview production branch]
 	Context string `json:"context,omitempty"`
 
 	// An additional parameter for custom branches. Currently, this is used for providing a branch name when `context=branch`.
@@ -48,7 +48,7 @@ var setEnvVarValueParamsBodyTypeContextPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["all","dev","branch-deploy","deploy-preview","production","branch"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["all","dev","dev-server","branch-deploy","deploy-preview","production","branch"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -63,6 +63,9 @@ const (
 
 	// SetEnvVarValueParamsBodyContextDev captures enum value "dev"
 	SetEnvVarValueParamsBodyContextDev string = "dev"
+
+	// SetEnvVarValueParamsBodyContextDevServer captures enum value "dev-server"
+	SetEnvVarValueParamsBodyContextDevServer string = "dev-server"
 
 	// SetEnvVarValueParamsBodyContextBranchDeploy captures enum value "branch-deploy"
 	SetEnvVarValueParamsBodyContextBranchDeploy string = "branch-deploy"
