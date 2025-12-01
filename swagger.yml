@@ -257,6 +257,7 @@ paths:
           enum:
             - all
             - dev
+            - dev-server
             - branch-deploy
             - deploy-preview
             - production
@@ -365,6 +366,7 @@ paths:
           enum:
             - all
             - dev
+            - dev-server
             - branch-deploy
             - deploy-preview
             - production
@@ -519,6 +521,7 @@ paths:
                 enum:
                   - all
                   - dev
+                  - dev-server
                   - branch-deploy
                   - deploy-preview
                   - production
@@ -3561,6 +3564,7 @@ definitions:
         enum:
           - all
           - dev
+          - dev-server
           - branch-deploy
           - deploy-preview
           - production
