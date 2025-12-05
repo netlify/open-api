@@ -1321,6 +1321,51 @@ paths:
             $ref: '#/definitions/site'
         '404':
           description: Site not found
+  /sites/{site_id}/enable:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+    put:
+      operationId: enableSite
+      tags: [site]
+      description: >-
+        Re-enables a site that was previously disabled by the user.
+        Sites that were disabled for usage exceeded or marked as spam
+        cannot be re-enabled via this endpoint.
+      responses:
+        '204':
+          description: No content
+        '422':
+          description: Cannot enable this site
+          schema:
+            $ref: '#/definitions/error'
+        default:
+          $ref: '#/responses/error'
+  /sites/{site_id}/disable:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+    put:
+      operationId: disableSite
+      tags: [site]
+      description: >-
+        Disables a site, preventing it from serving content.
+        The site can be re-enabled later using the enable endpoint.
+      parameters:
+        - name: reason
+          type: string
+          in: query
+          required: true
+          description: Reason for disabling the site
+      responses:
+        '204':
+          description: No content
+        default:
+          $ref: '#/responses/error'
   /builds/{build_id}:
     parameters:
       - name: build_id
