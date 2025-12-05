@@ -3465,8 +3465,10 @@ definitions:
         type: string
       functions_dir:
         type: string
+        description: The directory where Netlify can find your compiled functions to deploy them. Defaults to netlify/functions if not set. You can also define and override this setting in your project’s netlify.toml file.
       cmd:
         type: string
+        description: The build command to run. This is the command that Netlify runs to build your site. If a site has a netlify.toml file with a build command it will override this value.
       allowed_branches:
         type: array
         items:
@@ -3485,6 +3487,7 @@ definitions:
         type: integer
       stop_builds:
         type: boolean
+        description: When true, Netlify will not build your project automatically. You can build locally via the CLI and then publish new deploys manually via the CLI or the API.
   submission:
     type: object
     properties:
