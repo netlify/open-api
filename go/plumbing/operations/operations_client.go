@@ -1015,7 +1015,11 @@ func (a *Client) CreateSiteAsset(params *CreateSiteAssetParams, authInfo runtime
 }
 
 /*
-CreateSiteBuild Runs a build for a site. The build will be scheduled to run at the first opportunity, but it might not start immediately if insufficient account build capacity is available. Files for build could be also uploaded as a zipped site.
+	CreateSiteBuild Runs a build for a site. The build will be scheduled to run at the first opportunity, but it might not start immediately if insufficient account build capacity is available.
+
+Files for build can be uploaded as a zipped site using one of these methods:
+1. Set Content-Type to 'application/zip' and send the zip file as the raw request body
+2. Set Content-Type to 'multipart/form-data' and include the zip file in the 'zip' field
 */
 func (a *Client) CreateSiteBuild(params *CreateSiteBuildParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteBuildOK, error) {
 	// TODO: Validate the params before sending
@@ -1028,7 +1032,7 @@ func (a *Client) CreateSiteBuild(params *CreateSiteBuildParams, authInfo runtime
 		Method:             "POST",
 		PathPattern:        "/sites/{site_id}/builds",
 		ProducesMediaTypes: []string{"application/json"},
-		ConsumesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"multipart/form-data"},
 		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &CreateSiteBuildReader{formats: a.formats},

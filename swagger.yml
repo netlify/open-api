@@ -1233,7 +1233,14 @@ paths:
     post:
       operationId: createSiteBuild
       tags: [build]
-      description: 'Runs a build for a site. The build will be scheduled to run at the first opportunity, but it might not start immediately if insufficient account build capacity is available. Files for build could be also uploaded as a zipped site.'
+      description: |
+        Runs a build for a site. The build will be scheduled to run at the first opportunity, but it might not start immediately if insufficient account build capacity is available.
+
+        Files for build can be uploaded as a zipped site using one of these methods:
+        1. Set Content-Type to 'application/zip' and send the zip file as the raw request body
+        2. Set Content-Type to 'multipart/form-data' and include the zip file in the 'zip' field
+      consumes:
+        - multipart/form-data
       parameters:
         - name: branch
           description: >-
@@ -1263,6 +1270,14 @@ paths:
           required: false
           in: query
           type: string
+        - name: zip
+          description: |
+            A zip file containing the site files to build.
+            Only used with Content-Type 'multipart/form-data'.
+            Alternatively, set Content-Type to 'application/zip' and send the zip as the raw request body (no 'zip' parameter needed).
+          required: false
+          in: formData
+          type: file
       responses:
         '200':
           description: OK
@@ -3786,9 +3801,23 @@ definitions:
           $ref: '#/definitions/functionSchedule'
   deployFiles:
     type: object
+    description: |
+      Deploy files can be provided in two ways:
+      1. As a JSON object using 'files' (a hash mapping file paths to SHA1 digests), OR
+      2. As a zip file using one of these methods:
+         - Set Content-Type to 'application/zip' and send the zip file as the raw request body
+         - Include the zip file content in the 'zip' field of this JSON object with Content-Type 'application/json'
     properties:
       files:
         type: object
+        description: A hash mapping file paths to SHA1 digests of the file contents.
+      zip:
+        type: string
+        format: binary
+        description: |
+          A zip file containing the site files to deploy. Alternative to 'files'.
+          To use this field, set Content-Type to 'application/json' and include the zip content here.
+          Alternatively, you can set Content-Type to 'application/zip' and send the zip as the raw request body (not as JSON).
       draft:
         type: boolean
       async:
