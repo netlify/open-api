@@ -6,6 +6,7 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"io"
 	"strconv"
 
 	"github.com/go-openapi/errors"
@@ -14,7 +15,11 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// DeployFiles deploy files
+// DeployFiles Deploy files can be provided in two ways:
+// 1. As a JSON object using 'files' (a hash mapping file paths to SHA1 digests), OR
+// 2. As a zip file using one of these methods:
+//   - Set Content-Type to 'application/zip' and send the zip file as the raw request body
+//   - Include the zip file content in the 'zip' field of this JSON object with Content-Type 'application/json'
 //
 // swagger:model deployFiles
 type DeployFiles struct {
@@ -28,7 +33,7 @@ type DeployFiles struct {
 	// draft
 	Draft bool `json:"draft,omitempty"`
 
-	// files
+	// A hash mapping file paths to SHA1 digests of the file contents.
 	Files interface{} `json:"files,omitempty"`
 
 	// framework
@@ -45,6 +50,13 @@ type DeployFiles struct {
 
 	// functions config
 	FunctionsConfig map[string]FunctionConfig `json:"functions_config,omitempty"`
+
+	// A zip file containing the site files to deploy. Alternative to 'files'.
+	// To use this field, set Content-Type to 'application/json' and include the zip content here.
+	// Alternatively, you can set Content-Type to 'application/zip' and send the zip as the raw request body (not as JSON).
+	//
+	// Format: binary
+	Zip io.ReadCloser `json:"zip,omitempty"`
 }
 
 // Validate validates this deploy files
