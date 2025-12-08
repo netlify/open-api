@@ -18,7 +18,7 @@ type RepoInfo struct {
 	// allowed branches
 	AllowedBranches []string `json:"allowed_branches"`
 
-	// cmd
+	// The build command to run. This is the command that Netlify runs to build your site. If a site has a netlify.toml file with a build command it will override this value.
 	Cmd string `json:"cmd,omitempty"`
 
 	// deploy key id
@@ -30,7 +30,7 @@ type RepoInfo struct {
 	// env
 	Env map[string]string `json:"env,omitempty"`
 
-	// functions dir
+	// The directory where Netlify can find your compiled functions to deploy them. Defaults to netlify/functions if not set. You can also define and override this setting in your project’s netlify.toml file.
 	FunctionsDir string `json:"functions_dir,omitempty"`
 
 	// id
@@ -57,7 +57,7 @@ type RepoInfo struct {
 	// repo url
 	RepoURL string `json:"repo_url,omitempty"`
 
-	// stop builds
+	// When true, Netlify will not build your project automatically. You can build locally via the CLI and then publish new deploys manually via the CLI or the API.
 	StopBuilds bool `json:"stop_builds,omitempty"`
 }
 
