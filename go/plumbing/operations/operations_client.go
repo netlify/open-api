@@ -123,9 +123,13 @@ type ClientService interface {
 
 	DeleteSubmission(params *DeleteSubmissionParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSubmissionNoContent, error)
 
+	DisableSite(params *DisableSiteParams, authInfo runtime.ClientAuthInfoWriter) (*DisableSiteNoContent, error)
+
 	DisableSplitTest(params *DisableSplitTestParams, authInfo runtime.ClientAuthInfoWriter) (*DisableSplitTestNoContent, error)
 
 	EnableHook(params *EnableHookParams, authInfo runtime.ClientAuthInfoWriter) (*EnableHookOK, error)
+
+	EnableSite(params *EnableSiteParams, authInfo runtime.ClientAuthInfoWriter) (*EnableSiteNoContent, error)
 
 	EnableSplitTest(params *EnableSplitTestParams, authInfo runtime.ClientAuthInfoWriter) (*EnableSplitTestNoContent, error)
 
@@ -1972,6 +1976,40 @@ func (a *Client) DeleteSubmission(params *DeleteSubmissionParams, authInfo runti
 }
 
 /*
+DisableSite Disables a site, preventing it from serving content. The site can be re-enabled later using the enable endpoint.
+*/
+func (a *Client) DisableSite(params *DisableSiteParams, authInfo runtime.ClientAuthInfoWriter) (*DisableSiteNoContent, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewDisableSiteParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "disableSite",
+		Method:             "PUT",
+		PathPattern:        "/sites/{site_id}/disable",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &DisableSiteReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*DisableSiteNoContent)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*DisableSiteDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
 DisableSplitTest disable split test API
 */
 func (a *Client) DisableSplitTest(params *DisableSplitTestParams, authInfo runtime.ClientAuthInfoWriter) (*DisableSplitTestNoContent, error) {
@@ -2036,6 +2074,40 @@ func (a *Client) EnableHook(params *EnableHookParams, authInfo runtime.ClientAut
 	}
 	// unexpected success response
 	unexpectedSuccess := result.(*EnableHookDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+EnableSite Re-enables a site that was previously disabled by the user. Sites that were disabled for usage exceeded or marked as spam cannot be re-enabled via this endpoint.
+*/
+func (a *Client) EnableSite(params *EnableSiteParams, authInfo runtime.ClientAuthInfoWriter) (*EnableSiteNoContent, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewEnableSiteParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "enableSite",
+		Method:             "PUT",
+		PathPattern:        "/sites/{site_id}/enable",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &EnableSiteReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*EnableSiteNoContent)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*EnableSiteDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
