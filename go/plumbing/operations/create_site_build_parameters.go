@@ -89,6 +89,14 @@ type CreateSiteBuildParams struct {
 
 	*/
 	Title *string
+	/*Zip
+	  A zip file containing the site files to build.
+	Only used with Content-Type 'multipart/form-data'.
+	Alternatively, set Content-Type to 'application/zip' and send the zip as the raw request body (no 'zip' parameter needed).
+
+
+	*/
+	Zip runtime.NamedReadCloser
 
 	timeout    time.Duration
 	Context    context.Context
@@ -194,6 +202,17 @@ func (o *CreateSiteBuildParams) SetTitle(title *string) {
 	o.Title = title
 }
 
+// WithZip adds the zip to the create site build params
+func (o *CreateSiteBuildParams) WithZip(zip runtime.NamedReadCloser) *CreateSiteBuildParams {
+	o.SetZip(zip)
+	return o
+}
+
+// SetZip adds the zip to the create site build params
+func (o *CreateSiteBuildParams) SetZip(zip runtime.NamedReadCloser) {
+	o.Zip = zip
+}
+
 // WriteToRequest writes these params to a swagger request
 func (o *CreateSiteBuildParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -283,6 +302,19 @@ func (o *CreateSiteBuildParams) WriteToRequest(r runtime.ClientRequest, reg strf
 			if err := r.SetQueryParam("title", qTitle); err != nil {
 				return err
 			}
+		}
+
+	}
+
+	if o.Zip != nil {
+
+		if o.Zip != nil {
+
+			// form file param zip
+			if err := r.SetFileParam("zip", o.Zip); err != nil {
+				return err
+			}
+
 		}
 
 	}
