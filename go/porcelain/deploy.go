@@ -917,7 +917,7 @@ func newFunctionFile(filePath string, i os.FileInfo, runtime string, metadata *F
 
 	var buf io.ReadWriter
 
-	if zipFile(i) {
+	if zipFile(i) || tarFile(i) {
 		buf = fileEntry
 	} else {
 		buf = new(bytes.Buffer)
@@ -959,6 +959,12 @@ func newFunctionFile(filePath string, i os.FileInfo, runtime string, metadata *F
 
 func zipFile(i os.FileInfo) bool {
 	return filepath.Ext(i.Name()) == ".zip"
+}
+
+func tarFile(i os.FileInfo) bool {
+	name := i.Name()
+	ext := filepath.Ext(name)
+	return ext == ".tar" || ext == ".tgz" || strings.HasSuffix(name, ".tar.gz")
 }
 
 func jsFile(i os.FileInfo) bool {
