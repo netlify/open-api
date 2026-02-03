@@ -3288,6 +3288,7 @@ paths:
         in: path
         required: true
     post:
+      x-internal: true
       operationId: createSiteDatabase
       tags: [database]
       description: >-
@@ -3313,6 +3314,7 @@ paths:
         default:
           $ref: '#/responses/error'
     get:
+      x-internal: true
       operationId: getSiteDatabase
       tags: [database]
       description: Returns the database connection string for the specified site.
@@ -3324,6 +3326,7 @@ paths:
         default:
           $ref: '#/responses/error'
     delete:
+      x-internal: true
       operationId: deleteSiteDatabase
       tags: [database]
       description: Deletes the database and all associated branches and snapshots for the specified site.
@@ -3339,6 +3342,7 @@ paths:
         in: path
         required: true
     post:
+      x-internal: true
       operationId: createSiteDatabaseBranch
       tags: [database]
       description: >-
@@ -3375,6 +3379,7 @@ paths:
         required: true
         description: The deploy ID associated with the database branch
     get:
+      x-internal: true
       operationId: getSiteDatabaseBranch
       tags: [database]
       description: Returns the database branch connection string for a specific deploy.
@@ -3388,6 +3393,7 @@ paths:
         default:
           $ref: '#/responses/error'
     delete:
+      x-internal: true
       operationId: deleteSiteDatabaseBranch
       tags: [database]
       description: Deletes a database branch associated with a deploy.
@@ -3403,6 +3409,7 @@ paths:
         in: path
         required: true
     post:
+      x-internal: true
       operationId: createSiteDatabaseSnapshot
       tags: [database]
       description: >-
@@ -3429,6 +3436,7 @@ paths:
         in: path
         required: true
     get:
+      x-internal: true
       operationId: listSiteDatabaseSnapshots
       tags: [database]
       description: Returns all snapshots for the site's database.
@@ -3451,6 +3459,7 @@ paths:
         required: true
         description: The snapshot ID
     delete:
+      x-internal: true
       operationId: deleteSiteDatabaseSnapshot
       tags: [database]
       description: Deletes a database snapshot.
@@ -3471,6 +3480,7 @@ paths:
         required: true
         description: The snapshot ID to restore
     post:
+      x-internal: true
       operationId: restoreSiteDatabaseSnapshot
       tags: [database]
       description: >-
