@@ -71,6 +71,12 @@ type ClientService interface {
 
 	CreateSiteBuildHook(params *CreateSiteBuildHookParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteBuildHookCreated, error)
 
+	CreateSiteDatabase(params *CreateSiteDatabaseParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteDatabaseOK, *CreateSiteDatabaseCreated, error)
+
+	CreateSiteDatabaseBranch(params *CreateSiteDatabaseBranchParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteDatabaseBranchOK, *CreateSiteDatabaseBranchCreated, error)
+
+	CreateSiteDatabaseSnapshot(params *CreateSiteDatabaseSnapshotParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteDatabaseSnapshotCreated, error)
+
 	CreateSiteDeploy(params *CreateSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteDeployOK, error)
 
 	CreateSiteDevServer(params *CreateSiteDevServerParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteDevServerOK, error)
@@ -110,6 +116,12 @@ type ClientService interface {
 	DeleteSiteAsset(params *DeleteSiteAssetParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSiteAssetNoContent, error)
 
 	DeleteSiteBuildHook(params *DeleteSiteBuildHookParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSiteBuildHookNoContent, error)
+
+	DeleteSiteDatabase(params *DeleteSiteDatabaseParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSiteDatabaseNoContent, error)
+
+	DeleteSiteDatabaseBranch(params *DeleteSiteDatabaseBranchParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSiteDatabaseBranchNoContent, error)
+
+	DeleteSiteDatabaseSnapshot(params *DeleteSiteDatabaseSnapshotParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSiteDatabaseSnapshotNoContent, error)
 
 	DeleteSiteDeploy(params *DeleteSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSiteDeployNoContent, error)
 
@@ -187,6 +199,10 @@ type ClientService interface {
 
 	GetSiteBuildHook(params *GetSiteBuildHookParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteBuildHookOK, error)
 
+	GetSiteDatabase(params *GetSiteDatabaseParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteDatabaseOK, error)
+
+	GetSiteDatabaseBranch(params *GetSiteDatabaseBranchParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteDatabaseBranchOK, error)
+
 	GetSiteDeploy(params *GetSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteDeployOK, error)
 
 	GetSiteDevServer(params *GetSiteDevServerParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteDevServerOK, error)
@@ -237,6 +253,8 @@ type ClientService interface {
 
 	ListSiteBuilds(params *ListSiteBuildsParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteBuildsOK, error)
 
+	ListSiteDatabaseSnapshots(params *ListSiteDatabaseSnapshotsParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteDatabaseSnapshotsOK, error)
+
 	ListSiteDeployedBranches(params *ListSiteDeployedBranchesParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteDeployedBranchesOK, error)
 
 	ListSiteDeploys(params *ListSiteDeploysParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteDeploysOK, error)
@@ -268,6 +286,8 @@ type ClientService interface {
 	PurgeCache(params *PurgeCacheParams, authInfo runtime.ClientAuthInfoWriter) (*PurgeCacheAccepted, error)
 
 	RemoveAccountMember(params *RemoveAccountMemberParams, authInfo runtime.ClientAuthInfoWriter) (*RemoveAccountMemberNoContent, error)
+
+	RestoreSiteDatabaseSnapshot(params *RestoreSiteDatabaseSnapshotParams, authInfo runtime.ClientAuthInfoWriter) (*RestoreSiteDatabaseSnapshotOK, error)
 
 	RestoreSiteDeploy(params *RestoreSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*RestoreSiteDeployCreated, error)
 
@@ -1091,6 +1111,112 @@ func (a *Client) CreateSiteBuildHook(params *CreateSiteBuildHookParams, authInfo
 }
 
 /*
+CreateSiteDatabase Creates a new database for the specified site. If a database already exists, returns the existing connection string. The database region defaults to the site's functions region if not specified.
+*/
+func (a *Client) CreateSiteDatabase(params *CreateSiteDatabaseParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteDatabaseOK, *CreateSiteDatabaseCreated, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewCreateSiteDatabaseParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "createSiteDatabase",
+		Method:             "POST",
+		PathPattern:        "/sites/{site_id}/database",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &CreateSiteDatabaseReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, nil, err
+	}
+	switch value := result.(type) {
+	case *CreateSiteDatabaseOK:
+		return value, nil, nil
+	case *CreateSiteDatabaseCreated:
+		return nil, value, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*CreateSiteDatabaseDefault)
+	return nil, nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+CreateSiteDatabaseBranch Creates a new database branch for a deploy. If a branch already exists for the specified deploy ID, returns the existing connection string.
+*/
+func (a *Client) CreateSiteDatabaseBranch(params *CreateSiteDatabaseBranchParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteDatabaseBranchOK, *CreateSiteDatabaseBranchCreated, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewCreateSiteDatabaseBranchParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "createSiteDatabaseBranch",
+		Method:             "POST",
+		PathPattern:        "/sites/{site_id}/database/branch",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &CreateSiteDatabaseBranchReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, nil, err
+	}
+	switch value := result.(type) {
+	case *CreateSiteDatabaseBranchOK:
+		return value, nil, nil
+	case *CreateSiteDatabaseBranchCreated:
+		return nil, value, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*CreateSiteDatabaseBranchDefault)
+	return nil, nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+CreateSiteDatabaseSnapshot Creates a point-in-time snapshot of a database branch. Defaults to the production branch if no branch name is specified.
+*/
+func (a *Client) CreateSiteDatabaseSnapshot(params *CreateSiteDatabaseSnapshotParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteDatabaseSnapshotCreated, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewCreateSiteDatabaseSnapshotParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "createSiteDatabaseSnapshot",
+		Method:             "POST",
+		PathPattern:        "/sites/{site_id}/database/snapshot",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &CreateSiteDatabaseSnapshotReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*CreateSiteDatabaseSnapshotCreated)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*CreateSiteDatabaseSnapshotDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
 CreateSiteDeploy create site deploy API
 */
 func (a *Client) CreateSiteDeploy(params *CreateSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteDeployOK, error) {
@@ -1768,6 +1894,108 @@ func (a *Client) DeleteSiteBuildHook(params *DeleteSiteBuildHookParams, authInfo
 	}
 	// unexpected success response
 	unexpectedSuccess := result.(*DeleteSiteBuildHookDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+DeleteSiteDatabase Deletes the database and all associated branches and snapshots for the specified site.
+*/
+func (a *Client) DeleteSiteDatabase(params *DeleteSiteDatabaseParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSiteDatabaseNoContent, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewDeleteSiteDatabaseParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "deleteSiteDatabase",
+		Method:             "DELETE",
+		PathPattern:        "/sites/{site_id}/database",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &DeleteSiteDatabaseReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*DeleteSiteDatabaseNoContent)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*DeleteSiteDatabaseDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+DeleteSiteDatabaseBranch Deletes a database branch associated with a deploy.
+*/
+func (a *Client) DeleteSiteDatabaseBranch(params *DeleteSiteDatabaseBranchParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSiteDatabaseBranchNoContent, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewDeleteSiteDatabaseBranchParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "deleteSiteDatabaseBranch",
+		Method:             "DELETE",
+		PathPattern:        "/sites/{site_id}/database/branch/{deploy_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &DeleteSiteDatabaseBranchReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*DeleteSiteDatabaseBranchNoContent)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*DeleteSiteDatabaseBranchDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+DeleteSiteDatabaseSnapshot Deletes a database snapshot.
+*/
+func (a *Client) DeleteSiteDatabaseSnapshot(params *DeleteSiteDatabaseSnapshotParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSiteDatabaseSnapshotNoContent, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewDeleteSiteDatabaseSnapshotParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "deleteSiteDatabaseSnapshot",
+		Method:             "DELETE",
+		PathPattern:        "/sites/{site_id}/database/snapshot/{snapshot_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &DeleteSiteDatabaseSnapshotReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*DeleteSiteDatabaseSnapshotNoContent)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*DeleteSiteDatabaseSnapshotDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
@@ -3064,6 +3292,74 @@ func (a *Client) GetSiteBuildHook(params *GetSiteBuildHookParams, authInfo runti
 }
 
 /*
+GetSiteDatabase Returns the database connection string for the specified site.
+*/
+func (a *Client) GetSiteDatabase(params *GetSiteDatabaseParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteDatabaseOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetSiteDatabaseParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "getSiteDatabase",
+		Method:             "GET",
+		PathPattern:        "/sites/{site_id}/database",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &GetSiteDatabaseReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*GetSiteDatabaseOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*GetSiteDatabaseDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+GetSiteDatabaseBranch Returns the database branch connection string for a specific deploy.
+*/
+func (a *Client) GetSiteDatabaseBranch(params *GetSiteDatabaseBranchParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteDatabaseBranchOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetSiteDatabaseBranchParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "getSiteDatabaseBranch",
+		Method:             "GET",
+		PathPattern:        "/sites/{site_id}/database/branch/{deploy_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &GetSiteDatabaseBranchReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*GetSiteDatabaseBranchOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*GetSiteDatabaseBranchDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
 GetSiteDeploy get site deploy API
 */
 func (a *Client) GetSiteDeploy(params *GetSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteDeployOK, error) {
@@ -3915,6 +4211,40 @@ func (a *Client) ListSiteBuilds(params *ListSiteBuildsParams, authInfo runtime.C
 }
 
 /*
+ListSiteDatabaseSnapshots Returns all snapshots for the site's database.
+*/
+func (a *Client) ListSiteDatabaseSnapshots(params *ListSiteDatabaseSnapshotsParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteDatabaseSnapshotsOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewListSiteDatabaseSnapshotsParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "listSiteDatabaseSnapshots",
+		Method:             "GET",
+		PathPattern:        "/sites/{site_id}/database/snapshots",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &ListSiteDatabaseSnapshotsReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*ListSiteDatabaseSnapshotsOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*ListSiteDatabaseSnapshotsDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
 ListSiteDeployedBranches list site deployed branches API
 */
 func (a *Client) ListSiteDeployedBranches(params *ListSiteDeployedBranchesParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteDeployedBranchesOK, error) {
@@ -4465,6 +4795,40 @@ func (a *Client) RemoveAccountMember(params *RemoveAccountMemberParams, authInfo
 	}
 	// unexpected success response
 	unexpectedSuccess := result.(*RemoveAccountMemberDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+RestoreSiteDatabaseSnapshot Restores a snapshot to a database branch. Defaults to the production branch if no branch_name is specified.
+*/
+func (a *Client) RestoreSiteDatabaseSnapshot(params *RestoreSiteDatabaseSnapshotParams, authInfo runtime.ClientAuthInfoWriter) (*RestoreSiteDatabaseSnapshotOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewRestoreSiteDatabaseSnapshotParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "restoreSiteDatabaseSnapshot",
+		Method:             "POST",
+		PathPattern:        "/sites/{site_id}/database/snapshot/{snapshot_id}/restore",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &RestoreSiteDatabaseSnapshotReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*RestoreSiteDatabaseSnapshotOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*RestoreSiteDatabaseSnapshotDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
