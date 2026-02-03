@@ -4146,6 +4146,28 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/functionSchedule'
+  deployEnvironmentVariable:
+    type: object
+    required:
+      - key
+      - value
+      - scopes
+    properties:
+      key:
+        type: string
+      value:
+        type: string
+      is_secret:
+        type: boolean
+      scopes:
+        type: array
+        items:
+          type: string
+          enum:
+            - builds
+            - functions
+            - runtime
+            - post-processing
   deployFiles:
     type: object
     description: |
@@ -4186,6 +4208,27 @@ definitions:
         type: string
       framework_version:
         type: string
+      environment:
+        description: |
+          A list of deploy-specific environment variable data. Data specified this way applies only
+          to this specific deploy and is merged into any existing environment variables set on the
+          account and site.
+
+          Deploy-specific environment variable data takes precedence over account and site
+          environment variable data: For example, a deploy-specific variable with the key `NODE_ENV`
+          will take priority over any existing site- and account-level environment variable data
+          with the key `NODE_ENV`.
+
+          Environment variable data may be provided at one of two times:
+
+          - When creating a new Deploy with deploy files (most common)
+          - When finalizing an existing Deploy with deploy files
+
+          Once set, environment variables for a specific deploy cannot be modified. Subsequent
+          attempts to modify environment variable data for a deploy will be ignored.
+        type: array
+        items:
+          $ref: '#/definitions/deployEnvironmentVariable'
   pluginParams:
     type: object
     properties:
