@@ -3280,7 +3280,309 @@ paths:
           $ref: '#/responses/error'
       description: Returns an AI Gateway token for a specific site
 
+  # Database endpoints
+  /sites/{site_id}/database:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+    post:
+      x-internal: true
+      operationId: createSiteDatabase
+      tags: [database]
+      description: >-
+        Creates a new database for the specified site. If a database already exists,
+        returns the existing connection string. The database region defaults to the
+        site's functions region if not specified.
+      consumes:
+        - application/json
+      parameters:
+        - name: database
+          in: body
+          schema:
+            $ref: '#/definitions/createDatabaseRequest'
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/databaseResponse'
+        '200':
+          description: Database already exists
+          schema:
+            $ref: '#/definitions/databaseResponse'
+        default:
+          $ref: '#/responses/error'
+    get:
+      x-internal: true
+      operationId: getSiteDatabase
+      tags: [database]
+      description: Returns the database connection string for the specified site.
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/databaseResponse'
+        default:
+          $ref: '#/responses/error'
+    delete:
+      x-internal: true
+      operationId: deleteSiteDatabase
+      tags: [database]
+      description: Deletes the database and all associated branches and snapshots for the specified site.
+      responses:
+        '204':
+          description: Deleted
+        default:
+          $ref: '#/responses/error'
+  /sites/{site_id}/database/branch:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+    post:
+      x-internal: true
+      operationId: createSiteDatabaseBranch
+      tags: [database]
+      description: >-
+        Creates a new database branch for a deploy. If a branch already exists
+        for the specified deploy ID, returns the existing connection string.
+      consumes:
+        - application/json
+      parameters:
+        - name: branch
+          in: body
+          schema:
+            $ref: '#/definitions/createDatabaseBranchRequest'
+          required: true
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/databaseBranchResponse'
+        '200':
+          description: Branch already exists for this deploy
+          schema:
+            $ref: '#/definitions/databaseBranchResponse'
+        default:
+          $ref: '#/responses/error'
+  /sites/{site_id}/database/branch/{deploy_id}:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+      - name: deploy_id
+        type: string
+        in: path
+        required: true
+        description: The deploy ID associated with the database branch
+    get:
+      x-internal: true
+      operationId: getSiteDatabaseBranch
+      tags: [database]
+      description: Returns the database branch connection string for a specific deploy.
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/databaseBranchResponse'
+        '404':
+          description: Branch not found for this deploy
+        default:
+          $ref: '#/responses/error'
+    delete:
+      x-internal: true
+      operationId: deleteSiteDatabaseBranch
+      tags: [database]
+      description: Deletes a database branch associated with a deploy.
+      responses:
+        '204':
+          description: Deleted
+        default:
+          $ref: '#/responses/error'
+  /sites/{site_id}/database/snapshot:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+    post:
+      x-internal: true
+      operationId: createSiteDatabaseSnapshot
+      tags: [database]
+      description: >-
+        Creates a point-in-time snapshot of a database branch.
+        Defaults to the production branch if no branch name is specified.
+      consumes:
+        - application/json
+      parameters:
+        - name: snapshot
+          in: body
+          schema:
+            $ref: '#/definitions/createDatabaseSnapshotRequest'
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/databaseSnapshot'
+        default:
+          $ref: '#/responses/error'
+  /sites/{site_id}/database/snapshots:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+    get:
+      x-internal: true
+      operationId: listSiteDatabaseSnapshots
+      tags: [database]
+      description: Returns all snapshots for the site's database.
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/databaseSnapshotsResponse'
+        default:
+          $ref: '#/responses/error'
+  /sites/{site_id}/database/snapshot/{snapshot_id}:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+      - name: snapshot_id
+        type: string
+        in: path
+        required: true
+        description: The snapshot ID
+    delete:
+      x-internal: true
+      operationId: deleteSiteDatabaseSnapshot
+      tags: [database]
+      description: Deletes a database snapshot.
+      responses:
+        '204':
+          description: Deleted
+        default:
+          $ref: '#/responses/error'
+  /sites/{site_id}/database/snapshot/{snapshot_id}/restore:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+      - name: snapshot_id
+        type: string
+        in: path
+        required: true
+        description: The snapshot ID to restore
+    post:
+      x-internal: true
+      operationId: restoreSiteDatabaseSnapshot
+      tags: [database]
+      description: >-
+        Restores a snapshot to a database branch.
+        Defaults to the production branch if no branch_name is specified.
+      consumes:
+        - application/json
+      parameters:
+        - name: restore
+          in: body
+          schema:
+            $ref: '#/definitions/restoreDatabaseSnapshotRequest'
+      responses:
+        '200':
+          description: OK
+        default:
+          $ref: '#/responses/error'
+
 definitions:
+  # Database definitions
+  createDatabaseRequest:
+    type: object
+    description: Request body for creating a database
+    properties:
+      region:
+        type: string
+        description: >-
+          The region where the database should be created.
+          Defaults to the site's functions region if not specified.
+  databaseResponse:
+    type: object
+    description: Response containing the database connection string
+    properties:
+      connection_string:
+        type: string
+        description: The connection string for the database
+  createDatabaseBranchRequest:
+    type: object
+    description: Request body for creating a database branch
+    required:
+      - deploy_id
+    properties:
+      parent_branch_id:
+        type: string
+        description: >-
+          The ID of the parent branch to create the new branch from.
+          Defaults to the production branch if not specified.
+      deploy_id:
+        type: string
+        description: The deploy ID to associate with this branch
+  databaseBranchResponse:
+    type: object
+    description: Response containing the database branch connection string
+    properties:
+      connection_string:
+        type: string
+        description: The connection string for the database branch
+  createDatabaseSnapshotRequest:
+    type: object
+    description: Request body for creating a database snapshot
+    properties:
+      branch_name:
+        type: string
+        description: >-
+          The name of the branch to snapshot.
+          Defaults to "production" if not specified.
+      name:
+        type: string
+        description: An optional name for the snapshot
+  databaseSnapshot:
+    type: object
+    description: A point-in-time snapshot of a database branch
+    properties:
+      id:
+        type: string
+        description: The unique identifier of the snapshot
+      timestamp:
+        type: string
+        format: dateTime
+        description: The timestamp when the snapshot was created
+      source_branch_id:
+        type: string
+        description: The ID of the branch that was snapshotted
+  databaseSnapshotsResponse:
+    type: object
+    description: Response containing a list of database snapshots
+    properties:
+      snapshots:
+        type: array
+        items:
+          $ref: '#/definitions/databaseSnapshot'
+        description: List of database snapshots
+  restoreDatabaseSnapshotRequest:
+    type: object
+    description: Request body for restoring a database snapshot
+    properties:
+      branch_name:
+        type: string
+        description: >-
+          The name of the branch to restore the snapshot to.
+          Defaults to "production" if not specified.
+
   DeployValidationsReport:
     type: object
     properties:
@@ -4899,6 +5201,9 @@ x-tagGroups:
   - name: Functions
     tags:
       - function
+  - name: Database
+    tags:
+      - database
   - name: Forms
     tags:
       - form
@@ -4979,3 +5284,5 @@ tags:
     x-displayName: Dev server
   - name: devServerHook
     x-displayName: Dev server hook
+  - name: database
+    x-displayName: Database
