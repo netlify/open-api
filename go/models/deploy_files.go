@@ -33,6 +33,25 @@ type DeployFiles struct {
 	// draft
 	Draft bool `json:"draft,omitempty"`
 
+	// A list of deploy-specific environment variable data. Data specified this way applies only
+	// to this specific deploy and is merged into any existing environment variables set on the
+	// account and site.
+	//
+	// Deploy-specific environment variable data takes precedence over account and site
+	// environment variable data: For example, a deploy-specific variable with the key `NODE_ENV`
+	// will take priority over any existing site- and account-level environment variable data
+	// with the key `NODE_ENV`.
+	//
+	// Environment variable data may be provided at one of two times:
+	//
+	// - When creating a new Deploy with deploy files (most common)
+	// - When finalizing an existing Deploy with deploy files
+	//
+	// Once set, environment variables for a specific deploy cannot be modified. Subsequent
+	// attempts to modify environment variable data for a deploy will be ignored.
+	//
+	Environment []*DeployEnvironmentVariable `json:"environment"`
+
 	// A hash mapping file paths to SHA1 digests of the file contents.
 	Files interface{} `json:"files,omitempty"`
 
@@ -63,6 +82,10 @@ type DeployFiles struct {
 func (m *DeployFiles) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateEnvironment(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateFunctionSchedules(formats); err != nil {
 		res = append(res, err)
 	}
@@ -74,6 +97,31 @@ func (m *DeployFiles) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *DeployFiles) validateEnvironment(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Environment) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.Environment); i++ {
+		if swag.IsZero(m.Environment[i]) { // not required
+			continue
+		}
+
+		if m.Environment[i] != nil {
+			if err := m.Environment[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("environment" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
 	return nil
 }
 

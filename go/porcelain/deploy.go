@@ -49,11 +49,13 @@ const (
 
 var installDirs = []string{"node_modules/", "bower_components/"}
 
-type uploadType int
-type pointerData struct {
-	SHA  string
-	Size int64
-}
+type (
+	uploadType  int
+	pointerData struct {
+		SHA  string
+		Size int64
+	}
+)
 
 type DeployObserver interface {
 	OnSetupWalk() error
@@ -74,6 +76,12 @@ type DeployWarner interface {
 	OnWalkWarning(path, msg string)
 }
 
+type DeployEnvironmentVariable struct {
+	Key      string
+	Value    string
+	IsSecret bool
+}
+
 // DeployOptions holds the option for creating a new deploy
 type DeployOptions struct {
 	SiteID            string
@@ -83,6 +91,7 @@ type DeployOptions struct {
 	EdgeRedirectsDir  string
 	BuildDir          string
 	LargeMediaEnabled bool
+	Environment       []*models.DeployEnvironmentVariable
 
 	IsDraft   bool
 	SkipRetry bool
@@ -268,6 +277,10 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 	}
 	if options.functions != nil {
 		deployFiles.Functions = options.functions.Sums
+	}
+
+	if len(options.Environment) > 0 {
+		deployFiles.Environment = options.Environment
 	}
 
 	if options.Observer != nil {
@@ -763,7 +776,6 @@ func bundle(ctx context.Context, functionDir string, observer DeployObserver) (*
 
 func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer DeployObserver) (*deployFiles, []*models.FunctionSchedule, map[string]models.FunctionConfig, error) {
 	manifestBytes, err := ioutil.ReadAll(manifestFile)
-
 	if err != nil {
 		return nil, nil, nil, err
 	}
@@ -774,7 +786,6 @@ func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer Dep
 	var manifest functionsManifest
 
 	err = json.Unmarshal(manifestBytes, &manifest)
-
 	if err != nil {
 		return nil, nil, nil, fmt.Errorf("malformed functions manifest file: %w", err)
 	}
@@ -785,7 +796,6 @@ func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer Dep
 
 	for _, function := range manifest.Functions {
 		fileInfo, err := os.Stat(function.Path)
-
 		if err != nil {
 			return nil, nil, nil, fmt.Errorf("manifest file specifies a function path that cannot be found: %s", function.Path)
 		}
@@ -802,7 +812,6 @@ func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer Dep
 			Timeout:        function.Timeout,
 		}
 		file, err := newFunctionFile(function.Path, fileInfo, runtime, &meta, observer)
-
 		if err != nil {
 			return nil, nil, nil, err
 		}
@@ -974,7 +983,7 @@ func jsFile(i os.FileInfo) bool {
 func goFile(filePath string, i os.FileInfo, observer DeployObserver) bool {
 	warner, hasWarner := observer.(DeployWarner)
 
-	if m := i.Mode(); m&0111 == 0 && runtime.GOOS != "windows" { // check if it's an executable file. skip on windows, since it doesn't have that mode
+	if m := i.Mode(); m&0o111 == 0 && runtime.GOOS != "windows" { // check if it's an executable file. skip on windows, since it doesn't have that mode
 		if hasWarner {
 			warner.OnWalkWarning(filePath, "Go binary does not have executable permissions")
 		}
@@ -1016,8 +1025,8 @@ func ignoreFile(rel string, ignoreInstallDirs bool) bool {
 func createHeader(archive *zip.Writer, i os.FileInfo, runtime string) (io.Writer, error) {
 	if runtime == goRuntime || runtime == amazonLinux2 {
 		return archive.CreateHeader(&zip.FileHeader{
-			CreatorVersion: 3 << 8,     // indicates Unix
-			ExternalAttrs:  0777 << 16, // -rwxrwxrwx file permissions
+			CreatorVersion: 3 << 8,      // indicates Unix
+			ExternalAttrs:  0o777 << 16, // -rwxrwxrwx file permissions
 
 			// we need to make sure we don't have two ZIP files with the exact same contents - otherwise, our upload deduplication mechanism will do weird things.
 			// adding in the function name as a comment ensures that every function ZIP is unique
