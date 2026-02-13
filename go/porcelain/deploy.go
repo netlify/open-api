@@ -43,8 +43,9 @@ const (
 
 	lfsVersionString = "version https://git-lfs.github.com/spec/v1"
 
-	edgeFunctionsInternalPath = ".netlify/internal/edge-functions/"
-	edgeRedirectsInternalPath = ".netlify/deploy-config/"
+	edgeFunctionsInternalPath  = ".netlify/internal/edge-functions/"
+	edgeRedirectsInternalPath  = ".netlify/deploy-config/"
+	dbMigrationsInternalPath   = ".netlify/internal/db/migrations/"
 )
 
 var installDirs = []string{"node_modules/", "bower_components/"}
@@ -89,6 +90,7 @@ type DeployOptions struct {
 	FunctionsDir      string
 	EdgeFunctionsDir  string
 	EdgeRedirectsDir  string
+	DbMigrationsDir   string
 	BuildDir          string
 	LargeMediaEnabled bool
 	Environment       []*models.DeployEnvironmentVariable
@@ -247,6 +249,16 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 
 	if options.EdgeRedirectsDir != "" {
 		err = addInternalFilesToDeploy(options.EdgeRedirectsDir, edgeRedirectsInternalPath, files, options.Observer)
+		if err != nil {
+			if options.Observer != nil {
+				options.Observer.OnFailedWalk()
+			}
+			return nil, err
+		}
+	}
+
+	if options.DbMigrationsDir != "" {
+		err = addInternalFilesToDeploy(options.DbMigrationsDir, dbMigrationsInternalPath, files, options.Observer)
 		if err != nil {
 			if options.Observer != nil {
 				options.Observer.OnFailedWalk()

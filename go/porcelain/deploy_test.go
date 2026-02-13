@@ -287,6 +287,54 @@ func TestWalk_PublishedFilesAndEdgeRedirects(t *testing.T) {
 	assert.NotNil(t, files.Files[".netlify/deploy-config/redirects.json"])
 }
 
+func TestWalk_DbMigrations(t *testing.T) {
+	files := newDeployFiles()
+
+	netlifyDir, err := ioutil.TempDir("", ".netlify")
+	require.Nil(t, err)
+	defer os.RemoveAll(netlifyDir)
+
+	dbMigrationsDir, err := ioutil.TempDir(netlifyDir, "db-migrations-dist")
+	require.Nil(t, err)
+	defer os.RemoveAll(dbMigrationsDir)
+
+	migrationDir := filepath.Join(dbMigrationsDir, "1700000000_create-users")
+	err = os.Mkdir(migrationDir, os.ModePerm)
+	require.Nil(t, err)
+	err = ioutil.WriteFile(filepath.Join(migrationDir, "migration.sql"), []byte("CREATE TABLE users (id INT);"), 0644)
+	require.Nil(t, err)
+
+	err = addInternalFilesToDeploy(dbMigrationsDir, dbMigrationsInternalPath, files, mockObserver{})
+	require.Nil(t, err)
+
+	assert.NotNil(t, files.Files[".netlify/internal/db/migrations/1700000000_create-users/migration.sql"])
+}
+
+func TestWalk_PublishedFilesAndDbMigrations(t *testing.T) {
+	files := setupPublishedAssets(t)
+
+	netlifyDir, err := ioutil.TempDir("", ".netlify")
+	require.Nil(t, err)
+	defer os.RemoveAll(netlifyDir)
+
+	dbMigrationsDir, err := ioutil.TempDir(netlifyDir, "db-migrations-dist")
+	require.Nil(t, err)
+	defer os.RemoveAll(dbMigrationsDir)
+
+	migrationDir := filepath.Join(dbMigrationsDir, "1700000000_create-users")
+	err = os.Mkdir(migrationDir, os.ModePerm)
+	require.Nil(t, err)
+	err = ioutil.WriteFile(filepath.Join(migrationDir, "migration.sql"), []byte("CREATE TABLE users (id INT);"), 0644)
+	require.Nil(t, err)
+
+	err = addInternalFilesToDeploy(dbMigrationsDir, dbMigrationsInternalPath, files, mockObserver{})
+	require.Nil(t, err)
+
+	assert.NotNil(t, files.Files["assets/styles.css"])
+	assert.NotNil(t, files.Files["index.html"])
+	assert.NotNil(t, files.Files[".netlify/internal/db/migrations/1700000000_create-users/migration.sql"])
+}
+
 func setupPublishedAssets(t *testing.T) *deployFiles {
 	publishDir, err := ioutil.TempDir("", "publish")
 	require.Nil(t, err)
