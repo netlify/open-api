@@ -43,9 +43,9 @@ const (
 
 	lfsVersionString = "version https://git-lfs.github.com/spec/v1"
 
-	edgeFunctionsInternalPath  = ".netlify/internal/edge-functions/"
-	edgeRedirectsInternalPath  = ".netlify/deploy-config/"
-	dbMigrationsInternalPath   = ".netlify/internal/db/migrations/"
+	edgeFunctionsInternalPath = ".netlify/internal/edge-functions/"
+	edgeRedirectsInternalPath = ".netlify/deploy-config/"
+	dbMigrationsInternalPath  = ".netlify/internal/db/migrations/"
 )
 
 var installDirs = []string{"node_modules/", "bower_components/"}
@@ -75,12 +75,6 @@ type DeployObserver interface {
 
 type DeployWarner interface {
 	OnWalkWarning(path, msg string)
-}
-
-type DeployEnvironmentVariable struct {
-	Key      string
-	Value    string
-	IsSecret bool
 }
 
 // DeployOptions holds the option for creating a new deploy

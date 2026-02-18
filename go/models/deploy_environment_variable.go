@@ -21,7 +21,8 @@ import (
 type DeployEnvironmentVariable struct {
 
 	// is secret
-	IsSecret bool `json:"is_secret,omitempty"`
+	// Required: true
+	IsSecret *bool `json:"is_secret"`
 
 	// key
 	// Required: true
@@ -40,6 +41,10 @@ type DeployEnvironmentVariable struct {
 func (m *DeployEnvironmentVariable) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateIsSecret(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateKey(formats); err != nil {
 		res = append(res, err)
 	}
@@ -55,6 +60,15 @@ func (m *DeployEnvironmentVariable) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *DeployEnvironmentVariable) validateIsSecret(formats strfmt.Registry) error {
+
+	if err := validate.Required("is_secret", "body", m.IsSecret); err != nil {
+		return err
+	}
+
 	return nil
 }
 

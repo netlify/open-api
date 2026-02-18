@@ -4152,6 +4152,7 @@ definitions:
       - key
       - value
       - scopes
+      - is_secret
     properties:
       key:
         type: string
