@@ -498,13 +498,6 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 
 	authInfo := context.GetAuthInfo(ctx)
 
-	context.GetLogger(ctx).WithFields(logrus.Fields{
-		"deploy_id": d.ID,
-		"file_path": f.Name,
-		"file_sum":  f.Sum,
-		"file_size": f.Size,
-	}).Debug("Uploading file")
-
 	b := backoff.NewExponentialBackOff()
 	b.MaxElapsedTime = 2 * time.Minute
 
@@ -529,8 +522,6 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 		sharedErr.mutex.Unlock()
 
 		var operationError error
-
-		context.GetLogger(ctx).Infof("Uploading file %v", f.Name)
 
 		switch t {
 		case fileUpload:
