@@ -153,6 +153,8 @@ type ClientService interface {
 
 	GetAccount(params *GetAccountParams, authInfo runtime.ClientAuthInfoWriter) (*GetAccountOK, error)
 
+	GetAccountAIGatewayToken(params *GetAccountAIGatewayTokenParams, authInfo runtime.ClientAuthInfoWriter) (*GetAccountAIGatewayTokenOK, error)
+
 	GetAccountBuildStatus(params *GetAccountBuildStatusParams, authInfo runtime.ClientAuthInfoWriter) (*GetAccountBuildStatusOK, error)
 
 	GetAccountMember(params *GetAccountMemberParams, authInfo runtime.ClientAuthInfoWriter) (*GetAccountMemberOK, error)
@@ -2505,6 +2507,40 @@ func (a *Client) GetAccount(params *GetAccountParams, authInfo runtime.ClientAut
 	}
 	// unexpected success response
 	unexpectedSuccess := result.(*GetAccountDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+GetAccountAIGatewayToken Returns an AI Gateway token scoped to an account
+*/
+func (a *Client) GetAccountAIGatewayToken(params *GetAccountAIGatewayTokenParams, authInfo runtime.ClientAuthInfoWriter) (*GetAccountAIGatewayTokenOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetAccountAIGatewayTokenParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "getAccountAIGatewayToken",
+		Method:             "GET",
+		PathPattern:        "/accounts/{account_id}/ai-gateway/token",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &GetAccountAIGatewayTokenReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*GetAccountAIGatewayTokenOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*GetAccountAIGatewayTokenDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 

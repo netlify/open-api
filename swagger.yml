@@ -3279,6 +3279,26 @@ paths:
         default:
           $ref: '#/responses/error'
       description: Returns an AI Gateway token for a specific site
+  /accounts/{account_id}/ai-gateway/token:
+    parameters:
+      - name: account_id
+        type: string
+        in: path
+        required: true
+        description: The account ID
+    get:
+      operationId: getAccountAIGatewayToken
+      tags: [aiGateway]
+      responses:
+        '200':
+          description: AI Gateway token for the account
+          schema:
+            $ref: '#/definitions/aiGatewayToken'
+        '404':
+          description: AI Gateway not available for this account
+        default:
+          $ref: '#/responses/error'
+      description: Returns an AI Gateway token scoped to an account
 
   # Database endpoints
   /sites/{site_id}/database:
