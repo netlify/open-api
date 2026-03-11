@@ -1892,8 +1892,12 @@ paths:
             $ref: '#/definitions/ticket'
         '401':
           description: OAuth application not found
+          schema:
+            $ref: '#/definitions/error'
         '422':
           description: Validation error
+          schema:
+            $ref: '#/definitions/error'
         default:
           $ref: '#/responses/error'
   /oauth/tickets/{ticket_id}:

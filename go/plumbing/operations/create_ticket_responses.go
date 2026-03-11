@@ -98,13 +98,25 @@ CreateTicketUnauthorized handles this case with default header values.
 OAuth application not found
 */
 type CreateTicketUnauthorized struct {
+	Payload *models.Error
 }
 
 func (o *CreateTicketUnauthorized) Error() string {
-	return fmt.Sprintf("[POST /oauth/tickets][%d] createTicketUnauthorized ", 401)
+	return fmt.Sprintf("[POST /oauth/tickets][%d] createTicketUnauthorized  %+v", 401, o.Payload)
+}
+
+func (o *CreateTicketUnauthorized) GetPayload() *models.Error {
+	return o.Payload
 }
 
 func (o *CreateTicketUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.Error)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -120,13 +132,25 @@ CreateTicketUnprocessableEntity handles this case with default header values.
 Validation error
 */
 type CreateTicketUnprocessableEntity struct {
+	Payload *models.Error
 }
 
 func (o *CreateTicketUnprocessableEntity) Error() string {
-	return fmt.Sprintf("[POST /oauth/tickets][%d] createTicketUnprocessableEntity ", 422)
+	return fmt.Sprintf("[POST /oauth/tickets][%d] createTicketUnprocessableEntity  %+v", 422, o.Payload)
+}
+
+func (o *CreateTicketUnprocessableEntity) GetPayload() *models.Error {
+	return o.Payload
 }
 
 func (o *CreateTicketUnprocessableEntity) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.Error)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
