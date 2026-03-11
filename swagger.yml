@@ -1878,11 +1878,18 @@ paths:
           type: string
           in: query
           required: true
+        - name: message
+          type: string
+          in: query
       responses:
         '201':
-          description: ok
+          description: Created
           schema:
             $ref: '#/definitions/ticket'
+        '401':
+          description: OAuth application not found
+        '422':
+          description: Validation error
         default:
           $ref: '#/responses/error'
   /oauth/tickets/{ticket_id}:
