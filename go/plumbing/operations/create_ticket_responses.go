@@ -29,6 +29,18 @@ func (o *CreateTicketReader) ReadResponse(response runtime.ClientResponse, consu
 			return nil, err
 		}
 		return result, nil
+	case 401:
+		result := NewCreateTicketUnauthorized()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 422:
+		result := NewCreateTicketUnprocessableEntity()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	default:
 		result := NewCreateTicketDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -49,7 +61,7 @@ func NewCreateTicketCreated() *CreateTicketCreated {
 /*
 CreateTicketCreated handles this case with default header values.
 
-ok
+Created
 */
 type CreateTicketCreated struct {
 	Payload *models.Ticket
@@ -71,6 +83,50 @@ func (o *CreateTicketCreated) readResponse(response runtime.ClientResponse, cons
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
 		return err
 	}
+
+	return nil
+}
+
+// NewCreateTicketUnauthorized creates a CreateTicketUnauthorized with default headers values
+func NewCreateTicketUnauthorized() *CreateTicketUnauthorized {
+	return &CreateTicketUnauthorized{}
+}
+
+/*
+CreateTicketUnauthorized handles this case with default header values.
+
+OAuth application not found
+*/
+type CreateTicketUnauthorized struct {
+}
+
+func (o *CreateTicketUnauthorized) Error() string {
+	return fmt.Sprintf("[POST /oauth/tickets][%d] createTicketUnauthorized ", 401)
+}
+
+func (o *CreateTicketUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	return nil
+}
+
+// NewCreateTicketUnprocessableEntity creates a CreateTicketUnprocessableEntity with default headers values
+func NewCreateTicketUnprocessableEntity() *CreateTicketUnprocessableEntity {
+	return &CreateTicketUnprocessableEntity{}
+}
+
+/*
+CreateTicketUnprocessableEntity handles this case with default header values.
+
+Validation error
+*/
+type CreateTicketUnprocessableEntity struct {
+}
+
+func (o *CreateTicketUnprocessableEntity) Error() string {
+	return fmt.Sprintf("[POST /oauth/tickets][%d] createTicketUnprocessableEntity ", 422)
+}
+
+func (o *CreateTicketUnprocessableEntity) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	return nil
 }

@@ -63,6 +63,8 @@ type CreateTicketParams struct {
 
 	/*ClientID*/
 	ClientID string
+	/*Message*/
+	Message *string
 
 	timeout    time.Duration
 	Context    context.Context
@@ -113,6 +115,17 @@ func (o *CreateTicketParams) SetClientID(clientID string) {
 	o.ClientID = clientID
 }
 
+// WithMessage adds the message to the create ticket params
+func (o *CreateTicketParams) WithMessage(message *string) *CreateTicketParams {
+	o.SetMessage(message)
+	return o
+}
+
+// SetMessage adds the message to the create ticket params
+func (o *CreateTicketParams) SetMessage(message *string) {
+	o.Message = message
+}
+
 // WriteToRequest writes these params to a swagger request
 func (o *CreateTicketParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -128,6 +141,22 @@ func (o *CreateTicketParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.
 		if err := r.SetQueryParam("client_id", qClientID); err != nil {
 			return err
 		}
+	}
+
+	if o.Message != nil {
+
+		// query param message
+		var qrMessage string
+		if o.Message != nil {
+			qrMessage = *o.Message
+		}
+		qMessage := qrMessage
+		if qMessage != "" {
+			if err := r.SetQueryParam("message", qMessage); err != nil {
+				return err
+			}
+		}
+
 	}
 
 	if len(res) > 0 {
