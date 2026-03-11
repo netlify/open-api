@@ -14,6 +14,8 @@ import (
 	"github.com/go-openapi/runtime"
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
+
+	"github.com/netlify/open-api/v2/go/models"
 )
 
 // NewCreateTicketParams creates a new CreateTicketParams object
@@ -61,6 +63,8 @@ for the create ticket operation typically these are written to a http.Request
 */
 type CreateTicketParams struct {
 
+	/*Body*/
+	Body *models.CreateTicketParamsBody
 	/*ClientID*/
 	ClientID string
 
@@ -102,6 +106,17 @@ func (o *CreateTicketParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
+// WithBody adds the body to the create ticket params
+func (o *CreateTicketParams) WithBody(body *models.CreateTicketParamsBody) *CreateTicketParams {
+	o.SetBody(body)
+	return o
+}
+
+// SetBody adds the body to the create ticket params
+func (o *CreateTicketParams) SetBody(body *models.CreateTicketParamsBody) {
+	o.Body = body
+}
+
 // WithClientID adds the clientID to the create ticket params
 func (o *CreateTicketParams) WithClientID(clientID string) *CreateTicketParams {
 	o.SetClientID(clientID)
@@ -120,6 +135,12 @@ func (o *CreateTicketParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.
 		return err
 	}
 	var res []error
+
+	if o.Body != nil {
+		if err := r.SetBodyParam(o.Body); err != nil {
+			return err
+		}
+	}
 
 	// query param client_id
 	qrClientID := o.ClientID
