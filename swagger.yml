@@ -1878,9 +1878,13 @@ paths:
           type: string
           in: query
           required: true
-        - name: message
-          type: string
-          in: query
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
       responses:
         '201':
           description: Created
