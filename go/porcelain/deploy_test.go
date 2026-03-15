@@ -779,7 +779,7 @@ func TestBundleWithManifestEventSubscriptions(t *testing.T) {
 				"runtime": "js",
 				"mainFile": "/some/path/hello-js-function-test.js",
 				"name": "hello-js-function-test",
-				"eventSubscriptions": ["deploy-succeeded", "identity-signup"]
+				"eventSubscriptions": ["deploy_succeeded", "identity_signup"]
 			}
 		],
 		"version": 1
@@ -798,7 +798,7 @@ func TestBundleWithManifestEventSubscriptions(t *testing.T) {
 	assert.Nil(t, err)
 
 	helloJSConfig := functionsConfig["hello-js-function-test"]
-	assert.Equal(t, []string{"deploy-succeeded", "identity-signup"}, helloJSConfig.EventSubscriptions)
+	assert.Equal(t, []string{"deploy_succeeded", "identity_signup"}, helloJSConfig.EventSubscriptions)
 }
 
 func TestReadZipRuntime(t *testing.T) {
