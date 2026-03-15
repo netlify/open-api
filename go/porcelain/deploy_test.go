@@ -767,6 +767,40 @@ func TestBundleWithManifest(t *testing.T) {
 	assert.Equal(t, []string{"GET", "POST"}, helloJSConfig.Routes[1].Methods)
 }
 
+func TestBundleWithManifestEventSubscriptions(t *testing.T) {
+	cwd, _ := os.Getwd()
+	basePath := path.Join(filepath.Dir(cwd), "internal", "data")
+	jsFunctionPath := strings.Replace(filepath.Join(basePath, "hello-js-function-test.zip"), "\\", "/", -1)
+	manifestPath := path.Join(basePath, "manifest-events.json")
+	manifestFile := fmt.Sprintf(`{
+		"functions": [
+			{
+				"path": "%s",
+				"runtime": "js",
+				"mainFile": "/some/path/hello-js-function-test.js",
+				"name": "hello-js-function-test",
+				"eventSubscriptions": ["deploy_succeeded", "identity_signup"]
+			}
+		],
+		"version": 1
+	}`, jsFunctionPath)
+
+	err := ioutil.WriteFile(manifestPath, []byte(manifestFile), 0644)
+	defer os.Remove(manifestPath)
+	assert.Nil(t, err)
+
+	// We need to use the manifest file directly, not bundle() which looks for "manifest.json"
+	manifestFileHandle, err := os.Open(manifestPath)
+	assert.Nil(t, err)
+	defer manifestFileHandle.Close()
+
+	_, _, functionsConfig, err := bundleFromManifest(gocontext.Background(), manifestFileHandle, mockObserver{})
+	assert.Nil(t, err)
+
+	helloJSConfig := functionsConfig["hello-js-function-test"]
+	assert.Equal(t, []string{"deploy_succeeded", "identity_signup"}, helloJSConfig.EventSubscriptions)
+}
+
 func TestReadZipRuntime(t *testing.T) {
 	runtime, err := readZipRuntime("../internal/data/hello-rs-function-test.zip")
 

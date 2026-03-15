@@ -5041,6 +5041,10 @@ definitions:
         type: integer
       traffic_rules:
         $ref: '#/definitions/trafficRulesConfig'
+      event_subscriptions:
+        type: array
+        items:
+          type: string
   functionRoute:
     type: object
     properties:
