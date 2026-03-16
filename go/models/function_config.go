@@ -24,6 +24,9 @@ type FunctionConfig struct {
 	// display name
 	DisplayName string `json:"display_name,omitempty"`
 
+	// event subscriptions
+	EventSubscriptions []string `json:"event_subscriptions"`
+
 	// excluded routes
 	ExcludedRoutes []*ExcludedFunctionRoute `json:"excluded_routes"`
 
