@@ -3908,12 +3908,18 @@ definitions:
       min_cu:
         type: number
         format: double
+        minimum: 0.25
+        maximum: 16
+        x-nullable: true
         description: >-
           Minimum compute units (0.25 to 16.0).
           Must be less than or equal to max_cu.
       max_cu:
         type: number
         format: double
+        minimum: 0.25
+        maximum: 16
+        x-nullable: true
         description: >-
           Maximum compute units (0.25 to 16.0).
           Must be greater than or equal to min_cu.
@@ -3921,6 +3927,8 @@ definitions:
       sleep_timeout_seconds:
         type: integer
         format: int64
+        minimum: -1
+        x-nullable: true
         description: >-
           Seconds of inactivity before the compute endpoint is suspended.
           Use -1 for always on, or a non-negative value.
