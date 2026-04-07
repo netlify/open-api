@@ -61,6 +61,11 @@ for the get site database operation typically these are written to a http.Reques
 */
 type GetSiteDatabaseParams struct {
 
+	/*Role
+	  The database role to use for the connection string. Defaults to netlifydb_owner if not specified.
+
+	*/
+	Role *string
 	/*SiteID*/
 	SiteID string
 
@@ -102,6 +107,17 @@ func (o *GetSiteDatabaseParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
+// WithRole adds the role to the get site database params
+func (o *GetSiteDatabaseParams) WithRole(role *string) *GetSiteDatabaseParams {
+	o.SetRole(role)
+	return o
+}
+
+// SetRole adds the role to the get site database params
+func (o *GetSiteDatabaseParams) SetRole(role *string) {
+	o.Role = role
+}
+
 // WithSiteID adds the siteID to the get site database params
 func (o *GetSiteDatabaseParams) WithSiteID(siteID string) *GetSiteDatabaseParams {
 	o.SetSiteID(siteID)
@@ -120,6 +136,22 @@ func (o *GetSiteDatabaseParams) WriteToRequest(r runtime.ClientRequest, reg strf
 		return err
 	}
 	var res []error
+
+	if o.Role != nil {
+
+		// query param role
+		var qrRole string
+		if o.Role != nil {
+			qrRole = *o.Role
+		}
+		qRole := qrRole
+		if qRole != "" {
+			if err := r.SetQueryParam("role", qRole); err != nil {
+				return err
+			}
+		}
+
+	}
 
 	// path param site_id
 	if err := r.SetPathParam("site_id", o.SiteID); err != nil {

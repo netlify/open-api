@@ -17,9 +17,12 @@ import (
 // swagger:model createDatabaseBranchRequest
 type CreateDatabaseBranchRequest struct {
 
-	// The deploy ID to associate with this branch
+	// The branch identifier
 	// Required: true
-	DeployID *string `json:"deploy_id"`
+	BranchID *string `json:"branch_id"`
+
+	// Arbitrary metadata to associate with the branch
+	Metadata interface{} `json:"metadata,omitempty"`
 
 	// The ID of the parent branch to create the new branch from. Defaults to the production branch if not specified.
 	ParentBranchID string `json:"parent_branch_id,omitempty"`
@@ -29,7 +32,7 @@ type CreateDatabaseBranchRequest struct {
 func (m *CreateDatabaseBranchRequest) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.validateDeployID(formats); err != nil {
+	if err := m.validateBranchID(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -39,9 +42,9 @@ func (m *CreateDatabaseBranchRequest) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *CreateDatabaseBranchRequest) validateDeployID(formats strfmt.Registry) error {
+func (m *CreateDatabaseBranchRequest) validateBranchID(formats strfmt.Registry) error {
 
-	if err := validate.Required("deploy_id", "body", m.DeployID); err != nil {
+	if err := validate.Required("branch_id", "body", m.BranchID); err != nil {
 		return err
 	}
 

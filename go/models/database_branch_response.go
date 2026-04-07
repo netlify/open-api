@@ -17,6 +17,9 @@ type DatabaseBranchResponse struct {
 
 	// The connection string for the database branch
 	ConnectionString string `json:"connection_string,omitempty"`
+
+	// Metadata associated with the branch
+	Metadata interface{} `json:"metadata,omitempty"`
 }
 
 // Validate validates this database branch response

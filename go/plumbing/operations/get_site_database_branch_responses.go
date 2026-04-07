@@ -62,7 +62,7 @@ type GetSiteDatabaseBranchOK struct {
 }
 
 func (o *GetSiteDatabaseBranchOK) Error() string {
-	return fmt.Sprintf("[GET /sites/{site_id}/database/branch/{deploy_id}][%d] getSiteDatabaseBranchOK  %+v", 200, o.Payload)
+	return fmt.Sprintf("[GET /sites/{site_id}/database/branch/{branch_id}][%d] getSiteDatabaseBranchOK  %+v", 200, o.Payload)
 }
 
 func (o *GetSiteDatabaseBranchOK) GetPayload() *models.DatabaseBranchResponse {
@@ -89,13 +89,13 @@ func NewGetSiteDatabaseBranchNotFound() *GetSiteDatabaseBranchNotFound {
 /*
 GetSiteDatabaseBranchNotFound handles this case with default header values.
 
-Branch not found for this deploy
+Branch not found
 */
 type GetSiteDatabaseBranchNotFound struct {
 }
 
 func (o *GetSiteDatabaseBranchNotFound) Error() string {
-	return fmt.Sprintf("[GET /sites/{site_id}/database/branch/{deploy_id}][%d] getSiteDatabaseBranchNotFound ", 404)
+	return fmt.Sprintf("[GET /sites/{site_id}/database/branch/{branch_id}][%d] getSiteDatabaseBranchNotFound ", 404)
 }
 
 func (o *GetSiteDatabaseBranchNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -127,7 +127,7 @@ func (o *GetSiteDatabaseBranchDefault) Code() int {
 }
 
 func (o *GetSiteDatabaseBranchDefault) Error() string {
-	return fmt.Sprintf("[GET /sites/{site_id}/database/branch/{deploy_id}][%d] getSiteDatabaseBranch default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[GET /sites/{site_id}/database/branch/{branch_id}][%d] getSiteDatabaseBranch default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *GetSiteDatabaseBranchDefault) GetPayload() *models.Error {

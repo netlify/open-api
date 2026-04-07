@@ -55,7 +55,7 @@ func NewCreateSiteDatabaseBranchOK() *CreateSiteDatabaseBranchOK {
 /*
 CreateSiteDatabaseBranchOK handles this case with default header values.
 
-Branch already exists for this deploy
+Branch already exists
 */
 type CreateSiteDatabaseBranchOK struct {
 	Payload *models.DatabaseBranchResponse

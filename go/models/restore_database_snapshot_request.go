@@ -15,8 +15,8 @@ import (
 // swagger:model restoreDatabaseSnapshotRequest
 type RestoreDatabaseSnapshotRequest struct {
 
-	// The name of the branch to restore the snapshot to. Defaults to "production" if not specified.
-	BranchName string `json:"branch_name,omitempty"`
+	// The ID of the branch to restore the snapshot to. Defaults to "production" if not specified.
+	BranchID string `json:"branch_id,omitempty"`
 }
 
 // Validate validates this restore database snapshot request

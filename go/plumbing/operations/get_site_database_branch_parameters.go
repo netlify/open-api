@@ -61,11 +61,16 @@ for the get site database branch operation typically these are written to a http
 */
 type GetSiteDatabaseBranchParams struct {
 
-	/*DeployID
-	  The deploy ID associated with the database branch
+	/*BranchID
+	  The branch ID
 
 	*/
-	DeployID string
+	BranchID string
+	/*Role
+	  The database role to use for the connection string. Defaults to netlifydb_owner if not specified.
+
+	*/
+	Role *string
 	/*SiteID*/
 	SiteID string
 
@@ -107,15 +112,26 @@ func (o *GetSiteDatabaseBranchParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithDeployID adds the deployID to the get site database branch params
-func (o *GetSiteDatabaseBranchParams) WithDeployID(deployID string) *GetSiteDatabaseBranchParams {
-	o.SetDeployID(deployID)
+// WithBranchID adds the branchID to the get site database branch params
+func (o *GetSiteDatabaseBranchParams) WithBranchID(branchID string) *GetSiteDatabaseBranchParams {
+	o.SetBranchID(branchID)
 	return o
 }
 
-// SetDeployID adds the deployId to the get site database branch params
-func (o *GetSiteDatabaseBranchParams) SetDeployID(deployID string) {
-	o.DeployID = deployID
+// SetBranchID adds the branchId to the get site database branch params
+func (o *GetSiteDatabaseBranchParams) SetBranchID(branchID string) {
+	o.BranchID = branchID
+}
+
+// WithRole adds the role to the get site database branch params
+func (o *GetSiteDatabaseBranchParams) WithRole(role *string) *GetSiteDatabaseBranchParams {
+	o.SetRole(role)
+	return o
+}
+
+// SetRole adds the role to the get site database branch params
+func (o *GetSiteDatabaseBranchParams) SetRole(role *string) {
+	o.Role = role
 }
 
 // WithSiteID adds the siteID to the get site database branch params
@@ -137,9 +153,25 @@ func (o *GetSiteDatabaseBranchParams) WriteToRequest(r runtime.ClientRequest, re
 	}
 	var res []error
 
-	// path param deploy_id
-	if err := r.SetPathParam("deploy_id", o.DeployID); err != nil {
+	// path param branch_id
+	if err := r.SetPathParam("branch_id", o.BranchID); err != nil {
 		return err
+	}
+
+	if o.Role != nil {
+
+		// query param role
+		var qrRole string
+		if o.Role != nil {
+			qrRole = *o.Role
+		}
+		qRole := qrRole
+		if qRole != "" {
+			if err := r.SetQueryParam("role", qRole); err != nil {
+				return err
+			}
+		}
+
 	}
 
 	// path param site_id
