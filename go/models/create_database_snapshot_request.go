@@ -6,6 +6,7 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
@@ -15,15 +16,45 @@ import (
 // swagger:model createDatabaseSnapshotRequest
 type CreateDatabaseSnapshotRequest struct {
 
-	// The name of the branch to snapshot. Defaults to "production" if not specified.
-	BranchName string `json:"branch_name,omitempty"`
+	// The ID of the branch to snapshot. Defaults to "production" if not specified.
+	BranchID string `json:"branch_id,omitempty"`
 
-	// An optional name for the snapshot
+	// metadata
+	Metadata *DatabaseSnapshotMetadata `json:"metadata,omitempty"`
+
+	// A name for the snapshot
 	Name string `json:"name,omitempty"`
 }
 
 // Validate validates this create database snapshot request
 func (m *CreateDatabaseSnapshotRequest) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateMetadata(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *CreateDatabaseSnapshotRequest) validateMetadata(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Metadata) { // not required
+		return nil
+	}
+
+	if m.Metadata != nil {
+		if err := m.Metadata.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("metadata")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 

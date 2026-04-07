@@ -55,7 +55,7 @@ type DeleteSiteDatabaseBranchNoContent struct {
 }
 
 func (o *DeleteSiteDatabaseBranchNoContent) Error() string {
-	return fmt.Sprintf("[DELETE /sites/{site_id}/database/branch/{deploy_id}][%d] deleteSiteDatabaseBranchNoContent ", 204)
+	return fmt.Sprintf("[DELETE /sites/{site_id}/database/branch/{branch_id}][%d] deleteSiteDatabaseBranchNoContent ", 204)
 }
 
 func (o *DeleteSiteDatabaseBranchNoContent) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -87,7 +87,7 @@ func (o *DeleteSiteDatabaseBranchDefault) Code() int {
 }
 
 func (o *DeleteSiteDatabaseBranchDefault) Error() string {
-	return fmt.Sprintf("[DELETE /sites/{site_id}/database/branch/{deploy_id}][%d] deleteSiteDatabaseBranch default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[DELETE /sites/{site_id}/database/branch/{branch_id}][%d] deleteSiteDatabaseBranch default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *DeleteSiteDatabaseBranchDefault) GetPayload() *models.Error {

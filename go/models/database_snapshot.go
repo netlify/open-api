@@ -6,6 +6,7 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
@@ -15,18 +16,57 @@ import (
 // swagger:model databaseSnapshot
 type DatabaseSnapshot struct {
 
+	// When the snapshot was created
+	CreatedAt string `json:"created_at,omitempty"`
+
+	// When the snapshot expires
+	ExpiresAt string `json:"expires_at,omitempty"`
+
 	// The unique identifier of the snapshot
 	ID string `json:"id,omitempty"`
+
+	// Whether this snapshot was manually created
+	Manual bool `json:"manual,omitempty"`
+
+	// metadata
+	Metadata *DatabaseSnapshotMetadata `json:"metadata,omitempty"`
 
 	// The ID of the branch that was snapshotted
 	SourceBranchID string `json:"source_branch_id,omitempty"`
 
-	// The timestamp when the snapshot was created
+	// The point-in-time timestamp of the snapshot
 	Timestamp string `json:"timestamp,omitempty"`
 }
 
 // Validate validates this database snapshot
 func (m *DatabaseSnapshot) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateMetadata(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *DatabaseSnapshot) validateMetadata(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Metadata) { // not required
+		return nil
+	}
+
+	if m.Metadata != nil {
+		if err := m.Metadata.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("metadata")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 

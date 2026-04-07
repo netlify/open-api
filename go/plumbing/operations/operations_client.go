@@ -39,6 +39,8 @@ type ClientService interface {
 
 	CancelSiteDeploy(params *CancelSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*CancelSiteDeployCreated, error)
 
+	ClearSiteDatabaseComputeSettings(params *ClearSiteDatabaseComputeSettingsParams, authInfo runtime.ClientAuthInfoWriter) (*ClearSiteDatabaseComputeSettingsNoContent, error)
+
 	ConfigureDNSForSite(params *ConfigureDNSForSiteParams, authInfo runtime.ClientAuthInfoWriter) (*ConfigureDNSForSiteOK, error)
 
 	CreateAccount(params *CreateAccountParams, authInfo runtime.ClientAuthInfoWriter) (*CreateAccountCreated, error)
@@ -205,6 +207,8 @@ type ClientService interface {
 
 	GetSiteDatabaseBranch(params *GetSiteDatabaseBranchParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteDatabaseBranchOK, error)
 
+	GetSiteDatabaseComputeSettings(params *GetSiteDatabaseComputeSettingsParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteDatabaseComputeSettingsOK, error)
+
 	GetSiteDeploy(params *GetSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteDeployOK, error)
 
 	GetSiteDevServer(params *GetSiteDevServerParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteDevServerOK, error)
@@ -255,6 +259,8 @@ type ClientService interface {
 
 	ListSiteBuilds(params *ListSiteBuildsParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteBuildsOK, error)
 
+	ListSiteDatabaseBranches(params *ListSiteDatabaseBranchesParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteDatabaseBranchesOK, error)
+
 	ListSiteDatabaseSnapshots(params *ListSiteDatabaseSnapshotsParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteDatabaseSnapshotsOK, error)
 
 	ListSiteDeployedBranches(params *ListSiteDeployedBranchesParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteDeployedBranchesOK, error)
@@ -295,9 +301,15 @@ type ClientService interface {
 
 	RollbackSiteDeploy(params *RollbackSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*RollbackSiteDeployNoContent, error)
 
+	RunSiteDatabaseMigrations(params *RunSiteDatabaseMigrationsParams, authInfo runtime.ClientAuthInfoWriter) (*RunSiteDatabaseMigrationsOK, error)
+
 	SearchSiteFunctions(params *SearchSiteFunctionsParams, authInfo runtime.ClientAuthInfoWriter) (*SearchSiteFunctionsOK, error)
 
 	SetEnvVarValue(params *SetEnvVarValueParams, authInfo runtime.ClientAuthInfoWriter) (*SetEnvVarValueCreated, error)
+
+	SetSiteDatabaseBranchComputeSettings(params *SetSiteDatabaseBranchComputeSettingsParams, authInfo runtime.ClientAuthInfoWriter) (*SetSiteDatabaseBranchComputeSettingsOK, error)
+
+	SetSiteDatabaseComputeSettings(params *SetSiteDatabaseComputeSettingsParams, authInfo runtime.ClientAuthInfoWriter) (*SetSiteDatabaseComputeSettingsOK, error)
 
 	ShowService(params *ShowServiceParams, authInfo runtime.ClientAuthInfoWriter) (*ShowServiceOK, error)
 
@@ -561,6 +573,40 @@ func (a *Client) CancelSiteDeploy(params *CancelSiteDeployParams, authInfo runti
 	}
 	// unexpected success response
 	unexpectedSuccess := result.(*CancelSiteDeployDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+ClearSiteDatabaseComputeSettings Resets project-level compute settings to tier defaults. Requires a Pro or higher plan.
+*/
+func (a *Client) ClearSiteDatabaseComputeSettings(params *ClearSiteDatabaseComputeSettingsParams, authInfo runtime.ClientAuthInfoWriter) (*ClearSiteDatabaseComputeSettingsNoContent, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewClearSiteDatabaseComputeSettingsParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "clearSiteDatabaseComputeSettings",
+		Method:             "DELETE",
+		PathPattern:        "/sites/{site_id}/database/compute/settings",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &ClearSiteDatabaseComputeSettingsReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*ClearSiteDatabaseComputeSettingsNoContent)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*ClearSiteDatabaseComputeSettingsDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
@@ -1149,7 +1195,7 @@ func (a *Client) CreateSiteDatabase(params *CreateSiteDatabaseParams, authInfo r
 }
 
 /*
-CreateSiteDatabaseBranch Creates a new database branch for a deploy. If a branch already exists for the specified deploy ID, returns the existing connection string.
+CreateSiteDatabaseBranch Creates a new database branch. If a branch already exists for the specified branch ID, returns the existing connection string.
 */
 func (a *Client) CreateSiteDatabaseBranch(params *CreateSiteDatabaseBranchParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteDatabaseBranchOK, *CreateSiteDatabaseBranchCreated, error) {
 	// TODO: Validate the params before sending
@@ -1934,7 +1980,7 @@ func (a *Client) DeleteSiteDatabase(params *DeleteSiteDatabaseParams, authInfo r
 }
 
 /*
-DeleteSiteDatabaseBranch Deletes a database branch associated with a deploy.
+DeleteSiteDatabaseBranch Deletes a database branch.
 */
 func (a *Client) DeleteSiteDatabaseBranch(params *DeleteSiteDatabaseBranchParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSiteDatabaseBranchNoContent, error) {
 	// TODO: Validate the params before sending
@@ -1945,7 +1991,7 @@ func (a *Client) DeleteSiteDatabaseBranch(params *DeleteSiteDatabaseBranchParams
 	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "deleteSiteDatabaseBranch",
 		Method:             "DELETE",
-		PathPattern:        "/sites/{site_id}/database/branch/{deploy_id}",
+		PathPattern:        "/sites/{site_id}/database/branch/{branch_id}",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"https"},
@@ -3362,7 +3408,7 @@ func (a *Client) GetSiteDatabase(params *GetSiteDatabaseParams, authInfo runtime
 }
 
 /*
-GetSiteDatabaseBranch Returns the database branch connection string for a specific deploy.
+GetSiteDatabaseBranch Returns the database branch connection string for a specific branch.
 */
 func (a *Client) GetSiteDatabaseBranch(params *GetSiteDatabaseBranchParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteDatabaseBranchOK, error) {
 	// TODO: Validate the params before sending
@@ -3373,7 +3419,7 @@ func (a *Client) GetSiteDatabaseBranch(params *GetSiteDatabaseBranchParams, auth
 	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "getSiteDatabaseBranch",
 		Method:             "GET",
-		PathPattern:        "/sites/{site_id}/database/branch/{deploy_id}",
+		PathPattern:        "/sites/{site_id}/database/branch/{branch_id}",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"https"},
@@ -3392,6 +3438,40 @@ func (a *Client) GetSiteDatabaseBranch(params *GetSiteDatabaseBranchParams, auth
 	}
 	// unexpected success response
 	unexpectedSuccess := result.(*GetSiteDatabaseBranchDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+GetSiteDatabaseComputeSettings Returns the project-level compute settings for the database. Returns effective settings (custom or tier defaults). Requires a Pro or higher plan.
+*/
+func (a *Client) GetSiteDatabaseComputeSettings(params *GetSiteDatabaseComputeSettingsParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteDatabaseComputeSettingsOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetSiteDatabaseComputeSettingsParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "getSiteDatabaseComputeSettings",
+		Method:             "GET",
+		PathPattern:        "/sites/{site_id}/database/compute/settings",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &GetSiteDatabaseComputeSettingsReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*GetSiteDatabaseComputeSettingsOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*GetSiteDatabaseComputeSettingsDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
@@ -4247,6 +4327,40 @@ func (a *Client) ListSiteBuilds(params *ListSiteBuildsParams, authInfo runtime.C
 }
 
 /*
+ListSiteDatabaseBranches Returns all branches for the site's database with compute status and metadata.
+*/
+func (a *Client) ListSiteDatabaseBranches(params *ListSiteDatabaseBranchesParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteDatabaseBranchesOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewListSiteDatabaseBranchesParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "listSiteDatabaseBranches",
+		Method:             "GET",
+		PathPattern:        "/sites/{site_id}/database/branches",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &ListSiteDatabaseBranchesReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*ListSiteDatabaseBranchesOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*ListSiteDatabaseBranchesDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
 ListSiteDatabaseSnapshots Returns all snapshots for the site's database.
 */
 func (a *Client) ListSiteDatabaseSnapshots(params *ListSiteDatabaseSnapshotsParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteDatabaseSnapshotsOK, error) {
@@ -4937,6 +5051,40 @@ func (a *Client) RollbackSiteDeploy(params *RollbackSiteDeployParams, authInfo r
 }
 
 /*
+RunSiteDatabaseMigrations Runs database migrations for the specified deploy. Finds the deploy and determines the appropriate branch.
+*/
+func (a *Client) RunSiteDatabaseMigrations(params *RunSiteDatabaseMigrationsParams, authInfo runtime.ClientAuthInfoWriter) (*RunSiteDatabaseMigrationsOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewRunSiteDatabaseMigrationsParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "runSiteDatabaseMigrations",
+		Method:             "POST",
+		PathPattern:        "/sites/{site_id}/database/migrations/{deploy_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &RunSiteDatabaseMigrationsReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*RunSiteDatabaseMigrationsOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*RunSiteDatabaseMigrationsDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
 SearchSiteFunctions search site functions API
 */
 func (a *Client) SearchSiteFunctions(params *SearchSiteFunctionsParams, authInfo runtime.ClientAuthInfoWriter) (*SearchSiteFunctionsOK, error) {
@@ -5001,6 +5149,74 @@ func (a *Client) SetEnvVarValue(params *SetEnvVarValueParams, authInfo runtime.C
 	}
 	// unexpected success response
 	unexpectedSuccess := result.(*SetEnvVarValueDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+SetSiteDatabaseBranchComputeSettings Sets compute settings for a specific database branch, overriding project-level settings. Requires a Pro or higher plan.
+*/
+func (a *Client) SetSiteDatabaseBranchComputeSettings(params *SetSiteDatabaseBranchComputeSettingsParams, authInfo runtime.ClientAuthInfoWriter) (*SetSiteDatabaseBranchComputeSettingsOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewSetSiteDatabaseBranchComputeSettingsParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "setSiteDatabaseBranchComputeSettings",
+		Method:             "PUT",
+		PathPattern:        "/sites/{site_id}/database/branch/{branch_id}/compute/settings",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &SetSiteDatabaseBranchComputeSettingsReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*SetSiteDatabaseBranchComputeSettingsOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*SetSiteDatabaseBranchComputeSettingsDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+SetSiteDatabaseComputeSettings Sets project-level compute settings for the database. Applied to new branches. Can be overridden per-branch. Requires a Pro or higher plan.
+*/
+func (a *Client) SetSiteDatabaseComputeSettings(params *SetSiteDatabaseComputeSettingsParams, authInfo runtime.ClientAuthInfoWriter) (*SetSiteDatabaseComputeSettingsOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewSetSiteDatabaseComputeSettingsParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "setSiteDatabaseComputeSettings",
+		Method:             "PUT",
+		PathPattern:        "/sites/{site_id}/database/compute/settings",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &SetSiteDatabaseComputeSettingsReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*SetSiteDatabaseComputeSettingsOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*SetSiteDatabaseComputeSettingsDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 

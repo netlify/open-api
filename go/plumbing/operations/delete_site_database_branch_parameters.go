@@ -61,11 +61,11 @@ for the delete site database branch operation typically these are written to a h
 */
 type DeleteSiteDatabaseBranchParams struct {
 
-	/*DeployID
-	  The deploy ID associated with the database branch
+	/*BranchID
+	  The branch ID
 
 	*/
-	DeployID string
+	BranchID string
 	/*SiteID*/
 	SiteID string
 
@@ -107,15 +107,15 @@ func (o *DeleteSiteDatabaseBranchParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithDeployID adds the deployID to the delete site database branch params
-func (o *DeleteSiteDatabaseBranchParams) WithDeployID(deployID string) *DeleteSiteDatabaseBranchParams {
-	o.SetDeployID(deployID)
+// WithBranchID adds the branchID to the delete site database branch params
+func (o *DeleteSiteDatabaseBranchParams) WithBranchID(branchID string) *DeleteSiteDatabaseBranchParams {
+	o.SetBranchID(branchID)
 	return o
 }
 
-// SetDeployID adds the deployId to the delete site database branch params
-func (o *DeleteSiteDatabaseBranchParams) SetDeployID(deployID string) {
-	o.DeployID = deployID
+// SetBranchID adds the branchId to the delete site database branch params
+func (o *DeleteSiteDatabaseBranchParams) SetBranchID(branchID string) {
+	o.BranchID = branchID
 }
 
 // WithSiteID adds the siteID to the delete site database branch params
@@ -137,8 +137,8 @@ func (o *DeleteSiteDatabaseBranchParams) WriteToRequest(r runtime.ClientRequest,
 	}
 	var res []error
 
-	// path param deploy_id
-	if err := r.SetPathParam("deploy_id", o.DeployID); err != nil {
+	// path param branch_id
+	if err := r.SetPathParam("branch_id", o.BranchID); err != nil {
 		return err
 	}
 

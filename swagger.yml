@@ -3353,6 +3353,16 @@ paths:
       operationId: getSiteDatabase
       tags: [database]
       description: Returns the database connection string for the specified site.
+      parameters:
+        - name: role
+          type: string
+          in: query
+          description: >-
+            The database role to use for the connection string.
+            Defaults to netlifydb_owner if not specified.
+          enum:
+            - netlifydb_owner
+            - netlifydb_readonly
       responses:
         '200':
           description: OK
@@ -3381,8 +3391,8 @@ paths:
       operationId: createSiteDatabaseBranch
       tags: [database]
       description: >-
-        Creates a new database branch for a deploy. If a branch already exists
-        for the specified deploy ID, returns the existing connection string.
+        Creates a new database branch. If a branch already exists
+        for the specified branch ID, returns the existing connection string.
       consumes:
         - application/json
       parameters:
@@ -3397,12 +3407,172 @@ paths:
           schema:
             $ref: '#/definitions/databaseBranchResponse'
         '200':
-          description: Branch already exists for this deploy
+          description: Branch already exists
           schema:
             $ref: '#/definitions/databaseBranchResponse'
         default:
           $ref: '#/responses/error'
-  /sites/{site_id}/database/branch/{deploy_id}:
+  /sites/{site_id}/database/branches:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+    get:
+      x-internal: true
+      operationId: listSiteDatabaseBranches
+      tags: [database]
+      description: Returns all branches for the site's database with compute status and metadata.
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/databaseBranchesResponse'
+        default:
+          $ref: '#/responses/error'
+  /sites/{site_id}/database/branch/{branch_id}:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+      - name: branch_id
+        type: string
+        in: path
+        required: true
+        description: The branch ID
+    get:
+      x-internal: true
+      operationId: getSiteDatabaseBranch
+      tags: [database]
+      description: Returns the database branch connection string for a specific branch.
+      parameters:
+        - name: role
+          type: string
+          in: query
+          description: >-
+            The database role to use for the connection string.
+            Defaults to netlifydb_owner if not specified.
+          enum:
+            - netlifydb_owner
+            - netlifydb_readonly
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/databaseBranchResponse'
+        '404':
+          description: Branch not found
+        default:
+          $ref: '#/responses/error'
+    delete:
+      x-internal: true
+      operationId: deleteSiteDatabaseBranch
+      tags: [database]
+      description: Deletes a database branch.
+      responses:
+        '204':
+          description: Deleted
+        default:
+          $ref: '#/responses/error'
+  /sites/{site_id}/database/branch/{branch_id}/compute/settings:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+      - name: branch_id
+        type: string
+        in: path
+        required: true
+        description: The branch ID
+    put:
+      x-internal: true
+      operationId: setSiteDatabaseBranchComputeSettings
+      tags: [database]
+      description: >-
+        Sets compute settings for a specific database branch, overriding project-level settings.
+        Requires a Pro or higher plan.
+      consumes:
+        - application/json
+      parameters:
+        - name: computeSettings
+          in: body
+          schema:
+            $ref: '#/definitions/databaseComputeSettingsRequest'
+          required: true
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/databaseComputeSettings'
+        '403':
+          description: Compute customization requires a Pro or higher plan
+        default:
+          $ref: '#/responses/error'
+  /sites/{site_id}/database/compute/settings:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+    put:
+      x-internal: true
+      operationId: setSiteDatabaseComputeSettings
+      tags: [database]
+      description: >-
+        Sets project-level compute settings for the database.
+        Applied to new branches. Can be overridden per-branch.
+        Requires a Pro or higher plan.
+      consumes:
+        - application/json
+      parameters:
+        - name: computeSettings
+          in: body
+          schema:
+            $ref: '#/definitions/databaseComputeSettingsRequest'
+          required: true
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/databaseComputeSettings'
+        '403':
+          description: Compute customization requires a Pro or higher plan
+        default:
+          $ref: '#/responses/error'
+    get:
+      x-internal: true
+      operationId: getSiteDatabaseComputeSettings
+      tags: [database]
+      description: >-
+        Returns the project-level compute settings for the database.
+        Returns effective settings (custom or tier defaults).
+        Requires a Pro or higher plan.
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/databaseComputeSettings'
+        '403':
+          description: Compute customization requires a Pro or higher plan
+        default:
+          $ref: '#/responses/error'
+    delete:
+      x-internal: true
+      operationId: clearSiteDatabaseComputeSettings
+      tags: [database]
+      description: >-
+        Resets project-level compute settings to tier defaults.
+        Requires a Pro or higher plan.
+      responses:
+        '204':
+          description: Cleared
+        '403':
+          description: Compute customization requires a Pro or higher plan
+        default:
+          $ref: '#/responses/error'
+  /sites/{site_id}/database/migrations/{deploy_id}:
     parameters:
       - name: site_id
         type: string
@@ -3412,29 +3582,28 @@ paths:
         type: string
         in: path
         required: true
-        description: The deploy ID associated with the database branch
-    get:
+        description: The deploy ID to run migrations for
+    post:
       x-internal: true
-      operationId: getSiteDatabaseBranch
+      operationId: runSiteDatabaseMigrations
       tags: [database]
-      description: Returns the database branch connection string for a specific deploy.
+      description: >-
+        Runs database migrations for the specified deploy.
+        Finds the deploy and determines the appropriate branch.
+      consumes:
+        - application/json
+      parameters:
+        - name: migrations
+          in: body
+          schema:
+            $ref: '#/definitions/runDatabaseMigrationsRequest'
       responses:
         '200':
           description: OK
-          schema:
-            $ref: '#/definitions/databaseBranchResponse'
-        '404':
-          description: Branch not found for this deploy
-        default:
-          $ref: '#/responses/error'
-    delete:
-      x-internal: true
-      operationId: deleteSiteDatabaseBranch
-      tags: [database]
-      description: Deletes a database branch associated with a deploy.
-      responses:
-        '204':
-          description: Deleted
+        '409':
+          description: Migration conflict - migration modified or removed after being applied
+        '422':
+          description: Migration validation failed
         default:
           $ref: '#/responses/error'
   /sites/{site_id}/database/snapshot:
@@ -3556,16 +3725,20 @@ definitions:
     type: object
     description: Request body for creating a database branch
     required:
-      - deploy_id
+      - branch_id
     properties:
       parent_branch_id:
         type: string
         description: >-
           The ID of the parent branch to create the new branch from.
           Defaults to the production branch if not specified.
-      deploy_id:
+      branch_id:
         type: string
-        description: The deploy ID to associate with this branch
+        description: The branch identifier
+      metadata:
+        type: object
+        description: Arbitrary metadata to associate with the branch
+        additionalProperties: true
   databaseBranchResponse:
     type: object
     description: Response containing the database branch connection string
@@ -3573,18 +3746,103 @@ definitions:
       connection_string:
         type: string
         description: The connection string for the database branch
+      metadata:
+        type: object
+        description: Metadata associated with the branch
+        additionalProperties: true
+  databaseBranchesResponse:
+    type: object
+    description: Response containing a list of database branches
+    properties:
+      branches:
+        type: array
+        items:
+          $ref: '#/definitions/databaseBranchDetail'
+        description: List of database branches
+  databaseBranchDetail:
+    type: object
+    description: Detailed information about a database branch
+    properties:
+      branch_id:
+        type: string
+        description: The branch identifier
+      name:
+        type: string
+        description: The branch name
+      connection_string:
+        type: string
+        description: The connection string for the branch
+      state:
+        type: string
+        description: The current state of the branch
+        enum:
+          - init
+          - creating
+          - resetting
+          - ready
+          - archived
+      logical_size_bytes:
+        type: integer
+        format: int64
+        description: The logical size of the branch in bytes
+      created_at:
+        type: string
+        format: dateTime
+        description: When the branch was created
+      updated_at:
+        type: string
+        format: dateTime
+        description: When the branch was last updated
+      last_active_at:
+        type: string
+        format: dateTime
+        description: When the branch was last active
+      compute:
+        $ref: '#/definitions/databaseBranchCompute'
+      metadata:
+        type: object
+        description: Metadata associated with the branch
+        additionalProperties: true
+  databaseBranchCompute:
+    type: object
+    description: Compute endpoint status for a branch
+    properties:
+      current_state:
+        type: string
+        description: The current state of the compute endpoint
+        enum:
+          - active
+          - idle
+      autoscaling_limit_min_cu:
+        type: number
+        format: double
+        description: Minimum compute units for autoscaling
+      autoscaling_limit_max_cu:
+        type: number
+        format: double
+        description: Maximum compute units for autoscaling
+      suspend_timeout_seconds:
+        type: integer
+        format: int64
+        description: Seconds of inactivity before the compute endpoint is suspended
+      last_active:
+        type: string
+        format: dateTime
+        description: When the compute endpoint was last active
   createDatabaseSnapshotRequest:
     type: object
     description: Request body for creating a database snapshot
     properties:
-      branch_name:
+      branch_id:
         type: string
         description: >-
-          The name of the branch to snapshot.
+          The ID of the branch to snapshot.
           Defaults to "production" if not specified.
       name:
         type: string
-        description: An optional name for the snapshot
+        description: A name for the snapshot
+      metadata:
+        $ref: '#/definitions/databaseSnapshotMetadata'
   databaseSnapshot:
     type: object
     description: A point-in-time snapshot of a database branch
@@ -3592,13 +3850,37 @@ definitions:
       id:
         type: string
         description: The unique identifier of the snapshot
-      timestamp:
-        type: string
-        format: dateTime
-        description: The timestamp when the snapshot was created
       source_branch_id:
         type: string
         description: The ID of the branch that was snapshotted
+      manual:
+        type: boolean
+        description: Whether this snapshot was manually created
+      created_at:
+        type: string
+        format: dateTime
+        description: When the snapshot was created
+      expires_at:
+        type: string
+        format: dateTime
+        description: When the snapshot expires
+      timestamp:
+        type: string
+        format: dateTime
+        description: The point-in-time timestamp of the snapshot
+      metadata:
+        $ref: '#/definitions/databaseSnapshotMetadata'
+  databaseSnapshotMetadata:
+    type: object
+    description: Metadata associated with a snapshot
+    properties:
+      deploy:
+        type: object
+        description: Deploy information associated with the snapshot
+        additionalProperties: true
+      source:
+        type: string
+        description: The source that created the snapshot
   databaseSnapshotsResponse:
     type: object
     description: Response containing a list of database snapshots
@@ -3612,11 +3894,60 @@ definitions:
     type: object
     description: Request body for restoring a database snapshot
     properties:
-      branch_name:
+      branch_id:
         type: string
         description: >-
-          The name of the branch to restore the snapshot to.
+          The ID of the branch to restore the snapshot to.
           Defaults to "production" if not specified.
+  databaseComputeSettingsRequest:
+    type: object
+    description: >-
+      Request body for setting compute settings.
+      All fields are optional; only provided fields are updated.
+    properties:
+      min_cu:
+        type: number
+        format: double
+        description: >-
+          Minimum compute units (0.25 to 16.0).
+          Must be less than or equal to max_cu.
+      max_cu:
+        type: number
+        format: double
+        description: >-
+          Maximum compute units (0.25 to 16.0).
+          Must be greater than or equal to min_cu.
+          max_cu - min_cu must not exceed 8.0.
+      sleep_timeout_seconds:
+        type: integer
+        format: int64
+        description: >-
+          Seconds of inactivity before the compute endpoint is suspended.
+          Use -1 for always on, or a non-negative value.
+  databaseComputeSettings:
+    type: object
+    description: Compute settings for a database or branch
+    properties:
+      min_cu:
+        type: number
+        format: double
+        description: Minimum compute units
+      max_cu:
+        type: number
+        format: double
+        description: Maximum compute units
+      sleep_timeout_seconds:
+        type: integer
+        format: int64
+        description: Seconds of inactivity before suspension
+  runDatabaseMigrationsRequest:
+    type: object
+    description: Request body for running database migrations
+    properties:
+      dry_run:
+        type: boolean
+        description: >-
+          If true, validates migrations without applying them.
 
   DeployValidationsReport:
     type: object
