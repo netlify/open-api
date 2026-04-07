@@ -6,8 +6,10 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
+	"github.com/go-openapi/validate"
 )
 
 // DatabaseComputeSettingsRequest Request body for setting compute settings. All fields are optional; only provided fields are updated.
@@ -16,17 +18,86 @@ import (
 type DatabaseComputeSettingsRequest struct {
 
 	// Maximum compute units (0.25 to 16.0). Must be greater than or equal to min_cu. max_cu - min_cu must not exceed 8.0.
-	MaxCu float64 `json:"max_cu,omitempty"`
+	// Maximum: 16
+	// Minimum: 0.25
+	MaxCu *float64 `json:"max_cu,omitempty"`
 
 	// Minimum compute units (0.25 to 16.0). Must be less than or equal to max_cu.
-	MinCu float64 `json:"min_cu,omitempty"`
+	// Maximum: 16
+	// Minimum: 0.25
+	MinCu *float64 `json:"min_cu,omitempty"`
 
 	// Seconds of inactivity before the compute endpoint is suspended. Use -1 for always on, or a non-negative value.
-	SleepTimeoutSeconds int64 `json:"sleep_timeout_seconds,omitempty"`
+	// Minimum: -1
+	SleepTimeoutSeconds *int64 `json:"sleep_timeout_seconds,omitempty"`
 }
 
 // Validate validates this database compute settings request
 func (m *DatabaseComputeSettingsRequest) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateMaxCu(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateMinCu(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSleepTimeoutSeconds(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *DatabaseComputeSettingsRequest) validateMaxCu(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.MaxCu) { // not required
+		return nil
+	}
+
+	if err := validate.Minimum("max_cu", "body", float64(*m.MaxCu), 0.25, false); err != nil {
+		return err
+	}
+
+	if err := validate.Maximum("max_cu", "body", float64(*m.MaxCu), 16, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *DatabaseComputeSettingsRequest) validateMinCu(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.MinCu) { // not required
+		return nil
+	}
+
+	if err := validate.Minimum("min_cu", "body", float64(*m.MinCu), 0.25, false); err != nil {
+		return err
+	}
+
+	if err := validate.Maximum("min_cu", "body", float64(*m.MinCu), 16, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *DatabaseComputeSettingsRequest) validateSleepTimeoutSeconds(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SleepTimeoutSeconds) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("sleep_timeout_seconds", "body", int64(*m.SleepTimeoutSeconds), -1, false); err != nil {
+		return err
+	}
+
 	return nil
 }
 
