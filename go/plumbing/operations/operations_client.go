@@ -209,6 +209,8 @@ type ClientService interface {
 
 	GetSiteDatabaseComputeSettings(params *GetSiteDatabaseComputeSettingsParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteDatabaseComputeSettingsOK, error)
 
+	GetSiteDatabaseMigration(params *GetSiteDatabaseMigrationParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteDatabaseMigrationOK, error)
+
 	GetSiteDeploy(params *GetSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteDeployOK, error)
 
 	GetSiteDevServer(params *GetSiteDevServerParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteDevServerOK, error)
@@ -261,6 +263,8 @@ type ClientService interface {
 
 	ListSiteDatabaseBranches(params *ListSiteDatabaseBranchesParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteDatabaseBranchesOK, error)
 
+	ListSiteDatabaseMigrations(params *ListSiteDatabaseMigrationsParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteDatabaseMigrationsOK, error)
+
 	ListSiteDatabaseSnapshots(params *ListSiteDatabaseSnapshotsParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteDatabaseSnapshotsOK, error)
 
 	ListSiteDeployedBranches(params *ListSiteDeployedBranchesParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteDeployedBranchesOK, error)
@@ -294,6 +298,8 @@ type ClientService interface {
 	PurgeCache(params *PurgeCacheParams, authInfo runtime.ClientAuthInfoWriter) (*PurgeCacheAccepted, error)
 
 	RemoveAccountMember(params *RemoveAccountMemberParams, authInfo runtime.ClientAuthInfoWriter) (*RemoveAccountMemberNoContent, error)
+
+	ResetSiteDatabaseBranch(params *ResetSiteDatabaseBranchParams, authInfo runtime.ClientAuthInfoWriter) (*ResetSiteDatabaseBranchOK, error)
 
 	RestoreSiteDatabaseSnapshot(params *RestoreSiteDatabaseSnapshotParams, authInfo runtime.ClientAuthInfoWriter) (*RestoreSiteDatabaseSnapshotOK, error)
 
@@ -3476,6 +3482,40 @@ func (a *Client) GetSiteDatabaseComputeSettings(params *GetSiteDatabaseComputeSe
 }
 
 /*
+GetSiteDatabaseMigration Returns the contents of a named migration for the specified branch.
+*/
+func (a *Client) GetSiteDatabaseMigration(params *GetSiteDatabaseMigrationParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteDatabaseMigrationOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetSiteDatabaseMigrationParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "getSiteDatabaseMigration",
+		Method:             "GET",
+		PathPattern:        "/sites/{site_id}/database/migrations/{name}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &GetSiteDatabaseMigrationReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*GetSiteDatabaseMigrationOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*GetSiteDatabaseMigrationDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
 GetSiteDeploy get site deploy API
 */
 func (a *Client) GetSiteDeploy(params *GetSiteDeployParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteDeployOK, error) {
@@ -4361,6 +4401,40 @@ func (a *Client) ListSiteDatabaseBranches(params *ListSiteDatabaseBranchesParams
 }
 
 /*
+ListSiteDatabaseMigrations Returns the list of migrations available for the specified branch, indicating which ones have been applied to the database.
+*/
+func (a *Client) ListSiteDatabaseMigrations(params *ListSiteDatabaseMigrationsParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteDatabaseMigrationsOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewListSiteDatabaseMigrationsParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "listSiteDatabaseMigrations",
+		Method:             "GET",
+		PathPattern:        "/sites/{site_id}/database/migrations",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &ListSiteDatabaseMigrationsReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*ListSiteDatabaseMigrationsOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*ListSiteDatabaseMigrationsDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
 ListSiteDatabaseSnapshots Returns all snapshots for the site's database.
 */
 func (a *Client) ListSiteDatabaseSnapshots(params *ListSiteDatabaseSnapshotsParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteDatabaseSnapshotsOK, error) {
@@ -4945,6 +5019,40 @@ func (a *Client) RemoveAccountMember(params *RemoveAccountMemberParams, authInfo
 	}
 	// unexpected success response
 	unexpectedSuccess := result.(*RemoveAccountMemberDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+ResetSiteDatabaseBranch Resets a non-production database branch by re-forking it from a source branch (defaults to the production branch). If the target branch is already in sync with the source, returns the existing connection string without performing a reset, unless `force=true` is passed. The production branch cannot be reset.
+*/
+func (a *Client) ResetSiteDatabaseBranch(params *ResetSiteDatabaseBranchParams, authInfo runtime.ClientAuthInfoWriter) (*ResetSiteDatabaseBranchOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewResetSiteDatabaseBranchParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "resetSiteDatabaseBranch",
+		Method:             "POST",
+		PathPattern:        "/sites/{site_id}/database/branch/{branch_id}/reset",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &ResetSiteDatabaseBranchReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*ResetSiteDatabaseBranchOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*ResetSiteDatabaseBranchDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 

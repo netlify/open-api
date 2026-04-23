@@ -3323,7 +3323,6 @@ paths:
         in: path
         required: true
     post:
-      x-internal: true
       operationId: createSiteDatabase
       tags: [database]
       description: >-
@@ -3349,7 +3348,6 @@ paths:
         default:
           $ref: '#/responses/error'
     get:
-      x-internal: true
       operationId: getSiteDatabase
       tags: [database]
       description: Returns the database connection string for the specified site.
@@ -3371,7 +3369,6 @@ paths:
         default:
           $ref: '#/responses/error'
     delete:
-      x-internal: true
       operationId: deleteSiteDatabase
       tags: [database]
       description: Deletes the database and all associated branches and snapshots for the specified site.
@@ -3387,7 +3384,6 @@ paths:
         in: path
         required: true
     post:
-      x-internal: true
       operationId: createSiteDatabaseBranch
       tags: [database]
       description: >-
@@ -3419,7 +3415,6 @@ paths:
         in: path
         required: true
     get:
-      x-internal: true
       operationId: listSiteDatabaseBranches
       tags: [database]
       description: Returns all branches for the site's database with compute status and metadata.
@@ -3442,7 +3437,6 @@ paths:
         required: true
         description: The branch ID
     get:
-      x-internal: true
       operationId: getSiteDatabaseBranch
       tags: [database]
       description: Returns the database branch connection string for a specific branch.
@@ -3466,13 +3460,65 @@ paths:
         default:
           $ref: '#/responses/error'
     delete:
-      x-internal: true
       operationId: deleteSiteDatabaseBranch
       tags: [database]
       description: Deletes a database branch.
       responses:
         '204':
           description: Deleted
+        default:
+          $ref: '#/responses/error'
+  /sites/{site_id}/database/branch/{branch_id}/reset:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+      - name: branch_id
+        type: string
+        in: path
+        required: true
+        description: The branch ID to reset
+    post:
+      operationId: resetSiteDatabaseBranch
+      tags: [database]
+      description: >-
+        Resets a non-production database branch by re-forking it from a source branch
+        (defaults to the production branch). If the target branch is already in sync
+        with the source, returns the existing connection string without performing a
+        reset, unless `force=true` is passed. The production branch cannot be reset.
+      consumes:
+        - application/json
+      parameters:
+        - name: force
+          type: boolean
+          in: query
+          description: >-
+            If true, resets the branch even when it is already in sync with the source.
+        - name: role
+          type: string
+          in: query
+          description: >-
+            The database role to use for the returned connection string.
+            Defaults to netlifydb_owner if not specified.
+          enum:
+            - netlifydb_owner
+            - netlifydb_readonly
+        - name: reset
+          in: body
+          schema:
+            $ref: '#/definitions/resetDatabaseBranchRequest'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/resetDatabaseBranchResponse'
+        '400':
+          description: >-
+            Invalid request — for example, the target is the production branch
+            or the source branch is the same as the target.
+        '404':
+          description: Database or branch not found
         default:
           $ref: '#/responses/error'
   /sites/{site_id}/database/branch/{branch_id}/compute/settings:
@@ -3487,7 +3533,6 @@ paths:
         required: true
         description: The branch ID
     put:
-      x-internal: true
       operationId: setSiteDatabaseBranchComputeSettings
       tags: [database]
       description: >-
@@ -3517,7 +3562,6 @@ paths:
         in: path
         required: true
     put:
-      x-internal: true
       operationId: setSiteDatabaseComputeSettings
       tags: [database]
       description: >-
@@ -3542,7 +3586,6 @@ paths:
         default:
           $ref: '#/responses/error'
     get:
-      x-internal: true
       operationId: getSiteDatabaseComputeSettings
       tags: [database]
       description: >-
@@ -3559,7 +3602,6 @@ paths:
         default:
           $ref: '#/responses/error'
     delete:
-      x-internal: true
       operationId: clearSiteDatabaseComputeSettings
       tags: [database]
       description: >-
@@ -3570,6 +3612,70 @@ paths:
           description: Cleared
         '403':
           description: Compute customization requires a Pro or higher plan
+        default:
+          $ref: '#/responses/error'
+  /sites/{site_id}/database/migrations:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+    get:
+      operationId: listSiteDatabaseMigrations
+      tags: [database]
+      description: >-
+        Returns the list of migrations available for the specified branch,
+        indicating which ones have been applied to the database.
+      parameters:
+        - name: branch
+          type: string
+          in: query
+          description: >-
+            The branch ID to list migrations for.
+            Defaults to "production" if not specified.
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/listDatabaseMigrationsResponse'
+        '404':
+          description: Database or branch not found
+        '423':
+          description: Database is disabled
+        default:
+          $ref: '#/responses/error'
+  /sites/{site_id}/database/migrations/{name}:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+      - name: name
+        type: string
+        in: path
+        required: true
+        description: The migration name
+    get:
+      operationId: getSiteDatabaseMigration
+      tags: [database]
+      description: >-
+        Returns the contents of a named migration for the specified branch.
+      parameters:
+        - name: branch
+          type: string
+          in: query
+          description: >-
+            The branch ID to look up the migration on.
+            Defaults to the currently published deploy's branch.
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/databaseMigrationDetail'
+        '404':
+          description: Migration, database, or branch not found
+        '423':
+          description: Database is disabled
         default:
           $ref: '#/responses/error'
   /sites/{site_id}/database/migrations/{deploy_id}:
@@ -3584,7 +3690,6 @@ paths:
         required: true
         description: The deploy ID to run migrations for
     post:
-      x-internal: true
       operationId: runSiteDatabaseMigrations
       tags: [database]
       description: >-
@@ -3613,7 +3718,6 @@ paths:
         in: path
         required: true
     post:
-      x-internal: true
       operationId: createSiteDatabaseSnapshot
       tags: [database]
       description: >-
@@ -3640,7 +3744,6 @@ paths:
         in: path
         required: true
     get:
-      x-internal: true
       operationId: listSiteDatabaseSnapshots
       tags: [database]
       description: Returns all snapshots for the site's database.
@@ -3663,7 +3766,6 @@ paths:
         required: true
         description: The snapshot ID
     delete:
-      x-internal: true
       operationId: deleteSiteDatabaseSnapshot
       tags: [database]
       description: Deletes a database snapshot.
@@ -3684,7 +3786,6 @@ paths:
         required: true
         description: The snapshot ID to restore
     post:
-      x-internal: true
       operationId: restoreSiteDatabaseSnapshot
       tags: [database]
       description: >-
@@ -3956,6 +4057,74 @@ definitions:
         type: boolean
         description: >-
           If true, validates migrations without applying them.
+  resetDatabaseBranchRequest:
+    type: object
+    description: Request body for resetting a database branch
+    properties:
+      source_branch_id:
+        type: string
+        description: >-
+          The ID of the branch to re-fork the target branch from.
+          Defaults to "production" if not specified.
+  resetDatabaseBranchResponse:
+    type: object
+    description: Response for a database branch reset
+    properties:
+      reset:
+        type: boolean
+        description: >-
+          Whether the branch was actually re-forked. False when the target was
+          already in sync with the source and `force=true` was not set.
+      connection_string:
+        type: string
+        description: The connection string for the reset (or unchanged) branch
+      metadata:
+        type: object
+        description: Metadata associated with the branch
+        additionalProperties: true
+  listDatabaseMigrationsResponse:
+    type: object
+    description: Response containing the list of migrations for a branch
+    properties:
+      migrations:
+        type: array
+        items:
+          $ref: '#/definitions/databaseMigration'
+        description: List of migrations
+  databaseMigration:
+    type: object
+    description: A migration available to a database branch
+    properties:
+      version:
+        type: integer
+        format: int64
+        description: The migration version number
+      name:
+        type: string
+        description: The migration name
+      path:
+        type: string
+        description: The path to the migration file in the deploy bundle
+      applied:
+        type: boolean
+        description: Whether this migration has been applied to the branch
+  databaseMigrationDetail:
+    type: object
+    description: A migration with its file contents
+    properties:
+      version:
+        type: integer
+        format: int64
+        description: The migration version number
+      name:
+        type: string
+        description: The migration name
+      path:
+        type: string
+        description: The path to the migration file in the deploy bundle
+      content:
+        type: string
+        description: The raw contents of the migration file
 
   DeployValidationsReport:
     type: object
