@@ -840,11 +840,12 @@ func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer Dep
 			}
 		}
 
-		hasConfig := function.DisplayName != "" || function.Generator != "" || len(routes) > 0 || len(excludedRoutes) > 0 || len(function.BuildData) > 0 || function.Priority != 0 || function.TrafficRules != nil || function.Timeout != 0 || len(function.EventSubscriptions) > 0
+		hasConfig := function.DisplayName != "" || function.Generator != "" || len(routes) > 0 || len(excludedRoutes) > 0 || len(function.BuildData) > 0 || function.Priority != 0 || function.TrafficRules != nil || function.Timeout != 0 || len(function.EventSubscriptions) > 0 || function.Region != ""
 		if hasConfig {
 			cfg := models.FunctionConfig{
 				DisplayName:        function.DisplayName,
 				Generator:          function.Generator,
+				Region:             function.Region,
 				Routes:             routes,
 				ExcludedRoutes:     excludedRoutes,
 				BuildData:          function.BuildData,

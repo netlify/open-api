@@ -10,31 +10,25 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// Function function
+// DeployFunctionsRegionOverridesItems deploy functions region overrides items
 //
-// swagger:model function
-type Function struct {
-
-	// id
-	ID string `json:"id,omitempty"`
+// swagger:model deployFunctionsRegionOverridesItems
+type DeployFunctionsRegionOverridesItems struct {
 
 	// name
 	Name string `json:"name,omitempty"`
 
 	// region
 	Region string `json:"region,omitempty"`
-
-	// sha
-	Sha string `json:"sha,omitempty"`
 }
 
-// Validate validates this function
-func (m *Function) Validate(formats strfmt.Registry) error {
+// Validate validates this deploy functions region overrides items
+func (m *DeployFunctionsRegionOverridesItems) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
 // MarshalBinary interface implementation
-func (m *Function) MarshalBinary() ([]byte, error) {
+func (m *DeployFunctionsRegionOverridesItems) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -42,8 +36,8 @@ func (m *Function) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *Function) UnmarshalBinary(b []byte) error {
-	var res Function
+func (m *DeployFunctionsRegionOverridesItems) UnmarshalBinary(b []byte) error {
+	var res DeployFunctionsRegionOverridesItems
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}
