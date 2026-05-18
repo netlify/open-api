@@ -57,6 +57,15 @@ type Deploy struct {
 	// function schedules
 	FunctionSchedules []*FunctionSchedule `json:"function_schedules"`
 
+	// The functions region for this deploy as an airport code.
+	//
+	FunctionsRegion string `json:"functions_region,omitempty"`
+
+	// Functions in the deploy that explicitly specify their own region
+	// (airport code).
+	//
+	FunctionsRegionOverrides []*DeployFunctionsRegionOverridesItems `json:"functions_region_overrides"`
+
 	// id
 	ID string `json:"id,omitempty"`
 
@@ -120,6 +129,10 @@ func (m *Deploy) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateFunctionsRegionOverrides(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
@@ -141,6 +154,31 @@ func (m *Deploy) validateFunctionSchedules(formats strfmt.Registry) error {
 			if err := m.FunctionSchedules[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("function_schedules" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *Deploy) validateFunctionsRegionOverrides(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.FunctionsRegionOverrides) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.FunctionsRegionOverrides); i++ {
+		if swag.IsZero(m.FunctionsRegionOverrides[i]) { // not required
+			continue
+		}
+
+		if m.FunctionsRegionOverrides[i] != nil {
+			if err := m.FunctionsRegionOverrides[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("functions_region_overrides" + "." + strconv.Itoa(i))
 				}
 				return err
 			}

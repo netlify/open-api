@@ -36,6 +36,9 @@ type FunctionConfig struct {
 	// priority
 	Priority int64 `json:"priority,omitempty"`
 
+	// region
+	Region string `json:"region,omitempty"`
+
 	// routes
 	Routes []*FunctionRoute `json:"routes"`
 
