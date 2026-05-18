@@ -12,6 +12,7 @@ type functionsManifestEntry struct {
 	MainFile           string                  `json:"mainFile"`
 	Name               string                  `json:"name"`
 	Path               string                  `json:"path"`
+	Region             string                  `json:"region"`
 	Runtime            string                  `json:"runtime"`
 	RuntimeVersion     string                  `json:"runtimeVersion"`
 	Schedule           string                  `json:"schedule"`

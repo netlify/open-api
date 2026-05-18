@@ -4586,6 +4586,8 @@ definitions:
         type: string
       sha:
         type: string
+      region:
+        type: string
   snippet:
     type: object
     properties:
@@ -4689,6 +4691,22 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/functionSchedule'
+      functions_region:
+        type: string
+        description: |
+          The functions region for this deploy as an airport code.
+      functions_region_overrides:
+        type: array
+        items:
+          type: object
+          properties:
+            name:
+              type: string
+            region:
+              type: string
+        description: |
+          Functions in the deploy that explicitly specify their own region
+          (airport code).
   deployEnvironmentVariable:
     type: object
     required:
@@ -5547,6 +5565,8 @@ definitions:
           $ref: '#/definitions/excludedFunctionRoute'
       priority:
         type: integer
+      region:
+        type: string
       traffic_rules:
         $ref: '#/definitions/trafficRulesConfig'
       event_subscriptions:
