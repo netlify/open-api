@@ -5555,6 +5555,10 @@ definitions:
         type: string
       build_data:
         type: object
+      memory:
+        type: integer
+        description: |
+          The function's memory allocation in MB.
       routes:
         type: array
         items:
