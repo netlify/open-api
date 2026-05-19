@@ -33,7 +33,7 @@ type FunctionConfig struct {
 	// generator
 	Generator string `json:"generator,omitempty"`
 
-	// The function's memory allocation in MB.
+	// The function's memory allocation in MB. Mutually exclusive with `vcpu`.
 	//
 	Memory int64 `json:"memory,omitempty"`
 
@@ -48,6 +48,10 @@ type FunctionConfig struct {
 
 	// traffic rules
 	TrafficRules *TrafficRulesConfig `json:"traffic_rules,omitempty"`
+
+	// Number of vCPUs to provision for the function. Allowed range is 0.5–2.
+	//
+	Vcpu float64 `json:"vcpu,omitempty"`
 }
 
 // Validate validates this function config

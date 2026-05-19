@@ -27,6 +27,7 @@ type functionsManifestEntry struct {
 	ExcludedRoutes     []excludedFunctionRoute `json:"excludedRoutes"`
 	Priority           int                     `json:"priority"`
 	TrafficRules       *functionTrafficRules   `json:"trafficRules"`
+	Vcpu               float64                 `json:"vcpu"`
 }
 
 type functionRoute struct {
