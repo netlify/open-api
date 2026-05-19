@@ -49,9 +49,10 @@ type FunctionConfig struct {
 	// traffic rules
 	TrafficRules *TrafficRulesConfig `json:"traffic_rules,omitempty"`
 
-	// Number of vCPUs to provision for the function. Allowed range is 0.5–2.
+	// Number of vCPUs to provision for the function. Allowed range is
+	// 0.5–2.
 	//
-	Vcpu float64 `json:"vcpu,omitempty"`
+	Vcpu float32 `json:"vcpu,omitempty"`
 }
 
 // Validate validates this function config
