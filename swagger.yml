@@ -5558,7 +5558,7 @@ definitions:
       memory:
         type: integer
         description: |
-          The function's memory allocation in MB.
+          The function's memory allocation in MB. Mutually exclusive with `vcpu`.
       routes:
         type: array
         items:
@@ -5573,6 +5573,12 @@ definitions:
         type: string
       traffic_rules:
         $ref: '#/definitions/trafficRulesConfig'
+      vcpu:
+        type: number
+        format: float
+        description: |
+          Number of vCPUs to provision for the function. Allowed range is
+          0.5–2.
       event_subscriptions:
         type: array
         items:
