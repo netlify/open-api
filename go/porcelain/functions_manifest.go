@@ -10,6 +10,7 @@ type functionsManifest struct {
 
 type functionsManifestEntry struct {
 	MainFile           string                  `json:"mainFile"`
+	Memory             int64                   `json:"memory"`
 	Name               string                  `json:"name"`
 	Path               string                  `json:"path"`
 	Region             string                  `json:"region"`

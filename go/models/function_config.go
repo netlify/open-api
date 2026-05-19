@@ -33,6 +33,10 @@ type FunctionConfig struct {
 	// generator
 	Generator string `json:"generator,omitempty"`
 
+	// The function's memory allocation in MB.
+	//
+	Memory int64 `json:"memory,omitempty"`
+
 	// priority
 	Priority int64 `json:"priority,omitempty"`
 
