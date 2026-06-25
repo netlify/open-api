@@ -33,9 +33,6 @@ type AgentRunnerHook struct {
 	// prompt
 	Prompt string `json:"prompt,omitempty"`
 
-	// secret
-	Secret string `json:"secret,omitempty"`
-
 	// site id
 	SiteID string `json:"site_id,omitempty"`
 

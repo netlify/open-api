@@ -52,20 +52,20 @@ CreateSiteAgentRunnerHookCreated handles this case with default header values.
 Created
 */
 type CreateSiteAgentRunnerHookCreated struct {
-	Payload *models.AgentRunnerHook
+	Payload *models.AgentRunnerHookCreated
 }
 
 func (o *CreateSiteAgentRunnerHookCreated) Error() string {
 	return fmt.Sprintf("[POST /sites/{site_id}/agent_runner_hooks][%d] createSiteAgentRunnerHookCreated  %+v", 201, o.Payload)
 }
 
-func (o *CreateSiteAgentRunnerHookCreated) GetPayload() *models.AgentRunnerHook {
+func (o *CreateSiteAgentRunnerHookCreated) GetPayload() *models.AgentRunnerHookCreated {
 	return o.Payload
 }
 
 func (o *CreateSiteAgentRunnerHookCreated) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.AgentRunnerHook)
+	o.Payload = new(models.AgentRunnerHookCreated)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {

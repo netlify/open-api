@@ -3293,7 +3293,7 @@ paths:
         '201':
           description: Created
           schema:
-            $ref: '#/definitions/agentRunnerHook'
+            $ref: '#/definitions/agentRunnerHookCreated'
         default:
           $ref: '#/responses/error'
   /sites/{site_id}/agent_runner_hooks/{id}:
@@ -5547,8 +5547,6 @@ definitions:
         type: string
       url:
         type: string
-      secret:
-        type: string
       msg:
         type: string
       created_at:
@@ -5565,6 +5563,12 @@ definitions:
         type: string
       agent:
         type: string
+  agentRunnerHookCreated:
+    allOf:
+      - $ref: '#/definitions/agentRunnerHook'
+      - properties:
+          secret:
+            type: string
   accountUsageCapability:
     type: object
     properties:
