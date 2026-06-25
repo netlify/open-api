@@ -3257,6 +3257,93 @@ paths:
           description: No content
         default:
           $ref: '#/responses/error'
+  # begin agent_runner_hooks
+  /sites/{site_id}/agent_runner_hooks:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+    get:
+      x-internal: true
+      operationId: listSiteAgentRunnerHooks
+      tags: [agentRunnerHook]
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/agentRunnerHook'
+        default:
+          $ref: '#/responses/error'
+    post:
+      x-internal: true
+      operationId: createSiteAgentRunnerHook
+      tags: [agentRunnerHook]
+      consumes:
+        - application/json
+      parameters:
+        - name: agentRunnerHook
+          in: body
+          schema:
+            $ref: '#/definitions/agentRunnerHookSetup'
+          required: true
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/agentRunnerHook'
+        default:
+          $ref: '#/responses/error'
+  /sites/{site_id}/agent_runner_hooks/{id}:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+      - name: id
+        type: string
+        in: path
+        required: true
+    get:
+      x-internal: true
+      operationId: getSiteAgentRunnerHook
+      tags: [agentRunnerHook]
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/agentRunnerHook'
+        default:
+          $ref: '#/responses/error'
+    put:
+      x-internal: true
+      operationId: updateSiteAgentRunnerHook
+      tags: [agentRunnerHook]
+      consumes:
+        - application/json
+      parameters:
+        - name: agentRunnerHook
+          in: body
+          schema:
+            $ref: '#/definitions/agentRunnerHookSetup'
+          required: true
+      responses:
+        '204':
+          description: No content
+        default:
+          $ref: '#/responses/error'
+    delete:
+      x-internal: true
+      operationId: deleteSiteAgentRunnerHook
+      tags: [agentRunnerHook]
+      responses:
+        '204':
+          description: No content
+        default:
+          $ref: '#/responses/error'
+  # end agent_runner_hooks
   /ai-gateway/providers:
     get:
       operationId: getAIGatewayProviders
@@ -5442,6 +5529,41 @@ definitions:
       email:
         type: string
       avatar_url:
+        type: string
+  agentRunnerHook:
+    type: object
+    properties:
+      id:
+        type: string
+      site_id:
+        type: string
+      title:
+        type: string
+      branch:
+        type: string
+      prompt:
+        type: string
+      agent:
+        type: string
+      url:
+        type: string
+      secret:
+        type: string
+      msg:
+        type: string
+      created_at:
+        type: string
+        format: dateTime
+  agentRunnerHookSetup:
+    type: object
+    properties:
+      title:
+        type: string
+      branch:
+        type: string
+      prompt:
+        type: string
+      agent:
         type: string
   accountUsageCapability:
     type: object
