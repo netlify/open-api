@@ -67,6 +67,8 @@ type ClientService interface {
 
 	CreateSite(params *CreateSiteParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteCreated, error)
 
+	CreateSiteAgentRunnerHook(params *CreateSiteAgentRunnerHookParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteAgentRunnerHookCreated, error)
+
 	CreateSiteAsset(params *CreateSiteAssetParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteAssetCreated, error)
 
 	CreateSiteBuild(params *CreateSiteBuildParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteBuildOK, error)
@@ -114,6 +116,8 @@ type ClientService interface {
 	DeleteServiceInstance(params *DeleteServiceInstanceParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteServiceInstanceNoContent, error)
 
 	DeleteSite(params *DeleteSiteParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSiteNoContent, error)
+
+	DeleteSiteAgentRunnerHook(params *DeleteSiteAgentRunnerHookParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSiteAgentRunnerHookNoContent, error)
 
 	DeleteSiteAsset(params *DeleteSiteAssetParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSiteAssetNoContent, error)
 
@@ -195,6 +199,8 @@ type ClientService interface {
 
 	GetSite(params *GetSiteParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteOK, error)
 
+	GetSiteAgentRunnerHook(params *GetSiteAgentRunnerHookParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteAgentRunnerHookOK, error)
+
 	GetSiteAssetInfo(params *GetSiteAssetInfoParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteAssetInfoOK, error)
 
 	GetSiteAssetPublicSignature(params *GetSiteAssetPublicSignatureParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteAssetPublicSignatureOK, error)
@@ -254,6 +260,8 @@ type ClientService interface {
 	ListPaymentMethodsForUser(params *ListPaymentMethodsForUserParams, authInfo runtime.ClientAuthInfoWriter) (*ListPaymentMethodsForUserOK, error)
 
 	ListServiceInstancesForSite(params *ListServiceInstancesForSiteParams, authInfo runtime.ClientAuthInfoWriter) (*ListServiceInstancesForSiteOK, error)
+
+	ListSiteAgentRunnerHooks(params *ListSiteAgentRunnerHooksParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteAgentRunnerHooksOK, error)
 
 	ListSiteAssets(params *ListSiteAssetsParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteAssetsOK, error)
 
@@ -354,6 +362,8 @@ type ClientService interface {
 	UpdateServiceInstance(params *UpdateServiceInstanceParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateServiceInstanceNoContent, error)
 
 	UpdateSite(params *UpdateSiteParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateSiteOK, error)
+
+	UpdateSiteAgentRunnerHook(params *UpdateSiteAgentRunnerHookParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateSiteAgentRunnerHookNoContent, error)
 
 	UpdateSiteAsset(params *UpdateSiteAssetParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateSiteAssetOK, error)
 
@@ -1055,6 +1065,40 @@ func (a *Client) CreateSite(params *CreateSiteParams, authInfo runtime.ClientAut
 	}
 	// unexpected success response
 	unexpectedSuccess := result.(*CreateSiteDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+CreateSiteAgentRunnerHook create site agent runner hook API
+*/
+func (a *Client) CreateSiteAgentRunnerHook(params *CreateSiteAgentRunnerHookParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteAgentRunnerHookCreated, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewCreateSiteAgentRunnerHookParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "createSiteAgentRunnerHook",
+		Method:             "POST",
+		PathPattern:        "/sites/{site_id}/agent_runner_hooks",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &CreateSiteAgentRunnerHookReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*CreateSiteAgentRunnerHookCreated)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*CreateSiteAgentRunnerHookDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
@@ -1880,6 +1924,40 @@ func (a *Client) DeleteSite(params *DeleteSiteParams, authInfo runtime.ClientAut
 	}
 	// unexpected success response
 	unexpectedSuccess := result.(*DeleteSiteDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+DeleteSiteAgentRunnerHook delete site agent runner hook API
+*/
+func (a *Client) DeleteSiteAgentRunnerHook(params *DeleteSiteAgentRunnerHookParams, authInfo runtime.ClientAuthInfoWriter) (*DeleteSiteAgentRunnerHookNoContent, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewDeleteSiteAgentRunnerHookParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "deleteSiteAgentRunnerHook",
+		Method:             "DELETE",
+		PathPattern:        "/sites/{site_id}/agent_runner_hooks/{id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &DeleteSiteAgentRunnerHookReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*DeleteSiteAgentRunnerHookNoContent)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*DeleteSiteAgentRunnerHookDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
@@ -3244,6 +3322,40 @@ func (a *Client) GetSite(params *GetSiteParams, authInfo runtime.ClientAuthInfoW
 }
 
 /*
+GetSiteAgentRunnerHook get site agent runner hook API
+*/
+func (a *Client) GetSiteAgentRunnerHook(params *GetSiteAgentRunnerHookParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteAgentRunnerHookOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetSiteAgentRunnerHookParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "getSiteAgentRunnerHook",
+		Method:             "GET",
+		PathPattern:        "/sites/{site_id}/agent_runner_hooks/{id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &GetSiteAgentRunnerHookReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*GetSiteAgentRunnerHookOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*GetSiteAgentRunnerHookDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
 GetSiteAssetInfo get site asset info API
 */
 func (a *Client) GetSiteAssetInfo(params *GetSiteAssetInfoParams, authInfo runtime.ClientAuthInfoWriter) (*GetSiteAssetInfoOK, error) {
@@ -4261,6 +4373,40 @@ func (a *Client) ListServiceInstancesForSite(params *ListServiceInstancesForSite
 	}
 	// unexpected success response
 	unexpectedSuccess := result.(*ListServiceInstancesForSiteDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+ListSiteAgentRunnerHooks list site agent runner hooks API
+*/
+func (a *Client) ListSiteAgentRunnerHooks(params *ListSiteAgentRunnerHooksParams, authInfo runtime.ClientAuthInfoWriter) (*ListSiteAgentRunnerHooksOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewListSiteAgentRunnerHooksParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "listSiteAgentRunnerHooks",
+		Method:             "GET",
+		PathPattern:        "/sites/{site_id}/agent_runner_hooks",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &ListSiteAgentRunnerHooksReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*ListSiteAgentRunnerHooksOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*ListSiteAgentRunnerHooksDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
@@ -5979,6 +6125,40 @@ func (a *Client) UpdateSite(params *UpdateSiteParams, authInfo runtime.ClientAut
 	}
 	// unexpected success response
 	unexpectedSuccess := result.(*UpdateSiteDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+UpdateSiteAgentRunnerHook update site agent runner hook API
+*/
+func (a *Client) UpdateSiteAgentRunnerHook(params *UpdateSiteAgentRunnerHookParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateSiteAgentRunnerHookNoContent, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewUpdateSiteAgentRunnerHookParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "updateSiteAgentRunnerHook",
+		Method:             "PUT",
+		PathPattern:        "/sites/{site_id}/agent_runner_hooks/{id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &UpdateSiteAgentRunnerHookReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*UpdateSiteAgentRunnerHookNoContent)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*UpdateSiteAgentRunnerHookDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
