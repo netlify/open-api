@@ -4743,6 +4743,13 @@ definitions:
         type: array
         items:
           type: string
+      required_edge_functions:
+        type: array
+        items:
+          type: string
+        description: |
+          An array of code_shas for the edge-function ROM bundles that need to be uploaded to
+          complete the deploy.
       error_message:
         type: string
       branch:
@@ -4842,6 +4849,11 @@ definitions:
         type: boolean
       functions:
         type: object
+      edge_functions:
+        type: object
+        description: |
+          A hash mapping edge-function ROM bundle formats to the code_sha of each bundle. The
+          response's required_edge_functions lists which of these still need to be uploaded.
       function_schedules:
         type: array
         items:
