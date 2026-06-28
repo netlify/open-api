@@ -11,6 +11,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"hash"
 	"io"
 	"io/ioutil"
 	"os"
@@ -126,7 +127,10 @@ type FileBundle struct {
 	FunctionMetadata *FunctionMetadata
 
 	// Path OR Buffer should be populated
-	Path   string
+	Path string
+
+	// Deprecated: uploads always stream from Path; this package no longer reads Buffer. It is retained
+	// only for backwards compatibility with external callers and may be removed in a future release.
 	Buffer io.ReadSeeker
 }
 
@@ -263,7 +267,13 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 
 	options.files = files
 
-	functions, schedules, functionsConfig, err := bundle(ctx, options.FunctionsDir, options.Observer)
+	functionsTmpDir, err := os.MkdirTemp("", "netlify-deploy-functions-")
+	if err != nil {
+		return nil, err
+	}
+	defer os.RemoveAll(functionsTmpDir)
+
+	functions, schedules, functionsConfig, err := bundle(ctx, options.FunctionsDir, functionsTmpDir, options.Observer)
 	if err != nil {
 		if options.Observer != nil {
 			options.Observer.OnFailedWalk()
@@ -539,23 +549,25 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 				_, operationError = n.Operations.UploadDeployFile(params, authInfo)
 			}
 		case functionUpload:
-			params := operations.NewUploadDeployFunctionParams().WithDeployID(d.ID).WithName(f.Name).WithFileBody(f).WithRuntime(&f.Runtime)
+			var body io.ReadCloser
+			body, operationError = os.Open(f.Path)
+			if operationError == nil {
+				defer body.Close()
+				params := operations.NewUploadDeployFunctionParams().WithDeployID(d.ID).WithName(f.Name).WithFileBody(body).WithRuntime(&f.Runtime)
 
-			if retryCount > 0 {
-				params = params.WithXNfRetryCount(&retryCount)
-			}
+				if retryCount > 0 {
+					params = params.WithXNfRetryCount(&retryCount)
+				}
 
-			if f.FunctionMetadata != nil {
-				params = params.WithInvocationMode(&f.FunctionMetadata.InvocationMode)
-				params = params.WithTimeout(&f.FunctionMetadata.Timeout)
-			}
+				if f.FunctionMetadata != nil {
+					params = params.WithInvocationMode(&f.FunctionMetadata.InvocationMode)
+					params = params.WithTimeout(&f.FunctionMetadata.Timeout)
+				}
 
-			if timeout != 0 {
-				params.SetRequestTimeout(timeout)
-			}
-			_, operationError = n.Operations.UploadDeployFunction(params, authInfo)
-			if operationError != nil {
-				f.Buffer.Seek(0, 0)
+				if timeout != 0 {
+					params.SetRequestTimeout(timeout)
+				}
+				_, operationError = n.Operations.UploadDeployFunction(params, authInfo)
 			}
 		}
 
@@ -601,6 +613,14 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 }
 
 func createFileBundle(rel, path string) (*FileBundle, error) {
+	return createFileBundleWithHasher(rel, path, sha1.New())
+}
+
+func createFunctionFileBundle(rel, path string) (*FileBundle, error) {
+	return createFileBundleWithHasher(rel, path, sha256.New())
+}
+
+func createFileBundleWithHasher(rel, path string, s hash.Hash) (*FileBundle, error) {
 	o, err := os.Open(path)
 	if err != nil {
 		return nil, err
@@ -612,7 +632,6 @@ func createFileBundle(rel, path string) (*FileBundle, error) {
 		Path: path,
 	}
 
-	s := sha1.New()
 	if _, err := io.Copy(s, o); err != nil {
 		return nil, err
 	}
@@ -713,7 +732,7 @@ func addInternalFilesToDeploy(dir, internalPath string, files *deployFiles, obse
 	})
 }
 
-func bundle(ctx context.Context, functionDir string, observer DeployObserver) (*deployFiles, []*models.FunctionSchedule, map[string]models.FunctionConfig, error) {
+func bundle(ctx context.Context, functionDir, tmpDir string, observer DeployObserver) (*deployFiles, []*models.FunctionSchedule, map[string]models.FunctionConfig, error) {
 	if functionDir == "" {
 		return nil, nil, nil, nil
 	}
@@ -725,7 +744,7 @@ func bundle(ctx context.Context, functionDir string, observer DeployObserver) (*
 	if err == nil {
 		defer manifestFile.Close()
 
-		return bundleFromManifest(ctx, manifestFile, observer)
+		return bundleFromManifest(ctx, manifestFile, tmpDir, observer)
 	}
 
 	functions := newDeployFiles()
@@ -744,19 +763,19 @@ func bundle(ctx context.Context, functionDir string, observer DeployObserver) (*
 			if err != nil {
 				return nil, nil, nil, err
 			}
-			file, err := newFunctionFile(filePath, i, runtime, nil, observer)
+			file, err := newFunctionFile(filePath, i, runtime, nil, tmpDir, observer)
 			if err != nil {
 				return nil, nil, nil, err
 			}
 			functions.Add(file.Name, file)
 		case jsFile(i):
-			file, err := newFunctionFile(filePath, i, jsRuntime, nil, observer)
+			file, err := newFunctionFile(filePath, i, jsRuntime, nil, tmpDir, observer)
 			if err != nil {
 				return nil, nil, nil, err
 			}
 			functions.Add(file.Name, file)
 		case goFile(filePath, i, observer):
-			file, err := newFunctionFile(filePath, i, amazonLinux2, nil, observer)
+			file, err := newFunctionFile(filePath, i, amazonLinux2, nil, tmpDir, observer)
 			if err != nil {
 				return nil, nil, nil, err
 			}
@@ -771,7 +790,7 @@ func bundle(ctx context.Context, functionDir string, observer DeployObserver) (*
 	return functions, nil, nil, nil
 }
 
-func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer DeployObserver) (*deployFiles, []*models.FunctionSchedule, map[string]models.FunctionConfig, error) {
+func bundleFromManifest(ctx context.Context, manifestFile *os.File, tmpDir string, observer DeployObserver) (*deployFiles, []*models.FunctionSchedule, map[string]models.FunctionConfig, error) {
 	manifestBytes, err := ioutil.ReadAll(manifestFile)
 	if err != nil {
 		return nil, nil, nil, err
@@ -808,7 +827,7 @@ func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer Dep
 			InvocationMode: function.InvocationMode,
 			Timeout:        function.Timeout,
 		}
-		file, err := newFunctionFile(function.Path, fileInfo, runtime, &meta, observer)
+		file, err := newFunctionFile(function.Path, fileInfo, runtime, &meta, tmpDir, observer)
 		if err != nil {
 			return nil, nil, nil, err
 		}
@@ -911,50 +930,22 @@ func readZipRuntime(filePath string) (string, error) {
 	return jsRuntime, nil
 }
 
-func newFunctionFile(filePath string, i os.FileInfo, runtime string, metadata *FunctionMetadata, observer DeployObserver) (*FileBundle, error) {
-	file := &FileBundle{
-		Name:    strings.TrimSuffix(i.Name(), filepath.Ext(i.Name())),
-		Runtime: runtime,
+func newFunctionFile(filePath string, i os.FileInfo, runtime string, metadata *FunctionMetadata, tmpDir string, observer DeployObserver) (*FileBundle, error) {
+	var file *FileBundle
+	var err error
+
+	if zipFile(i) || tarFile(i) {
+		name := strings.TrimSuffix(i.Name(), filepath.Ext(i.Name()))
+		file, err = createFunctionFileBundle(name, filePath)
+	} else {
+		file, err = zipFunctionFile(filePath, i, runtime, tmpDir)
 	}
-
-	s := sha256.New()
-
-	fileEntry, err := os.Open(filePath)
 	if err != nil {
 		return nil, err
 	}
-	defer fileEntry.Close()
 
-	var buf io.ReadWriter
-
-	if zipFile(i) || tarFile(i) {
-		buf = fileEntry
-	} else {
-		buf = new(bytes.Buffer)
-		archive := zip.NewWriter(buf)
-
-		fileHeader, err := createHeader(archive, i, runtime)
-		if err != nil {
-			return nil, err
-		}
-
-		if _, err = io.Copy(fileHeader, fileEntry); err != nil {
-			return nil, err
-		}
-
-		if err := archive.Close(); err != nil {
-			return nil, err
-		}
-	}
-
-	fileBuffer := new(bytes.Buffer)
-	m := io.MultiWriter(s, fileBuffer)
-
-	if _, err := io.Copy(m, buf); err != nil {
-		return nil, err
-	}
-	file.Sum = hex.EncodeToString(s.Sum(nil))
-	file.Buffer = bytes.NewReader(fileBuffer.Bytes())
+	file.Runtime = runtime
+	file.FunctionMetadata = metadata
 
 	if observer != nil {
 		if err := observer.OnSuccessfulStep(file); err != nil {
@@ -962,9 +953,41 @@ func newFunctionFile(filePath string, i os.FileInfo, runtime string, metadata *F
 		}
 	}
 
-	file.FunctionMetadata = metadata
-
 	return file, nil
+}
+
+func zipFunctionFile(filePath string, i os.FileInfo, runtime, tmpDir string) (*FileBundle, error) {
+	src, err := os.Open(filePath)
+	if err != nil {
+		return nil, err
+	}
+	defer src.Close()
+
+	tmp, err := os.CreateTemp(tmpDir, "function-*.zip")
+	if err != nil {
+		return nil, err
+	}
+	defer tmp.Close()
+
+	s := sha256.New()
+	archive := zip.NewWriter(io.MultiWriter(tmp, s))
+
+	fileHeader, err := createHeader(archive, i, runtime)
+	if err != nil {
+		return nil, err
+	}
+	if _, err := io.Copy(fileHeader, src); err != nil {
+		return nil, err
+	}
+	if err := archive.Close(); err != nil {
+		return nil, err
+	}
+
+	return &FileBundle{
+		Name: strings.TrimSuffix(i.Name(), filepath.Ext(i.Name())),
+		Sum:  hex.EncodeToString(s.Sum(nil)),
+		Path: tmp.Name(),
+	}, nil
 }
 
 func zipFile(i os.FileInfo) bool {
