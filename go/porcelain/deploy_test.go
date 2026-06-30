@@ -3,7 +3,10 @@ package porcelain
 import (
 	"bytes"
 	gocontext "context"
+	"crypto/sha256"
+	"encoding/hex"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -654,6 +657,89 @@ func TestUploadFunctions_RetryCountHeader(t *testing.T) {
 	}
 
 	require.NoError(t, client.uploadFiles(apiCtx, d, files, nil, functionUpload, time.Minute, false))
+}
+
+func TestBundleEdgeFunctions(t *testing.T) {
+	dir := t.TempDir()
+	require.NoError(t, os.WriteFile(filepath.Join(dir, "aaa111.eszip"), []byte("eszip-rom"), 0644))
+	require.NoError(t, os.WriteFile(filepath.Join(dir, "bbb222.tar"), []byte("tar-rom"), 0644))
+	manifest := `{
+		"bundles": [
+			{ "asset": "aaa111.eszip", "format": "eszip2" },
+			{ "asset": "bbb222.tar", "format": "tar" }
+		]
+	}`
+	require.NoError(t, os.WriteFile(filepath.Join(dir, "manifest.json"), []byte(manifest), 0644))
+
+	files, err := bundleEdgeFunctions(gocontext.Background(), dir, mockObserver{})
+	require.NoError(t, err)
+
+	// The declared edge_functions map keys each bundle by its format, with the code_sha computed by the
+	// deployer from the bundle bytes (not parsed from the asset filename).
+	eszipSha := sha256.Sum256([]byte("eszip-rom"))
+	tarSha := sha256.Sum256([]byte("tar-rom"))
+	require.Equal(t, map[string]string{
+		"eszip2": hex.EncodeToString(eszipSha[:]),
+		"tar":    hex.EncodeToString(tarSha[:]),
+	}, files.Sums)
+
+	// Bundles are tracked by Path and streamed at upload time; they are never buffered into memory.
+	require.Equal(t, filepath.Join(dir, "aaa111.eszip"), files.Files["eszip2"].Path)
+	require.Nil(t, files.Files["eszip2"].Buffer)
+	require.NotNil(t, files.Files["eszip2"].Size)
+	require.EqualValues(t, len("eszip-rom"), *files.Files["eszip2"].Size)
+}
+
+func TestBundleEdgeFunctions_NoManifest(t *testing.T) {
+	// No edge functions dir configured.
+	files, err := bundleEdgeFunctions(gocontext.Background(), "", mockObserver{})
+	require.NoError(t, err)
+	require.Nil(t, files)
+
+	// A dir without a manifest.json yields no edge functions rather than an error.
+	files, err = bundleEdgeFunctions(gocontext.Background(), t.TempDir(), mockObserver{})
+	require.NoError(t, err)
+	require.Nil(t, files)
+}
+
+func TestUploadEdgeFunctions(t *testing.T) {
+	ctx, cancel := gocontext.WithCancel(gocontext.Background())
+	t.Cleanup(cancel)
+
+	romBody := []byte("baked-eszip-rom-bytes")
+
+	var gotPath, gotFormat string
+	var gotBody []byte
+	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		gotPath = req.URL.Path
+		gotFormat = req.URL.Query().Get("format")
+		gotBody, _ = io.ReadAll(req.Body)
+		rw.WriteHeader(http.StatusOK)
+	}))
+	defer server.Close()
+
+	hu, _ := url.Parse(server.URL)
+	tr := apiClient.NewWithClient(hu.Host, "/api/v1", []string{"http"}, http.DefaultClient)
+	client := NewRetryable(tr, strfmt.Default, 1)
+	client.uploadLimit = 1
+	apiCtx := context.WithAuthInfo(ctx, apiClient.BearerToken("token"))
+
+	dir := t.TempDir()
+	require.NoError(t, os.WriteFile(filepath.Join(dir, "edgecodesha.eszip"), romBody, 0644))
+	manifest := `{ "bundles": [ { "asset": "edgecodesha.eszip", "format": "eszip2" } ] }`
+	require.NoError(t, os.WriteFile(filepath.Join(dir, "manifest.json"), []byte(manifest), 0644))
+
+	files, err := bundleEdgeFunctions(gocontext.Background(), dir, mockObserver{})
+	require.NoError(t, err)
+
+	codeSha := files.Sums["eszip2"]
+	d := &models.Deploy{ID: "deploy-id", RequiredEdgeFunctions: []string{codeSha}}
+
+	require.NoError(t, client.uploadFiles(apiCtx, d, files, nil, edgeFunctionUpload, time.Minute, false))
+
+	require.Equal(t, "/api/v1/deploys/deploy-id/edge_functions/"+codeSha, gotPath)
+	require.Equal(t, "eszip2", gotFormat)
+	require.Equal(t, romBody, gotBody)
 }
 
 func TestBundle(t *testing.T) {
