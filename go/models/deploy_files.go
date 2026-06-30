@@ -33,6 +33,11 @@ type DeployFiles struct {
 	// draft
 	Draft bool `json:"draft,omitempty"`
 
+	// A hash mapping edge-function ROM bundle formats to the code_sha of each bundle. The
+	// response's required_edge_functions lists which of these still need to be uploaded.
+	//
+	EdgeFunctions interface{} `json:"edge_functions,omitempty"`
+
 	// A list of deploy-specific environment variable data. Data specified this way applies only
 	// to this specific deploy and is merged into any existing environment variables set on the
 	// account and site.

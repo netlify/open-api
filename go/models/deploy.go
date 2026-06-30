@@ -81,6 +81,11 @@ type Deploy struct {
 	// required
 	Required []string `json:"required"`
 
+	// An array of code_shas for the edge-function ROM bundles that need to be uploaded to
+	// complete the deploy.
+	//
+	RequiredEdgeFunctions []string `json:"required_edge_functions"`
+
 	// required functions
 	RequiredFunctions []string `json:"required_functions"`
 
