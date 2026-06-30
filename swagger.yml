@@ -1665,6 +1665,39 @@ paths:
             $ref: '#/definitions/function'
         default:
           $ref: '#/responses/error'
+  /deploys/{deploy_id}/edge_functions/{code_sha}:
+    put:
+      operationId: uploadDeployEdgeFunction
+      tags: [edgeFunction]
+      consumes:
+        - application/octet-stream
+      parameters:
+        - name: deploy_id
+          type: string
+          in: path
+          required: true
+        - name: code_sha
+          type: string
+          in: path
+          required: true
+        - name: format
+          type: string
+          in: query
+        - name: size
+          type: integer
+          in: query
+        - name: file_body
+          in: body
+          schema:
+            type: string
+            format: binary
+          required: true
+        - $ref: '#/parameters/retryCount'
+      responses:
+        '200':
+          description: OK
+        default:
+          $ref: '#/responses/error'
   /sites/{site_id}/plugins/{package}:
     put:
       x-internal: true

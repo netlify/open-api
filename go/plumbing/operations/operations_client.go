@@ -381,6 +381,8 @@ type ClientService interface {
 
 	UpdateSplitTest(params *UpdateSplitTestParams, authInfo runtime.ClientAuthInfoWriter) (*UpdateSplitTestCreated, error)
 
+	UploadDeployEdgeFunction(params *UploadDeployEdgeFunctionParams, authInfo runtime.ClientAuthInfoWriter) (*UploadDeployEdgeFunctionOK, error)
+
 	UploadDeployFile(params *UploadDeployFileParams, authInfo runtime.ClientAuthInfoWriter) (*UploadDeployFileOK, error)
 
 	UploadDeployFunction(params *UploadDeployFunctionParams, authInfo runtime.ClientAuthInfoWriter) (*UploadDeployFunctionOK, error)
@@ -6431,6 +6433,40 @@ func (a *Client) UpdateSplitTest(params *UpdateSplitTestParams, authInfo runtime
 	}
 	// unexpected success response
 	unexpectedSuccess := result.(*UpdateSplitTestDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+UploadDeployEdgeFunction upload deploy edge function API
+*/
+func (a *Client) UploadDeployEdgeFunction(params *UploadDeployEdgeFunctionParams, authInfo runtime.ClientAuthInfoWriter) (*UploadDeployEdgeFunctionOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewUploadDeployEdgeFunctionParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "uploadDeployEdgeFunction",
+		Method:             "PUT",
+		PathPattern:        "/deploys/{deploy_id}/edge_functions/{code_sha}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/octet-stream"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &UploadDeployEdgeFunctionReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*UploadDeployEdgeFunctionOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*UploadDeployEdgeFunctionDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
