@@ -967,7 +967,11 @@ func zipFunctionFile(filePath string, i os.FileInfo, runtime, tmpDir string) (*F
 	if err != nil {
 		return nil, err
 	}
-	defer tmp.Close()
+	defer func() {
+		if tmp != nil {
+			_ = tmp.Close()
+		}
+	}()
 
 	s := sha256.New()
 	archive := zip.NewWriter(io.MultiWriter(tmp, s))
@@ -983,10 +987,16 @@ func zipFunctionFile(filePath string, i os.FileInfo, runtime, tmpDir string) (*F
 		return nil, err
 	}
 
+	tmpName := tmp.Name()
+	if err := tmp.Close(); err != nil {
+		return nil, err
+	}
+	tmp = nil
+
 	return &FileBundle{
 		Name: strings.TrimSuffix(i.Name(), filepath.Ext(i.Name())),
 		Sum:  hex.EncodeToString(s.Sum(nil)),
-		Path: tmp.Name(),
+		Path: tmpName,
 	}, nil
 }
 
