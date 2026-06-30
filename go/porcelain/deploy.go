@@ -586,14 +586,8 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 			if operationError == nil {
 				defer body.Close()
 				params := operations.NewUploadDeployEdgeFunctionParams().WithDeployID(d.ID).WithCodeSha(f.Sum).WithFileBody(body)
-				if f.Name != "" {
-					params = params.WithFormat(&f.Name)
-				}
 				if retryCount > 0 {
 					params = params.WithXNfRetryCount(&retryCount)
-				}
-				if f.Size != nil {
-					params = params.WithSize(f.Size)
 				}
 				if timeout != 0 {
 					params.SetTimeout(timeout)
@@ -1062,22 +1056,14 @@ func bundleEdgeFunctions(ctx context.Context, edgeFunctionsDir string, observer 
 func newEdgeFunctionFile(edgeFunctionsDir string, bundle edgeFunctionsManifestBundle) (*FileBundle, error) {
 	path := filepath.Join(edgeFunctionsDir, bundle.Asset)
 
-	info, err := os.Stat(path)
-	if err != nil {
-		return nil, fmt.Errorf("edge functions manifest specifies a bundle that cannot be found: %s", bundle.Asset)
-	}
-
 	// code_sha is the dedup key in the deployer<->functions-origin contract, so we compute it from the
 	// bundle's bytes rather than trusting the edge-bundler's asset filename (which currently also happens
 	// to be the sha256, but that's a bundler implementation detail). createFileBundleWithHasher streams
 	// the bytes through the hasher, so the bundle is never held in memory.
 	file, err := createFileBundleWithHasher(bundle.Format, path, sha256.New())
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("edge functions manifest specifies a bundle that cannot be read: %s: %w", bundle.Asset, err)
 	}
-
-	size := info.Size()
-	file.Size = &size
 
 	return file, nil
 }

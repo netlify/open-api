@@ -1680,12 +1680,6 @@ paths:
           type: string
           in: path
           required: true
-        - name: format
-          type: string
-          in: query
-        - name: size
-          type: integer
-          in: query
         - name: file_body
           in: body
           schema:
@@ -4781,7 +4775,7 @@ definitions:
         items:
           type: string
         description: |
-          An array of code_shas for the edge-function ROM bundles that need to be uploaded to
+          An array of code_shas for the edge-function bundles that need to be uploaded to
           complete the deploy.
       error_message:
         type: string
@@ -4885,7 +4879,7 @@ definitions:
       edge_functions:
         type: object
         description: |
-          A hash mapping edge-function ROM bundle formats to the code_sha of each bundle. The
+          A hash mapping edge-function bundle formats to the code_sha of each bundle. The
           response's required_edge_functions lists which of these still need to be uploaded.
       function_schedules:
         type: array

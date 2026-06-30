@@ -71,10 +71,6 @@ type UploadDeployEdgeFunctionParams struct {
 	DeployID string
 	/*FileBody*/
 	FileBody io.ReadCloser
-	/*Format*/
-	Format *string
-	/*Size*/
-	Size *int64
 
 	timeout    time.Duration
 	Context    context.Context
@@ -158,28 +154,6 @@ func (o *UploadDeployEdgeFunctionParams) SetFileBody(fileBody io.ReadCloser) {
 	o.FileBody = fileBody
 }
 
-// WithFormat adds the format to the upload deploy edge function params
-func (o *UploadDeployEdgeFunctionParams) WithFormat(format *string) *UploadDeployEdgeFunctionParams {
-	o.SetFormat(format)
-	return o
-}
-
-// SetFormat adds the format to the upload deploy edge function params
-func (o *UploadDeployEdgeFunctionParams) SetFormat(format *string) {
-	o.Format = format
-}
-
-// WithSize adds the size to the upload deploy edge function params
-func (o *UploadDeployEdgeFunctionParams) WithSize(size *int64) *UploadDeployEdgeFunctionParams {
-	o.SetSize(size)
-	return o
-}
-
-// SetSize adds the size to the upload deploy edge function params
-func (o *UploadDeployEdgeFunctionParams) SetSize(size *int64) {
-	o.Size = size
-}
-
 // WriteToRequest writes these params to a swagger request
 func (o *UploadDeployEdgeFunctionParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -211,38 +185,6 @@ func (o *UploadDeployEdgeFunctionParams) WriteToRequest(r runtime.ClientRequest,
 		if err := r.SetBodyParam(o.FileBody); err != nil {
 			return err
 		}
-	}
-
-	if o.Format != nil {
-
-		// query param format
-		var qrFormat string
-		if o.Format != nil {
-			qrFormat = *o.Format
-		}
-		qFormat := qrFormat
-		if qFormat != "" {
-			if err := r.SetQueryParam("format", qFormat); err != nil {
-				return err
-			}
-		}
-
-	}
-
-	if o.Size != nil {
-
-		// query param size
-		var qrSize int64
-		if o.Size != nil {
-			qrSize = *o.Size
-		}
-		qSize := swag.FormatInt64(qrSize)
-		if qSize != "" {
-			if err := r.SetQueryParam("size", qSize); err != nil {
-				return err
-			}
-		}
-
 	}
 
 	if len(res) > 0 {
