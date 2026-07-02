@@ -534,7 +534,7 @@ func TestUploadFunctions422Error_SkipsRetry(t *testing.T) {
 	defer os.RemoveAll(dir)
 	require.NoError(t, ioutil.WriteFile(filepath.Join(functionsPath, "foo.js"), []byte("module.exports = () => {}"), 0644))
 
-	files, _, _, err := bundle(ctx, functionsPath, t.TempDir(), mockObserver{})
+	files, _, _, err := bundle(ctx, functionsPath, &lazyTempDir{root: t.TempDir()}, mockObserver{})
 	require.NoError(t, err)
 	d := &models.Deploy{}
 	for _, bundle := range files.Files {
@@ -633,7 +633,7 @@ func TestUploadFiles_SkipEqualFiles(t *testing.T) {
 	require.NoError(t, ioutil.WriteFile(filepath.Join(functionsDir, "a.zip"), bundleBody, 0644))
 	require.NoError(t, ioutil.WriteFile(filepath.Join(functionsDir, "b.zip"), bundleBody, 0644))
 
-	functions, _, _, err := bundle(ctx, functionsDir, t.TempDir(), mockObserver{})
+	functions, _, _, err := bundle(ctx, functionsDir, &lazyTempDir{root: t.TempDir()}, mockObserver{})
 	require.NoError(t, err)
 
 	d := &models.Deploy{}
@@ -695,7 +695,7 @@ func TestUploadFunctions_RetryCountHeader(t *testing.T) {
 	defer os.RemoveAll(dir)
 	require.NoError(t, ioutil.WriteFile(filepath.Join(functionsPath, "foo.js"), []byte("module.exports = () => {}"), 0644))
 
-	files, _, _, err := bundle(ctx, functionsPath, t.TempDir(), mockObserver{})
+	files, _, _, err := bundle(ctx, functionsPath, &lazyTempDir{root: t.TempDir()}, mockObserver{})
 	require.NoError(t, err)
 	d := &models.Deploy{}
 	for _, bundle := range files.Files {
@@ -706,7 +706,7 @@ func TestUploadFunctions_RetryCountHeader(t *testing.T) {
 }
 
 func TestBundle(t *testing.T) {
-	functions, schedules, functionsConfig, err := bundle(gocontext.Background(), "../internal/data", t.TempDir(), mockObserver{})
+	functions, schedules, functionsConfig, err := bundle(gocontext.Background(), "../internal/data", &lazyTempDir{root: t.TempDir()}, mockObserver{})
 
 	assert.Nil(t, err)
 	assert.Equal(t, 5, len(functions.Files))
@@ -781,7 +781,7 @@ func TestBundleWithManifest(t *testing.T) {
 	defer os.Remove(manifestPath)
 	assert.Nil(t, err)
 
-	functions, schedules, functionsConfig, err := bundle(gocontext.Background(), "../internal/data", t.TempDir(), mockObserver{})
+	functions, schedules, functionsConfig, err := bundle(gocontext.Background(), "../internal/data", &lazyTempDir{root: t.TempDir()}, mockObserver{})
 	assert.Nil(t, err)
 
 	assert.Equal(t, 1, len(schedules))
@@ -843,7 +843,7 @@ func TestBundleWithManifestEventSubscriptions(t *testing.T) {
 	assert.Nil(t, err)
 	defer manifestFileHandle.Close()
 
-	_, _, functionsConfig, err := bundleFromManifest(gocontext.Background(), manifestFileHandle, t.TempDir(), mockObserver{})
+	_, _, functionsConfig, err := bundleFromManifest(gocontext.Background(), manifestFileHandle, &lazyTempDir{root: t.TempDir()}, mockObserver{})
 	assert.Nil(t, err)
 
 	helloJSConfig := functionsConfig["hello-js-function-test"]

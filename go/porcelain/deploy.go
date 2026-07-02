@@ -303,11 +303,11 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 
 	options.files = files
 
-	functionsTmpDir, err := os.MkdirTemp("", "netlify-deploy-functions-")
-	if err != nil {
-		return nil, err
-	}
-	defer os.RemoveAll(functionsTmpDir)
+	// The temp dir is created lazily, only if a function actually needs to be zipped. Pre-bundled
+	// .zip/.tar functions stream from their original path and never touch it, so a deploy with no
+	// unbundled functions creates no temp dir at all.
+	functionsTmpDir := &lazyTempDir{}
+	defer functionsTmpDir.remove()
 
 	functions, schedules, functionsConfig, err := bundle(ctx, options.FunctionsDir, functionsTmpDir, options.Observer)
 	if err != nil {
@@ -768,7 +768,30 @@ func addInternalFilesToDeploy(dir, internalPath string, files *deployFiles, obse
 	})
 }
 
-func bundle(ctx context.Context, functionDir, tmpDir string, observer DeployObserver) (*deployFiles, []*models.FunctionSchedule, map[string]models.FunctionConfig, error) {
+type lazyTempDir struct {
+	root    string
+	path    string
+	created bool
+}
+
+func (l *lazyTempDir) get() (string, error) {
+	if !l.created {
+		path, err := os.MkdirTemp(l.root, "netlify-deploy-functions-")
+		if err != nil {
+			return "", err
+		}
+		l.path, l.created = path, true
+	}
+	return l.path, nil
+}
+
+func (l *lazyTempDir) remove() {
+	if l.created {
+		os.RemoveAll(l.path)
+	}
+}
+
+func bundle(ctx context.Context, functionDir string, tmpDir *lazyTempDir, observer DeployObserver) (*deployFiles, []*models.FunctionSchedule, map[string]models.FunctionConfig, error) {
 	if functionDir == "" {
 		return nil, nil, nil, nil
 	}
@@ -826,7 +849,7 @@ func bundle(ctx context.Context, functionDir, tmpDir string, observer DeployObse
 	return functions, nil, nil, nil
 }
 
-func bundleFromManifest(ctx context.Context, manifestFile *os.File, tmpDir string, observer DeployObserver) (*deployFiles, []*models.FunctionSchedule, map[string]models.FunctionConfig, error) {
+func bundleFromManifest(ctx context.Context, manifestFile *os.File, tmpDir *lazyTempDir, observer DeployObserver) (*deployFiles, []*models.FunctionSchedule, map[string]models.FunctionConfig, error) {
 	manifestBytes, err := ioutil.ReadAll(manifestFile)
 	if err != nil {
 		return nil, nil, nil, err
@@ -966,7 +989,7 @@ func readZipRuntime(filePath string) (string, error) {
 	return jsRuntime, nil
 }
 
-func newFunctionFile(filePath string, i os.FileInfo, runtime string, metadata *FunctionMetadata, tmpDir string, observer DeployObserver) (*FileBundle, error) {
+func newFunctionFile(filePath string, i os.FileInfo, runtime string, metadata *FunctionMetadata, tmpDir *lazyTempDir, observer DeployObserver) (*FileBundle, error) {
 	var file *FileBundle
 	var err error
 
@@ -992,14 +1015,19 @@ func newFunctionFile(filePath string, i os.FileInfo, runtime string, metadata *F
 	return file, nil
 }
 
-func zipFunctionFile(filePath string, i os.FileInfo, runtime, tmpDir string) (*FileBundle, error) {
+func zipFunctionFile(filePath string, i os.FileInfo, runtime string, tmpDir *lazyTempDir) (*FileBundle, error) {
 	src, err := os.Open(filePath)
 	if err != nil {
 		return nil, err
 	}
 	defer src.Close()
 
-	tmp, err := os.CreateTemp(tmpDir, "function-*.zip")
+	dir, err := tmpDir.get()
+	if err != nil {
+		return nil, err
+	}
+
+	tmp, err := os.CreateTemp(dir, "function-*.zip")
 	if err != nil {
 		return nil, err
 	}
