@@ -126,12 +126,17 @@ type FileBundle struct {
 	Size             *int64 `json:"size,omitempty"`
 	FunctionMetadata *FunctionMetadata
 
-	// Path OR Buffer should be populated
+	// Path is the location of the file on disk. Uploads always stream from Path.
 	Path string
 
 	// Deprecated: uploads always stream from Path; this package no longer reads Buffer. It is retained
 	// only for backwards compatibility with external callers and may be removed in a future release.
+	// Leave it nil to have the (also deprecated) Read/Seek/Close methods stream from Path instead.
 	Buffer io.ReadSeeker
+
+	// pathReader is lazily opened from Path when Buffer is nil, so the deprecated Read/Seek/Close
+	// methods keep working for external callers that treat a FileBundle as an io.ReadSeekCloser.
+	pathReader *os.File
 }
 
 type FunctionMetadata struct {
@@ -143,15 +148,46 @@ type toolchainSpec struct {
 	Runtime string `json:"runtime"`
 }
 
+// Deprecated: read directly from Path (e.g. via os.Open) instead. When Buffer is set, Read reads
+// from it; otherwise it streams from Path. Retained for backwards compatibility with external
+// callers and may be removed in a future release.
 func (f *FileBundle) Read(p []byte) (n int, err error) {
-	return f.Buffer.Read(p)
+	if f.Buffer != nil {
+		return f.Buffer.Read(p)
+	}
+	if f.pathReader == nil {
+		if f.pathReader, err = os.Open(f.Path); err != nil {
+			return 0, err
+		}
+	}
+	return f.pathReader.Read(p)
 }
 
+// Deprecated: read directly from Path (e.g. via os.Open) instead. When Buffer is set, Seek seeks
+// it; otherwise it seeks the stream opened from Path. Retained for backwards compatibility with
+// external callers and may be removed in a future release.
 func (f *FileBundle) Seek(offset int64, whence int) (int64, error) {
-	return f.Buffer.Seek(offset, whence)
+	if f.Buffer != nil {
+		return f.Buffer.Seek(offset, whence)
+	}
+	if f.pathReader == nil {
+		var err error
+		if f.pathReader, err = os.Open(f.Path); err != nil {
+			return 0, err
+		}
+	}
+	return f.pathReader.Seek(offset, whence)
 }
 
+// Deprecated: retained for backwards compatibility with external callers and may be removed in a
+// future release. It closes the stream lazily opened from Path by Read/Seek; it never closes a
+// caller-supplied Buffer.
 func (f *FileBundle) Close() error {
+	if f.pathReader != nil {
+		err := f.pathReader.Close()
+		f.pathReader = nil
+		return err
+	}
 	return nil
 }
 

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	gocontext "context"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -83,6 +84,54 @@ func TestAddWithLargeMedia(t *testing.T) {
 	out2 := files.Sums["baz.jpg"]
 	if out2 != "sum3:originalsha" {
 		t.Fatalf("expected `%v`, got `%v`", "sum3:originalsha", out2)
+	}
+}
+
+// The exported Read/Seek/Close adapters must behave identically whether the bytes come from a
+// caller-supplied Buffer or (with Buffer nil) are streamed from Path. The Path case is also a
+// regression guard: it used to nil-panic instead of falling back to Path.
+func TestFileBundleReadSeekClose(t *testing.T) {
+	const contents = "hello deploy world"
+
+	tests := []struct {
+		name                   string
+		newFileBundleUnderTest func(t *testing.T) *FileBundle
+	}{
+		{
+			name: "streams from Path when Buffer is nil",
+			newFileBundleUnderTest: func(t *testing.T) *FileBundle {
+				p := filepath.Join(t.TempDir(), "file.txt")
+				require.NoError(t, os.WriteFile(p, []byte(contents), 0o600))
+				return &FileBundle{Path: p}
+			},
+		},
+		{
+			name: "reads from Buffer when set",
+			newFileBundleUnderTest: func(t *testing.T) *FileBundle {
+				return &FileBundle{Buffer: strings.NewReader(contents)}
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			f := test.newFileBundleUnderTest(t)
+
+			got, err := io.ReadAll(f)
+			require.NoError(t, err)
+			assert.Equal(t, contents, string(got))
+
+			// Rewind and re-read, mirroring the upload client's retry contract.
+			pos, err := f.Seek(0, 0)
+			require.NoError(t, err)
+			assert.Equal(t, int64(0), pos)
+
+			got, err = io.ReadAll(f)
+			require.NoError(t, err)
+			assert.Equal(t, contents, string(got))
+
+			assert.NoError(t, f.Close())
+		})
 	}
 }
 
