@@ -502,6 +502,7 @@ func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *depl
 	log := context.GetLogger(ctx)
 	log.Infof("Uploading %v files", count)
 
+	var abortErr error
 	for _, sha := range required {
 		if files, exist := files.Hashed[sha]; exist {
 			file := files[0]
@@ -512,7 +513,11 @@ func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *depl
 				go n.uploadFile(ctx, d, file, observer, t, timeout, wg, sem, sharedErr, skipRetry)
 			case <-ctx.Done():
 				log.Info("Context terminated, aborting file upload")
-				return errors.Wrap(ctx.Err(), "aborted file upload early")
+				abortErr = errors.Wrap(ctx.Err(), "aborted file upload early")
+			}
+
+			if abortErr != nil {
+				break
 			}
 
 			if len(files) > 1 {
@@ -524,7 +529,15 @@ func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *depl
 		}
 	}
 
+	// Always wait for in-flight uploads to finish before returning. On the ctx.Done()
+	// path this prevents orphaned uploadFile goroutines from racing against the caller's
+	// deferred temp-dir cleanup (os.RemoveAll), which would otherwise open files that are
+	// being deleted and surface spurious "no such file or directory" errors.
 	wg.Wait()
+
+	if abortErr != nil {
+		return abortErr
+	}
 
 	return sharedErr.err
 }
