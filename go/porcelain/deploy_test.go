@@ -13,6 +13,8 @@ import (
 	"path"
 	"path/filepath"
 	"strings"
+	"sync"
+	"sync/atomic"
 	"testing"
 	"time"
 
@@ -433,6 +435,82 @@ func TestUploadFiles_Cancelation(t *testing.T) {
 	}
 	err = client.uploadFiles(ctx, d, files, nil, fileUpload, time.Minute, false)
 	require.ErrorIs(t, err, gocontext.Canceled)
+}
+
+func TestUploadFiles_CancelationWaitsForInFlightUploads(t *testing.T) {
+	ctx, cancel := gocontext.WithCancel(gocontext.Background())
+
+	uploadStarted := make(chan struct{})
+	releaseUpload := make(chan struct{})
+	var startOnce, releaseOnce sync.Once
+	releaseUploads := func() { releaseOnce.Do(func() { close(releaseUpload) }) }
+
+	var uploadRequests int32
+	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		atomic.AddInt32(&uploadRequests, 1)
+		// Signal that the first upload is in flight, then block until the test
+		// releases it, keeping the goroutine parked while we cancel the context.
+		startOnce.Do(func() { close(uploadStarted) })
+		<-releaseUpload
+		rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+		rw.Write([]byte(`{ "state": "uploaded" }`))
+	}))
+	defer server.Close()
+	// Registered after server.Close so it runs first (LIFO): always unblock the
+	// parked handler before Close, which otherwise waits on outstanding requests.
+	// Without this a failing assertion (e.g. the bug being reintroduced) would
+	// deadlock server.Close and time out instead of failing fast.
+	defer releaseUploads()
+
+	hu, _ := url.Parse(server.URL)
+	tr := apiClient.NewWithClient(hu.Host, "/api/v1", []string{"http"}, http.DefaultClient)
+	client := NewRetryable(tr, strfmt.Default, 1)
+	client.uploadLimit = 1 // Force the second file to wait on the semaphore.
+	ctx = context.WithAuthInfo(ctx, apiClient.BearerToken("token"))
+
+	dir := t.TempDir()
+	require.NoError(t, os.WriteFile(filepath.Join(dir, "foo.html"), []byte("Hello"), 0644))
+	require.NoError(t, os.WriteFile(filepath.Join(dir, "bar.html"), []byte("World"), 0644))
+
+	files, err := walk(dir, nil, false, false)
+	require.NoError(t, err)
+	d := &models.Deploy{}
+	for _, bundle := range files.Files {
+		d.Required = append(d.Required, bundle.Sum)
+	}
+
+	returned := make(chan error, 1)
+	go func() {
+		returned <- client.uploadFiles(ctx, d, files, nil, fileUpload, time.Minute, false)
+	}()
+
+	// Wait for the first upload to be in flight, then cancel the deploy. The
+	// second file's select hits ctx.Done() (the semaphore is still held), so
+	// uploadFiles breaks out of its loop while the first upload is still parked.
+	<-uploadStarted
+	cancel()
+
+	// uploadFiles blocks on wg.Wait() until the in-flight upload
+	// finishes, so it must NOT have returned while the upload is still parked.
+	select {
+	case <-returned:
+		t.Fatal("uploadFiles returned before in-flight upload finished; orphaned goroutine would race temp-dir cleanup")
+	case <-time.After(100 * time.Millisecond):
+	}
+
+	// Let the in-flight upload complete; uploadFiles should now return the
+	// cancellation error.
+	releaseUploads()
+	select {
+	case err = <-returned:
+		require.ErrorIs(t, err, gocontext.Canceled)
+	case <-time.After(5 * time.Second):
+		t.Fatal("uploadFiles did not return after in-flight upload was released")
+	}
+
+	// Only the first file should ever hit the server: the second file's upload
+	// is aborted at the semaphore by the canceled context and must never start.
+	require.Equal(t, int32(1), atomic.LoadInt32(&uploadRequests), "second file must not be uploaded after cancelation")
 }
 
 func TestUploadFiles_Errors(t *testing.T) {
