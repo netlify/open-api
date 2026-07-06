@@ -128,9 +128,17 @@ type FileBundle struct {
 	Size             *int64 `json:"size,omitempty"`
 	FunctionMetadata *FunctionMetadata
 
-	// Path OR Buffer should be populated
-	Path   string
+	// Path is the location of the file on disk. Uploads always stream from Path.
+	Path string
+
+	// Deprecated: uploads always stream from Path; this package no longer reads Buffer. It is retained
+	// only for backwards compatibility with external callers and may be removed in a future release.
+	// Leave it nil to have the (also deprecated) Read/Seek/Close methods stream from Path instead.
 	Buffer io.ReadSeeker
+
+	// pathReader is lazily opened from Path when Buffer is nil, so the deprecated Read/Seek/Close
+	// methods keep working for external callers that treat a FileBundle as an io.ReadSeekCloser.
+	pathReader *os.File
 }
 
 type FunctionMetadata struct {
@@ -142,15 +150,46 @@ type toolchainSpec struct {
 	Runtime string `json:"runtime"`
 }
 
+// Deprecated: read directly from Path (e.g. via os.Open) instead. When Buffer is set, Read reads
+// from it; otherwise it streams from Path. Retained for backwards compatibility with external
+// callers and may be removed in a future release.
 func (f *FileBundle) Read(p []byte) (n int, err error) {
-	return f.Buffer.Read(p)
+	if f.Buffer != nil {
+		return f.Buffer.Read(p)
+	}
+	if f.pathReader == nil {
+		if f.pathReader, err = os.Open(f.Path); err != nil {
+			return 0, err
+		}
+	}
+	return f.pathReader.Read(p)
 }
 
+// Deprecated: read directly from Path (e.g. via os.Open) instead. When Buffer is set, Seek seeks
+// it; otherwise it seeks the stream opened from Path. Retained for backwards compatibility with
+// external callers and may be removed in a future release.
 func (f *FileBundle) Seek(offset int64, whence int) (int64, error) {
-	return f.Buffer.Seek(offset, whence)
+	if f.Buffer != nil {
+		return f.Buffer.Seek(offset, whence)
+	}
+	if f.pathReader == nil {
+		var err error
+		if f.pathReader, err = os.Open(f.Path); err != nil {
+			return 0, err
+		}
+	}
+	return f.pathReader.Seek(offset, whence)
 }
 
+// Deprecated: retained for backwards compatibility with external callers and may be removed in a
+// future release. It closes the stream lazily opened from Path by Read/Seek; it never closes a
+// caller-supplied Buffer.
 func (f *FileBundle) Close() error {
+	if f.pathReader != nil {
+		err := f.pathReader.Close()
+		f.pathReader = nil
+		return err
+	}
 	return nil
 }
 
@@ -266,7 +305,13 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 
 	options.files = files
 
-	functions, schedules, functionsConfig, err := bundle(ctx, options.FunctionsDir, options.Observer)
+	// The temp dir is created lazily, only if a function actually needs to be zipped. Pre-bundled
+	// .zip/.tar functions stream from their original path and never touch it, so a deploy with no
+	// unbundled functions creates no temp dir at all.
+	functionsTmpDir := &lazyTempDir{}
+	defer functionsTmpDir.remove()
+
+	functions, schedules, functionsConfig, err := bundle(ctx, options.FunctionsDir, functionsTmpDir, options.Observer)
 	if err != nil {
 		if options.Observer != nil {
 			options.Observer.OnFailedWalk()
@@ -479,6 +524,7 @@ func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *depl
 	log := context.GetLogger(ctx)
 	log.Infof("Uploading %v files", count)
 
+	var abortErr error
 	for _, sha := range required {
 		if files, exist := files.Hashed[sha]; exist {
 			file := files[0]
@@ -489,7 +535,11 @@ func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *depl
 				go n.uploadFile(ctx, d, file, observer, t, timeout, wg, sem, sharedErr, skipRetry)
 			case <-ctx.Done():
 				log.Info("Context terminated, aborting file upload")
-				return errors.Wrap(ctx.Err(), "aborted file upload early")
+				abortErr = errors.Wrap(ctx.Err(), "aborted file upload early")
+			}
+
+			if abortErr != nil {
+				break
 			}
 
 			if len(files) > 1 {
@@ -501,7 +551,15 @@ func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *depl
 		}
 	}
 
+	// Always wait for in-flight uploads to finish before returning. On the ctx.Done()
+	// path this prevents orphaned uploadFile goroutines from racing against the caller's
+	// deferred temp-dir cleanup (os.RemoveAll), which would otherwise open files that are
+	// being deleted and surface spurious "no such file or directory" errors.
 	wg.Wait()
+
+	if abortErr != nil {
+		return abortErr
+	}
 
 	return sharedErr.err
 }
@@ -562,23 +620,25 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 				_, operationError = n.Operations.UploadDeployFile(params, authInfo)
 			}
 		case functionUpload:
-			params := operations.NewUploadDeployFunctionParams().WithDeployID(d.ID).WithName(f.Name).WithFileBody(f).WithRuntime(&f.Runtime)
+			var body io.ReadCloser
+			body, operationError = os.Open(f.Path)
+			if operationError == nil {
+				defer body.Close()
+				params := operations.NewUploadDeployFunctionParams().WithDeployID(d.ID).WithName(f.Name).WithFileBody(body).WithRuntime(&f.Runtime)
 
-			if retryCount > 0 {
-				params = params.WithXNfRetryCount(&retryCount)
-			}
+				if retryCount > 0 {
+					params = params.WithXNfRetryCount(&retryCount)
+				}
 
-			if f.FunctionMetadata != nil {
-				params = params.WithInvocationMode(&f.FunctionMetadata.InvocationMode)
-				params = params.WithTimeout(&f.FunctionMetadata.Timeout)
-			}
+				if f.FunctionMetadata != nil {
+					params = params.WithInvocationMode(&f.FunctionMetadata.InvocationMode)
+					params = params.WithTimeout(&f.FunctionMetadata.Timeout)
+				}
 
-			if timeout != 0 {
-				params.SetRequestTimeout(timeout)
-			}
-			_, operationError = n.Operations.UploadDeployFunction(params, authInfo)
-			if operationError != nil {
-				f.Buffer.Seek(0, 0)
+				if timeout != 0 {
+					params.SetRequestTimeout(timeout)
+				}
+				_, operationError = n.Operations.UploadDeployFunction(params, authInfo)
 			}
 		case edgeFunctionUpload:
 			var body io.ReadCloser
@@ -639,6 +699,10 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 
 func createFileBundle(rel, path string) (*FileBundle, error) {
 	return createFileBundleWithHasher(rel, path, sha1.New())
+}
+
+func createFunctionFileBundle(rel, path string) (*FileBundle, error) {
+	return createFileBundleWithHasher(rel, path, sha256.New())
 }
 
 func createFileBundleWithHasher(rel, path string, s hash.Hash) (*FileBundle, error) {
@@ -753,7 +817,30 @@ func addInternalFilesToDeploy(dir, internalPath string, files *deployFiles, obse
 	})
 }
 
-func bundle(ctx context.Context, functionDir string, observer DeployObserver) (*deployFiles, []*models.FunctionSchedule, map[string]models.FunctionConfig, error) {
+type lazyTempDir struct {
+	root    string
+	path    string
+	created bool
+}
+
+func (l *lazyTempDir) get() (string, error) {
+	if !l.created {
+		path, err := os.MkdirTemp(l.root, "netlify-deploy-functions-")
+		if err != nil {
+			return "", err
+		}
+		l.path, l.created = path, true
+	}
+	return l.path, nil
+}
+
+func (l *lazyTempDir) remove() {
+	if l.created {
+		os.RemoveAll(l.path)
+	}
+}
+
+func bundle(ctx context.Context, functionDir string, tmpDir *lazyTempDir, observer DeployObserver) (*deployFiles, []*models.FunctionSchedule, map[string]models.FunctionConfig, error) {
 	if functionDir == "" {
 		return nil, nil, nil, nil
 	}
@@ -765,7 +852,7 @@ func bundle(ctx context.Context, functionDir string, observer DeployObserver) (*
 	if err == nil {
 		defer manifestFile.Close()
 
-		return bundleFromManifest(ctx, manifestFile, observer)
+		return bundleFromManifest(ctx, manifestFile, tmpDir, observer)
 	}
 
 	functions := newDeployFiles()
@@ -784,19 +871,19 @@ func bundle(ctx context.Context, functionDir string, observer DeployObserver) (*
 			if err != nil {
 				return nil, nil, nil, err
 			}
-			file, err := newFunctionFile(filePath, i, runtime, nil, observer)
+			file, err := newFunctionFile(filePath, i, runtime, nil, tmpDir, observer)
 			if err != nil {
 				return nil, nil, nil, err
 			}
 			functions.Add(file.Name, file)
 		case jsFile(i):
-			file, err := newFunctionFile(filePath, i, jsRuntime, nil, observer)
+			file, err := newFunctionFile(filePath, i, jsRuntime, nil, tmpDir, observer)
 			if err != nil {
 				return nil, nil, nil, err
 			}
 			functions.Add(file.Name, file)
 		case goFile(filePath, i, observer):
-			file, err := newFunctionFile(filePath, i, amazonLinux2, nil, observer)
+			file, err := newFunctionFile(filePath, i, amazonLinux2, nil, tmpDir, observer)
 			if err != nil {
 				return nil, nil, nil, err
 			}
@@ -811,7 +898,7 @@ func bundle(ctx context.Context, functionDir string, observer DeployObserver) (*
 	return functions, nil, nil, nil
 }
 
-func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer DeployObserver) (*deployFiles, []*models.FunctionSchedule, map[string]models.FunctionConfig, error) {
+func bundleFromManifest(ctx context.Context, manifestFile *os.File, tmpDir *lazyTempDir, observer DeployObserver) (*deployFiles, []*models.FunctionSchedule, map[string]models.FunctionConfig, error) {
 	manifestBytes, err := ioutil.ReadAll(manifestFile)
 	if err != nil {
 		return nil, nil, nil, err
@@ -848,7 +935,7 @@ func bundleFromManifest(ctx context.Context, manifestFile *os.File, observer Dep
 			InvocationMode: function.InvocationMode,
 			Timeout:        function.Timeout,
 		}
-		file, err := newFunctionFile(function.Path, fileInfo, runtime, &meta, observer)
+		file, err := newFunctionFile(function.Path, fileInfo, runtime, &meta, tmpDir, observer)
 		if err != nil {
 			return nil, nil, nil, err
 		}
@@ -951,50 +1038,22 @@ func readZipRuntime(filePath string) (string, error) {
 	return jsRuntime, nil
 }
 
-func newFunctionFile(filePath string, i os.FileInfo, runtime string, metadata *FunctionMetadata, observer DeployObserver) (*FileBundle, error) {
-	file := &FileBundle{
-		Name:    strings.TrimSuffix(i.Name(), filepath.Ext(i.Name())),
-		Runtime: runtime,
+func newFunctionFile(filePath string, i os.FileInfo, runtime string, metadata *FunctionMetadata, tmpDir *lazyTempDir, observer DeployObserver) (*FileBundle, error) {
+	var file *FileBundle
+	var err error
+
+	if zipFile(i) || tarFile(i) {
+		name := strings.TrimSuffix(i.Name(), filepath.Ext(i.Name()))
+		file, err = createFunctionFileBundle(name, filePath)
+	} else {
+		file, err = zipFunctionFile(filePath, i, runtime, tmpDir)
 	}
-
-	s := sha256.New()
-
-	fileEntry, err := os.Open(filePath)
 	if err != nil {
 		return nil, err
 	}
-	defer fileEntry.Close()
 
-	var buf io.ReadWriter
-
-	if zipFile(i) || tarFile(i) {
-		buf = fileEntry
-	} else {
-		buf = new(bytes.Buffer)
-		archive := zip.NewWriter(buf)
-
-		fileHeader, err := createHeader(archive, i, runtime)
-		if err != nil {
-			return nil, err
-		}
-
-		if _, err = io.Copy(fileHeader, fileEntry); err != nil {
-			return nil, err
-		}
-
-		if err := archive.Close(); err != nil {
-			return nil, err
-		}
-	}
-
-	fileBuffer := new(bytes.Buffer)
-	m := io.MultiWriter(s, fileBuffer)
-
-	if _, err := io.Copy(m, buf); err != nil {
-		return nil, err
-	}
-	file.Sum = hex.EncodeToString(s.Sum(nil))
-	file.Buffer = bytes.NewReader(fileBuffer.Bytes())
+	file.Runtime = runtime
+	file.FunctionMetadata = metadata
 
 	if observer != nil {
 		if err := observer.OnSuccessfulStep(file); err != nil {
@@ -1002,9 +1061,56 @@ func newFunctionFile(filePath string, i os.FileInfo, runtime string, metadata *F
 		}
 	}
 
-	file.FunctionMetadata = metadata
-
 	return file, nil
+}
+
+func zipFunctionFile(filePath string, i os.FileInfo, runtime string, tmpDir *lazyTempDir) (*FileBundle, error) {
+	src, err := os.Open(filePath)
+	if err != nil {
+		return nil, err
+	}
+	defer src.Close()
+
+	dir, err := tmpDir.get()
+	if err != nil {
+		return nil, err
+	}
+
+	tmp, err := os.CreateTemp(dir, "function-*.zip")
+	if err != nil {
+		return nil, err
+	}
+	defer func() {
+		if tmp != nil {
+			_ = tmp.Close()
+		}
+	}()
+
+	s := sha256.New()
+	archive := zip.NewWriter(io.MultiWriter(tmp, s))
+
+	fileHeader, err := createHeader(archive, i, runtime)
+	if err != nil {
+		return nil, err
+	}
+	if _, err := io.Copy(fileHeader, src); err != nil {
+		return nil, err
+	}
+	if err := archive.Close(); err != nil {
+		return nil, err
+	}
+
+	tmpName := tmp.Name()
+	if err := tmp.Close(); err != nil {
+		return nil, err
+	}
+	tmp = nil
+
+	return &FileBundle{
+		Name: strings.TrimSuffix(i.Name(), filepath.Ext(i.Name())),
+		Sum:  hex.EncodeToString(s.Sum(nil)),
+		Path: tmpName,
+	}, nil
 }
 
 // bundleEdgeFunctions reads the edge-bundler manifest from edgeFunctionsDir and turns each bundle it

@@ -15,6 +15,8 @@ import (
 	"path"
 	"path/filepath"
 	"strings"
+	"sync"
+	"sync/atomic"
 	"testing"
 	"time"
 
@@ -86,6 +88,54 @@ func TestAddWithLargeMedia(t *testing.T) {
 	out2 := files.Sums["baz.jpg"]
 	if out2 != "sum3:originalsha" {
 		t.Fatalf("expected `%v`, got `%v`", "sum3:originalsha", out2)
+	}
+}
+
+// The exported Read/Seek/Close adapters must behave identically whether the bytes come from a
+// caller-supplied Buffer or (with Buffer nil) are streamed from Path. The Path case is also a
+// regression guard: it used to nil-panic instead of falling back to Path.
+func TestFileBundleReadSeekClose(t *testing.T) {
+	const contents = "hello deploy world"
+
+	tests := []struct {
+		name                   string
+		newFileBundleUnderTest func(t *testing.T) *FileBundle
+	}{
+		{
+			name: "streams from Path when Buffer is nil",
+			newFileBundleUnderTest: func(t *testing.T) *FileBundle {
+				p := filepath.Join(t.TempDir(), "file.txt")
+				require.NoError(t, os.WriteFile(p, []byte(contents), 0o600))
+				return &FileBundle{Path: p}
+			},
+		},
+		{
+			name: "reads from Buffer when set",
+			newFileBundleUnderTest: func(t *testing.T) *FileBundle {
+				return &FileBundle{Buffer: strings.NewReader(contents)}
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			f := test.newFileBundleUnderTest(t)
+
+			got, err := io.ReadAll(f)
+			require.NoError(t, err)
+			assert.Equal(t, contents, string(got))
+
+			// Rewind and re-read, mirroring the upload client's retry contract.
+			pos, err := f.Seek(0, 0)
+			require.NoError(t, err)
+			assert.Equal(t, int64(0), pos)
+
+			got, err = io.ReadAll(f)
+			require.NoError(t, err)
+			assert.Equal(t, contents, string(got))
+
+			assert.NoError(t, f.Close())
+		})
 	}
 }
 
@@ -389,6 +439,82 @@ func TestUploadFiles_Cancelation(t *testing.T) {
 	require.ErrorIs(t, err, gocontext.Canceled)
 }
 
+func TestUploadFiles_CancelationWaitsForInFlightUploads(t *testing.T) {
+	ctx, cancel := gocontext.WithCancel(gocontext.Background())
+
+	uploadStarted := make(chan struct{})
+	releaseUpload := make(chan struct{})
+	var startOnce, releaseOnce sync.Once
+	releaseUploads := func() { releaseOnce.Do(func() { close(releaseUpload) }) }
+
+	var uploadRequests int32
+	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		atomic.AddInt32(&uploadRequests, 1)
+		// Signal that the first upload is in flight, then block until the test
+		// releases it, keeping the goroutine parked while we cancel the context.
+		startOnce.Do(func() { close(uploadStarted) })
+		<-releaseUpload
+		rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+		rw.Write([]byte(`{ "state": "uploaded" }`))
+	}))
+	defer server.Close()
+	// Registered after server.Close so it runs first (LIFO): always unblock the
+	// parked handler before Close, which otherwise waits on outstanding requests.
+	// Without this a failing assertion (e.g. the bug being reintroduced) would
+	// deadlock server.Close and time out instead of failing fast.
+	defer releaseUploads()
+
+	hu, _ := url.Parse(server.URL)
+	tr := apiClient.NewWithClient(hu.Host, "/api/v1", []string{"http"}, http.DefaultClient)
+	client := NewRetryable(tr, strfmt.Default, 1)
+	client.uploadLimit = 1 // Force the second file to wait on the semaphore.
+	ctx = context.WithAuthInfo(ctx, apiClient.BearerToken("token"))
+
+	dir := t.TempDir()
+	require.NoError(t, os.WriteFile(filepath.Join(dir, "foo.html"), []byte("Hello"), 0644))
+	require.NoError(t, os.WriteFile(filepath.Join(dir, "bar.html"), []byte("World"), 0644))
+
+	files, err := walk(dir, nil, false, false)
+	require.NoError(t, err)
+	d := &models.Deploy{}
+	for _, bundle := range files.Files {
+		d.Required = append(d.Required, bundle.Sum)
+	}
+
+	returned := make(chan error, 1)
+	go func() {
+		returned <- client.uploadFiles(ctx, d, files, nil, fileUpload, time.Minute, false)
+	}()
+
+	// Wait for the first upload to be in flight, then cancel the deploy. The
+	// second file's select hits ctx.Done() (the semaphore is still held), so
+	// uploadFiles breaks out of its loop while the first upload is still parked.
+	<-uploadStarted
+	cancel()
+
+	// uploadFiles blocks on wg.Wait() until the in-flight upload
+	// finishes, so it must NOT have returned while the upload is still parked.
+	select {
+	case <-returned:
+		t.Fatal("uploadFiles returned before in-flight upload finished; orphaned goroutine would race temp-dir cleanup")
+	case <-time.After(100 * time.Millisecond):
+	}
+
+	// Let the in-flight upload complete; uploadFiles should now return the
+	// cancellation error.
+	releaseUploads()
+	select {
+	case err = <-returned:
+		require.ErrorIs(t, err, gocontext.Canceled)
+	case <-time.After(5 * time.Second):
+		t.Fatal("uploadFiles did not return after in-flight upload was released")
+	}
+
+	// Only the first file should ever hit the server: the second file's upload
+	// is aborted at the semaphore by the canceled context and must never start.
+	require.Equal(t, int32(1), atomic.LoadInt32(&uploadRequests), "second file must not be uploaded after cancelation")
+}
+
 func TestUploadFiles_Errors(t *testing.T) {
 	ctx := gocontext.Background()
 
@@ -488,7 +614,7 @@ func TestUploadFunctions422Error_SkipsRetry(t *testing.T) {
 	defer os.RemoveAll(dir)
 	require.NoError(t, ioutil.WriteFile(filepath.Join(functionsPath, "foo.js"), []byte("module.exports = () => {}"), 0644))
 
-	files, _, _, err := bundle(ctx, functionsPath, mockObserver{})
+	files, _, _, err := bundle(ctx, functionsPath, &lazyTempDir{root: t.TempDir()}, mockObserver{})
 	require.NoError(t, err)
 	d := &models.Deploy{}
 	for _, bundle := range files.Files {
@@ -587,7 +713,7 @@ func TestUploadFiles_SkipEqualFiles(t *testing.T) {
 	require.NoError(t, ioutil.WriteFile(filepath.Join(functionsDir, "a.zip"), bundleBody, 0644))
 	require.NoError(t, ioutil.WriteFile(filepath.Join(functionsDir, "b.zip"), bundleBody, 0644))
 
-	functions, _, _, err := bundle(ctx, functionsDir, mockObserver{})
+	functions, _, _, err := bundle(ctx, functionsDir, &lazyTempDir{root: t.TempDir()}, mockObserver{})
 	require.NoError(t, err)
 
 	d := &models.Deploy{}
@@ -649,7 +775,7 @@ func TestUploadFunctions_RetryCountHeader(t *testing.T) {
 	defer os.RemoveAll(dir)
 	require.NoError(t, ioutil.WriteFile(filepath.Join(functionsPath, "foo.js"), []byte("module.exports = () => {}"), 0644))
 
-	files, _, _, err := bundle(ctx, functionsPath, mockObserver{})
+	files, _, _, err := bundle(ctx, functionsPath, &lazyTempDir{root: t.TempDir()}, mockObserver{})
 	require.NoError(t, err)
 	d := &models.Deploy{}
 	for _, bundle := range files.Files {
@@ -742,7 +868,7 @@ func TestUploadEdgeFunctions(t *testing.T) {
 }
 
 func TestBundle(t *testing.T) {
-	functions, schedules, functionsConfig, err := bundle(gocontext.Background(), "../internal/data", mockObserver{})
+	functions, schedules, functionsConfig, err := bundle(gocontext.Background(), "../internal/data", &lazyTempDir{root: t.TempDir()}, mockObserver{})
 
 	assert.Nil(t, err)
 	assert.Equal(t, 5, len(functions.Files))
@@ -817,7 +943,7 @@ func TestBundleWithManifest(t *testing.T) {
 	defer os.Remove(manifestPath)
 	assert.Nil(t, err)
 
-	functions, schedules, functionsConfig, err := bundle(gocontext.Background(), "../internal/data", mockObserver{})
+	functions, schedules, functionsConfig, err := bundle(gocontext.Background(), "../internal/data", &lazyTempDir{root: t.TempDir()}, mockObserver{})
 	assert.Nil(t, err)
 
 	assert.Equal(t, 1, len(schedules))
@@ -879,7 +1005,7 @@ func TestBundleWithManifestEventSubscriptions(t *testing.T) {
 	assert.Nil(t, err)
 	defer manifestFileHandle.Close()
 
-	_, _, functionsConfig, err := bundleFromManifest(gocontext.Background(), manifestFileHandle, mockObserver{})
+	_, _, functionsConfig, err := bundleFromManifest(gocontext.Background(), manifestFileHandle, &lazyTempDir{root: t.TempDir()}, mockObserver{})
 	assert.Nil(t, err)
 
 	helloJSConfig := functionsConfig["hello-js-function-test"]
