@@ -13,7 +13,7 @@ require (
 	github.com/go-swagger/go-swagger v0.24.0
 	github.com/pkg/errors v0.9.1
 	github.com/rsc/goversion v1.2.0
-	github.com/sirupsen/logrus v1.6.0
+	github.com/sirupsen/logrus v1.8.3
 	github.com/stretchr/testify v1.8.2
 	golang.org/x/net v0.7.0 // indirect
 )
