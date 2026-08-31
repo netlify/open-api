@@ -3,7 +3,6 @@ package porcelain
 import (
 	gocontext "context"
 	"encoding/json"
-	"fmt"
 	"os"
 	"path/filepath"
 	"testing"
@@ -112,5 +111,5 @@ func contentOf(t *testing.T, dir, name string) string {
 	t.Helper()
 	b, err := os.ReadFile(filepath.Join(dir, filepath.FromSlash(name)))
 	require.NoError(t, err)
-	return fmt.Sprintf("%s", b)
+	return string(b)
 }

@@ -974,7 +974,7 @@ func (l *lazyTempDir) get() (string, *os.Root, error) {
 		}
 		handle, err := os.OpenRoot(path)
 		if err != nil {
-			os.RemoveAll(path)
+			_ = os.RemoveAll(path)
 			return "", nil, err
 		}
 		l.path, l.handle, l.created = path, handle, true
@@ -985,7 +985,7 @@ func (l *lazyTempDir) get() (string, *os.Root, error) {
 func (l *lazyTempDir) remove() {
 	if l.created {
 		_ = l.handle.Close()
-		os.RemoveAll(l.path)
+		_ = os.RemoveAll(l.path)
 	}
 }
 
@@ -999,7 +999,7 @@ func bundle(ctx context.Context, functionsDir dirHandle, tmpDir *lazyTempDir, ob
 	// If a `manifest.json` file is found, we extract the functions and their
 	// metadata from it.
 	if err == nil {
-		defer manifestFile.Close()
+		defer func() { _ = manifestFile.Close() }()
 
 		return bundleFromManifest(ctx, functionsDir, manifestFile, tmpDir, observer)
 	}
@@ -1325,7 +1325,7 @@ func bundleEdgeFunctions(ctx context.Context, edgeFunctionsDir dirHandle, observ
 		return nil, err
 	}
 	manifestBytes, err := io.ReadAll(manifestFile)
-	manifestFile.Close()
+	_ = manifestFile.Close()
 	if err != nil {
 		return nil, err
 	}
