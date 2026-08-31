@@ -2,12 +2,5 @@
 
 package porcelain
 
-import (
-	"fmt"
-	"os"
-	"strings"
-)
-
-func forceSlashSeparators(name string) string {
-	return strings.Replace(name, fmt.Sprintf("%c", os.PathSeparator), "/", -1)
-}
+// Windows has no O_NONBLOCK and no FIFOs to guard against.
+const openNonblock = 0

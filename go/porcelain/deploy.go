@@ -13,6 +13,7 @@ import (
 	"fmt"
 	"hash"
 	"io"
+	"io/fs"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -91,6 +92,19 @@ type DeployOptions struct {
 	LargeMediaEnabled bool
 	Environment       []*models.DeployEnvironmentVariable
 
+	// DirRoot and friends are optional pre-opened handles for the corresponding
+	// *Dir path fields. When set, all filesystem access for that directory goes
+	// through the handle; when nil, the path field is opened with [os.OpenRoot]
+	// once at the start of the deploy. Caller-provided handles must stay open for
+	// the duration of the deploy and are not closed by this package. The path
+	// fields should still be set: they are used for logging and to resolve paths
+	// read from manifest files.
+	DirRoot              *os.Root
+	FunctionsDirRoot     *os.Root
+	EdgeFunctionsDirRoot *os.Root
+	EdgeRedirectsDirRoot *os.Root
+	DbMigrationsDirRoot  *os.Root
+
 	IsDraft   bool
 	SkipRetry bool
 
@@ -139,6 +153,30 @@ type FileBundle struct {
 	// pathReader is lazily opened from Path when Buffer is nil, so the deprecated Read/Seek/Close
 	// methods keep working for external callers that treat a FileBundle as an io.ReadSeekCloser.
 	pathReader *os.File
+
+	// root is the directory handle the file lives in and rel its path within that
+	// handle; every read of the file's contents goes through root.
+	root *os.Root
+	rel  string
+}
+
+// open returns a reader for the bundle's contents, always through the root
+// handle the bundle was created with.
+func (f *FileBundle) open() (*os.File, error) {
+	if f.root == nil {
+		return nil, fmt.Errorf("file bundle %s has no root handle", f.Name)
+	}
+	return openRegularFileInRoot(f.root, f.rel)
+}
+
+// legacyOpen backs the deprecated Read/Seek methods only: a FileBundle
+// constructed by hand by an external caller has no root handle and keeps the
+// historical direct open of its Path.
+func (f *FileBundle) legacyOpen() (*os.File, error) {
+	if f.root == nil {
+		return os.Open(f.Path)
+	}
+	return f.open()
 }
 
 type FunctionMetadata struct {
@@ -158,7 +196,7 @@ func (f *FileBundle) Read(p []byte) (n int, err error) {
 		return f.Buffer.Read(p)
 	}
 	if f.pathReader == nil {
-		if f.pathReader, err = os.Open(f.Path); err != nil {
+		if f.pathReader, err = f.legacyOpen(); err != nil {
 			return 0, err
 		}
 	}
@@ -174,7 +212,7 @@ func (f *FileBundle) Seek(offset int64, whence int) (int64, error) {
 	}
 	if f.pathReader == nil {
 		var err error
-		if f.pathReader, err = os.Open(f.Path); err != nil {
+		if f.pathReader, err = f.legacyOpen(); err != nil {
 			return 0, err
 		}
 	}
@@ -239,16 +277,113 @@ func (n *Netlify) DeploySite(ctx context.Context, options DeployOptions) (*model
 	return n.DoDeploy(ctx, &options, nil)
 }
 
+// dirHandle pairs an open directory handle with its configured path, which is
+// used for messages, FileBundle.Path, and resolving absolute manifest paths.
+type dirHandle struct {
+	root *os.Root
+	name string
+}
+
+func (h dirHandle) valid() bool {
+	return h.root != nil
+}
+
+// deployRoots holds the resolved directory handles for one deploy. Handles
+// opened here (rather than provided by the caller) are recorded in owned and
+// closed when the deploy returns.
+type deployRoots struct {
+	dir, functions, edgeFunctions, edgeRedirects, dbMigrations dirHandle
+
+	owned []*os.Root
+}
+
+func (r *deployRoots) close() {
+	for _, root := range r.owned {
+		_ = root.Close()
+	}
+}
+
+// resolveRoot returns the caller-provided handle when set, otherwise opens one
+// for path; an empty path means the directory takes no part in the deploy.
+func (r *deployRoots) resolveRoot(handle *os.Root, path string) (dirHandle, error) {
+	if handle != nil {
+		name := path
+		if name == "" {
+			name = handle.Name()
+		}
+		return dirHandle{root: handle, name: name}, nil
+	}
+	if path == "" {
+		return dirHandle{}, nil
+	}
+	if fi, err := os.Lstat(path); err != nil {
+		return dirHandle{}, err
+	} else if fi.Mode()&os.ModeSymlink != 0 {
+		return dirHandle{}, fmt.Errorf("%s is a symbolic link", path)
+	}
+	root, err := os.OpenRoot(path)
+	if err != nil {
+		return dirHandle{}, err
+	}
+	r.owned = append(r.owned, root)
+	return dirHandle{root: root, name: path}, nil
+}
+
+func resolveDeployRoots(options *DeployOptions) (*deployRoots, error) {
+	roots := &deployRoots{}
+
+	resolve := func(dst *dirHandle, handle *os.Root, path string) error {
+		h, err := roots.resolveRoot(handle, path)
+		if err != nil {
+			roots.close()
+			return err
+		}
+		*dst = h
+		return nil
+	}
+
+	// Keep the historical error message for a path that is not a directory.
+	if options.DirRoot == nil {
+		f, err := os.Stat(options.Dir)
+		if err != nil {
+			return nil, err
+		}
+		if !f.IsDir() {
+			return nil, fmt.Errorf("%s is not a directory", options.Dir)
+		}
+	}
+
+	if err := resolve(&roots.dir, options.DirRoot, options.Dir); err != nil {
+		return nil, err
+	}
+	if !roots.dir.valid() {
+		return nil, fmt.Errorf("no deploy directory provided")
+	}
+	if err := resolve(&roots.functions, options.FunctionsDirRoot, options.FunctionsDir); err != nil {
+		return nil, err
+	}
+	if err := resolve(&roots.edgeFunctions, options.EdgeFunctionsDirRoot, options.EdgeFunctionsDir); err != nil {
+		return nil, err
+	}
+	if err := resolve(&roots.edgeRedirects, options.EdgeRedirectsDirRoot, options.EdgeRedirectsDir); err != nil {
+		return nil, err
+	}
+	if err := resolve(&roots.dbMigrations, options.DbMigrationsDirRoot, options.DbMigrationsDir); err != nil {
+		return nil, err
+	}
+
+	return roots, nil
+}
+
 // DoDeploy deploys the changes for a site given a directory in the filesystem.
 // It uploads the necessary files that changed between deploys.
 func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *models.Deploy) (*models.Deploy, error) {
-	f, err := os.Stat(options.Dir)
+	roots, err := resolveDeployRoots(options)
 	if err != nil {
 		return nil, err
 	}
-	if !f.IsDir() {
-		return nil, fmt.Errorf("%s is not a directory", options.Dir)
-	}
+	// The upload phase re-reads every required file through these handles.
+	defer roots.close()
 
 	if options.Observer != nil {
 		if err := options.Observer.OnSetupWalk(); err != nil {
@@ -257,10 +392,10 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 	}
 
 	largeMediaEnabled := options.LargeMediaEnabled
-	ignoreInstallDirs := options.Dir == options.BuildDir
+	ignoreInstallDirs := options.Dir != "" && options.Dir == options.BuildDir
 
 	context.GetLogger(ctx).Infof("Getting files info with large media flag: %v", largeMediaEnabled)
-	files, err := walk(options.Dir, options.Observer, largeMediaEnabled, ignoreInstallDirs)
+	files, err := walk(roots.dir, options.Observer, largeMediaEnabled, ignoreInstallDirs)
 	if err != nil {
 		if options.Observer != nil {
 			options.Observer.OnFailedWalk()
@@ -273,8 +408,8 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 		}
 	}
 
-	if options.EdgeFunctionsDir != "" {
-		err = addInternalFilesToDeploy(options.EdgeFunctionsDir, edgeFunctionsInternalPath, files, options.Observer)
+	if roots.edgeFunctions.valid() {
+		err = addInternalFilesToDeploy(roots.edgeFunctions, edgeFunctionsInternalPath, files, options.Observer)
 		if err != nil {
 			if options.Observer != nil {
 				options.Observer.OnFailedWalk()
@@ -283,8 +418,8 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 		}
 	}
 
-	if options.EdgeRedirectsDir != "" {
-		err = addInternalFilesToDeploy(options.EdgeRedirectsDir, edgeRedirectsInternalPath, files, options.Observer)
+	if roots.edgeRedirects.valid() {
+		err = addInternalFilesToDeploy(roots.edgeRedirects, edgeRedirectsInternalPath, files, options.Observer)
 		if err != nil {
 			if options.Observer != nil {
 				options.Observer.OnFailedWalk()
@@ -293,8 +428,8 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 		}
 	}
 
-	if options.DbMigrationsDir != "" {
-		err = addInternalFilesToDeploy(options.DbMigrationsDir, dbMigrationsInternalPath, files, options.Observer)
+	if roots.dbMigrations.valid() {
+		err = addInternalFilesToDeploy(roots.dbMigrations, dbMigrationsInternalPath, files, options.Observer)
 		if err != nil {
 			if options.Observer != nil {
 				options.Observer.OnFailedWalk()
@@ -311,7 +446,7 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 	functionsTmpDir := &lazyTempDir{}
 	defer functionsTmpDir.remove()
 
-	functions, schedules, functionsConfig, err := bundle(ctx, options.FunctionsDir, functionsTmpDir, options.Observer)
+	functions, schedules, functionsConfig, err := bundle(ctx, roots.functions, functionsTmpDir, options.Observer)
 	if err != nil {
 		if options.Observer != nil {
 			options.Observer.OnFailedWalk()
@@ -322,7 +457,7 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 	options.functionSchedules = schedules
 	options.functionsConfig = functionsConfig
 
-	edgeFunctions, err := bundleEdgeFunctions(ctx, options.EdgeFunctionsDir, options.Observer)
+	edgeFunctions, err := bundleEdgeFunctions(ctx, roots.edgeFunctions, options.Observer)
 	if err != nil {
 		if options.Observer != nil {
 			options.Observer.OnFailedWalk()
@@ -602,58 +737,51 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 		}
 		sharedErr.mutex.Unlock()
 
-		var operationError error
+		// Opening the file cannot start succeeding on a retry, so fail permanently
+		// rather than backing off for the full retry window.
+		body, openErr := f.open()
+		if openErr != nil {
+			context.GetLogger(ctx).WithError(openErr).Errorf("Failed to open %v for upload", f.Name)
+			return backoff.Permanent(openErr)
+		}
+		defer func() { _ = body.Close() }()
 
+		var operationError error
 		switch t {
 		case fileUpload:
-			var body io.ReadCloser
-			body, operationError = os.Open(f.Path)
-			if operationError == nil {
-				defer body.Close()
-				params := operations.NewUploadDeployFileParams().WithDeployID(d.ID).WithPath(f.Name).WithFileBody(body)
-				if f.Size != nil {
-					params.WithSize(f.Size)
-				}
-				if timeout != 0 {
-					params.SetTimeout(timeout)
-				}
-				_, operationError = n.Operations.UploadDeployFile(params, authInfo)
+			params := operations.NewUploadDeployFileParams().WithDeployID(d.ID).WithPath(f.Name).WithFileBody(body)
+			if f.Size != nil {
+				params.WithSize(f.Size)
 			}
+			if timeout != 0 {
+				params.SetTimeout(timeout)
+			}
+			_, operationError = n.Operations.UploadDeployFile(params, authInfo)
 		case functionUpload:
-			var body io.ReadCloser
-			body, operationError = os.Open(f.Path)
-			if operationError == nil {
-				defer body.Close()
-				params := operations.NewUploadDeployFunctionParams().WithDeployID(d.ID).WithName(f.Name).WithFileBody(body).WithRuntime(&f.Runtime)
+			params := operations.NewUploadDeployFunctionParams().WithDeployID(d.ID).WithName(f.Name).WithFileBody(body).WithRuntime(&f.Runtime)
 
-				if retryCount > 0 {
-					params = params.WithXNfRetryCount(&retryCount)
-				}
-
-				if f.FunctionMetadata != nil {
-					params = params.WithInvocationMode(&f.FunctionMetadata.InvocationMode)
-					params = params.WithTimeout(&f.FunctionMetadata.Timeout)
-				}
-
-				if timeout != 0 {
-					params.SetRequestTimeout(timeout)
-				}
-				_, operationError = n.Operations.UploadDeployFunction(params, authInfo)
+			if retryCount > 0 {
+				params = params.WithXNfRetryCount(&retryCount)
 			}
+
+			if f.FunctionMetadata != nil {
+				params = params.WithInvocationMode(&f.FunctionMetadata.InvocationMode)
+				params = params.WithTimeout(&f.FunctionMetadata.Timeout)
+			}
+
+			if timeout != 0 {
+				params.SetRequestTimeout(timeout)
+			}
+			_, operationError = n.Operations.UploadDeployFunction(params, authInfo)
 		case edgeFunctionUpload:
-			var body io.ReadCloser
-			body, operationError = os.Open(f.Path)
-			if operationError == nil {
-				defer body.Close()
-				params := operations.NewUploadDeployEdgeFunctionParams().WithDeployID(d.ID).WithCodeSha(f.Sum).WithFileBody(body)
-				if retryCount > 0 {
-					params = params.WithXNfRetryCount(&retryCount)
-				}
-				if timeout != 0 {
-					params.SetTimeout(timeout)
-				}
-				_, operationError = n.Operations.UploadDeployEdgeFunction(params, authInfo)
+			params := operations.NewUploadDeployEdgeFunctionParams().WithDeployID(d.ID).WithCodeSha(f.Sum).WithFileBody(body)
+			if retryCount > 0 {
+				params = params.WithXNfRetryCount(&retryCount)
 			}
+			if timeout != 0 {
+				params.SetTimeout(timeout)
+			}
+			_, operationError = n.Operations.UploadDeployEdgeFunction(params, authInfo)
 		}
 
 		if operationError != nil {
@@ -697,24 +825,28 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 	}
 }
 
-func createFileBundle(rel, path string) (*FileBundle, error) {
-	return createFileBundleWithHasher(rel, path, sha1.New())
+func createFileBundle(rel string, dir dirHandle, relPath string) (*FileBundle, error) {
+	return createFileBundleWithHasher(rel, dir, relPath, sha1.New())
 }
 
-func createFunctionFileBundle(rel, path string) (*FileBundle, error) {
-	return createFileBundleWithHasher(rel, path, sha256.New())
+func createFunctionFileBundle(rel string, dir dirHandle, relPath string) (*FileBundle, error) {
+	return createFileBundleWithHasher(rel, dir, relPath, sha256.New())
 }
 
-func createFileBundleWithHasher(rel, path string, s hash.Hash) (*FileBundle, error) {
-	o, err := os.Open(path)
+// createFileBundleWithHasher builds the bundle for the file at relPath inside
+// dir; rel is the name it deploys as.
+func createFileBundleWithHasher(rel string, dir dirHandle, relPath string, s hash.Hash) (*FileBundle, error) {
+	o, err := openRegularFileInRoot(dir.root, relPath)
 	if err != nil {
 		return nil, err
 	}
-	defer o.Close()
+	defer func() { _ = o.Close() }()
 
 	file := &FileBundle{
 		Name: rel,
-		Path: path,
+		Path: filepath.Join(dir.name, relPath),
+		root: dir.root,
+		rel:  relPath,
 	}
 
 	if _, err := io.Copy(s, o); err != nil {
@@ -726,32 +858,46 @@ func createFileBundleWithHasher(rel, path string, s hash.Hash) (*FileBundle, err
 	return file, nil
 }
 
-func walk(dir string, observer DeployObserver, useLargeMedia, ignoreInstallDirs bool) (*deployFiles, error) {
+// openRegularFileInRoot opens relPath inside root for reading, rejecting
+// anything but a regular file. O_NONBLOCK avoids blocking the open if relPath
+// is a FIFO.
+func openRegularFileInRoot(root *os.Root, relPath string) (*os.File, error) {
+	f, err := root.OpenFile(filepath.FromSlash(relPath), os.O_RDONLY|openNonblock, 0)
+	if err != nil {
+		return nil, err
+	}
+	fi, err := f.Stat()
+	if err != nil {
+		_ = f.Close()
+		return nil, err
+	}
+	if !fi.Mode().IsRegular() {
+		_ = f.Close()
+		return nil, fmt.Errorf("%s is not a regular file", relPath)
+	}
+	return f, nil
+}
+
+func walk(dir dirHandle, observer DeployObserver, useLargeMedia, ignoreInstallDirs bool) (*deployFiles, error) {
 	files := newDeployFiles()
 
-	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+	err := fs.WalkDir(dir.root.FS(), ".", func(rel string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
 
-		if !info.IsDir() && info.Mode().IsRegular() {
-			osRel, err := filepath.Rel(dir, path)
-			if err != nil {
-				return err
-			}
-			rel := forceSlashSeparators(osRel)
-
+		if !d.IsDir() && d.Type().IsRegular() {
 			if ignoreFile(rel, ignoreInstallDirs) {
 				return nil
 			}
 
-			file, err := createFileBundle(rel, path)
+			file, err := createFileBundle(rel, dir, rel)
 			if err != nil {
 				return err
 			}
 
 			if useLargeMedia {
-				o, err := os.Open(path)
+				o, err := openRegularFileInRoot(dir.root, rel)
 				if err != nil {
 					return err
 				}
@@ -786,20 +932,16 @@ func walk(dir string, observer DeployObserver, useLargeMedia, ignoreInstallDirs 
 	return files, err
 }
 
-func addInternalFilesToDeploy(dir, internalPath string, files *deployFiles, observer DeployObserver) error {
-	return filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+func addInternalFilesToDeploy(dir dirHandle, internalPath string, files *deployFiles, observer DeployObserver) error {
+	return fs.WalkDir(dir.root.FS(), ".", func(osRel string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
 
-		if !info.IsDir() && info.Mode().IsRegular() {
-			osRel, err := filepath.Rel(dir, path)
-			if err != nil {
-				return err
-			}
-			rel := internalPath + forceSlashSeparators(osRel)
+		if !d.IsDir() && d.Type().IsRegular() {
+			rel := internalPath + osRel
 
-			file, err := createFileBundle(rel, path)
+			file, err := createFileBundle(rel, dir, osRel)
 			if err != nil {
 				return err
 			}
@@ -820,70 +962,83 @@ func addInternalFilesToDeploy(dir, internalPath string, files *deployFiles, obse
 type lazyTempDir struct {
 	root    string
 	path    string
+	handle  *os.Root
 	created bool
 }
 
-func (l *lazyTempDir) get() (string, error) {
+func (l *lazyTempDir) get() (string, *os.Root, error) {
 	if !l.created {
 		path, err := os.MkdirTemp(l.root, "netlify-deploy-functions-")
 		if err != nil {
-			return "", err
+			return "", nil, err
 		}
-		l.path, l.created = path, true
+		handle, err := os.OpenRoot(path)
+		if err != nil {
+			os.RemoveAll(path)
+			return "", nil, err
+		}
+		l.path, l.handle, l.created = path, handle, true
 	}
-	return l.path, nil
+	return l.path, l.handle, nil
 }
 
 func (l *lazyTempDir) remove() {
 	if l.created {
+		_ = l.handle.Close()
 		os.RemoveAll(l.path)
 	}
 }
 
-func bundle(ctx context.Context, functionDir string, tmpDir *lazyTempDir, observer DeployObserver) (*deployFiles, []*models.FunctionSchedule, map[string]models.FunctionConfig, error) {
-	if functionDir == "" {
+func bundle(ctx context.Context, functionsDir dirHandle, tmpDir *lazyTempDir, observer DeployObserver) (*deployFiles, []*models.FunctionSchedule, map[string]models.FunctionConfig, error) {
+	if !functionsDir.valid() {
 		return nil, nil, nil, nil
 	}
 
-	manifestFile, err := os.Open(filepath.Join(functionDir, "manifest.json"))
+	manifestFile, err := openRegularFileInRoot(functionsDir.root, "manifest.json")
 
 	// If a `manifest.json` file is found, we extract the functions and their
 	// metadata from it.
 	if err == nil {
 		defer manifestFile.Close()
 
-		return bundleFromManifest(ctx, manifestFile, tmpDir, observer)
+		return bundleFromManifest(ctx, functionsDir, manifestFile, tmpDir, observer)
 	}
 
 	functions := newDeployFiles()
 
-	info, err := ioutil.ReadDir(functionDir)
+	info, err := fs.ReadDir(functionsDir.root.FS(), ".")
 	if err != nil {
 		return nil, nil, nil, err
 	}
 
-	for _, i := range info {
-		filePath := filepath.Join(functionDir, i.Name())
+	for _, entry := range info {
+		i, err := entry.Info()
+		if err != nil {
+			return nil, nil, nil, err
+		}
+
+		// filePath is only used for warnings and the go-binary classification.
+		filePath := filepath.Join(functionsDir.name, i.Name())
 
 		switch {
 		case zipFile(i):
-			runtime, err := readZipRuntime(filePath)
+			runtime, err := readZipRuntime(functionsDir.root, i.Name())
 			if err != nil {
 				return nil, nil, nil, err
 			}
-			file, err := newFunctionFile(filePath, i, runtime, nil, tmpDir, observer)
+			file, err := newFunctionFile(functionsDir, i.Name(), i, runtime, nil, tmpDir, observer)
 			if err != nil {
 				return nil, nil, nil, err
 			}
 			functions.Add(file.Name, file)
 		case jsFile(i):
-			file, err := newFunctionFile(filePath, i, jsRuntime, nil, tmpDir, observer)
+			file, err := newFunctionFile(functionsDir, i.Name(), i, jsRuntime, nil, tmpDir, observer)
 			if err != nil {
 				return nil, nil, nil, err
 			}
 			functions.Add(file.Name, file)
 		case goFile(filePath, i, observer):
-			file, err := newFunctionFile(filePath, i, amazonLinux2, nil, tmpDir, observer)
+			file, err := newFunctionFile(functionsDir, i.Name(), i, amazonLinux2, nil, tmpDir, observer)
 			if err != nil {
 				return nil, nil, nil, err
 			}
@@ -898,7 +1053,7 @@ func bundle(ctx context.Context, functionDir string, tmpDir *lazyTempDir, observ
 	return functions, nil, nil, nil
 }
 
-func bundleFromManifest(ctx context.Context, manifestFile *os.File, tmpDir *lazyTempDir, observer DeployObserver) (*deployFiles, []*models.FunctionSchedule, map[string]models.FunctionConfig, error) {
+func bundleFromManifest(ctx context.Context, functionsDir dirHandle, manifestFile *os.File, tmpDir *lazyTempDir, observer DeployObserver) (*deployFiles, []*models.FunctionSchedule, map[string]models.FunctionConfig, error) {
 	manifestBytes, err := ioutil.ReadAll(manifestFile)
 	if err != nil {
 		return nil, nil, nil, err
@@ -919,7 +1074,14 @@ func bundleFromManifest(ctx context.Context, manifestFile *os.File, tmpDir *lazy
 	functionsConfig := make(map[string]models.FunctionConfig)
 
 	for _, function := range manifest.Functions {
-		fileInfo, err := os.Stat(function.Path)
+		// The manifest is untrusted input: the paths it names must resolve
+		// inside the functions directory.
+		relPath, err := manifestFunctionRel(functionsDir.name, function.Path)
+		if err != nil {
+			return nil, nil, nil, err
+		}
+
+		fileInfo, err := functionsDir.root.Stat(relPath)
 		if err != nil {
 			return nil, nil, nil, fmt.Errorf("manifest file specifies a function path that cannot be found: %s", function.Path)
 		}
@@ -935,7 +1097,7 @@ func bundleFromManifest(ctx context.Context, manifestFile *os.File, tmpDir *lazy
 			InvocationMode: function.InvocationMode,
 			Timeout:        function.Timeout,
 		}
-		file, err := newFunctionFile(function.Path, fileInfo, runtime, &meta, tmpDir, observer)
+		file, err := newFunctionFile(functionsDir, relPath, fileInfo, runtime, &meta, tmpDir, observer)
 		if err != nil {
 			return nil, nil, nil, err
 		}
@@ -1008,12 +1170,43 @@ func bundleFromManifest(ctx context.Context, manifestFile *os.File, tmpDir *lazy
 	return functions, schedules, functionsConfig, nil
 }
 
-func readZipRuntime(filePath string) (string, error) {
-	zf, err := zip.OpenReader(filePath)
+// manifestFunctionRel converts a manifest function path into a path relative to
+// the functions directory, rejecting anything that points outside it.
+func manifestFunctionRel(rootName, path string) (string, error) {
+	rel := path
+	if filepath.IsAbs(path) {
+		absRoot, err := filepath.Abs(rootName)
+		if err != nil {
+			return "", err
+		}
+		rel, err = filepath.Rel(absRoot, path)
+		if err != nil {
+			return "", fmt.Errorf("manifest file specifies a function path outside the functions directory: %s", path)
+		}
+	}
+	rel = filepath.Clean(rel)
+	if rel == ".." || strings.HasPrefix(rel, ".."+string(filepath.Separator)) {
+		return "", fmt.Errorf("manifest file specifies a function path outside the functions directory: %s", path)
+	}
+	return rel, nil
+}
+
+func readZipRuntime(root *os.Root, relPath string) (string, error) {
+	f, err := openRegularFileInRoot(root, relPath)
 	if err != nil {
 		return "", err
 	}
-	defer zf.Close()
+	defer func() { _ = f.Close() }()
+
+	info, err := f.Stat()
+	if err != nil {
+		return "", err
+	}
+
+	zf, err := zip.NewReader(f, info.Size())
+	if err != nil {
+		return "", err
+	}
 
 	for _, file := range zf.File {
 		if file.Name == "netlify-toolchain" {
@@ -1023,7 +1216,7 @@ func readZipRuntime(filePath string) (string, error) {
 				// This preserves the current behavior in this library.
 				return jsRuntime, nil
 			}
-			defer fc.Close()
+			defer func() { _ = fc.Close() }()
 
 			var tc toolchainSpec
 			if err := json.NewDecoder(fc).Decode(&tc); err != nil {
@@ -1038,15 +1231,15 @@ func readZipRuntime(filePath string) (string, error) {
 	return jsRuntime, nil
 }
 
-func newFunctionFile(filePath string, i os.FileInfo, runtime string, metadata *FunctionMetadata, tmpDir *lazyTempDir, observer DeployObserver) (*FileBundle, error) {
+func newFunctionFile(dir dirHandle, relPath string, i os.FileInfo, runtime string, metadata *FunctionMetadata, tmpDir *lazyTempDir, observer DeployObserver) (*FileBundle, error) {
 	var file *FileBundle
 	var err error
 
 	if zipFile(i) || tarFile(i) {
 		name := strings.TrimSuffix(i.Name(), filepath.Ext(i.Name()))
-		file, err = createFunctionFileBundle(name, filePath)
+		file, err = createFunctionFileBundle(name, dir, relPath)
 	} else {
-		file, err = zipFunctionFile(filePath, i, runtime, tmpDir)
+		file, err = zipFunctionFile(dir, relPath, i, runtime, tmpDir)
 	}
 	if err != nil {
 		return nil, err
@@ -1064,19 +1257,19 @@ func newFunctionFile(filePath string, i os.FileInfo, runtime string, metadata *F
 	return file, nil
 }
 
-func zipFunctionFile(filePath string, i os.FileInfo, runtime string, tmpDir *lazyTempDir) (*FileBundle, error) {
-	src, err := os.Open(filePath)
+func zipFunctionFile(dir dirHandle, relPath string, i os.FileInfo, runtime string, tmpDir *lazyTempDir) (*FileBundle, error) {
+	src, err := openRegularFileInRoot(dir.root, relPath)
 	if err != nil {
 		return nil, err
 	}
-	defer src.Close()
+	defer func() { _ = src.Close() }()
 
-	dir, err := tmpDir.get()
+	tmpPath, tmpRoot, err := tmpDir.get()
 	if err != nil {
 		return nil, err
 	}
 
-	tmp, err := os.CreateTemp(dir, "function-*.zip")
+	tmp, err := os.CreateTemp(tmpPath, "function-*.zip")
 	if err != nil {
 		return nil, err
 	}
@@ -1110,6 +1303,8 @@ func zipFunctionFile(filePath string, i os.FileInfo, runtime string, tmpDir *laz
 		Name: strings.TrimSuffix(i.Name(), filepath.Ext(i.Name())),
 		Sum:  hex.EncodeToString(s.Sum(nil)),
 		Path: tmpName,
+		root: tmpRoot,
+		rel:  filepath.Base(tmpName),
 	}, nil
 }
 
@@ -1117,15 +1312,20 @@ func zipFunctionFile(filePath string, i os.FileInfo, runtime string, tmpDir *laz
 // lists into an uploadable FileBundle. The deploy declares these as its edge_functions map
 // ({format => code_sha}); the server replies with the subset (required_edge_functions) not already
 // stored, and only those are streamed up. A missing manifest means no edge functions to upload.
-func bundleEdgeFunctions(ctx context.Context, edgeFunctionsDir string, observer DeployObserver) (*deployFiles, error) {
-	if edgeFunctionsDir == "" {
+func bundleEdgeFunctions(ctx context.Context, edgeFunctionsDir dirHandle, observer DeployObserver) (*deployFiles, error) {
+	if !edgeFunctionsDir.valid() {
 		return nil, nil
 	}
 
-	manifestBytes, err := os.ReadFile(filepath.Join(edgeFunctionsDir, "manifest.json"))
+	manifestFile, err := openRegularFileInRoot(edgeFunctionsDir.root, "manifest.json")
 	if os.IsNotExist(err) {
 		return nil, nil
 	}
+	if err != nil {
+		return nil, err
+	}
+	manifestBytes, err := io.ReadAll(manifestFile)
+	manifestFile.Close()
 	if err != nil {
 		return nil, err
 	}
@@ -1159,14 +1359,12 @@ func bundleEdgeFunctions(ctx context.Context, edgeFunctionsDir string, observer 
 	return files, nil
 }
 
-func newEdgeFunctionFile(edgeFunctionsDir string, bundle edgeFunctionsManifestBundle) (*FileBundle, error) {
-	path := filepath.Join(edgeFunctionsDir, bundle.Asset)
-
+func newEdgeFunctionFile(edgeFunctionsDir dirHandle, bundle edgeFunctionsManifestBundle) (*FileBundle, error) {
 	// code_sha is the dedup key in the deployer<->functions-origin contract, so we compute it from the
 	// bundle's bytes rather than trusting the edge-bundler's asset filename (which currently also happens
 	// to be the sha256, but that's a bundler implementation detail). createFileBundleWithHasher streams
 	// the bytes through the hasher, so the bundle is never held in memory.
-	file, err := createFileBundleWithHasher(bundle.Format, path, sha256.New())
+	file, err := createFileBundleWithHasher(bundle.Format, edgeFunctionsDir, bundle.Asset, sha256.New())
 	if err != nil {
 		return nil, fmt.Errorf("edge functions manifest specifies a bundle that cannot be read: %s: %w", bundle.Asset, err)
 	}

@@ -30,6 +30,26 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+// testDir opens a dirHandle over dir for the lifetime of the test.
+func testDir(t *testing.T, dir string) dirHandle {
+	t.Helper()
+	root, err := os.OpenRoot(dir)
+	require.NoError(t, err)
+	t.Cleanup(func() { _ = root.Close() })
+	return dirHandle{root: root, name: dir}
+}
+
+// newTestTempDir returns a lazyTempDir whose handle and directory are cleaned up
+// when the test ends. Production pairs every lazyTempDir with a deferred remove;
+// tests must too, or the still-open directory handle blocks TempDir cleanup on
+// Windows.
+func newTestTempDir(t *testing.T) *lazyTempDir {
+	t.Helper()
+	td := &lazyTempDir{root: t.TempDir()}
+	t.Cleanup(td.remove)
+	return td
+}
+
 func TestGetLFSSha(t *testing.T) {
 	t.Run("test with not a pointer file", func(t *testing.T) {
 		file := strings.NewReader("Not a pointer file")
@@ -258,13 +278,13 @@ func TestWalk_IgnoreNodeModulesInRoot(t *testing.T) {
 	err = ioutil.WriteFile(filepath.Join(dir, "more", "node_modules", "inner-package"), []byte{}, 0644)
 	require.Nil(t, err)
 
-	files, err := walk(dir, mockObserver{}, false, false)
+	files, err := walk(testDir(t, dir), mockObserver{}, false, false)
 	require.Nil(t, err)
 	assert.NotNil(t, files.Files["node_modules/root-package"])
 	assert.NotNil(t, files.Files["more/node_modules/inner-package"])
 
 	// When deploy directory == build directory, ignore node_modules in deploy directory root.
-	files, err = walk(dir, mockObserver{}, false, true)
+	files, err = walk(testDir(t, dir), mockObserver{}, false, true)
 	require.Nil(t, err)
 	assert.Nil(t, files.Files["node_modules/root-package"])
 	assert.NotNil(t, files.Files["more/node_modules/inner-package"])
@@ -286,7 +306,7 @@ func TestWalk_EdgeFunctions(t *testing.T) {
 	err = ioutil.WriteFile(filepath.Join(edgeFunctionsDir, "123456789.js"), []byte{}, 0644)
 	require.Nil(t, err)
 
-	err = addInternalFilesToDeploy(edgeFunctionsDir, edgeFunctionsInternalPath, files, mockObserver{})
+	err = addInternalFilesToDeploy(testDir(t, edgeFunctionsDir), edgeFunctionsInternalPath, files, mockObserver{})
 	require.Nil(t, err)
 
 	assert.NotNil(t, files.Files[".netlify/internal/edge-functions/manifest.json"])
@@ -309,7 +329,7 @@ func TestWalk_PublishedFilesAndEdgeFunctions(t *testing.T) {
 	err = ioutil.WriteFile(filepath.Join(edgeFunctionsDir, "123456789.js"), []byte{}, 0644)
 	require.Nil(t, err)
 
-	err = addInternalFilesToDeploy(edgeFunctionsDir, edgeFunctionsInternalPath, files, mockObserver{})
+	err = addInternalFilesToDeploy(testDir(t, edgeFunctionsDir), edgeFunctionsInternalPath, files, mockObserver{})
 	require.Nil(t, err)
 
 	assert.NotNil(t, files.Files["assets/styles.css"])
@@ -332,7 +352,7 @@ func TestWalk_PublishedFilesAndEdgeRedirects(t *testing.T) {
 	err = ioutil.WriteFile(filepath.Join(edgeRedirectsDir, "redirects.json"), []byte{}, 0644)
 	require.Nil(t, err)
 
-	err = addInternalFilesToDeploy(edgeRedirectsDir, edgeRedirectsInternalPath, files, mockObserver{})
+	err = addInternalFilesToDeploy(testDir(t, edgeRedirectsDir), edgeRedirectsInternalPath, files, mockObserver{})
 	require.Nil(t, err)
 
 	assert.NotNil(t, files.Files["assets/styles.css"])
@@ -357,7 +377,7 @@ func TestWalk_DbMigrations(t *testing.T) {
 	err = ioutil.WriteFile(filepath.Join(migrationDir, "migration.sql"), []byte("CREATE TABLE users (id INT);"), 0644)
 	require.Nil(t, err)
 
-	err = addInternalFilesToDeploy(dbMigrationsDir, dbMigrationsInternalPath, files, mockObserver{})
+	err = addInternalFilesToDeploy(testDir(t, dbMigrationsDir), dbMigrationsInternalPath, files, mockObserver{})
 	require.Nil(t, err)
 
 	assert.NotNil(t, files.Files[".netlify/internal/db/migrations/1700000000_create-users/migration.sql"])
@@ -380,7 +400,7 @@ func TestWalk_PublishedFilesAndDbMigrations(t *testing.T) {
 	err = ioutil.WriteFile(filepath.Join(migrationDir, "migration.sql"), []byte("CREATE TABLE users (id INT);"), 0644)
 	require.Nil(t, err)
 
-	err = addInternalFilesToDeploy(dbMigrationsDir, dbMigrationsInternalPath, files, mockObserver{})
+	err = addInternalFilesToDeploy(testDir(t, dbMigrationsDir), dbMigrationsInternalPath, files, mockObserver{})
 	require.Nil(t, err)
 
 	assert.NotNil(t, files.Files["assets/styles.css"])
@@ -401,7 +421,7 @@ func setupPublishedAssets(t *testing.T) *deployFiles {
 	err = ioutil.WriteFile(filepath.Join(publishDir, "index.html"), []byte{}, 0644)
 	require.Nil(t, err)
 
-	files, err := walk(publishDir, mockObserver{}, false, false)
+	files, err := walk(testDir(t, publishDir), mockObserver{}, false, false)
 	require.Nil(t, err)
 
 	return files
@@ -429,7 +449,7 @@ func TestUploadFiles_Cancelation(t *testing.T) {
 	require.NoError(t, ioutil.WriteFile(filepath.Join(dir, "foo.html"), []byte("Hello"), 0644))
 	require.NoError(t, ioutil.WriteFile(filepath.Join(dir, "bar.html"), []byte("World"), 0644))
 
-	files, err := walk(dir, nil, false, false)
+	files, err := walk(testDir(t, dir), nil, false, false)
 	require.NoError(t, err)
 	d := &models.Deploy{}
 	for _, bundle := range files.Files {
@@ -474,7 +494,7 @@ func TestUploadFiles_CancelationWaitsForInFlightUploads(t *testing.T) {
 	require.NoError(t, os.WriteFile(filepath.Join(dir, "foo.html"), []byte("Hello"), 0644))
 	require.NoError(t, os.WriteFile(filepath.Join(dir, "bar.html"), []byte("World"), 0644))
 
-	files, err := walk(dir, nil, false, false)
+	files, err := walk(testDir(t, dir), nil, false, false)
 	require.NoError(t, err)
 	d := &models.Deploy{}
 	for _, bundle := range files.Files {
@@ -535,7 +555,7 @@ func TestUploadFiles_Errors(t *testing.T) {
 	defer os.RemoveAll(dir)
 	require.NoError(t, ioutil.WriteFile(filepath.Join(dir, "foo.html"), []byte("Hello"), 0644))
 
-	files, err := walk(dir, nil, false, false)
+	files, err := walk(testDir(t, dir), nil, false, false)
 	require.NoError(t, err)
 	d := &models.Deploy{}
 	for _, bundle := range files.Files {
@@ -573,7 +593,7 @@ func TestUploadFiles422Error_SkipsRetry(t *testing.T) {
 	defer os.RemoveAll(dir)
 	require.NoError(t, ioutil.WriteFile(filepath.Join(dir, "foo.html"), []byte("Hello"), 0644))
 
-	files, err := walk(dir, nil, false, false)
+	files, err := walk(testDir(t, dir), nil, false, false)
 	require.NoError(t, err)
 	d := &models.Deploy{}
 	for _, bundle := range files.Files {
@@ -614,7 +634,7 @@ func TestUploadFunctions422Error_SkipsRetry(t *testing.T) {
 	defer os.RemoveAll(dir)
 	require.NoError(t, ioutil.WriteFile(filepath.Join(functionsPath, "foo.js"), []byte("module.exports = () => {}"), 0644))
 
-	files, _, _, err := bundle(ctx, functionsPath, &lazyTempDir{root: t.TempDir()}, mockObserver{})
+	files, _, _, err := bundle(ctx, testDir(t, functionsPath), newTestTempDir(t), mockObserver{})
 	require.NoError(t, err)
 	d := &models.Deploy{}
 	for _, bundle := range files.Files {
@@ -654,7 +674,7 @@ func TestUploadFiles400Error_NoSkipRetry(t *testing.T) {
 	defer os.RemoveAll(dir)
 	require.NoError(t, ioutil.WriteFile(filepath.Join(dir, "foo.html"), []byte("Hello"), 0644))
 
-	files, err := walk(dir, nil, false, false)
+	files, err := walk(testDir(t, dir), nil, false, false)
 	require.NoError(t, err)
 	d := &models.Deploy{}
 	for _, bundle := range files.Files {
@@ -695,7 +715,7 @@ func TestUploadFiles_SkipEqualFiles(t *testing.T) {
 	require.NoError(t, ioutil.WriteFile(filepath.Join(dir, "a.html"), fileBody, 0644))
 	require.NoError(t, ioutil.WriteFile(filepath.Join(dir, "b.html"), fileBody, 0644))
 
-	files, err := walk(dir, nil, false, false)
+	files, err := walk(testDir(t, dir), nil, false, false)
 	require.NoError(t, err)
 
 	// Create some fake function bundles to deploy
@@ -713,7 +733,7 @@ func TestUploadFiles_SkipEqualFiles(t *testing.T) {
 	require.NoError(t, ioutil.WriteFile(filepath.Join(functionsDir, "a.zip"), bundleBody, 0644))
 	require.NoError(t, ioutil.WriteFile(filepath.Join(functionsDir, "b.zip"), bundleBody, 0644))
 
-	functions, _, _, err := bundle(ctx, functionsDir, &lazyTempDir{root: t.TempDir()}, mockObserver{})
+	functions, _, _, err := bundle(ctx, testDir(t, functionsDir), newTestTempDir(t), mockObserver{})
 	require.NoError(t, err)
 
 	d := &models.Deploy{}
@@ -775,7 +795,7 @@ func TestUploadFunctions_RetryCountHeader(t *testing.T) {
 	defer os.RemoveAll(dir)
 	require.NoError(t, ioutil.WriteFile(filepath.Join(functionsPath, "foo.js"), []byte("module.exports = () => {}"), 0644))
 
-	files, _, _, err := bundle(ctx, functionsPath, &lazyTempDir{root: t.TempDir()}, mockObserver{})
+	files, _, _, err := bundle(ctx, testDir(t, functionsPath), newTestTempDir(t), mockObserver{})
 	require.NoError(t, err)
 	d := &models.Deploy{}
 	for _, bundle := range files.Files {
@@ -800,7 +820,7 @@ func TestBundleEdgeFunctions(t *testing.T) {
 	}`
 	require.NoError(t, os.WriteFile(filepath.Join(dir, "manifest.json"), []byte(manifest), 0644))
 
-	files, err := bundleEdgeFunctions(gocontext.Background(), dir, mockObserver{})
+	files, err := bundleEdgeFunctions(gocontext.Background(), testDir(t, dir), mockObserver{})
 	require.NoError(t, err)
 
 	// The declared edge_functions map keys each bundle by its format, with the code_sha computed by the
@@ -819,12 +839,12 @@ func TestBundleEdgeFunctions(t *testing.T) {
 
 func TestBundleEdgeFunctions_NoManifest(t *testing.T) {
 	// No edge functions dir configured.
-	files, err := bundleEdgeFunctions(gocontext.Background(), "", mockObserver{})
+	files, err := bundleEdgeFunctions(gocontext.Background(), dirHandle{}, mockObserver{})
 	require.NoError(t, err)
 	require.Nil(t, files)
 
 	// A dir without a manifest.json yields no edge functions rather than an error.
-	files, err = bundleEdgeFunctions(gocontext.Background(), t.TempDir(), mockObserver{})
+	files, err = bundleEdgeFunctions(gocontext.Background(), testDir(t, t.TempDir()), mockObserver{})
 	require.NoError(t, err)
 	require.Nil(t, files)
 }
@@ -855,7 +875,7 @@ func TestUploadEdgeFunctions(t *testing.T) {
 	manifest := `{ "bundles": [ { "asset": "edgecodesha.tar.gz", "format": "tar" } ] }`
 	require.NoError(t, os.WriteFile(filepath.Join(dir, "manifest.json"), []byte(manifest), 0644))
 
-	files, err := bundleEdgeFunctions(gocontext.Background(), dir, mockObserver{})
+	files, err := bundleEdgeFunctions(gocontext.Background(), testDir(t, dir), mockObserver{})
 	require.NoError(t, err)
 
 	codeSha := files.Sums["tar"]
@@ -868,7 +888,7 @@ func TestUploadEdgeFunctions(t *testing.T) {
 }
 
 func TestBundle(t *testing.T) {
-	functions, schedules, functionsConfig, err := bundle(gocontext.Background(), "../internal/data", &lazyTempDir{root: t.TempDir()}, mockObserver{})
+	functions, schedules, functionsConfig, err := bundle(gocontext.Background(), testDir(t, "../internal/data"), newTestTempDir(t), mockObserver{})
 
 	assert.Nil(t, err)
 	assert.Equal(t, 5, len(functions.Files))
@@ -943,7 +963,7 @@ func TestBundleWithManifest(t *testing.T) {
 	defer os.Remove(manifestPath)
 	assert.Nil(t, err)
 
-	functions, schedules, functionsConfig, err := bundle(gocontext.Background(), "../internal/data", &lazyTempDir{root: t.TempDir()}, mockObserver{})
+	functions, schedules, functionsConfig, err := bundle(gocontext.Background(), testDir(t, "../internal/data"), newTestTempDir(t), mockObserver{})
 	assert.Nil(t, err)
 
 	assert.Equal(t, 1, len(schedules))
@@ -1005,7 +1025,7 @@ func TestBundleWithManifestEventSubscriptions(t *testing.T) {
 	assert.Nil(t, err)
 	defer manifestFileHandle.Close()
 
-	_, _, functionsConfig, err := bundleFromManifest(gocontext.Background(), manifestFileHandle, &lazyTempDir{root: t.TempDir()}, mockObserver{})
+	_, _, functionsConfig, err := bundleFromManifest(gocontext.Background(), testDir(t, basePath), manifestFileHandle, newTestTempDir(t), mockObserver{})
 	assert.Nil(t, err)
 
 	helloJSConfig := functionsConfig["hello-js-function-test"]
@@ -1013,7 +1033,7 @@ func TestBundleWithManifestEventSubscriptions(t *testing.T) {
 }
 
 func TestReadZipRuntime(t *testing.T) {
-	runtime, err := readZipRuntime("../internal/data/hello-rs-function-test.zip")
+	runtime, err := readZipRuntime(testDir(t, "../internal/data").root, "hello-rs-function-test.zip")
 
 	assert.Nil(t, err)
 	assert.Equal(t, "rs", runtime)
