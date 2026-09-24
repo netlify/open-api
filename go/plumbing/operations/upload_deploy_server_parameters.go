@@ -65,6 +65,8 @@ type UploadDeployServerParams struct {
 
 	/*XNfRetryCount*/
 	XNfRetryCount *int64
+	/*CodeSha*/
+	CodeSha string
 	/*DeployID*/
 	DeployID string
 	/*FileBody*/
@@ -121,6 +123,17 @@ func (o *UploadDeployServerParams) SetXNfRetryCount(xNfRetryCount *int64) {
 	o.XNfRetryCount = xNfRetryCount
 }
 
+// WithCodeSha adds the codeSha to the upload deploy server params
+func (o *UploadDeployServerParams) WithCodeSha(codeSha string) *UploadDeployServerParams {
+	o.SetCodeSha(codeSha)
+	return o
+}
+
+// SetCodeSha adds the codeSha to the upload deploy server params
+func (o *UploadDeployServerParams) SetCodeSha(codeSha string) {
+	o.CodeSha = codeSha
+}
+
 // WithDeployID adds the deployID to the upload deploy server params
 func (o *UploadDeployServerParams) WithDeployID(deployID string) *UploadDeployServerParams {
 	o.SetDeployID(deployID)
@@ -169,6 +182,11 @@ func (o *UploadDeployServerParams) WriteToRequest(r runtime.ClientRequest, reg s
 			return err
 		}
 
+	}
+
+	// path param code_sha
+	if err := r.SetPathParam("code_sha", o.CodeSha); err != nil {
+		return err
 	}
 
 	// path param deploy_id

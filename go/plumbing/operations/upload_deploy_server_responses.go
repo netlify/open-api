@@ -55,7 +55,7 @@ type UploadDeployServerOK struct {
 }
 
 func (o *UploadDeployServerOK) Error() string {
-	return fmt.Sprintf("[PUT /deploys/{deploy_id}/server][%d] uploadDeployServerOK ", 200)
+	return fmt.Sprintf("[PUT /deploys/{deploy_id}/server/{code_sha}][%d] uploadDeployServerOK ", 200)
 }
 
 func (o *UploadDeployServerOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -87,7 +87,7 @@ func (o *UploadDeployServerDefault) Code() int {
 }
 
 func (o *UploadDeployServerDefault) Error() string {
-	return fmt.Sprintf("[PUT /deploys/{deploy_id}/server][%d] uploadDeployServer default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[PUT /deploys/{deploy_id}/server/{code_sha}][%d] uploadDeployServer default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *UploadDeployServerDefault) GetPayload() *models.Error {

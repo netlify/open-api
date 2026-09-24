@@ -1665,17 +1665,21 @@ paths:
             $ref: '#/definitions/function'
         default:
           $ref: '#/responses/error'
-  /deploys/{deploy_id}/server:
+  /deploys/{deploy_id}/server/{code_sha}:
     put:
       operationId: uploadDeployServer
       tags: [deploy]
       consumes:
         - application/octet-stream
       description: |
-        Uploads the deploy's Netlify Server bundle. A deploy has at most one, so the
-        endpoint takes no name.
+        Uploads the deploy's Netlify Server bundle, addressed by the digest the deploy
+        declared in its `server` property.
       parameters:
         - name: deploy_id
+          type: string
+          in: path
+          required: true
+        - name: code_sha
           type: string
           in: path
           required: true

@@ -6541,9 +6541,9 @@ func (a *Client) UploadDeployFunction(params *UploadDeployFunctionParams, authIn
 }
 
 /*
-	UploadDeployServer Uploads the deploy's Netlify Server bundle. A deploy has at most one, so the
+	UploadDeployServer Uploads the deploy's Netlify Server bundle, addressed by the digest the deploy
 
-endpoint takes no name.
+declared in its `server` property.
 */
 func (a *Client) UploadDeployServer(params *UploadDeployServerParams, authInfo runtime.ClientAuthInfoWriter) (*UploadDeployServerOK, error) {
 	// TODO: Validate the params before sending
@@ -6554,7 +6554,7 @@ func (a *Client) UploadDeployServer(params *UploadDeployServerParams, authInfo r
 	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "uploadDeployServer",
 		Method:             "PUT",
-		PathPattern:        "/deploys/{deploy_id}/server",
+		PathPattern:        "/deploys/{deploy_id}/server/{code_sha}",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/octet-stream"},
 		Schemes:            []string{"https"},
