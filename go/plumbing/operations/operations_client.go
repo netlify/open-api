@@ -387,6 +387,8 @@ type ClientService interface {
 
 	UploadDeployFunction(params *UploadDeployFunctionParams, authInfo runtime.ClientAuthInfoWriter) (*UploadDeployFunctionOK, error)
 
+	UploadDeployServer(params *UploadDeployServerParams, authInfo runtime.ClientAuthInfoWriter) (*UploadDeployServerOK, error)
+
 	SetTransport(transport runtime.ClientTransport)
 }
 
@@ -6535,6 +6537,42 @@ func (a *Client) UploadDeployFunction(params *UploadDeployFunctionParams, authIn
 	}
 	// unexpected success response
 	unexpectedSuccess := result.(*UploadDeployFunctionDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+	UploadDeployServer Uploads the deploy's Netlify Server bundle, addressed by the digest the deploy
+
+declared in its `server` property.
+*/
+func (a *Client) UploadDeployServer(params *UploadDeployServerParams, authInfo runtime.ClientAuthInfoWriter) (*UploadDeployServerOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewUploadDeployServerParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "uploadDeployServer",
+		Method:             "PUT",
+		PathPattern:        "/deploys/{deploy_id}/server/{code_sha}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/octet-stream"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &UploadDeployServerReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*UploadDeployServerOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*UploadDeployServerDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 

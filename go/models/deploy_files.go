@@ -75,6 +75,9 @@ type DeployFiles struct {
 	// functions config
 	FunctionsConfig map[string]FunctionConfig `json:"functions_config,omitempty"`
 
+	// server
+	Server *DeployFilesServer `json:"server,omitempty"`
+
 	// A zip file containing the site files to deploy. Alternative to 'files'.
 	// To use this field, set Content-Type to 'application/json' and include the zip content here.
 	// Alternatively, you can set Content-Type to 'application/zip' and send the zip as the raw request body (not as JSON).
@@ -96,6 +99,10 @@ func (m *DeployFiles) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateFunctionsConfig(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateServer(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -172,6 +179,24 @@ func (m *DeployFiles) validateFunctionsConfig(formats strfmt.Registry) error {
 			}
 		}
 
+	}
+
+	return nil
+}
+
+func (m *DeployFiles) validateServer(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Server) { // not required
+		return nil
+	}
+
+	if m.Server != nil {
+		if err := m.Server.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("server")
+			}
+			return err
+		}
 	}
 
 	return nil
