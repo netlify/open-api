@@ -4923,10 +4923,21 @@ definitions:
           A hash mapping edge-function bundle formats to the code_sha of each bundle. The
           response's required_edge_functions lists which of these still need to be uploaded.
       server:
-        type: string
+        type: object
         description: |
-          The SHA256 digest of the deploy's Netlify Server bundle. A deploy has at most one.
-          The response's required_server says whether it still needs to be uploaded.
+          The deploy's Netlify Server. A deploy has at most one. The response's
+          required_server says whether it still needs to be uploaded.
+        required:
+          - sha
+        properties:
+          sha:
+            type: string
+            description: The SHA256 digest of the server bundle.
+          region:
+            type: string
+            description: |
+              Where the server runs. Defaults to the region configured at the site level
+              when absent.
       function_schedules:
         type: array
         items:
