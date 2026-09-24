@@ -1053,3 +1053,68 @@ func (m mockObserver) OnFailedDelta(*models.DeployFiles)                        
 func (m mockObserver) OnSetupUpload(*FileBundle) error      { return nil }
 func (m mockObserver) OnSuccessfulUpload(*FileBundle) error { return nil }
 func (m mockObserver) OnFailedUpload(*FileBundle)           {}
+
+func TestBundleServerReadsTheManifestServer(t *testing.T) {
+	dir := t.TempDir()
+	serverDir := filepath.Join(dir, "server")
+
+	require.NoError(t, os.MkdirAll(serverDir, 0o755))
+
+	archive := filepath.Join(serverDir, "server.tgz")
+	require.NoError(t, os.WriteFile(archive, []byte("the server"), 0o644))
+
+	manifest := fmt.Sprintf(`{"functions":[],"server":{"path":%q,"region":"us-east-1"},"version":1}`, archive)
+	require.NoError(t, os.WriteFile(filepath.Join(dir, "manifest.json"), []byte(manifest), 0o644))
+
+	bundle, err := bundleServer(gocontext.Background(), testDir(t, dir), mockObserver{})
+	require.NoError(t, err)
+	require.NotNil(t, bundle)
+
+	sum := sha256.Sum256([]byte("the server"))
+
+	assert.Equal(t, hex.EncodeToString(sum[:]), bundle.sha, "the digest is of the archive's bytes")
+	assert.Equal(t, "us-east-1", bundle.region)
+	assert.Equal(t, map[string]string{"server": bundle.sha}, bundle.files.Sums)
+}
+
+func TestBundleServerWithoutAServer(t *testing.T) {
+	dir := t.TempDir()
+
+	require.NoError(t, os.WriteFile(filepath.Join(dir, "manifest.json"), []byte(`{"functions":[],"version":1}`), 0o644))
+
+	bundle, err := bundleServer(gocontext.Background(), testDir(t, dir), mockObserver{})
+
+	require.NoError(t, err)
+	assert.Nil(t, bundle)
+}
+
+func TestBundleServerRejectsAPathOutsideTheFunctionsDirectory(t *testing.T) {
+	dir := t.TempDir()
+	manifest := `{"functions":[],"server":{"path":"../escape.tgz"},"version":1}`
+
+	require.NoError(t, os.WriteFile(filepath.Join(dir, "manifest.json"), []byte(manifest), 0o644))
+
+	_, err := bundleServer(gocontext.Background(), testDir(t, dir), mockObserver{})
+
+	require.Error(t, err)
+}
+
+// An unreadable manifest counts as absent: the functions directory is scanned
+// instead, so a deploy is never silently emptied by a manifest we cannot open.
+func TestBundleFallsBackToScanningWhenTheManifestCannotBeOpened(t *testing.T) {
+	dir := t.TempDir()
+
+	source, err := os.ReadFile(filepath.Join("../internal/data", "hello-js-function-test.zip"))
+	require.NoError(t, err)
+	require.NoError(t, os.WriteFile(filepath.Join(dir, "hello-js-function-test.zip"), source, 0o644))
+
+	// A directory in the manifest's place fails openRegularFileInRoot with
+	// something other than "not found".
+	require.NoError(t, os.MkdirAll(filepath.Join(dir, "manifest.json"), 0o755))
+
+	functions, _, _, err := bundle(gocontext.Background(), testDir(t, dir), newTestTempDir(t), mockObserver{})
+
+	require.NoError(t, err)
+	require.NotNil(t, functions)
+	assert.Contains(t, functions.Files, "hello-js-function-test")
+}

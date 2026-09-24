@@ -43,7 +43,10 @@ const (
 	fileUpload uploadType = iota
 	functionUpload
 	edgeFunctionUpload
+	serverUpload
+)
 
+const (
 	lfsVersionString = "version https://git-lfs.github.com/spec/v1"
 
 	edgeFunctionsInternalPath = ".netlify/internal/edge-functions/"
@@ -121,6 +124,7 @@ type DeployOptions struct {
 	files             *deployFiles
 	functions         *deployFiles
 	edgeFunctions     *deployFiles
+	server            *serverBundle
 	functionSchedules []*models.FunctionSchedule
 	functionsConfig   map[string]models.FunctionConfig
 }
@@ -466,6 +470,15 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 	}
 	options.edgeFunctions = edgeFunctions
 
+	server, err := bundleServer(ctx, roots.functions, options.Observer)
+	if err != nil {
+		if options.Observer != nil {
+			options.Observer.OnFailedWalk()
+		}
+		return nil, err
+	}
+	options.server = server
+
 	deployFiles := &models.DeployFiles{
 		Files:            options.files.Sums,
 		Draft:            options.IsDraft,
@@ -478,6 +491,12 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 	}
 	if options.edgeFunctions != nil {
 		deployFiles.EdgeFunctions = options.edgeFunctions.Sums
+	}
+	if options.server != nil {
+		deployFiles.Server = &models.DeployFilesServer{
+			Sha:    &options.server.sha,
+			Region: options.server.region,
+		}
 	}
 
 	if len(options.Environment) > 0 {
@@ -560,7 +579,8 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 		}
 	}
 
-	if len(deploy.Required) == 0 && len(deploy.RequiredFunctions) == 0 && len(deploy.RequiredEdgeFunctions) == 0 {
+	if len(deploy.Required) == 0 && len(deploy.RequiredFunctions) == 0 && len(deploy.RequiredEdgeFunctions) == 0 &&
+		len(deploy.RequiredServer) == 0 {
 		return deploy, nil
 	}
 
@@ -578,6 +598,12 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 
 	if options.edgeFunctions != nil {
 		if err := n.uploadFiles(ctx, deploy, options.edgeFunctions, options.Observer, edgeFunctionUpload, options.UploadTimeout, skipRetry); err != nil {
+			return nil, err
+		}
+	}
+
+	if options.server != nil {
+		if err := n.uploadFiles(ctx, deploy, options.server.files, options.Observer, serverUpload, options.UploadTimeout, skipRetry); err != nil {
 			return nil, err
 		}
 	}
@@ -647,6 +673,8 @@ func (n *Netlify) uploadFiles(ctx context.Context, d *models.Deploy, files *depl
 		required = d.RequiredFunctions
 	case edgeFunctionUpload:
 		required = d.RequiredEdgeFunctions
+	case serverUpload:
+		required = d.RequiredServer
 	}
 
 	count := 0
@@ -782,6 +810,15 @@ func (n *Netlify) uploadFile(ctx context.Context, d *models.Deploy, f *FileBundl
 				params.SetTimeout(timeout)
 			}
 			_, operationError = n.Operations.UploadDeployEdgeFunction(params, authInfo)
+		case serverUpload:
+			params := operations.NewUploadDeployServerParams().WithDeployID(d.ID).WithCodeSha(f.Sum).WithFileBody(body)
+			if retryCount > 0 {
+				params = params.WithXNfRetryCount(&retryCount)
+			}
+			if timeout != 0 {
+				params.SetTimeout(timeout)
+			}
+			_, operationError = n.Operations.UploadDeployServer(params, authInfo)
 		}
 
 		if operationError != nil {
@@ -1306,6 +1343,66 @@ func zipFunctionFile(dir dirHandle, relPath string, i os.FileInfo, runtime strin
 		root: tmpRoot,
 		rel:  filepath.Base(tmpName),
 	}, nil
+}
+
+type serverBundle struct {
+	files  *deployFiles
+	sha    string
+	region string
+}
+
+// bundleServer reads the deploy's Netlify Server out of the functions manifest.
+func bundleServer(ctx context.Context, functionsDir dirHandle, observer DeployObserver) (*serverBundle, error) {
+	if !functionsDir.valid() {
+		return nil, nil
+	}
+
+	// A manifest that cannot be opened means there is no server to bundl.
+	manifestFile, err := openRegularFileInRoot(functionsDir.root, "manifest.json")
+	if err != nil {
+		return nil, nil
+	}
+
+	manifestBytes, err := io.ReadAll(manifestFile)
+	_ = manifestFile.Close()
+
+	if err != nil {
+		return nil, err
+	}
+
+	var manifest functionsManifest
+	if err := json.Unmarshal(manifestBytes, &manifest); err != nil {
+		return nil, fmt.Errorf("malformed functions manifest file: %w", err)
+	}
+
+	if manifest.Server == nil || manifest.Server.Path == "" {
+		return nil, nil
+	}
+
+	context.GetLogger(ctx).Debug("Found a Netlify Server in the functions manifest")
+
+	relPath, err := manifestFunctionRel(functionsDir.name, manifest.Server.Path)
+	if err != nil {
+		return nil, err
+	}
+
+	// The digest is computed from the archive's bytes rather than taken from the
+	// manifest, because it is what the upload is addressed by.
+	file, err := createFileBundleWithHasher("server", functionsDir, relPath, sha256.New())
+	if err != nil {
+		return nil, fmt.Errorf("functions manifest specifies a server that cannot be read: %s: %w", manifest.Server.Path, err)
+	}
+
+	files := newDeployFiles()
+	files.Add(file.Name, file)
+
+	if observer != nil {
+		if err := observer.OnSuccessfulStep(file); err != nil {
+			return nil, err
+		}
+	}
+
+	return &serverBundle{files: files, sha: file.Sum, region: manifest.Server.Region}, nil
 }
 
 // bundleEdgeFunctions reads the edge-bundler manifest from edgeFunctionsDir and turns each bundle it
