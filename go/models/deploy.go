@@ -89,6 +89,12 @@ type Deploy struct {
 	// required functions
 	RequiredFunctions []string `json:"required_functions"`
 
+	// The SHA256 digest of the deploy's Netlify Server bundle, when it still needs to
+	// be uploaded to complete the deploy. A deploy has at most one server, so this
+	// holds either nothing or a single digest.
+	//
+	RequiredServer []string `json:"required_server"`
+
 	// review id
 	ReviewID float64 `json:"review_id,omitempty"`
 

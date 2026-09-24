@@ -1665,6 +1665,35 @@ paths:
             $ref: '#/definitions/function'
         default:
           $ref: '#/responses/error'
+  /deploys/{deploy_id}/server:
+    put:
+      operationId: uploadDeployServer
+      tags: [deploy]
+      consumes:
+        - application/octet-stream
+      description: |
+        Uploads the deploy's Netlify Server bundle. A deploy has at most one, so the
+        endpoint takes no name.
+      parameters:
+        - name: deploy_id
+          type: string
+          in: path
+          required: true
+        - name: size
+          type: integer
+          in: query
+        - name: file_body
+          in: body
+          schema:
+            type: string
+            format: binary
+          required: true
+        - $ref: '#/parameters/retryCount'
+      responses:
+        '200':
+          description: OK
+        default:
+          $ref: '#/responses/error'
   /deploys/{deploy_id}/edge_functions/{code_sha}:
     put:
       operationId: uploadDeployEdgeFunction
@@ -4777,6 +4806,14 @@ definitions:
         description: |
           An array of code_shas for the edge-function bundles that need to be uploaded to
           complete the deploy.
+      required_server:
+        type: array
+        items:
+          type: string
+        description: |
+          The SHA256 digest of the deploy's Netlify Server bundle, when it still needs to
+          be uploaded to complete the deploy. A deploy has at most one server, so this
+          holds either nothing or a single digest.
       error_message:
         type: string
       branch:
@@ -4881,6 +4918,11 @@ definitions:
         description: |
           A hash mapping edge-function bundle formats to the code_sha of each bundle. The
           response's required_edge_functions lists which of these still need to be uploaded.
+      server:
+        type: string
+        description: |
+          The SHA256 digest of the deploy's Netlify Server bundle. A deploy has at most one.
+          The response's required_server says whether it still needs to be uploaded.
       function_schedules:
         type: array
         items:

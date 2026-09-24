@@ -75,6 +75,11 @@ type DeployFiles struct {
 	// functions config
 	FunctionsConfig map[string]FunctionConfig `json:"functions_config,omitempty"`
 
+	// The SHA256 digest of the deploy's Netlify Server bundle. A deploy has at most one.
+	// The response's required_server says whether it still needs to be uploaded.
+	//
+	Server string `json:"server,omitempty"`
+
 	// A zip file containing the site files to deploy. Alternative to 'files'.
 	// To use this field, set Content-Type to 'application/json' and include the zip content here.
 	// Alternatively, you can set Content-Type to 'application/zip' and send the zip as the raw request body (not as JSON).
