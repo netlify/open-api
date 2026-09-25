@@ -88,6 +88,7 @@ type DeployOptions struct {
 	SiteID            string
 	Dir               string
 	FunctionsDir      string
+	ServerDir         string
 	EdgeFunctionsDir  string
 	EdgeRedirectsDir  string
 	DbMigrationsDir   string
@@ -104,6 +105,7 @@ type DeployOptions struct {
 	// read from manifest files.
 	DirRoot              *os.Root
 	FunctionsDirRoot     *os.Root
+	ServerDirRoot        *os.Root
 	EdgeFunctionsDirRoot *os.Root
 	EdgeRedirectsDirRoot *os.Root
 	DbMigrationsDirRoot  *os.Root
@@ -296,7 +298,7 @@ func (h dirHandle) valid() bool {
 // opened here (rather than provided by the caller) are recorded in owned and
 // closed when the deploy returns.
 type deployRoots struct {
-	dir, functions, edgeFunctions, edgeRedirects, dbMigrations dirHandle
+	dir, functions, server, edgeFunctions, edgeRedirects, dbMigrations dirHandle
 
 	owned []*os.Root
 }
@@ -366,6 +368,10 @@ func resolveDeployRoots(options *DeployOptions) (*deployRoots, error) {
 	if err := resolve(&roots.functions, options.FunctionsDirRoot, options.FunctionsDir); err != nil {
 		return nil, err
 	}
+	if err := resolve(&roots.server, options.ServerDirRoot, options.ServerDir); err != nil {
+		return roots, err
+	}
+
 	if err := resolve(&roots.edgeFunctions, options.EdgeFunctionsDirRoot, options.EdgeFunctionsDir); err != nil {
 		return nil, err
 	}
@@ -470,7 +476,7 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 	}
 	options.edgeFunctions = edgeFunctions
 
-	server, err := bundleServer(ctx, roots.functions, options.Observer)
+	server, err := bundleServer(ctx, roots.server, options.Observer)
 	if err != nil {
 		if options.Observer != nil {
 			options.Observer.OnFailedWalk()
@@ -1351,14 +1357,15 @@ type serverBundle struct {
 	region string
 }
 
-// bundleServer reads the deploy's Netlify Server out of the functions manifest.
-func bundleServer(ctx context.Context, functionsDir dirHandle, observer DeployObserver) (*serverBundle, error) {
-	if !functionsDir.valid() {
+// bundleServer reads the deploy's Netlify Server out of the server manifest,
+// which its own build step writes alongside the archive it describes.
+func bundleServer(ctx context.Context, serverDir dirHandle, observer DeployObserver) (*serverBundle, error) {
+	if !serverDir.valid() {
 		return nil, nil
 	}
 
-	// A manifest that cannot be opened means there is no server to bundl.
-	manifestFile, err := openRegularFileInRoot(functionsDir.root, "manifest.json")
+	// A manifest that cannot be opened means there is no server to bundle.
+	manifestFile, err := openRegularFileInRoot(serverDir.root, "manifest.json")
 	if err != nil {
 		return nil, nil
 	}
@@ -1370,27 +1377,27 @@ func bundleServer(ctx context.Context, functionsDir dirHandle, observer DeployOb
 		return nil, err
 	}
 
-	var manifest functionsManifest
+	var manifest serverManifest
 	if err := json.Unmarshal(manifestBytes, &manifest); err != nil {
-		return nil, fmt.Errorf("malformed functions manifest file: %w", err)
+		return nil, fmt.Errorf("malformed server manifest file: %w", err)
 	}
 
 	if manifest.Server == nil || manifest.Server.Path == "" {
 		return nil, nil
 	}
 
-	context.GetLogger(ctx).Debug("Found a Netlify Server in the functions manifest")
+	context.GetLogger(ctx).Debug("Found a Netlify Server in the server manifest")
 
-	relPath, err := manifestFunctionRel(functionsDir.name, manifest.Server.Path)
+	relPath, err := manifestFunctionRel(serverDir.name, manifest.Server.Path)
 	if err != nil {
 		return nil, err
 	}
 
 	// The digest is computed from the archive's bytes rather than taken from the
 	// manifest, because it is what the upload is addressed by.
-	file, err := createFileBundleWithHasher("server", functionsDir, relPath, sha256.New())
+	file, err := createFileBundleWithHasher("server", serverDir, relPath, sha256.New())
 	if err != nil {
-		return nil, fmt.Errorf("functions manifest specifies a server that cannot be read: %s: %w", manifest.Server.Path, err)
+		return nil, fmt.Errorf("server manifest specifies a server that cannot be read: %s: %w", manifest.Server.Path, err)
 	}
 
 	files := newDeployFiles()

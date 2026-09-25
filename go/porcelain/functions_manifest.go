@@ -5,13 +5,7 @@ import "github.com/netlify/open-api/v2/go/models"
 // https://github.com/netlify/zip-it-and-ship-it/blob/main/src/manifest.ts
 type functionsManifest struct {
 	Functions []functionsManifestEntry `json:"functions"`
-	Server    *serverManifestEntry     `json:"server"`
 	Version   int                      `json:"version"`
-}
-
-type serverManifestEntry struct {
-	Path   string `json:"path"`
-	Region string `json:"region"`
 }
 
 type functionsManifestEntry struct {

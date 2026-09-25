@@ -1056,14 +1056,10 @@ func (m mockObserver) OnFailedUpload(*FileBundle)           {}
 
 func TestBundleServerReadsTheManifestServer(t *testing.T) {
 	dir := t.TempDir()
-	serverDir := filepath.Join(dir, "server")
-
-	require.NoError(t, os.MkdirAll(serverDir, 0o755))
-
-	archive := filepath.Join(serverDir, "server.tgz")
+	archive := filepath.Join(dir, "server.tgz")
 	require.NoError(t, os.WriteFile(archive, []byte("the server"), 0o644))
 
-	manifest := fmt.Sprintf(`{"functions":[],"server":{"path":%q,"region":"us-east-1"},"version":1}`, archive)
+	manifest := fmt.Sprintf(`{"server":{"path":%q,"region":"us-east-1"},"version":1}`, archive)
 	require.NoError(t, os.WriteFile(filepath.Join(dir, "manifest.json"), []byte(manifest), 0o644))
 
 	bundle, err := bundleServer(gocontext.Background(), testDir(t, dir), mockObserver{})
@@ -1080,7 +1076,7 @@ func TestBundleServerReadsTheManifestServer(t *testing.T) {
 func TestBundleServerWithoutAServer(t *testing.T) {
 	dir := t.TempDir()
 
-	require.NoError(t, os.WriteFile(filepath.Join(dir, "manifest.json"), []byte(`{"functions":[],"version":1}`), 0o644))
+	require.NoError(t, os.WriteFile(filepath.Join(dir, "manifest.json"), []byte(`{"version":1}`), 0o644))
 
 	bundle, err := bundleServer(gocontext.Background(), testDir(t, dir), mockObserver{})
 
@@ -1088,9 +1084,9 @@ func TestBundleServerWithoutAServer(t *testing.T) {
 	assert.Nil(t, bundle)
 }
 
-func TestBundleServerRejectsAPathOutsideTheFunctionsDirectory(t *testing.T) {
+func TestBundleServerRejectsAPathOutsideTheServerDirectory(t *testing.T) {
 	dir := t.TempDir()
-	manifest := `{"functions":[],"server":{"path":"../escape.tgz"},"version":1}`
+	manifest := `{"server":{"path":"../escape.tgz"},"version":1}`
 
 	require.NoError(t, os.WriteFile(filepath.Join(dir, "manifest.json"), []byte(manifest), 0o644))
 
