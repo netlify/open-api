@@ -5,6 +5,7 @@ import (
 	gocontext "context"
 	"crypto/sha256"
 	"encoding/hex"
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -1071,6 +1072,117 @@ func TestBundleServerReadsTheManifestServer(t *testing.T) {
 	assert.Equal(t, hex.EncodeToString(sum[:]), bundle.sha, "the digest is of the archive's bytes")
 	assert.Equal(t, "us-east-1", bundle.region)
 	assert.Equal(t, map[string]string{"server": bundle.sha}, bundle.files.Sums)
+}
+
+func TestBundleServerReadsTheManifestServerConfig(t *testing.T) {
+	dir := t.TempDir()
+	archive := filepath.Join(dir, "server.tgz")
+	require.NoError(t, os.WriteFile(archive, []byte("the server"), 0o644))
+
+	manifest := fmt.Sprintf(`{
+		"server": {
+			"path": %q,
+			"instanceSize": "medium",
+			"routes": [
+				{"pattern": "/api/*", "expression": "^/api(?:/(.*))/?$", "methods": ["GET", "POST"], "prefer_static": true},
+				{"pattern": "/health", "literal": "/health"}
+			],
+			"excludedRoutes": [{"pattern": "/api/internal", "literal": "/api/internal"}]
+		},
+		"version": 1
+	}`, archive)
+	require.NoError(t, os.WriteFile(filepath.Join(dir, "manifest.json"), []byte(manifest), 0o644))
+
+	bundle, err := bundleServer(gocontext.Background(), testDir(t, dir), mockObserver{})
+	require.NoError(t, err)
+	require.NotNil(t, bundle)
+
+	assert.Equal(t, "medium", bundle.instanceSize)
+	assert.Equal(t, []*models.FunctionRoute{
+		{Pattern: "/api/*", Expression: "^/api(?:/(.*))/?$", Methods: []string{"GET", "POST"}, PreferStatic: true},
+		{Pattern: "/health", Literal: "/health"},
+	}, bundle.routes)
+	assert.Equal(t, []*models.ExcludedFunctionRoute{
+		{Pattern: "/api/internal", Literal: "/api/internal"},
+	}, bundle.excludedRoutes)
+}
+
+func TestBundleServerLeavesUnsetConfigEmpty(t *testing.T) {
+	dir := t.TempDir()
+	archive := filepath.Join(dir, "server.tgz")
+	require.NoError(t, os.WriteFile(archive, []byte("the server"), 0o644))
+
+	manifest := fmt.Sprintf(`{"server":{"path":%q},"version":1}`, archive)
+	require.NoError(t, os.WriteFile(filepath.Join(dir, "manifest.json"), []byte(manifest), 0o644))
+
+	bundle, err := bundleServer(gocontext.Background(), testDir(t, dir), mockObserver{})
+	require.NoError(t, err)
+	require.NotNil(t, bundle)
+
+	assert.Empty(t, bundle.instanceSize)
+	assert.Nil(t, bundle.routes)
+	assert.Nil(t, bundle.excludedRoutes)
+}
+
+var errStopAfterWalk = errors.New("stop after walk")
+
+// walkCapturingObserver records the deploy files built by the walk and stops
+// the deploy before it reaches the API.
+type walkCapturingObserver struct {
+	mockObserver
+	deployFiles *models.DeployFiles
+}
+
+func (o *walkCapturingObserver) OnSuccessfulWalk(df *models.DeployFiles) error {
+	o.deployFiles = df
+	return errStopAfterWalk
+}
+
+func TestDoDeploySendsTheServerConfig(t *testing.T) {
+	siteDir := t.TempDir()
+	require.NoError(t, os.WriteFile(filepath.Join(siteDir, "index.html"), []byte("Hello"), 0o644))
+
+	serverDir := t.TempDir()
+	archive := filepath.Join(serverDir, "server.tgz")
+	require.NoError(t, os.WriteFile(archive, []byte("the server"), 0o644))
+
+	manifest := fmt.Sprintf(`{
+		"server": {
+			"path": %q,
+			"region": "us-east-2",
+			"instanceSize": "large",
+			"routes": [{"pattern": "/*", "expression": "^(?:/(.*))/?$", "prefer_static": true}],
+			"excludedRoutes": [{"pattern": "/static/*", "expression": "^/static(?:/(.*))/?$"}]
+		},
+		"version": 1
+	}`, archive)
+	require.NoError(t, os.WriteFile(filepath.Join(serverDir, "manifest.json"), []byte(manifest), 0o644))
+
+	client := NewRetryable(apiClient.New("localhost", "/api/v1", []string{"http"}), strfmt.Default, 1)
+	observer := &walkCapturingObserver{}
+
+	_, err := client.DoDeploy(gocontext.Background(), &DeployOptions{
+		Dir:       siteDir,
+		ServerDir: serverDir,
+		Observer:  observer,
+	}, nil)
+	require.ErrorIs(t, err, errStopAfterWalk)
+	require.NotNil(t, observer.deployFiles)
+	require.NotNil(t, observer.deployFiles.Server)
+
+	sum := sha256.Sum256([]byte("the server"))
+	server := observer.deployFiles.Server
+
+	assert.Equal(t, hex.EncodeToString(sum[:]), *server.Sha)
+	assert.Equal(t, "us-east-2", server.Region)
+	assert.Equal(t, models.DeployFilesServerInstanceSizeLarge, server.InstanceSize)
+	assert.Equal(t, []*models.FunctionRoute{
+		{Pattern: "/*", Expression: "^(?:/(.*))/?$", PreferStatic: true},
+	}, server.Routes)
+	assert.Equal(t, []*models.ExcludedFunctionRoute{
+		{Pattern: "/static/*", Expression: "^/static(?:/(.*))/?$"},
+	}, server.ExcludedRoutes)
+	require.NoError(t, server.Validate(strfmt.Default))
 }
 
 func TestBundleServerWithoutAServer(t *testing.T) {

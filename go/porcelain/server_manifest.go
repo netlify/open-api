@@ -10,6 +10,9 @@ type serverManifest struct {
 }
 
 type serverManifestEntry struct {
-	Path   string `json:"path"`
-	Region string `json:"region"`
+	Path           string                  `json:"path"`
+	Region         string                  `json:"region"`
+	InstanceSize   string                  `json:"instanceSize"`
+	Routes         []functionRoute         `json:"routes"`
+	ExcludedRoutes []excludedFunctionRoute `json:"excludedRoutes"`
 }

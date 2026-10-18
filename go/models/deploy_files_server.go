@@ -6,6 +6,9 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"encoding/json"
+	"strconv"
+
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
@@ -18,10 +21,22 @@ import (
 // swagger:model deployFilesServer
 type DeployFilesServer struct {
 
+	// Paths within `routes` that the server does not handle.
+	ExcludedRoutes []*ExcludedFunctionRoute `json:"excluded_routes"`
+
+	// The size of the instances the server runs on. A default size is used when
+	// absent.
+	//
+	// Enum: [small medium large]
+	InstanceSize string `json:"instance_size,omitempty"`
+
 	// Where the server runs. Defaults to the region configured at the site level
 	// when absent.
 	//
 	Region string `json:"region,omitempty"`
+
+	// The paths the server handles.
+	Routes []*FunctionRoute `json:"routes"`
 
 	// The SHA256 digest of the server bundle.
 	// Required: true
@@ -32,6 +47,18 @@ type DeployFilesServer struct {
 func (m *DeployFilesServer) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateExcludedRoutes(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateInstanceSize(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateRoutes(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateSha(formats); err != nil {
 		res = append(res, err)
 	}
@@ -39,6 +66,102 @@ func (m *DeployFilesServer) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *DeployFilesServer) validateExcludedRoutes(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ExcludedRoutes) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.ExcludedRoutes); i++ {
+		if swag.IsZero(m.ExcludedRoutes[i]) { // not required
+			continue
+		}
+
+		if m.ExcludedRoutes[i] != nil {
+			if err := m.ExcludedRoutes[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("excluded_routes" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+var deployFilesServerTypeInstanceSizePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["small","medium","large"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		deployFilesServerTypeInstanceSizePropEnum = append(deployFilesServerTypeInstanceSizePropEnum, v)
+	}
+}
+
+const (
+
+	// DeployFilesServerInstanceSizeSmall captures enum value "small"
+	DeployFilesServerInstanceSizeSmall string = "small"
+
+	// DeployFilesServerInstanceSizeMedium captures enum value "medium"
+	DeployFilesServerInstanceSizeMedium string = "medium"
+
+	// DeployFilesServerInstanceSizeLarge captures enum value "large"
+	DeployFilesServerInstanceSizeLarge string = "large"
+)
+
+// prop value enum
+func (m *DeployFilesServer) validateInstanceSizeEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, deployFilesServerTypeInstanceSizePropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *DeployFilesServer) validateInstanceSize(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.InstanceSize) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateInstanceSizeEnum("instance_size", "body", m.InstanceSize); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *DeployFilesServer) validateRoutes(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Routes) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.Routes); i++ {
+		if swag.IsZero(m.Routes[i]) { // not required
+			continue
+		}
+
+		if m.Routes[i] != nil {
+			if err := m.Routes[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("routes" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
 	return nil
 }
 

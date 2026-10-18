@@ -4938,6 +4938,22 @@ definitions:
             description: |
               Where the server runs. Defaults to the region configured at the site level
               when absent.
+          instance_size:
+            type: string
+            enum: ['small', 'medium', 'large']
+            description: |
+              The size of the instances the server runs on. A default size is used when
+              absent.
+          routes:
+            type: array
+            description: The paths the server handles.
+            items:
+              $ref: '#/definitions/functionRoute'
+          excluded_routes:
+            type: array
+            description: Paths within `routes` that the server does not handle.
+            items:
+              $ref: '#/definitions/excludedFunctionRoute'
       function_schedules:
         type: array
         items:
