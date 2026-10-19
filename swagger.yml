@@ -4954,6 +4954,11 @@ definitions:
             description: Paths within `routes` that the server does not handle.
             items:
               $ref: '#/definitions/excludedFunctionRoute'
+          runtime_version:
+            type: string
+            description: |
+              The runtime version the server was built for, such as `nodejs24.x`. A
+              default version is used when absent.
       function_schedules:
         type: array
         items:

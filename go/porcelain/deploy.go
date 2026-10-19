@@ -505,6 +505,7 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 			InstanceSize:   options.server.instanceSize,
 			Routes:         options.server.routes,
 			ExcludedRoutes: options.server.excludedRoutes,
+			RuntimeVersion: options.server.runtimeVersion,
 		}
 	}
 
@@ -1370,6 +1371,7 @@ type serverBundle struct {
 	instanceSize   string
 	routes         []*models.FunctionRoute
 	excludedRoutes []*models.ExcludedFunctionRoute
+	runtimeVersion string
 }
 
 // bundleServer reads the deploy's Netlify Server out of the server manifest,
@@ -1425,10 +1427,11 @@ func bundleServer(ctx context.Context, serverDir dirHandle, observer DeployObser
 	}
 
 	bundle := &serverBundle{
-		files:        files,
-		sha:          file.Sum,
-		region:       manifest.Server.Region,
-		instanceSize: manifest.Server.InstanceSize,
+		files:          files,
+		sha:            file.Sum,
+		region:         manifest.Server.Region,
+		instanceSize:   manifest.Server.InstanceSize,
+		runtimeVersion: manifest.Server.RuntimeVersion,
 	}
 	if len(manifest.Server.Routes) > 0 {
 		bundle.routes = toModelRoutes(manifest.Server.Routes)

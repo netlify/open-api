@@ -1083,6 +1083,7 @@ func TestBundleServerReadsTheManifestServerConfig(t *testing.T) {
 		"server": {
 			"path": %q,
 			"instanceSize": "medium",
+			"runtimeVersion": "nodejs24.x",
 			"routes": [
 				{"pattern": "/api/*", "expression": "^/api(?:/(.*))/?$", "methods": ["GET", "POST"], "prefer_static": true},
 				{"pattern": "/health", "literal": "/health"}
@@ -1098,6 +1099,7 @@ func TestBundleServerReadsTheManifestServerConfig(t *testing.T) {
 	require.NotNil(t, bundle)
 
 	assert.Equal(t, "medium", bundle.instanceSize)
+	assert.Equal(t, "nodejs24.x", bundle.runtimeVersion)
 	assert.Equal(t, []*models.FunctionRoute{
 		{Pattern: "/api/*", Expression: "^/api(?:/(.*))/?$", Methods: []string{"GET", "POST"}, PreferStatic: true},
 		{Pattern: "/health", Literal: "/health"},
@@ -1120,6 +1122,7 @@ func TestBundleServerLeavesUnsetConfigEmpty(t *testing.T) {
 	require.NotNil(t, bundle)
 
 	assert.Empty(t, bundle.instanceSize)
+	assert.Empty(t, bundle.runtimeVersion)
 	assert.Nil(t, bundle.routes)
 	assert.Nil(t, bundle.excludedRoutes)
 }
@@ -1149,8 +1152,9 @@ func TestDoDeploySendsTheServerConfig(t *testing.T) {
 	manifest := fmt.Sprintf(`{
 		"server": {
 			"path": %q,
-			"region": "us-east-2",
+			"region": "cmh",
 			"instanceSize": "large",
+			"runtimeVersion": "nodejs24.x",
 			"routes": [{"pattern": "/*", "expression": "^(?:/(.*))/?$", "prefer_static": true}],
 			"excludedRoutes": [{"pattern": "/static/*", "expression": "^/static(?:/(.*))/?$"}]
 		},
@@ -1174,8 +1178,9 @@ func TestDoDeploySendsTheServerConfig(t *testing.T) {
 	server := observer.deployFiles.Server
 
 	assert.Equal(t, hex.EncodeToString(sum[:]), *server.Sha)
-	assert.Equal(t, "us-east-2", server.Region)
+	assert.Equal(t, "cmh", server.Region)
 	assert.Equal(t, models.DeployFilesServerInstanceSizeLarge, server.InstanceSize)
+	assert.Equal(t, "nodejs24.x", server.RuntimeVersion)
 	assert.Equal(t, []*models.FunctionRoute{
 		{Pattern: "/*", Expression: "^(?:/(.*))/?$", PreferStatic: true},
 	}, server.Routes)

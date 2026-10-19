@@ -38,6 +38,11 @@ type DeployFilesServer struct {
 	// The paths the server handles.
 	Routes []*FunctionRoute `json:"routes"`
 
+	// The runtime version the server was built for, such as `nodejs24.x`. A
+	// default version is used when absent.
+	//
+	RuntimeVersion string `json:"runtime_version,omitempty"`
+
 	// The SHA256 digest of the server bundle.
 	// Required: true
 	Sha *string `json:"sha"`
