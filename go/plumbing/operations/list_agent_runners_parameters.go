@@ -66,7 +66,10 @@ type ListAgentRunnersParams struct {
 	AccountID string
 	/*Branch*/
 	Branch *string
-	/*From*/
+	/*From
+	  Unix timestamp. Only runs created at or after this time.
+
+	*/
 	From *int64
 	/*Page*/
 	Page *int32
@@ -76,12 +79,23 @@ type ListAgentRunnersParams struct {
 	ResultBranch *string
 	/*SiteID*/
 	SiteID string
-	/*State*/
+	/*State
+	  Only runs in this state: `new`, `running`, `await_input`, `interrupted`, `error`, `done`, `cancelled` or `archived`.
+
+	*/
 	State *string
 	/*Title*/
 	Title *string
-	/*To*/
+	/*To
+	  Unix timestamp. Only runs created before this time.
+
+	*/
 	To *int64
+	/*UserID
+	  Only runs started by this user.
+
+	*/
+	UserID *string
 
 	timeout    time.Duration
 	Context    context.Context
@@ -229,6 +243,17 @@ func (o *ListAgentRunnersParams) WithTo(to *int64) *ListAgentRunnersParams {
 // SetTo adds the to to the list agent runners params
 func (o *ListAgentRunnersParams) SetTo(to *int64) {
 	o.To = to
+}
+
+// WithUserID adds the userID to the list agent runners params
+func (o *ListAgentRunnersParams) WithUserID(userID *string) *ListAgentRunnersParams {
+	o.SetUserID(userID)
+	return o
+}
+
+// SetUserID adds the userId to the list agent runners params
+func (o *ListAgentRunnersParams) SetUserID(userID *string) {
+	o.UserID = userID
 }
 
 // WriteToRequest writes these params to a swagger request
@@ -379,6 +404,22 @@ func (o *ListAgentRunnersParams) WriteToRequest(r runtime.ClientRequest, reg str
 		qTo := swag.FormatInt64(qrTo)
 		if qTo != "" {
 			if err := r.SetQueryParam("to", qTo); err != nil {
+				return err
+			}
+		}
+
+	}
+
+	if o.UserID != nil {
+
+		// query param user_id
+		var qrUserID string
+		if o.UserID != nil {
+			qrUserID = *o.UserID
+		}
+		qUserID := qrUserID
+		if qUserID != "" {
+			if err := r.SetQueryParam("user_id", qUserID); err != nil {
 				return err
 			}
 		}

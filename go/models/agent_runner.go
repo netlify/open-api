@@ -31,11 +31,14 @@ type AgentRunner struct {
 	// created at
 	CreatedAt string `json:"created_at,omitempty"`
 
-	// current task
+	// What the agent is working on in the active session.
 	CurrentTask string `json:"current_task,omitempty"`
 
 	// done at
 	DoneAt string `json:"done_at,omitempty"`
+
+	// Whether the run has changes, available from `GET /agent_runners/{agent_runner_id}/diff`.
+	HasResultDiff bool `json:"has_result_diff,omitempty"`
 
 	// id
 	ID string `json:"id,omitempty"`
@@ -70,11 +73,14 @@ type AgentRunner struct {
 	// pr number
 	PrNumber int64 `json:"pr_number,omitempty"`
 
-	// pr state
+	// One of `open`, `draft`, `merged` or `closed`.
 	PrState string `json:"pr_state,omitempty"`
 
 	// pr url
 	PrURL string `json:"pr_url,omitempty"`
+
+	// State of the deploy building the latest preview. Null until that deploy exists; `ready` once the preview is live.
+	PreviewState string `json:"preview_state,omitempty"`
 
 	// result branch
 	ResultBranch string `json:"result_branch,omitempty"`
@@ -88,7 +94,7 @@ type AgentRunner struct {
 	// site id
 	SiteID string `json:"site_id,omitempty"`
 
-	// state
+	// One of `new`, `running`, `await_input`, `interrupted`, `error`, `done`, `cancelled` or `archived`.
 	State string `json:"state,omitempty"`
 
 	// title

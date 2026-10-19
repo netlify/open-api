@@ -11,6 +11,7 @@ import (
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
+	"github.com/go-openapi/validate"
 )
 
 // AgentRunnerSession agent runner session
@@ -36,7 +37,7 @@ type AgentRunnerSession struct {
 	// deploy id
 	DeployID string `json:"deploy_id,omitempty"`
 
-	// deploy url
+	// URL of the session's deploy preview.
 	DeployURL string `json:"deploy_url,omitempty"`
 
 	// dev server id
@@ -51,13 +52,19 @@ type AgentRunnerSession struct {
 	// id
 	ID string `json:"id,omitempty"`
 
+	// Questions and requests from the agent, keyed by reference ID. A pending one pauses the session in `await_input` until it's answered or skipped.
+	Interactions map[string]AgentRunnerSessionInteraction `json:"interactions,omitempty"`
+
 	// is published
 	IsPublished bool `json:"is_published,omitempty"`
+
+	// When the session paused waiting on an interaction. Null once it resumes.
+	PausedAt string `json:"paused_at,omitempty"`
 
 	// prompt
 	Prompt string `json:"prompt,omitempty"`
 
-	// result
+	// The agent's summary of what it did.
 	Result string `json:"result,omitempty"`
 
 	// result diff
@@ -66,7 +73,7 @@ type AgentRunnerSession struct {
 	// result zip file name
 	ResultZipFileName string `json:"result_zip_file_name,omitempty"`
 
-	// state
+	// One of `new`, `running`, `await_input`, `interrupted`, `error`, `done` or `cancelled`.
 	State string `json:"state,omitempty"`
 
 	// steps
@@ -77,6 +84,9 @@ type AgentRunnerSession struct {
 
 	// updated at
 	UpdatedAt string `json:"updated_at,omitempty"`
+
+	// usage
+	Usage *AgentRunnerSessionUsage `json:"usage,omitempty"`
 
 	// user
 	User *AgentRunnerUser `json:"user,omitempty"`
@@ -90,7 +100,15 @@ func (m *AgentRunnerSession) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateInteractions(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateSteps(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateUsage(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -122,6 +140,28 @@ func (m *AgentRunnerSession) validateAgentConfig(formats strfmt.Registry) error 
 	return nil
 }
 
+func (m *AgentRunnerSession) validateInteractions(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Interactions) { // not required
+		return nil
+	}
+
+	for k := range m.Interactions {
+
+		if err := validate.Required("interactions"+"."+k, "body", m.Interactions[k]); err != nil {
+			return err
+		}
+		if val, ok := m.Interactions[k]; ok {
+			if err := val.Validate(formats); err != nil {
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
 func (m *AgentRunnerSession) validateSteps(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.Steps) { // not required
@@ -142,6 +182,24 @@ func (m *AgentRunnerSession) validateSteps(formats strfmt.Registry) error {
 			}
 		}
 
+	}
+
+	return nil
+}
+
+func (m *AgentRunnerSession) validateUsage(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Usage) { // not required
+		return nil
+	}
+
+	if m.Usage != nil {
+		if err := m.Usage.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("usage")
+			}
+			return err
+		}
 	}
 
 	return nil
