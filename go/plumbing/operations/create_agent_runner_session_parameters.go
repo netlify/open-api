@@ -15,6 +15,8 @@ import (
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
+
+	"github.com/netlify/open-api/v2/go/models"
 )
 
 // NewCreateAgentRunnerSessionParams creates a new CreateAgentRunnerSessionParams object
@@ -62,15 +64,29 @@ for the create agent runner session operation typically these are written to a h
 */
 type CreateAgentRunnerSessionParams struct {
 
-	/*Agent*/
+	/*Agent
+	  Use the request body instead.
+
+	*/
 	Agent *string
 	/*AgentRunnerID*/
 	AgentRunnerID string
-	/*FileKeys*/
+	/*AgentRunnerSession*/
+	AgentRunnerSession *models.AgentRunnerSessionSetup
+	/*FileKeys
+	  Use the request body instead.
+
+	*/
 	FileKeys []string
-	/*Model*/
+	/*Model
+	  Use the request body instead.
+
+	*/
 	Model *string
-	/*Prompt*/
+	/*Prompt
+	  Use the request body instead.
+
+	*/
 	Prompt *string
 
 	timeout    time.Duration
@@ -133,6 +149,17 @@ func (o *CreateAgentRunnerSessionParams) SetAgentRunnerID(agentRunnerID string) 
 	o.AgentRunnerID = agentRunnerID
 }
 
+// WithAgentRunnerSession adds the agentRunnerSession to the create agent runner session params
+func (o *CreateAgentRunnerSessionParams) WithAgentRunnerSession(agentRunnerSession *models.AgentRunnerSessionSetup) *CreateAgentRunnerSessionParams {
+	o.SetAgentRunnerSession(agentRunnerSession)
+	return o
+}
+
+// SetAgentRunnerSession adds the agentRunnerSession to the create agent runner session params
+func (o *CreateAgentRunnerSessionParams) SetAgentRunnerSession(agentRunnerSession *models.AgentRunnerSessionSetup) {
+	o.AgentRunnerSession = agentRunnerSession
+}
+
 // WithFileKeys adds the fileKeys to the create agent runner session params
 func (o *CreateAgentRunnerSessionParams) WithFileKeys(fileKeys []string) *CreateAgentRunnerSessionParams {
 	o.SetFileKeys(fileKeys)
@@ -193,6 +220,12 @@ func (o *CreateAgentRunnerSessionParams) WriteToRequest(r runtime.ClientRequest,
 	// path param agent_runner_id
 	if err := r.SetPathParam("agent_runner_id", o.AgentRunnerID); err != nil {
 		return err
+	}
+
+	if o.AgentRunnerSession != nil {
+		if err := r.SetBodyParam(o.AgentRunnerSession); err != nil {
+			return err
+		}
 	}
 
 	valuesFileKeys := o.FileKeys

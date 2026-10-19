@@ -2310,12 +2310,15 @@ paths:
     get:
       operationId: listAgentRunners
       tags: [agentRunner]
+      description: >-
+        Lists a site's agent runs, most recently active first. Archived runs
+        are left out unless `state` is `archived`.
       parameters:
-        - name: account_id
+        - name: site_id
           type: string
           in: query
           required: true
-        - name: site_id
+        - name: account_id
           type: string
           in: query
           required: true
@@ -2324,7 +2327,7 @@ paths:
         - name: state
           type: string
           in: query
-          enum: ['live', 'error']
+          description: 'Only runs in this state: `new`, `running`, `await_input`, `interrupted`, `error`, `done`, `cancelled` or `archived`.'
         - name: title
           type: string
           in: query
@@ -2334,12 +2337,18 @@ paths:
         - name: result_branch
           type: string
           in: query
+        - name: user_id
+          type: string
+          in: query
+          description: Only runs started by this user.
         - name: from
           type: integer
           in: query
+          description: Unix timestamp. Only runs created at or after this time.
         - name: to
           type: integer
           in: query
+          description: Unix timestamp. Only runs created before this time.
       responses:
         '200':
           description: OK
@@ -2392,6 +2401,53 @@ paths:
           description: Not Found
         '422':
           description: Unprocessable Entity
+        default:
+          $ref: '#/responses/error'
+  /sites/{site_id}/agent_runners:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+        description: The site's ID or one of its hostnames.
+    post:
+      operationId: createSiteAgentRunner
+      tags: [agentRunner]
+      description: Starts an agent run on the site.
+      parameters:
+        - name: agent_runner
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/agentRunnerSetup'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/agentRunner'
+        '400':
+          description: '`prompt_required` or `invalid_request`.'
+          schema:
+            $ref: '#/definitions/agentRunnerError'
+        '403':
+          description: '`plan_not_eligible` or `ai_credit_limit_disabled`.'
+          schema:
+            $ref: '#/definitions/agentRunnerError'
+        '404':
+          description: >-
+            The site or deploy wasn't found (`deploy_not_found`), the deploy's
+            files are no longer available (`deploy_zip_unavailable`), or agent
+            runners aren't enabled for the site.
+          schema:
+            $ref: '#/definitions/agentRunnerError'
+        '422':
+          description: '`deploy_zip_unavailable`.'
+          schema:
+            $ref: '#/definitions/agentRunnerError'
+        '429':
+          description: '`concurrency_limit_reached`, `ai_credit_limit_exceeded` or `ai_credit_limit_reached`.'
+          schema:
+            $ref: '#/definitions/agentRunnerError'
         default:
           $ref: '#/responses/error'
   /agent_runners/upload_url:
@@ -2449,10 +2505,57 @@ paths:
           $ref: '#/responses/error'
     delete:
       operationId: deleteAgentRunner
-      tags: [agentRunner]
+      # This tag is in no x-tagGroups entry, which keeps the operation out of the docs but not the clients.
+      tags: [hiddenAgentRunner]
+      description: Same as `POST /agent_runners/{agent_runner_id}/stop`. Doesn't delete the run.
       responses:
         '202':
           description: Accepted
+        default:
+          $ref: '#/responses/error'
+  /agent_runners/{agent_runner_id}/stop:
+    parameters:
+      - name: agent_runner_id
+        type: string
+        in: path
+        required: true
+    post:
+      operationId: stopAgentRunner
+      tags: [agentRunner]
+      description: Stops the run's active session. Stopping happens in the background.
+      responses:
+        '202':
+          description: Accepted
+        default:
+          $ref: '#/responses/error'
+  /agent_runners/{agent_runner_id}/diff:
+    parameters:
+      - name: agent_runner_id
+        type: string
+        in: path
+        required: true
+    get:
+      operationId: getAgentRunnerDiff
+      tags: [agentRunner]
+      description: >-
+        Returns the run's changes as a unified diff. With `page`, returns that
+        page of changed files and sets pagination headers.
+      produces:
+        - text/plain
+      parameters:
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/perPage'
+        - name: strip_binary
+          type: boolean
+          in: query
+          description: Replace binary file contents with a placeholder, keeping the file headers.
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '404':
+          description: The run has no changes.
         default:
           $ref: '#/responses/error'
   /agent_runners/{agent_runner_id}/archive:
@@ -2538,13 +2641,15 @@ paths:
         - name: state
           type: string
           in: query
-          enum: ['live', 'error']
+          description: 'Only sessions in this state: `new`, `running`, `await_input`, `interrupted`, `error`, `done` or `cancelled`.'
         - name: from
           type: integer
           in: query
+          description: Unix timestamp. Only sessions created at or after this time.
         - name: to
           type: integer
           in: query
+          description: Unix timestamp. Only sessions created before this time.
         - name: order_by
           type: string
           in: query
@@ -2561,30 +2666,61 @@ paths:
     post:
       operationId: createAgentRunnerSession
       tags: [agentRunnerSession]
+      description: Starts a follow-up session on the run.
       parameters:
+        - name: agent_runner_session
+          in: body
+          schema:
+            $ref: '#/definitions/agentRunnerSessionSetup'
         - name: prompt
           type: string
           in: query
+          description: Use the request body instead.
         - name: agent
           type: string
           in: query
+          description: Use the request body instead.
         - name: model
           type: string
           in: query
+          description: Use the request body instead.
         - name: file_keys
           type: array
           in: query
           items:
             type: string
+          description: Use the request body instead.
       responses:
         '200':
           description: OK
           schema:
             $ref: '#/definitions/agentRunnerSession'
+        '400':
+          description: '`prompt_required` or `invalid_request`.'
+          schema:
+            $ref: '#/definitions/agentRunnerError'
+        '403':
+          description: '`plan_not_eligible` or `ai_credit_limit_disabled`.'
+          schema:
+            $ref: '#/definitions/agentRunnerError'
         '404':
           description: Not Found
+          schema:
+            $ref: '#/definitions/agentRunnerError'
+        '409':
+          description: >-
+            `active_session_exists` while a session is still running, or
+            `follow_up_unavailable` once the run is publishing or published.
+          schema:
+            $ref: '#/definitions/agentRunnerError'
         '422':
-          description: Unprocessable Entity
+          description: '`deploy_zip_unavailable`.'
+          schema:
+            $ref: '#/definitions/agentRunnerError'
+        '429':
+          description: '`concurrency_limit_reached`, `ai_credit_limit_exceeded` or `ai_credit_limit_reached`.'
+          schema:
+            $ref: '#/definitions/agentRunnerError'
         default:
           $ref: '#/responses/error'
   /agent_runners/{agent_runner_id}/sessions/{agent_runner_session_id}:
@@ -2623,10 +2759,75 @@ paths:
           $ref: '#/responses/error'
     delete:
       operationId: deleteAgentRunnerSession
-      tags: [agentRunnerSession]
+      # This tag is in no x-tagGroups entry, which keeps the operation out of the docs but not the clients.
+      tags: [hiddenAgentRunner]
+      description: Same as `POST /agent_runners/{agent_runner_id}/sessions/{agent_runner_session_id}/stop`. Doesn't delete the session.
       responses:
         '202':
           description: Accepted
+        default:
+          $ref: '#/responses/error'
+  /agent_runners/{agent_runner_id}/sessions/{agent_runner_session_id}/stop:
+    parameters:
+      - name: agent_runner_id
+        type: string
+        in: path
+        required: true
+      - name: agent_runner_session_id
+        type: string
+        in: path
+        required: true
+    post:
+      operationId: stopAgentRunnerSession
+      tags: [agentRunnerSession]
+      description: Stops the session. Stopping happens in the background.
+      responses:
+        '202':
+          description: Accepted
+        default:
+          $ref: '#/responses/error'
+  /agent_runners/{agent_runner_id}/sessions/{agent_runner_session_id}/answers:
+    parameters:
+      - name: agent_runner_id
+        type: string
+        in: path
+        required: true
+      - name: agent_runner_session_id
+        type: string
+        in: path
+        required: true
+    post:
+      operationId: answerAgentRunnerSession
+      tags: [agentRunnerSession]
+      description: >-
+        Answers or skips a pending interaction and resumes the session. A
+        session waiting on an interaction is in the `await_input` state.
+      parameters:
+        - name: answer
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/agentRunnerSessionAnswer'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/agentRunnerSession'
+        '400':
+          description: >-
+            `ref_id_required`, `invalid_response`, or
+            `interaction_can_only_be_skipped` when answering an `authorization`
+            or `setup_request` interaction.
+          schema:
+            $ref: '#/definitions/agentRunnerError'
+        '422':
+          description: '`interaction_not_found` or `interaction_not_pending`.'
+          schema:
+            $ref: '#/definitions/agentRunnerError'
+        '429':
+          description: '`concurrency_limit_reached`.'
+          schema:
+            $ref: '#/definitions/agentRunnerError'
         default:
           $ref: '#/responses/error'
   # end agent_runner_sessions
@@ -5516,6 +5717,7 @@ definitions:
         type: string
       state:
         type: string
+        description: One of `new`, `running`, `await_input`, `interrupted`, `error`, `done`, `cancelled` or `archived`.
       created_at:
         type: string
         format: dateTime
@@ -5537,6 +5739,7 @@ definitions:
         type: string
       pr_state:
         type: string
+        description: One of `open`, `draft`, `merged` or `closed`.
       pr_number:
         type: integer
       pr_is_being_created:
@@ -5545,6 +5748,7 @@ definitions:
         type: string
       current_task:
         type: string
+        description: What the agent is working on in the active session.
       result_diff:
         type: string
       sha:
@@ -5564,12 +5768,45 @@ definitions:
       active_session_created_at:
         type: string
         format: dateTime
+      has_result_diff:
+        type: boolean
+        description: Whether the run has changes, available from `GET /agent_runners/{agent_runner_id}/diff`.
       latest_session_deploy_id:
         type: string
       latest_session_deploy_url:
         type: string
+      preview_state:
+        type: string
+        description: State of the deploy building the latest preview. Null until that deploy exists; `ready` once the preview is live.
       user:
         $ref: '#/definitions/agentRunnerUser'
+  agentRunnerSetup:
+    type: object
+    required:
+      - prompt
+    properties:
+      prompt:
+        type: string
+      branch:
+        type: string
+        description: Branch to start from. Defaults to the site's production branch.
+      deploy_id:
+        type: string
+        description: Deploy to start from. Takes precedence over `branch`.
+      agent:
+        type: string
+        description: Agent to run, for example `claude` or `codex`.
+      model:
+        type: string
+        description: Model for the agent to use. Omit to let Netlify choose.
+      effort:
+        type: string
+        enum: ['low', 'medium', 'high']
+        description: Reasoning effort. Omit to let the agent decide.
+      mode:
+        type: string
+        enum: ['normal', 'ask']
+        description: '`normal` (the default) changes code; `ask` answers questions without changing code.'
   agentRunnerSession:
     type: object
     properties:
@@ -5581,6 +5818,7 @@ definitions:
         type: string
       state:
         type: string
+        description: One of `new`, `running`, `await_input`, `interrupted`, `error`, `done` or `cancelled`.
       created_at:
         type: string
         format: dateTime
@@ -5590,6 +5828,10 @@ definitions:
       done_at:
         type: string
         format: dateTime
+      paused_at:
+        type: string
+        format: dateTime
+        description: When the session paused waiting on an interaction. Null once it resumes.
       title:
         type: string
       prompt:
@@ -5598,6 +5840,7 @@ definitions:
         $ref: '#/definitions/agentRunnerSessionConfig'
       result:
         type: string
+        description: The agent's summary of what it did.
       result_diff:
         type: string
       commit_sha:
@@ -5606,8 +5849,19 @@ definitions:
         type: string
       deploy_url:
         type: string
+        description: URL of the session's deploy preview.
       duration:
         type: integer
+      usage:
+        $ref: '#/definitions/agentRunnerSessionUsage'
+      interactions:
+        type: object
+        description: >-
+          Questions and requests from the agent, keyed by reference ID. A
+          pending one pauses the session in `await_input` until it's answered
+          or skipped.
+        additionalProperties:
+          $ref: '#/definitions/agentRunnerSessionInteraction'
       steps:
         type: array
         items:
@@ -5622,6 +5876,86 @@ definitions:
         type: string
       is_published:
         type: boolean
+  agentRunnerSessionSetup:
+    type: object
+    properties:
+      prompt:
+        type: string
+        description: What the agent should do. Required.
+      agent:
+        type: string
+      model:
+        type: string
+        description: Model for the agent to use. Omit to let Netlify choose.
+      mode:
+        type: string
+        enum: ['normal', 'ask']
+        description: '`normal` (the default) changes code; `ask` answers questions without changing code.'
+  agentRunnerSessionUsage:
+    type: object
+    properties:
+      total_input_tokens:
+        type: integer
+      total_output_tokens:
+        type: integer
+      total_cached_input_tokens:
+        type: integer
+      total_cached_output_tokens:
+        type: integer
+      total_tokens:
+        type: integer
+      total_credits_cost:
+        type: number
+        description: Credits the session used.
+  agentRunnerSessionInteraction:
+    type: object
+    properties:
+      type:
+        type: string
+        description: >-
+          One of `question`, `authorization` or `setup_request`. Only questions
+          can be answered; the others can only be skipped.
+      status:
+        type: string
+        description: One of `pending`, `answered` or `skipped`.
+      payload:
+        description: >-
+          For a question, an array of questions, each with `question`, an
+          optional `header`, `multiSelect` and `options` (each with `label` and
+          an optional `description`). For `authorization` and `setup_request`,
+          an object describing the request.
+      response:
+        type: array
+        description: Answers aligned to `payload`; null entries were skipped.
+        items: {}
+  agentRunnerSessionAnswer:
+    type: object
+    required:
+      - refId
+    properties:
+      refId:
+        type: string
+        description: Key of the pending interaction in the session's `interactions`.
+      response:
+        type: array
+        description: >-
+          One entry per question in the interaction's `payload`: a string, an
+          array of strings for a multi-select question, or null to skip that
+          question.
+        items: {}
+      skipped:
+        type: boolean
+        description: Skip the whole interaction instead of answering it.
+      instruction:
+        type: string
+        description: Instruction for the agent when skipping.
+  agentRunnerError:
+    allOf:
+      - $ref: '#/definitions/error'
+      - properties:
+          error_code:
+            type: string
+            description: Machine-readable reason. Each operation lists the codes it can return.
   agentRunnerSessionStep:
     type: object
     properties:
@@ -6052,6 +6386,10 @@ x-tagGroups:
   - name: Dev servers
     tags:
       - devServer
+  - name: Agent runners
+    tags:
+      - agentRunner
+      - agentRunnerSession
   - name: Webhooks and notifications
     tags:
       - hook
@@ -6148,5 +6486,9 @@ tags:
     x-displayName: Dev server
   - name: devServerHook
     x-displayName: Dev server hook
+  - name: agentRunner
+    x-displayName: Agent runner
+  - name: agentRunnerSession
+    x-displayName: Agent runner session
   - name: database
     x-displayName: Database

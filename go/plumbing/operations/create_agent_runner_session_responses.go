@@ -29,14 +29,38 @@ func (o *CreateAgentRunnerSessionReader) ReadResponse(response runtime.ClientRes
 			return nil, err
 		}
 		return result, nil
+	case 400:
+		result := NewCreateAgentRunnerSessionBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 403:
+		result := NewCreateAgentRunnerSessionForbidden()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	case 404:
 		result := NewCreateAgentRunnerSessionNotFound()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return nil, result
+	case 409:
+		result := NewCreateAgentRunnerSessionConflict()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	case 422:
 		result := NewCreateAgentRunnerSessionUnprocessableEntity()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 429:
+		result := NewCreateAgentRunnerSessionTooManyRequests()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -87,6 +111,74 @@ func (o *CreateAgentRunnerSessionOK) readResponse(response runtime.ClientRespons
 	return nil
 }
 
+// NewCreateAgentRunnerSessionBadRequest creates a CreateAgentRunnerSessionBadRequest with default headers values
+func NewCreateAgentRunnerSessionBadRequest() *CreateAgentRunnerSessionBadRequest {
+	return &CreateAgentRunnerSessionBadRequest{}
+}
+
+/*
+CreateAgentRunnerSessionBadRequest handles this case with default header values.
+
+`prompt_required` or `invalid_request`.
+*/
+type CreateAgentRunnerSessionBadRequest struct {
+	Payload *models.AgentRunnerError
+}
+
+func (o *CreateAgentRunnerSessionBadRequest) Error() string {
+	return fmt.Sprintf("[POST /agent_runners/{agent_runner_id}/sessions][%d] createAgentRunnerSessionBadRequest  %+v", 400, o.Payload)
+}
+
+func (o *CreateAgentRunnerSessionBadRequest) GetPayload() *models.AgentRunnerError {
+	return o.Payload
+}
+
+func (o *CreateAgentRunnerSessionBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.AgentRunnerError)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewCreateAgentRunnerSessionForbidden creates a CreateAgentRunnerSessionForbidden with default headers values
+func NewCreateAgentRunnerSessionForbidden() *CreateAgentRunnerSessionForbidden {
+	return &CreateAgentRunnerSessionForbidden{}
+}
+
+/*
+CreateAgentRunnerSessionForbidden handles this case with default header values.
+
+`plan_not_eligible` or `ai_credit_limit_disabled`.
+*/
+type CreateAgentRunnerSessionForbidden struct {
+	Payload *models.AgentRunnerError
+}
+
+func (o *CreateAgentRunnerSessionForbidden) Error() string {
+	return fmt.Sprintf("[POST /agent_runners/{agent_runner_id}/sessions][%d] createAgentRunnerSessionForbidden  %+v", 403, o.Payload)
+}
+
+func (o *CreateAgentRunnerSessionForbidden) GetPayload() *models.AgentRunnerError {
+	return o.Payload
+}
+
+func (o *CreateAgentRunnerSessionForbidden) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.AgentRunnerError)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
 // NewCreateAgentRunnerSessionNotFound creates a CreateAgentRunnerSessionNotFound with default headers values
 func NewCreateAgentRunnerSessionNotFound() *CreateAgentRunnerSessionNotFound {
 	return &CreateAgentRunnerSessionNotFound{}
@@ -98,13 +190,59 @@ CreateAgentRunnerSessionNotFound handles this case with default header values.
 Not Found
 */
 type CreateAgentRunnerSessionNotFound struct {
+	Payload *models.AgentRunnerError
 }
 
 func (o *CreateAgentRunnerSessionNotFound) Error() string {
-	return fmt.Sprintf("[POST /agent_runners/{agent_runner_id}/sessions][%d] createAgentRunnerSessionNotFound ", 404)
+	return fmt.Sprintf("[POST /agent_runners/{agent_runner_id}/sessions][%d] createAgentRunnerSessionNotFound  %+v", 404, o.Payload)
+}
+
+func (o *CreateAgentRunnerSessionNotFound) GetPayload() *models.AgentRunnerError {
+	return o.Payload
 }
 
 func (o *CreateAgentRunnerSessionNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.AgentRunnerError)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewCreateAgentRunnerSessionConflict creates a CreateAgentRunnerSessionConflict with default headers values
+func NewCreateAgentRunnerSessionConflict() *CreateAgentRunnerSessionConflict {
+	return &CreateAgentRunnerSessionConflict{}
+}
+
+/*
+CreateAgentRunnerSessionConflict handles this case with default header values.
+
+`active_session_exists` while a session is still running, or `follow_up_unavailable` once the run is publishing or published.
+*/
+type CreateAgentRunnerSessionConflict struct {
+	Payload *models.AgentRunnerError
+}
+
+func (o *CreateAgentRunnerSessionConflict) Error() string {
+	return fmt.Sprintf("[POST /agent_runners/{agent_runner_id}/sessions][%d] createAgentRunnerSessionConflict  %+v", 409, o.Payload)
+}
+
+func (o *CreateAgentRunnerSessionConflict) GetPayload() *models.AgentRunnerError {
+	return o.Payload
+}
+
+func (o *CreateAgentRunnerSessionConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.AgentRunnerError)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -117,16 +255,62 @@ func NewCreateAgentRunnerSessionUnprocessableEntity() *CreateAgentRunnerSessionU
 /*
 CreateAgentRunnerSessionUnprocessableEntity handles this case with default header values.
 
-Unprocessable Entity
+`deploy_zip_unavailable`.
 */
 type CreateAgentRunnerSessionUnprocessableEntity struct {
+	Payload *models.AgentRunnerError
 }
 
 func (o *CreateAgentRunnerSessionUnprocessableEntity) Error() string {
-	return fmt.Sprintf("[POST /agent_runners/{agent_runner_id}/sessions][%d] createAgentRunnerSessionUnprocessableEntity ", 422)
+	return fmt.Sprintf("[POST /agent_runners/{agent_runner_id}/sessions][%d] createAgentRunnerSessionUnprocessableEntity  %+v", 422, o.Payload)
+}
+
+func (o *CreateAgentRunnerSessionUnprocessableEntity) GetPayload() *models.AgentRunnerError {
+	return o.Payload
 }
 
 func (o *CreateAgentRunnerSessionUnprocessableEntity) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.AgentRunnerError)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewCreateAgentRunnerSessionTooManyRequests creates a CreateAgentRunnerSessionTooManyRequests with default headers values
+func NewCreateAgentRunnerSessionTooManyRequests() *CreateAgentRunnerSessionTooManyRequests {
+	return &CreateAgentRunnerSessionTooManyRequests{}
+}
+
+/*
+CreateAgentRunnerSessionTooManyRequests handles this case with default header values.
+
+`concurrency_limit_reached`, `ai_credit_limit_exceeded` or `ai_credit_limit_reached`.
+*/
+type CreateAgentRunnerSessionTooManyRequests struct {
+	Payload *models.AgentRunnerError
+}
+
+func (o *CreateAgentRunnerSessionTooManyRequests) Error() string {
+	return fmt.Sprintf("[POST /agent_runners/{agent_runner_id}/sessions][%d] createAgentRunnerSessionTooManyRequests  %+v", 429, o.Payload)
+}
+
+func (o *CreateAgentRunnerSessionTooManyRequests) GetPayload() *models.AgentRunnerError {
+	return o.Payload
+}
+
+func (o *CreateAgentRunnerSessionTooManyRequests) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.AgentRunnerError)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
