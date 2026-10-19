@@ -64,7 +64,10 @@ type ListAgentRunnerSessionsParams struct {
 
 	/*AgentRunnerID*/
 	AgentRunnerID string
-	/*From*/
+	/*From
+	  Unix timestamp. Only sessions created at or after this time.
+
+	*/
 	From *int64
 	/*OrderBy*/
 	OrderBy *string
@@ -74,7 +77,10 @@ type ListAgentRunnerSessionsParams struct {
 	PerPage *int32
 	/*State*/
 	State *string
-	/*To*/
+	/*To
+	  Unix timestamp. Only sessions created before this time.
+
+	*/
 	To *int64
 
 	timeout    time.Duration

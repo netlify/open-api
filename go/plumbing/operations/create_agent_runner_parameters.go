@@ -14,7 +14,8 @@ import (
 	"github.com/go-openapi/runtime"
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
-	"github.com/go-openapi/swag"
+
+	"github.com/netlify/open-api/v2/go/models"
 )
 
 // NewCreateAgentRunnerParams creates a new CreateAgentRunnerParams object
@@ -62,23 +63,12 @@ for the create agent runner operation typically these are written to a http.Requ
 */
 type CreateAgentRunnerParams struct {
 
-	/*Agent*/
-	Agent *string
-	/*Branch*/
-	Branch *string
-	/*DeployID*/
-	DeployID *string
-	/*DevServerImage*/
-	DevServerImage *string
-	/*FileKeys*/
-	FileKeys []string
-	/*Model*/
-	Model *string
-	/*ParentAgentRunnerID*/
-	ParentAgentRunnerID *string
-	/*Prompt*/
-	Prompt *string
-	/*SiteID*/
+	/*AgentRunner*/
+	AgentRunner *models.AgentRunnerSetup
+	/*SiteID
+	  The site's ID or one of its hostnames.
+
+	*/
 	SiteID string
 
 	timeout    time.Duration
@@ -119,92 +109,15 @@ func (o *CreateAgentRunnerParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithAgent adds the agent to the create agent runner params
-func (o *CreateAgentRunnerParams) WithAgent(agent *string) *CreateAgentRunnerParams {
-	o.SetAgent(agent)
+// WithAgentRunner adds the agentRunner to the create agent runner params
+func (o *CreateAgentRunnerParams) WithAgentRunner(agentRunner *models.AgentRunnerSetup) *CreateAgentRunnerParams {
+	o.SetAgentRunner(agentRunner)
 	return o
 }
 
-// SetAgent adds the agent to the create agent runner params
-func (o *CreateAgentRunnerParams) SetAgent(agent *string) {
-	o.Agent = agent
-}
-
-// WithBranch adds the branch to the create agent runner params
-func (o *CreateAgentRunnerParams) WithBranch(branch *string) *CreateAgentRunnerParams {
-	o.SetBranch(branch)
-	return o
-}
-
-// SetBranch adds the branch to the create agent runner params
-func (o *CreateAgentRunnerParams) SetBranch(branch *string) {
-	o.Branch = branch
-}
-
-// WithDeployID adds the deployID to the create agent runner params
-func (o *CreateAgentRunnerParams) WithDeployID(deployID *string) *CreateAgentRunnerParams {
-	o.SetDeployID(deployID)
-	return o
-}
-
-// SetDeployID adds the deployId to the create agent runner params
-func (o *CreateAgentRunnerParams) SetDeployID(deployID *string) {
-	o.DeployID = deployID
-}
-
-// WithDevServerImage adds the devServerImage to the create agent runner params
-func (o *CreateAgentRunnerParams) WithDevServerImage(devServerImage *string) *CreateAgentRunnerParams {
-	o.SetDevServerImage(devServerImage)
-	return o
-}
-
-// SetDevServerImage adds the devServerImage to the create agent runner params
-func (o *CreateAgentRunnerParams) SetDevServerImage(devServerImage *string) {
-	o.DevServerImage = devServerImage
-}
-
-// WithFileKeys adds the fileKeys to the create agent runner params
-func (o *CreateAgentRunnerParams) WithFileKeys(fileKeys []string) *CreateAgentRunnerParams {
-	o.SetFileKeys(fileKeys)
-	return o
-}
-
-// SetFileKeys adds the fileKeys to the create agent runner params
-func (o *CreateAgentRunnerParams) SetFileKeys(fileKeys []string) {
-	o.FileKeys = fileKeys
-}
-
-// WithModel adds the model to the create agent runner params
-func (o *CreateAgentRunnerParams) WithModel(model *string) *CreateAgentRunnerParams {
-	o.SetModel(model)
-	return o
-}
-
-// SetModel adds the model to the create agent runner params
-func (o *CreateAgentRunnerParams) SetModel(model *string) {
-	o.Model = model
-}
-
-// WithParentAgentRunnerID adds the parentAgentRunnerID to the create agent runner params
-func (o *CreateAgentRunnerParams) WithParentAgentRunnerID(parentAgentRunnerID *string) *CreateAgentRunnerParams {
-	o.SetParentAgentRunnerID(parentAgentRunnerID)
-	return o
-}
-
-// SetParentAgentRunnerID adds the parentAgentRunnerId to the create agent runner params
-func (o *CreateAgentRunnerParams) SetParentAgentRunnerID(parentAgentRunnerID *string) {
-	o.ParentAgentRunnerID = parentAgentRunnerID
-}
-
-// WithPrompt adds the prompt to the create agent runner params
-func (o *CreateAgentRunnerParams) WithPrompt(prompt *string) *CreateAgentRunnerParams {
-	o.SetPrompt(prompt)
-	return o
-}
-
-// SetPrompt adds the prompt to the create agent runner params
-func (o *CreateAgentRunnerParams) SetPrompt(prompt *string) {
-	o.Prompt = prompt
+// SetAgentRunner adds the agentRunner to the create agent runner params
+func (o *CreateAgentRunnerParams) SetAgentRunner(agentRunner *models.AgentRunnerSetup) {
+	o.AgentRunner = agentRunner
 }
 
 // WithSiteID adds the siteID to the create agent runner params
@@ -226,133 +139,15 @@ func (o *CreateAgentRunnerParams) WriteToRequest(r runtime.ClientRequest, reg st
 	}
 	var res []error
 
-	if o.Agent != nil {
-
-		// query param agent
-		var qrAgent string
-		if o.Agent != nil {
-			qrAgent = *o.Agent
-		}
-		qAgent := qrAgent
-		if qAgent != "" {
-			if err := r.SetQueryParam("agent", qAgent); err != nil {
-				return err
-			}
-		}
-
-	}
-
-	if o.Branch != nil {
-
-		// query param branch
-		var qrBranch string
-		if o.Branch != nil {
-			qrBranch = *o.Branch
-		}
-		qBranch := qrBranch
-		if qBranch != "" {
-			if err := r.SetQueryParam("branch", qBranch); err != nil {
-				return err
-			}
-		}
-
-	}
-
-	if o.DeployID != nil {
-
-		// query param deploy_id
-		var qrDeployID string
-		if o.DeployID != nil {
-			qrDeployID = *o.DeployID
-		}
-		qDeployID := qrDeployID
-		if qDeployID != "" {
-			if err := r.SetQueryParam("deploy_id", qDeployID); err != nil {
-				return err
-			}
-		}
-
-	}
-
-	if o.DevServerImage != nil {
-
-		// query param dev_server_image
-		var qrDevServerImage string
-		if o.DevServerImage != nil {
-			qrDevServerImage = *o.DevServerImage
-		}
-		qDevServerImage := qrDevServerImage
-		if qDevServerImage != "" {
-			if err := r.SetQueryParam("dev_server_image", qDevServerImage); err != nil {
-				return err
-			}
-		}
-
-	}
-
-	valuesFileKeys := o.FileKeys
-
-	joinedFileKeys := swag.JoinByFormat(valuesFileKeys, "")
-	// query array param file_keys
-	if err := r.SetQueryParam("file_keys", joinedFileKeys...); err != nil {
-		return err
-	}
-
-	if o.Model != nil {
-
-		// query param model
-		var qrModel string
-		if o.Model != nil {
-			qrModel = *o.Model
-		}
-		qModel := qrModel
-		if qModel != "" {
-			if err := r.SetQueryParam("model", qModel); err != nil {
-				return err
-			}
-		}
-
-	}
-
-	if o.ParentAgentRunnerID != nil {
-
-		// query param parent_agent_runner_id
-		var qrParentAgentRunnerID string
-		if o.ParentAgentRunnerID != nil {
-			qrParentAgentRunnerID = *o.ParentAgentRunnerID
-		}
-		qParentAgentRunnerID := qrParentAgentRunnerID
-		if qParentAgentRunnerID != "" {
-			if err := r.SetQueryParam("parent_agent_runner_id", qParentAgentRunnerID); err != nil {
-				return err
-			}
-		}
-
-	}
-
-	if o.Prompt != nil {
-
-		// query param prompt
-		var qrPrompt string
-		if o.Prompt != nil {
-			qrPrompt = *o.Prompt
-		}
-		qPrompt := qrPrompt
-		if qPrompt != "" {
-			if err := r.SetQueryParam("prompt", qPrompt); err != nil {
-				return err
-			}
-		}
-
-	}
-
-	// query param site_id
-	qrSiteID := o.SiteID
-	qSiteID := qrSiteID
-	if qSiteID != "" {
-		if err := r.SetQueryParam("site_id", qSiteID); err != nil {
+	if o.AgentRunner != nil {
+		if err := r.SetBodyParam(o.AgentRunner); err != nil {
 			return err
 		}
+	}
+
+	// path param site_id
+	if err := r.SetPathParam("site_id", o.SiteID); err != nil {
+		return err
 	}
 
 	if len(res) > 0 {

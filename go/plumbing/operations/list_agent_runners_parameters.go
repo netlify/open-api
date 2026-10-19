@@ -63,10 +63,13 @@ for the list agent runners operation typically these are written to a http.Reque
 type ListAgentRunnersParams struct {
 
 	/*AccountID*/
-	AccountID string
+	AccountID *string
 	/*Branch*/
 	Branch *string
-	/*From*/
+	/*From
+	  Unix timestamp. Only runs created at or after this time.
+
+	*/
 	From *int64
 	/*Page*/
 	Page *int32
@@ -80,8 +83,16 @@ type ListAgentRunnersParams struct {
 	State *string
 	/*Title*/
 	Title *string
-	/*To*/
+	/*To
+	  Unix timestamp. Only runs created before this time.
+
+	*/
 	To *int64
+	/*UserID
+	  Only runs started by this user.
+
+	*/
+	UserID *string
 
 	timeout    time.Duration
 	Context    context.Context
@@ -122,13 +133,13 @@ func (o *ListAgentRunnersParams) SetHTTPClient(client *http.Client) {
 }
 
 // WithAccountID adds the accountID to the list agent runners params
-func (o *ListAgentRunnersParams) WithAccountID(accountID string) *ListAgentRunnersParams {
+func (o *ListAgentRunnersParams) WithAccountID(accountID *string) *ListAgentRunnersParams {
 	o.SetAccountID(accountID)
 	return o
 }
 
 // SetAccountID adds the accountId to the list agent runners params
-func (o *ListAgentRunnersParams) SetAccountID(accountID string) {
+func (o *ListAgentRunnersParams) SetAccountID(accountID *string) {
 	o.AccountID = accountID
 }
 
@@ -231,6 +242,17 @@ func (o *ListAgentRunnersParams) SetTo(to *int64) {
 	o.To = to
 }
 
+// WithUserID adds the userID to the list agent runners params
+func (o *ListAgentRunnersParams) WithUserID(userID *string) *ListAgentRunnersParams {
+	o.SetUserID(userID)
+	return o
+}
+
+// SetUserID adds the userId to the list agent runners params
+func (o *ListAgentRunnersParams) SetUserID(userID *string) {
+	o.UserID = userID
+}
+
 // WriteToRequest writes these params to a swagger request
 func (o *ListAgentRunnersParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -239,13 +261,20 @@ func (o *ListAgentRunnersParams) WriteToRequest(r runtime.ClientRequest, reg str
 	}
 	var res []error
 
-	// query param account_id
-	qrAccountID := o.AccountID
-	qAccountID := qrAccountID
-	if qAccountID != "" {
-		if err := r.SetQueryParam("account_id", qAccountID); err != nil {
-			return err
+	if o.AccountID != nil {
+
+		// query param account_id
+		var qrAccountID string
+		if o.AccountID != nil {
+			qrAccountID = *o.AccountID
 		}
+		qAccountID := qrAccountID
+		if qAccountID != "" {
+			if err := r.SetQueryParam("account_id", qAccountID); err != nil {
+				return err
+			}
+		}
+
 	}
 
 	if o.Branch != nil {
@@ -379,6 +408,22 @@ func (o *ListAgentRunnersParams) WriteToRequest(r runtime.ClientRequest, reg str
 		qTo := swag.FormatInt64(qrTo)
 		if qTo != "" {
 			if err := r.SetQueryParam("to", qTo); err != nil {
+				return err
+			}
+		}
+
+	}
+
+	if o.UserID != nil {
+
+		// query param user_id
+		var qrUserID string
+		if o.UserID != nil {
+			qrUserID = *o.UserID
+		}
+		qUserID := qrUserID
+		if qUserID != "" {
+			if err := r.SetQueryParam("user_id", qUserID); err != nil {
 				return err
 			}
 		}
