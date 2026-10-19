@@ -2369,6 +2369,52 @@ paths:
               $ref: '#/definitions/agentRunner'
         default:
           $ref: '#/responses/error'
+    post:
+      x-internal: true
+      operationId: createAgentRunner
+      tags: [agentRunner]
+      parameters:
+        - name: site_id
+          type: string
+          in: query
+          required: true
+        - name: deploy_id
+          type: string
+          in: query
+        - name: branch
+          type: string
+          in: query
+        - name: prompt
+          type: string
+          in: query
+        - name: agent
+          type: string
+          in: query
+        - name: model
+          type: string
+          in: query
+        - name: parent_agent_runner_id
+          type: string
+          in: query
+        - name: dev_server_image
+          type: string
+          in: query
+        - name: file_keys
+          type: array
+          in: query
+          items:
+            type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/agentRunner'
+        '404':
+          description: Not Found
+        '422':
+          description: Unprocessable Entity
+        default:
+          $ref: '#/responses/error'
   /sites/{site_id}/agent_runners:
     parameters:
       - name: site_id
@@ -2377,7 +2423,7 @@ paths:
         required: true
         description: The site's ID or one of its hostnames.
     post:
-      operationId: createAgentRunner
+      operationId: createSiteAgentRunner
       tags: [agentRunner]
       description: Starts an agent run on the site.
       parameters:

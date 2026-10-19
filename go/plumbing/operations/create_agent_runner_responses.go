@@ -29,18 +29,6 @@ func (o *CreateAgentRunnerReader) ReadResponse(response runtime.ClientResponse, 
 			return nil, err
 		}
 		return result, nil
-	case 400:
-		result := NewCreateAgentRunnerBadRequest()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 403:
-		result := NewCreateAgentRunnerForbidden()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
 	case 404:
 		result := NewCreateAgentRunnerNotFound()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -49,12 +37,6 @@ func (o *CreateAgentRunnerReader) ReadResponse(response runtime.ClientResponse, 
 		return nil, result
 	case 422:
 		result := NewCreateAgentRunnerUnprocessableEntity()
-		if err := result.readResponse(response, consumer, o.formats); err != nil {
-			return nil, err
-		}
-		return nil, result
-	case 429:
-		result := NewCreateAgentRunnerTooManyRequests()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -86,7 +68,7 @@ type CreateAgentRunnerOK struct {
 }
 
 func (o *CreateAgentRunnerOK) Error() string {
-	return fmt.Sprintf("[POST /sites/{site_id}/agent_runners][%d] createAgentRunnerOK  %+v", 200, o.Payload)
+	return fmt.Sprintf("[POST /agent_runners][%d] createAgentRunnerOK  %+v", 200, o.Payload)
 }
 
 func (o *CreateAgentRunnerOK) GetPayload() *models.AgentRunner {
@@ -105,74 +87,6 @@ func (o *CreateAgentRunnerOK) readResponse(response runtime.ClientResponse, cons
 	return nil
 }
 
-// NewCreateAgentRunnerBadRequest creates a CreateAgentRunnerBadRequest with default headers values
-func NewCreateAgentRunnerBadRequest() *CreateAgentRunnerBadRequest {
-	return &CreateAgentRunnerBadRequest{}
-}
-
-/*
-CreateAgentRunnerBadRequest handles this case with default header values.
-
-`prompt_required` or `invalid_request`.
-*/
-type CreateAgentRunnerBadRequest struct {
-	Payload *models.AgentRunnerError
-}
-
-func (o *CreateAgentRunnerBadRequest) Error() string {
-	return fmt.Sprintf("[POST /sites/{site_id}/agent_runners][%d] createAgentRunnerBadRequest  %+v", 400, o.Payload)
-}
-
-func (o *CreateAgentRunnerBadRequest) GetPayload() *models.AgentRunnerError {
-	return o.Payload
-}
-
-func (o *CreateAgentRunnerBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
-
-	o.Payload = new(models.AgentRunnerError)
-
-	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
-		return err
-	}
-
-	return nil
-}
-
-// NewCreateAgentRunnerForbidden creates a CreateAgentRunnerForbidden with default headers values
-func NewCreateAgentRunnerForbidden() *CreateAgentRunnerForbidden {
-	return &CreateAgentRunnerForbidden{}
-}
-
-/*
-CreateAgentRunnerForbidden handles this case with default header values.
-
-`plan_not_eligible` or `ai_credit_limit_disabled`.
-*/
-type CreateAgentRunnerForbidden struct {
-	Payload *models.AgentRunnerError
-}
-
-func (o *CreateAgentRunnerForbidden) Error() string {
-	return fmt.Sprintf("[POST /sites/{site_id}/agent_runners][%d] createAgentRunnerForbidden  %+v", 403, o.Payload)
-}
-
-func (o *CreateAgentRunnerForbidden) GetPayload() *models.AgentRunnerError {
-	return o.Payload
-}
-
-func (o *CreateAgentRunnerForbidden) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
-
-	o.Payload = new(models.AgentRunnerError)
-
-	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
-		return err
-	}
-
-	return nil
-}
-
 // NewCreateAgentRunnerNotFound creates a CreateAgentRunnerNotFound with default headers values
 func NewCreateAgentRunnerNotFound() *CreateAgentRunnerNotFound {
 	return &CreateAgentRunnerNotFound{}
@@ -181,28 +95,16 @@ func NewCreateAgentRunnerNotFound() *CreateAgentRunnerNotFound {
 /*
 CreateAgentRunnerNotFound handles this case with default header values.
 
-The site or deploy wasn't found (`deploy_not_found`), the deploy's files are no longer available (`deploy_zip_unavailable`), or agent runners aren't enabled for the site.
+Not Found
 */
 type CreateAgentRunnerNotFound struct {
-	Payload *models.AgentRunnerError
 }
 
 func (o *CreateAgentRunnerNotFound) Error() string {
-	return fmt.Sprintf("[POST /sites/{site_id}/agent_runners][%d] createAgentRunnerNotFound  %+v", 404, o.Payload)
-}
-
-func (o *CreateAgentRunnerNotFound) GetPayload() *models.AgentRunnerError {
-	return o.Payload
+	return fmt.Sprintf("[POST /agent_runners][%d] createAgentRunnerNotFound ", 404)
 }
 
 func (o *CreateAgentRunnerNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
-
-	o.Payload = new(models.AgentRunnerError)
-
-	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
-		return err
-	}
 
 	return nil
 }
@@ -215,62 +117,16 @@ func NewCreateAgentRunnerUnprocessableEntity() *CreateAgentRunnerUnprocessableEn
 /*
 CreateAgentRunnerUnprocessableEntity handles this case with default header values.
 
-`deploy_zip_unavailable`.
+Unprocessable Entity
 */
 type CreateAgentRunnerUnprocessableEntity struct {
-	Payload *models.AgentRunnerError
 }
 
 func (o *CreateAgentRunnerUnprocessableEntity) Error() string {
-	return fmt.Sprintf("[POST /sites/{site_id}/agent_runners][%d] createAgentRunnerUnprocessableEntity  %+v", 422, o.Payload)
-}
-
-func (o *CreateAgentRunnerUnprocessableEntity) GetPayload() *models.AgentRunnerError {
-	return o.Payload
+	return fmt.Sprintf("[POST /agent_runners][%d] createAgentRunnerUnprocessableEntity ", 422)
 }
 
 func (o *CreateAgentRunnerUnprocessableEntity) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
-
-	o.Payload = new(models.AgentRunnerError)
-
-	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
-		return err
-	}
-
-	return nil
-}
-
-// NewCreateAgentRunnerTooManyRequests creates a CreateAgentRunnerTooManyRequests with default headers values
-func NewCreateAgentRunnerTooManyRequests() *CreateAgentRunnerTooManyRequests {
-	return &CreateAgentRunnerTooManyRequests{}
-}
-
-/*
-CreateAgentRunnerTooManyRequests handles this case with default header values.
-
-`concurrency_limit_reached`, `ai_credit_limit_exceeded` or `ai_credit_limit_reached`.
-*/
-type CreateAgentRunnerTooManyRequests struct {
-	Payload *models.AgentRunnerError
-}
-
-func (o *CreateAgentRunnerTooManyRequests) Error() string {
-	return fmt.Sprintf("[POST /sites/{site_id}/agent_runners][%d] createAgentRunnerTooManyRequests  %+v", 429, o.Payload)
-}
-
-func (o *CreateAgentRunnerTooManyRequests) GetPayload() *models.AgentRunnerError {
-	return o.Payload
-}
-
-func (o *CreateAgentRunnerTooManyRequests) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
-
-	o.Payload = new(models.AgentRunnerError)
-
-	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
-		return err
-	}
 
 	return nil
 }
@@ -299,7 +155,7 @@ func (o *CreateAgentRunnerDefault) Code() int {
 }
 
 func (o *CreateAgentRunnerDefault) Error() string {
-	return fmt.Sprintf("[POST /sites/{site_id}/agent_runners][%d] createAgentRunner default  %+v", o._statusCode, o.Payload)
+	return fmt.Sprintf("[POST /agent_runners][%d] createAgentRunner default  %+v", o._statusCode, o.Payload)
 }
 
 func (o *CreateAgentRunnerDefault) GetPayload() *models.Error {

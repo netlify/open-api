@@ -69,6 +69,8 @@ type ClientService interface {
 
 	CreateSite(params *CreateSiteParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteCreated, error)
 
+	CreateSiteAgentRunner(params *CreateSiteAgentRunnerParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteAgentRunnerOK, error)
+
 	CreateSiteAgentRunnerHook(params *CreateSiteAgentRunnerHookParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteAgentRunnerHookCreated, error)
 
 	CreateSiteAsset(params *CreateSiteAssetParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteAssetCreated, error)
@@ -741,7 +743,7 @@ func (a *Client) CreateAccount(params *CreateAccountParams, authInfo runtime.Cli
 }
 
 /*
-CreateAgentRunner Starts an agent run on the site.
+CreateAgentRunner create agent runner API
 */
 func (a *Client) CreateAgentRunner(params *CreateAgentRunnerParams, authInfo runtime.ClientAuthInfoWriter) (*CreateAgentRunnerOK, error) {
 	// TODO: Validate the params before sending
@@ -752,7 +754,7 @@ func (a *Client) CreateAgentRunner(params *CreateAgentRunnerParams, authInfo run
 	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "createAgentRunner",
 		Method:             "POST",
-		PathPattern:        "/sites/{site_id}/agent_runners",
+		PathPattern:        "/agent_runners",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"https"},
@@ -1111,6 +1113,40 @@ func (a *Client) CreateSite(params *CreateSiteParams, authInfo runtime.ClientAut
 	}
 	// unexpected success response
 	unexpectedSuccess := result.(*CreateSiteDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+CreateSiteAgentRunner Starts an agent run on the site.
+*/
+func (a *Client) CreateSiteAgentRunner(params *CreateSiteAgentRunnerParams, authInfo runtime.ClientAuthInfoWriter) (*CreateSiteAgentRunnerOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewCreateSiteAgentRunnerParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "createSiteAgentRunner",
+		Method:             "POST",
+		PathPattern:        "/sites/{site_id}/agent_runners",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &CreateSiteAgentRunnerReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*CreateSiteAgentRunnerOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*CreateSiteAgentRunnerDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
