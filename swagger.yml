@@ -2360,9 +2360,7 @@ paths:
           $ref: '#/responses/error'
     post:
       operationId: createAgentRunner
-      deprecated: true
       tags: [agentRunner]
-      description: Use `POST /sites/{site_id}/agent_runners` instead.
       parameters:
         - name: site_id
           type: string
@@ -2507,8 +2505,8 @@ paths:
           $ref: '#/responses/error'
     delete:
       operationId: deleteAgentRunner
-      deprecated: true
-      tags: [agentRunner]
+      # This tag is in no x-tagGroups entry, which keeps the operation out of the docs but not the clients.
+      tags: [hiddenAgentRunner]
       description: Same as `POST /agent_runners/{agent_runner_id}/stop`. Doesn't delete the run.
       responses:
         '202':
@@ -2761,8 +2759,8 @@ paths:
           $ref: '#/responses/error'
     delete:
       operationId: deleteAgentRunnerSession
-      deprecated: true
-      tags: [agentRunnerSession]
+      # This tag is in no x-tagGroups entry, which keeps the operation out of the docs but not the clients.
+      tags: [hiddenAgentRunner]
       description: Same as `POST /agent_runners/{agent_runner_id}/sessions/{agent_runner_session_id}/stop`. Doesn't delete the session.
       responses:
         '202':
