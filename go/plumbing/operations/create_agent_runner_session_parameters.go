@@ -14,6 +14,7 @@ import (
 	"github.com/go-openapi/runtime"
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
+	"github.com/go-openapi/swag"
 
 	"github.com/netlify/open-api/v2/go/models"
 )
@@ -63,10 +64,30 @@ for the create agent runner session operation typically these are written to a h
 */
 type CreateAgentRunnerSessionParams struct {
 
+	/*Agent
+	  Use the request body instead.
+
+	*/
+	Agent *string
 	/*AgentRunnerID*/
 	AgentRunnerID string
 	/*AgentRunnerSession*/
 	AgentRunnerSession *models.AgentRunnerSessionSetup
+	/*FileKeys
+	  Use the request body instead.
+
+	*/
+	FileKeys []string
+	/*Model
+	  Use the request body instead.
+
+	*/
+	Model *string
+	/*Prompt
+	  Use the request body instead.
+
+	*/
+	Prompt *string
 
 	timeout    time.Duration
 	Context    context.Context
@@ -106,6 +127,17 @@ func (o *CreateAgentRunnerSessionParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
+// WithAgent adds the agent to the create agent runner session params
+func (o *CreateAgentRunnerSessionParams) WithAgent(agent *string) *CreateAgentRunnerSessionParams {
+	o.SetAgent(agent)
+	return o
+}
+
+// SetAgent adds the agent to the create agent runner session params
+func (o *CreateAgentRunnerSessionParams) SetAgent(agent *string) {
+	o.Agent = agent
+}
+
 // WithAgentRunnerID adds the agentRunnerID to the create agent runner session params
 func (o *CreateAgentRunnerSessionParams) WithAgentRunnerID(agentRunnerID string) *CreateAgentRunnerSessionParams {
 	o.SetAgentRunnerID(agentRunnerID)
@@ -128,6 +160,39 @@ func (o *CreateAgentRunnerSessionParams) SetAgentRunnerSession(agentRunnerSessio
 	o.AgentRunnerSession = agentRunnerSession
 }
 
+// WithFileKeys adds the fileKeys to the create agent runner session params
+func (o *CreateAgentRunnerSessionParams) WithFileKeys(fileKeys []string) *CreateAgentRunnerSessionParams {
+	o.SetFileKeys(fileKeys)
+	return o
+}
+
+// SetFileKeys adds the fileKeys to the create agent runner session params
+func (o *CreateAgentRunnerSessionParams) SetFileKeys(fileKeys []string) {
+	o.FileKeys = fileKeys
+}
+
+// WithModel adds the model to the create agent runner session params
+func (o *CreateAgentRunnerSessionParams) WithModel(model *string) *CreateAgentRunnerSessionParams {
+	o.SetModel(model)
+	return o
+}
+
+// SetModel adds the model to the create agent runner session params
+func (o *CreateAgentRunnerSessionParams) SetModel(model *string) {
+	o.Model = model
+}
+
+// WithPrompt adds the prompt to the create agent runner session params
+func (o *CreateAgentRunnerSessionParams) WithPrompt(prompt *string) *CreateAgentRunnerSessionParams {
+	o.SetPrompt(prompt)
+	return o
+}
+
+// SetPrompt adds the prompt to the create agent runner session params
+func (o *CreateAgentRunnerSessionParams) SetPrompt(prompt *string) {
+	o.Prompt = prompt
+}
+
 // WriteToRequest writes these params to a swagger request
 func (o *CreateAgentRunnerSessionParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -135,6 +200,22 @@ func (o *CreateAgentRunnerSessionParams) WriteToRequest(r runtime.ClientRequest,
 		return err
 	}
 	var res []error
+
+	if o.Agent != nil {
+
+		// query param agent
+		var qrAgent string
+		if o.Agent != nil {
+			qrAgent = *o.Agent
+		}
+		qAgent := qrAgent
+		if qAgent != "" {
+			if err := r.SetQueryParam("agent", qAgent); err != nil {
+				return err
+			}
+		}
+
+	}
 
 	// path param agent_runner_id
 	if err := r.SetPathParam("agent_runner_id", o.AgentRunnerID); err != nil {
@@ -145,6 +226,46 @@ func (o *CreateAgentRunnerSessionParams) WriteToRequest(r runtime.ClientRequest,
 		if err := r.SetBodyParam(o.AgentRunnerSession); err != nil {
 			return err
 		}
+	}
+
+	valuesFileKeys := o.FileKeys
+
+	joinedFileKeys := swag.JoinByFormat(valuesFileKeys, "")
+	// query array param file_keys
+	if err := r.SetQueryParam("file_keys", joinedFileKeys...); err != nil {
+		return err
+	}
+
+	if o.Model != nil {
+
+		// query param model
+		var qrModel string
+		if o.Model != nil {
+			qrModel = *o.Model
+		}
+		qModel := qrModel
+		if qModel != "" {
+			if err := r.SetQueryParam("model", qModel); err != nil {
+				return err
+			}
+		}
+
+	}
+
+	if o.Prompt != nil {
+
+		// query param prompt
+		var qrPrompt string
+		if o.Prompt != nil {
+			qrPrompt = *o.Prompt
+		}
+		qPrompt := qrPrompt
+		if qPrompt != "" {
+			if err := r.SetQueryParam("prompt", qPrompt); err != nil {
+				return err
+			}
+		}
+
 	}
 
 	if len(res) > 0 {

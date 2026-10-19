@@ -2321,23 +2321,13 @@ paths:
         - name: account_id
           type: string
           in: query
-          x-internal: true
+          required: true
         - $ref: '#/parameters/page'
         - $ref: '#/parameters/perPage'
         - name: state
           type: string
           in: query
-          enum:
-            [
-              'new',
-              'running',
-              'await_input',
-              'interrupted',
-              'error',
-              'done',
-              'cancelled',
-              'archived',
-            ]
+          description: 'Only runs in this state: `new`, `running`, `await_input`, `interrupted`, `error`, `done`, `cancelled` or `archived`.'
         - name: title
           type: string
           in: query
@@ -2347,7 +2337,6 @@ paths:
         - name: result_branch
           type: string
           in: query
-          x-internal: true
         - name: user_id
           type: string
           in: query
@@ -2370,9 +2359,10 @@ paths:
         default:
           $ref: '#/responses/error'
     post:
-      x-internal: true
       operationId: createAgentRunner
+      deprecated: true
       tags: [agentRunner]
+      description: Use `POST /sites/{site_id}/agent_runners` instead.
       parameters:
         - name: site_id
           type: string
@@ -2506,7 +2496,6 @@ paths:
         default:
           $ref: '#/responses/error'
     patch:
-      x-internal: true
       operationId: updateAgentRunner
       tags: [agentRunner]
       responses:
@@ -2517,8 +2506,8 @@ paths:
         default:
           $ref: '#/responses/error'
     delete:
-      x-internal: true
       operationId: deleteAgentRunner
+      deprecated: true
       tags: [agentRunner]
       description: Same as `POST /agent_runners/{agent_runner_id}/stop`. Doesn't delete the run.
       responses:
@@ -2578,7 +2567,6 @@ paths:
         in: path
         required: true
     post:
-      x-internal: true
       operationId: archiveAgentRunner
       tags: [agentRunner]
       responses:
@@ -2655,16 +2643,7 @@ paths:
         - name: state
           type: string
           in: query
-          enum:
-            [
-              'new',
-              'running',
-              'await_input',
-              'interrupted',
-              'error',
-              'done',
-              'cancelled',
-            ]
+          description: 'Only sessions in this state: `new`, `running`, `await_input`, `interrupted`, `error`, `done` or `cancelled`.'
         - name: from
           type: integer
           in: query
@@ -2693,9 +2672,26 @@ paths:
       parameters:
         - name: agent_runner_session
           in: body
-          required: true
           schema:
             $ref: '#/definitions/agentRunnerSessionSetup'
+        - name: prompt
+          type: string
+          in: query
+          description: Use the request body instead.
+        - name: agent
+          type: string
+          in: query
+          description: Use the request body instead.
+        - name: model
+          type: string
+          in: query
+          description: Use the request body instead.
+        - name: file_keys
+          type: array
+          in: query
+          items:
+            type: string
+          description: Use the request body instead.
       responses:
         '200':
           description: OK
@@ -2750,7 +2746,6 @@ paths:
         default:
           $ref: '#/responses/error'
     patch:
-      x-internal: true
       operationId: updateAgentRunnerSession
       tags: [agentRunnerSession]
       parameters:
@@ -2765,8 +2760,8 @@ paths:
         default:
           $ref: '#/responses/error'
     delete:
-      x-internal: true
       operationId: deleteAgentRunnerSession
+      deprecated: true
       tags: [agentRunnerSession]
       description: Same as `POST /agent_runners/{agent_runner_id}/sessions/{agent_runner_session_id}/stop`. Doesn't delete the session.
       responses:
@@ -5699,6 +5694,8 @@ definitions:
         type: string
       site_id:
         type: string
+      parent_agent_runner_id:
+        type: string
       state:
         type: string
         description: One of `new`, `running`, `await_input`, `interrupted`, `error`, `done`, `cancelled` or `archived`.
@@ -5715,6 +5712,8 @@ definitions:
         type: string
       branch:
         type: string
+      result_branch:
+        type: string
       pr_url:
         type: string
       pr_branch:
@@ -5724,9 +5723,32 @@ definitions:
         description: One of `open`, `draft`, `merged` or `closed`.
       pr_number:
         type: integer
+      pr_is_being_created:
+        type: boolean
+      pr_error:
+        type: string
       current_task:
         type: string
         description: What the agent is working on in the active session.
+      result_diff:
+        type: string
+      sha:
+        type: string
+      merge_commit_sha:
+        type: string
+      merge_commit_error:
+        type: string
+      merge_commit_is_being_created:
+        type: boolean
+      base_deploy_id:
+        type: string
+      attached_file_keys:
+        type: array
+        items:
+          type: string
+      active_session_created_at:
+        type: string
+        format: dateTime
       has_result_diff:
         type: boolean
         description: Whether the run has changes, available from `GET /agent_runners/{agent_runner_id}/diff`.
@@ -5737,6 +5759,8 @@ definitions:
       preview_state:
         type: string
         description: State of the deploy building the latest preview. Null until that deploy exists; `ready` once the preview is live.
+      user:
+        $ref: '#/definitions/agentRunnerUser'
   agentRunnerSetup:
     type: object
     required:
@@ -5771,6 +5795,8 @@ definitions:
         type: string
       agent_runner_id:
         type: string
+      dev_server_id:
+        type: string
       state:
         type: string
         description: One of `new`, `running`, `await_input`, `interrupted`, `error`, `done` or `cancelled`.
@@ -5791,14 +5817,22 @@ definitions:
         type: string
       prompt:
         type: string
+      agent_config:
+        $ref: '#/definitions/agentRunnerSessionConfig'
       result:
         type: string
         description: The agent's summary of what it did.
+      result_diff:
+        type: string
+      commit_sha:
+        type: string
       deploy_id:
         type: string
       deploy_url:
         type: string
         description: URL of the session's deploy preview.
+      duration:
+        type: integer
       usage:
         $ref: '#/definitions/agentRunnerSessionUsage'
       interactions:
@@ -5809,13 +5843,26 @@ definitions:
           or skipped.
         additionalProperties:
           $ref: '#/definitions/agentRunnerSessionInteraction'
+      steps:
+        type: array
+        items:
+          $ref: '#/definitions/agentRunnerSessionStep'
+      user:
+        $ref: '#/definitions/agentRunnerUser'
+      attached_file_keys:
+        type: array
+        items:
+          type: string
+      result_zip_file_name:
+        type: string
+      is_published:
+        type: boolean
   agentRunnerSessionSetup:
     type: object
-    required:
-      - prompt
     properties:
       prompt:
         type: string
+        description: What the agent should do. Required.
       agent:
         type: string
       model:

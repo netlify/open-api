@@ -63,7 +63,7 @@ for the list agent runners operation typically these are written to a http.Reque
 type ListAgentRunnersParams struct {
 
 	/*AccountID*/
-	AccountID *string
+	AccountID string
 	/*Branch*/
 	Branch *string
 	/*From
@@ -79,7 +79,10 @@ type ListAgentRunnersParams struct {
 	ResultBranch *string
 	/*SiteID*/
 	SiteID string
-	/*State*/
+	/*State
+	  Only runs in this state: `new`, `running`, `await_input`, `interrupted`, `error`, `done`, `cancelled` or `archived`.
+
+	*/
 	State *string
 	/*Title*/
 	Title *string
@@ -133,13 +136,13 @@ func (o *ListAgentRunnersParams) SetHTTPClient(client *http.Client) {
 }
 
 // WithAccountID adds the accountID to the list agent runners params
-func (o *ListAgentRunnersParams) WithAccountID(accountID *string) *ListAgentRunnersParams {
+func (o *ListAgentRunnersParams) WithAccountID(accountID string) *ListAgentRunnersParams {
 	o.SetAccountID(accountID)
 	return o
 }
 
 // SetAccountID adds the accountId to the list agent runners params
-func (o *ListAgentRunnersParams) SetAccountID(accountID *string) {
+func (o *ListAgentRunnersParams) SetAccountID(accountID string) {
 	o.AccountID = accountID
 }
 
@@ -261,20 +264,13 @@ func (o *ListAgentRunnersParams) WriteToRequest(r runtime.ClientRequest, reg str
 	}
 	var res []error
 
-	if o.AccountID != nil {
-
-		// query param account_id
-		var qrAccountID string
-		if o.AccountID != nil {
-			qrAccountID = *o.AccountID
+	// query param account_id
+	qrAccountID := o.AccountID
+	qAccountID := qrAccountID
+	if qAccountID != "" {
+		if err := r.SetQueryParam("account_id", qAccountID); err != nil {
+			return err
 		}
-		qAccountID := qrAccountID
-		if qAccountID != "" {
-			if err := r.SetQueryParam("account_id", qAccountID); err != nil {
-				return err
-			}
-		}
-
 	}
 
 	if o.Branch != nil {

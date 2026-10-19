@@ -29,9 +29,8 @@ type AgentRunnerSessionSetup struct {
 	// Model for the agent to use. Omit to let Netlify choose.
 	Model string `json:"model,omitempty"`
 
-	// prompt
-	// Required: true
-	Prompt *string `json:"prompt"`
+	// What the agent should do. Required.
+	Prompt string `json:"prompt,omitempty"`
 }
 
 // Validate validates this agent runner session setup
@@ -39,10 +38,6 @@ func (m *AgentRunnerSessionSetup) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateMode(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validatePrompt(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -89,15 +84,6 @@ func (m *AgentRunnerSessionSetup) validateMode(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateModeEnum("mode", "body", m.Mode); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *AgentRunnerSessionSetup) validatePrompt(formats strfmt.Registry) error {
-
-	if err := validate.Required("prompt", "body", m.Prompt); err != nil {
 		return err
 	}
 

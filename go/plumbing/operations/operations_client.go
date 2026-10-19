@@ -743,7 +743,7 @@ func (a *Client) CreateAccount(params *CreateAccountParams, authInfo runtime.Cli
 }
 
 /*
-CreateAgentRunner create agent runner API
+CreateAgentRunner Use `POST /sites/{site_id}/agent_runners` instead.
 */
 func (a *Client) CreateAgentRunner(params *CreateAgentRunnerParams, authInfo runtime.ClientAuthInfoWriter) (*CreateAgentRunnerOK, error) {
 	// TODO: Validate the params before sending

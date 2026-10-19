@@ -6,6 +6,7 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
@@ -14,6 +15,15 @@ import (
 //
 // swagger:model agentRunner
 type AgentRunner struct {
+
+	// active session created at
+	ActiveSessionCreatedAt string `json:"active_session_created_at,omitempty"`
+
+	// attached file keys
+	AttachedFileKeys []string `json:"attached_file_keys"`
+
+	// base deploy id
+	BaseDeployID string `json:"base_deploy_id,omitempty"`
 
 	// branch
 	Branch string `json:"branch,omitempty"`
@@ -39,8 +49,26 @@ type AgentRunner struct {
 	// latest session deploy url
 	LatestSessionDeployURL string `json:"latest_session_deploy_url,omitempty"`
 
+	// merge commit error
+	MergeCommitError string `json:"merge_commit_error,omitempty"`
+
+	// merge commit is being created
+	MergeCommitIsBeingCreated bool `json:"merge_commit_is_being_created,omitempty"`
+
+	// merge commit sha
+	MergeCommitSha string `json:"merge_commit_sha,omitempty"`
+
+	// parent agent runner id
+	ParentAgentRunnerID string `json:"parent_agent_runner_id,omitempty"`
+
 	// pr branch
 	PrBranch string `json:"pr_branch,omitempty"`
+
+	// pr error
+	PrError string `json:"pr_error,omitempty"`
+
+	// pr is being created
+	PrIsBeingCreated bool `json:"pr_is_being_created,omitempty"`
 
 	// pr number
 	PrNumber int64 `json:"pr_number,omitempty"`
@@ -54,6 +82,15 @@ type AgentRunner struct {
 	// State of the deploy building the latest preview. Null until that deploy exists; `ready` once the preview is live.
 	PreviewState string `json:"preview_state,omitempty"`
 
+	// result branch
+	ResultBranch string `json:"result_branch,omitempty"`
+
+	// result diff
+	ResultDiff string `json:"result_diff,omitempty"`
+
+	// sha
+	Sha string `json:"sha,omitempty"`
+
 	// site id
 	SiteID string `json:"site_id,omitempty"`
 
@@ -65,10 +102,40 @@ type AgentRunner struct {
 
 	// updated at
 	UpdatedAt string `json:"updated_at,omitempty"`
+
+	// user
+	User *AgentRunnerUser `json:"user,omitempty"`
 }
 
 // Validate validates this agent runner
 func (m *AgentRunner) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateUser(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *AgentRunner) validateUser(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.User) { // not required
+		return nil
+	}
+
+	if m.User != nil {
+		if err := m.User.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("user")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 

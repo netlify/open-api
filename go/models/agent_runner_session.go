@@ -6,6 +6,8 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"strconv"
+
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
@@ -17,8 +19,17 @@ import (
 // swagger:model agentRunnerSession
 type AgentRunnerSession struct {
 
+	// agent config
+	AgentConfig *AgentRunnerSessionConfig `json:"agent_config,omitempty"`
+
 	// agent runner id
 	AgentRunnerID string `json:"agent_runner_id,omitempty"`
+
+	// attached file keys
+	AttachedFileKeys []string `json:"attached_file_keys"`
+
+	// commit sha
+	CommitSha string `json:"commit_sha,omitempty"`
 
 	// created at
 	CreatedAt string `json:"created_at,omitempty"`
@@ -29,14 +40,23 @@ type AgentRunnerSession struct {
 	// URL of the session's deploy preview.
 	DeployURL string `json:"deploy_url,omitempty"`
 
+	// dev server id
+	DevServerID string `json:"dev_server_id,omitempty"`
+
 	// done at
 	DoneAt string `json:"done_at,omitempty"`
+
+	// duration
+	Duration int64 `json:"duration,omitempty"`
 
 	// id
 	ID string `json:"id,omitempty"`
 
 	// Questions and requests from the agent, keyed by reference ID. A pending one pauses the session in `await_input` until it's answered or skipped.
 	Interactions map[string]AgentRunnerSessionInteraction `json:"interactions,omitempty"`
+
+	// is published
+	IsPublished bool `json:"is_published,omitempty"`
 
 	// When the session paused waiting on an interaction. Null once it resumes.
 	PausedAt string `json:"paused_at,omitempty"`
@@ -47,8 +67,17 @@ type AgentRunnerSession struct {
 	// The agent's summary of what it did.
 	Result string `json:"result,omitempty"`
 
+	// result diff
+	ResultDiff string `json:"result_diff,omitempty"`
+
+	// result zip file name
+	ResultZipFileName string `json:"result_zip_file_name,omitempty"`
+
 	// One of `new`, `running`, `await_input`, `interrupted`, `error`, `done` or `cancelled`.
 	State string `json:"state,omitempty"`
+
+	// steps
+	Steps []*AgentRunnerSessionStep `json:"steps"`
 
 	// title
 	Title string `json:"title,omitempty"`
@@ -58,13 +87,24 @@ type AgentRunnerSession struct {
 
 	// usage
 	Usage *AgentRunnerSessionUsage `json:"usage,omitempty"`
+
+	// user
+	User *AgentRunnerUser `json:"user,omitempty"`
 }
 
 // Validate validates this agent runner session
 func (m *AgentRunnerSession) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateAgentConfig(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateInteractions(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSteps(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -72,9 +112,31 @@ func (m *AgentRunnerSession) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateUser(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *AgentRunnerSession) validateAgentConfig(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.AgentConfig) { // not required
+		return nil
+	}
+
+	if m.AgentConfig != nil {
+		if err := m.AgentConfig.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("agent_config")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -100,6 +162,31 @@ func (m *AgentRunnerSession) validateInteractions(formats strfmt.Registry) error
 	return nil
 }
 
+func (m *AgentRunnerSession) validateSteps(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Steps) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.Steps); i++ {
+		if swag.IsZero(m.Steps[i]) { // not required
+			continue
+		}
+
+		if m.Steps[i] != nil {
+			if err := m.Steps[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("steps" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
 func (m *AgentRunnerSession) validateUsage(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.Usage) { // not required
@@ -110,6 +197,24 @@ func (m *AgentRunnerSession) validateUsage(formats strfmt.Registry) error {
 		if err := m.Usage.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("usage")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *AgentRunnerSession) validateUser(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.User) { // not required
+		return nil
+	}
+
+	if m.User != nil {
+		if err := m.User.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("user")
 			}
 			return err
 		}
