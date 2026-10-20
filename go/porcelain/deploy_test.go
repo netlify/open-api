@@ -5,6 +5,7 @@ import (
 	gocontext "context"
 	"crypto/sha256"
 	"encoding/hex"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -1188,6 +1189,14 @@ func TestDoDeploySendsTheServerConfig(t *testing.T) {
 		{Pattern: "/static/*", Expression: "^/static(?:/(.*))/?$"},
 	}, server.ExcludedRoutes)
 	require.NoError(t, server.Validate(strfmt.Default))
+}
+
+func TestDeployFilesServerOmitsUnsetRoutes(t *testing.T) {
+	sha := "abc"
+	payload, err := json.Marshal(&models.DeployFilesServer{Sha: &sha})
+	require.NoError(t, err)
+
+	assert.JSONEq(t, `{"sha":"abc"}`, string(payload))
 }
 
 func TestBundleServerWithoutAServer(t *testing.T) {

@@ -22,7 +22,7 @@ import (
 type DeployFilesServer struct {
 
 	// Paths within `routes` that the server does not handle.
-	ExcludedRoutes []*ExcludedFunctionRoute `json:"excluded_routes"`
+	ExcludedRoutes []*ExcludedFunctionRoute `json:"excluded_routes,omitempty"`
 
 	// The size of the instances the server runs on. A default size is used when
 	// absent.
@@ -36,7 +36,7 @@ type DeployFilesServer struct {
 	Region string `json:"region,omitempty"`
 
 	// The paths the server handles.
-	Routes []*FunctionRoute `json:"routes"`
+	Routes []*FunctionRoute `json:"routes,omitempty"`
 
 	// The runtime version the server was built for, such as `nodejs24.x`. A
 	// default version is used when absent.

@@ -5148,11 +5148,13 @@ definitions:
           routes:
             type: array
             description: The paths the server handles.
+            x-omitempty: true
             items:
               $ref: '#/definitions/functionRoute'
           excluded_routes:
             type: array
             description: Paths within `routes` that the server does not handle.
+            x-omitempty: true
             items:
               $ref: '#/definitions/excludedFunctionRoute'
           runtime_version:
