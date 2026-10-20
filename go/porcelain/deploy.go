@@ -500,8 +500,12 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 	}
 	if options.server != nil {
 		deployFiles.Server = &models.DeployFilesServer{
-			Sha:    &options.server.sha,
-			Region: options.server.region,
+			Sha:            &options.server.sha,
+			Region:         options.server.region,
+			InstanceSize:   options.server.instanceSize,
+			Routes:         options.server.routes,
+			ExcludedRoutes: options.server.excludedRoutes,
+			RuntimeVersion: options.server.runtimeVersion,
 		}
 	}
 
@@ -1152,25 +1156,8 @@ func bundleFromManifest(ctx context.Context, functionsDir dirHandle, manifestFil
 			})
 		}
 
-		routes := make([]*models.FunctionRoute, len(function.Routes))
-		for i, route := range function.Routes {
-			routes[i] = &models.FunctionRoute{
-				Pattern:      route.Pattern,
-				Literal:      route.Literal,
-				Expression:   route.Expression,
-				Methods:      route.Methods,
-				PreferStatic: route.PreferStatic,
-			}
-		}
-
-		excludedRoutes := make([]*models.ExcludedFunctionRoute, len(function.ExcludedRoutes))
-		for i, route := range function.ExcludedRoutes {
-			excludedRoutes[i] = &models.ExcludedFunctionRoute{
-				Pattern:    route.Pattern,
-				Literal:    route.Literal,
-				Expression: route.Expression,
-			}
-		}
+		routes := toModelRoutes(function.Routes)
+		excludedRoutes := toModelExcludedRoutes(function.ExcludedRoutes)
 
 		hasConfig := function.DisplayName != "" || function.Generator != "" || len(routes) > 0 || len(excludedRoutes) > 0 || len(function.BuildData) > 0 || function.Priority != 0 || function.TrafficRules != nil || function.Timeout != 0 || len(function.EventSubscriptions) > 0 || function.Region != "" || function.Memory != 0 || function.Vcpu != 0
 		if hasConfig {
@@ -1211,6 +1198,32 @@ func bundleFromManifest(ctx context.Context, functionsDir dirHandle, manifestFil
 	}
 
 	return functions, schedules, functionsConfig, nil
+}
+
+func toModelRoutes(routes []functionRoute) []*models.FunctionRoute {
+	result := make([]*models.FunctionRoute, len(routes))
+	for i, route := range routes {
+		result[i] = &models.FunctionRoute{
+			Pattern:      route.Pattern,
+			Literal:      route.Literal,
+			Expression:   route.Expression,
+			Methods:      route.Methods,
+			PreferStatic: route.PreferStatic,
+		}
+	}
+	return result
+}
+
+func toModelExcludedRoutes(routes []excludedFunctionRoute) []*models.ExcludedFunctionRoute {
+	result := make([]*models.ExcludedFunctionRoute, len(routes))
+	for i, route := range routes {
+		result[i] = &models.ExcludedFunctionRoute{
+			Pattern:    route.Pattern,
+			Literal:    route.Literal,
+			Expression: route.Expression,
+		}
+	}
+	return result
 }
 
 // manifestFunctionRel converts a manifest function path into a path relative to
@@ -1352,9 +1365,13 @@ func zipFunctionFile(dir dirHandle, relPath string, i os.FileInfo, runtime strin
 }
 
 type serverBundle struct {
-	files  *deployFiles
-	sha    string
-	region string
+	files          *deployFiles
+	sha            string
+	region         string
+	instanceSize   string
+	routes         []*models.FunctionRoute
+	excludedRoutes []*models.ExcludedFunctionRoute
+	runtimeVersion string
 }
 
 // bundleServer reads the deploy's Netlify Server out of the server manifest,
@@ -1409,7 +1426,21 @@ func bundleServer(ctx context.Context, serverDir dirHandle, observer DeployObser
 		}
 	}
 
-	return &serverBundle{files: files, sha: file.Sum, region: manifest.Server.Region}, nil
+	bundle := &serverBundle{
+		files:          files,
+		sha:            file.Sum,
+		region:         manifest.Server.Region,
+		instanceSize:   manifest.Server.InstanceSize,
+		runtimeVersion: manifest.Server.RuntimeVersion,
+	}
+	if len(manifest.Server.Routes) > 0 {
+		bundle.routes = toModelRoutes(manifest.Server.Routes)
+	}
+	if len(manifest.Server.ExcludedRoutes) > 0 {
+		bundle.excludedRoutes = toModelExcludedRoutes(manifest.Server.ExcludedRoutes)
+	}
+
+	return bundle, nil
 }
 
 // bundleEdgeFunctions reads the edge-bundler manifest from edgeFunctionsDir and turns each bundle it

@@ -5139,6 +5139,29 @@ definitions:
             description: |
               Where the server runs. Defaults to the region configured at the site level
               when absent.
+          instance_size:
+            type: string
+            enum: ['small', 'medium', 'large']
+            description: |
+              The size of the instances the server runs on. A default size is used when
+              absent.
+          routes:
+            type: array
+            description: The paths the server handles.
+            x-omitempty: true
+            items:
+              $ref: '#/definitions/functionRoute'
+          excluded_routes:
+            type: array
+            description: Paths within `routes` that the server does not handle.
+            x-omitempty: true
+            items:
+              $ref: '#/definitions/excludedFunctionRoute'
+          runtime_version:
+            type: string
+            description: |
+              The runtime version the server was built for, such as `nodejs24.x`. A
+              default version is used when absent.
       function_schedules:
         type: array
         items:
