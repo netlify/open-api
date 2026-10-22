@@ -72,11 +72,26 @@ type CreateSiteBuildParams struct {
 
 	*/
 	ClearCache *bool
+	/*CommitSha
+	  The commit SHA to build; when omitted, the head of the branch or pull request is fetched from the git host. Ignored for zip uploads
+
+	*/
+	CommitSha *string
+	/*Draft
+	  Whether to create a draft deploy, which uses the deploy-preview context and is never published; review_id builds are always drafts
+
+	*/
+	Draft *bool
 	/*Image
 	  The build image tag to use for the build
 
 	*/
 	Image *string
+	/*ReviewID
+	  The merge/pull request ID to build; triggers a deploy preview. Ignored for zip uploads
+
+	*/
+	ReviewID *int64
 	/*SiteID*/
 	SiteID string
 	/*TemplateID
@@ -158,6 +173,28 @@ func (o *CreateSiteBuildParams) SetClearCache(clearCache *bool) {
 	o.ClearCache = clearCache
 }
 
+// WithCommitSha adds the commitSha to the create site build params
+func (o *CreateSiteBuildParams) WithCommitSha(commitSha *string) *CreateSiteBuildParams {
+	o.SetCommitSha(commitSha)
+	return o
+}
+
+// SetCommitSha adds the commitSha to the create site build params
+func (o *CreateSiteBuildParams) SetCommitSha(commitSha *string) {
+	o.CommitSha = commitSha
+}
+
+// WithDraft adds the draft to the create site build params
+func (o *CreateSiteBuildParams) WithDraft(draft *bool) *CreateSiteBuildParams {
+	o.SetDraft(draft)
+	return o
+}
+
+// SetDraft adds the draft to the create site build params
+func (o *CreateSiteBuildParams) SetDraft(draft *bool) {
+	o.Draft = draft
+}
+
 // WithImage adds the image to the create site build params
 func (o *CreateSiteBuildParams) WithImage(image *string) *CreateSiteBuildParams {
 	o.SetImage(image)
@@ -167,6 +204,17 @@ func (o *CreateSiteBuildParams) WithImage(image *string) *CreateSiteBuildParams 
 // SetImage adds the image to the create site build params
 func (o *CreateSiteBuildParams) SetImage(image *string) {
 	o.Image = image
+}
+
+// WithReviewID adds the reviewID to the create site build params
+func (o *CreateSiteBuildParams) WithReviewID(reviewID *int64) *CreateSiteBuildParams {
+	o.SetReviewID(reviewID)
+	return o
+}
+
+// SetReviewID adds the reviewId to the create site build params
+func (o *CreateSiteBuildParams) SetReviewID(reviewID *int64) {
+	o.ReviewID = reviewID
 }
 
 // WithSiteID adds the siteID to the create site build params
@@ -253,6 +301,38 @@ func (o *CreateSiteBuildParams) WriteToRequest(r runtime.ClientRequest, reg strf
 
 	}
 
+	if o.CommitSha != nil {
+
+		// query param commit_sha
+		var qrCommitSha string
+		if o.CommitSha != nil {
+			qrCommitSha = *o.CommitSha
+		}
+		qCommitSha := qrCommitSha
+		if qCommitSha != "" {
+			if err := r.SetQueryParam("commit_sha", qCommitSha); err != nil {
+				return err
+			}
+		}
+
+	}
+
+	if o.Draft != nil {
+
+		// query param draft
+		var qrDraft bool
+		if o.Draft != nil {
+			qrDraft = *o.Draft
+		}
+		qDraft := swag.FormatBool(qrDraft)
+		if qDraft != "" {
+			if err := r.SetQueryParam("draft", qDraft); err != nil {
+				return err
+			}
+		}
+
+	}
+
 	if o.Image != nil {
 
 		// query param image
@@ -263,6 +343,22 @@ func (o *CreateSiteBuildParams) WriteToRequest(r runtime.ClientRequest, reg strf
 		qImage := qrImage
 		if qImage != "" {
 			if err := r.SetQueryParam("image", qImage); err != nil {
+				return err
+			}
+		}
+
+	}
+
+	if o.ReviewID != nil {
+
+		// query param review_id
+		var qrReviewID int64
+		if o.ReviewID != nil {
+			qrReviewID = *o.ReviewID
+		}
+		qReviewID := swag.FormatInt64(qrReviewID)
+		if qReviewID != "" {
+			if err := r.SetQueryParam("review_id", qReviewID); err != nil {
 				return err
 			}
 		}

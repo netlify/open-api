@@ -1255,11 +1255,30 @@ paths:
           required: false
           in: query
           type: boolean
+        - name: commit_sha
+          description: >-
+            The commit SHA to build; when omitted, the head of the branch or pull request is fetched from the git host.
+            Ignored for zip uploads
+          required: false
+          in: query
+          type: string
+        - name: draft
+          description: >-
+            Whether to create a draft deploy, which uses the deploy-preview context and is never published;
+            review_id builds are always drafts
+          required: false
+          in: query
+          type: boolean
         - name: image
           description: The build image tag to use for the build
           required: false
           in: query
           type: string
+        - name: review_id
+          description: The merge/pull request ID to build; triggers a deploy preview. Ignored for zip uploads
+          required: false
+          in: query
+          type: integer
         - name: template_id
           description: The build template to use for the build
           required: false
