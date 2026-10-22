@@ -1944,6 +1944,14 @@ paths:
           in: query
           type: string
           required: true
+        - name: form_id
+          in: query
+          type: string
+          description: Only return hooks attached to this form.
+        - name: event
+          in: query
+          type: string
+          description: Only return hooks for this event name.
       responses:
         '200':
           description: OK
@@ -2041,6 +2049,11 @@ paths:
       summary: List outgoing hook types
       description: Returns the available outgoing hook types. When `site_id` is given, returns only the types available to that site.
       tags: [hookType]
+      parameters:
+        - name: site_id
+          in: query
+          type: string
+          description: Only return the hook types available to this site.
       responses:
         '200':
           description: OK
@@ -2621,6 +2634,7 @@ paths:
           description: OK
           schema:
             type: object
+            required: [upload_url, file_key]
             properties:
               upload_url:
                 type: string

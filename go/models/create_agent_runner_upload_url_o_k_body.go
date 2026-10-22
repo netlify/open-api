@@ -6,8 +6,10 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
+	"github.com/go-openapi/validate"
 )
 
 // CreateAgentRunnerUploadURLOKBody create agent runner upload Url o k body
@@ -16,14 +18,47 @@ import (
 type CreateAgentRunnerUploadURLOKBody struct {
 
 	// Storage key of the uploaded file.
-	FileKey string `json:"file_key,omitempty"`
+	// Required: true
+	FileKey *string `json:"file_key"`
 
 	// Presigned URL to upload the file to with a PUT request. Expires after one hour.
-	UploadURL string `json:"upload_url,omitempty"`
+	// Required: true
+	UploadURL *string `json:"upload_url"`
 }
 
 // Validate validates this create agent runner upload Url o k body
 func (m *CreateAgentRunnerUploadURLOKBody) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateFileKey(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateUploadURL(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *CreateAgentRunnerUploadURLOKBody) validateFileKey(formats strfmt.Registry) error {
+
+	if err := validate.Required("file_key", "body", m.FileKey); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *CreateAgentRunnerUploadURLOKBody) validateUploadURL(formats strfmt.Registry) error {
+
+	if err := validate.Required("upload_url", "body", m.UploadURL); err != nil {
+		return err
+	}
+
 	return nil
 }
 

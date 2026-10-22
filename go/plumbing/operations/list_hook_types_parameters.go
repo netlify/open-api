@@ -19,7 +19,7 @@ import (
 // NewListHookTypesParams creates a new ListHookTypesParams object
 // with the default values initialized.
 func NewListHookTypesParams() *ListHookTypesParams {
-
+	var ()
 	return &ListHookTypesParams{
 
 		timeout: cr.DefaultTimeout,
@@ -29,7 +29,7 @@ func NewListHookTypesParams() *ListHookTypesParams {
 // NewListHookTypesParamsWithTimeout creates a new ListHookTypesParams object
 // with the default values initialized, and the ability to set a timeout on a request
 func NewListHookTypesParamsWithTimeout(timeout time.Duration) *ListHookTypesParams {
-
+	var ()
 	return &ListHookTypesParams{
 
 		timeout: timeout,
@@ -39,7 +39,7 @@ func NewListHookTypesParamsWithTimeout(timeout time.Duration) *ListHookTypesPara
 // NewListHookTypesParamsWithContext creates a new ListHookTypesParams object
 // with the default values initialized, and the ability to set a context for a request
 func NewListHookTypesParamsWithContext(ctx context.Context) *ListHookTypesParams {
-
+	var ()
 	return &ListHookTypesParams{
 
 		Context: ctx,
@@ -49,7 +49,7 @@ func NewListHookTypesParamsWithContext(ctx context.Context) *ListHookTypesParams
 // NewListHookTypesParamsWithHTTPClient creates a new ListHookTypesParams object
 // with the default values initialized, and the ability to set a custom HTTPClient for a request
 func NewListHookTypesParamsWithHTTPClient(client *http.Client) *ListHookTypesParams {
-
+	var ()
 	return &ListHookTypesParams{
 		HTTPClient: client,
 	}
@@ -60,6 +60,13 @@ ListHookTypesParams contains all the parameters to send to the API endpoint
 for the list hook types operation typically these are written to a http.Request
 */
 type ListHookTypesParams struct {
+
+	/*SiteID
+	  Only return the hook types available to this site.
+
+	*/
+	SiteID *string
+
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
@@ -98,6 +105,17 @@ func (o *ListHookTypesParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
+// WithSiteID adds the siteID to the list hook types params
+func (o *ListHookTypesParams) WithSiteID(siteID *string) *ListHookTypesParams {
+	o.SetSiteID(siteID)
+	return o
+}
+
+// SetSiteID adds the siteId to the list hook types params
+func (o *ListHookTypesParams) SetSiteID(siteID *string) {
+	o.SiteID = siteID
+}
+
 // WriteToRequest writes these params to a swagger request
 func (o *ListHookTypesParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -105,6 +123,22 @@ func (o *ListHookTypesParams) WriteToRequest(r runtime.ClientRequest, reg strfmt
 		return err
 	}
 	var res []error
+
+	if o.SiteID != nil {
+
+		// query param site_id
+		var qrSiteID string
+		if o.SiteID != nil {
+			qrSiteID = *o.SiteID
+		}
+		qSiteID := qrSiteID
+		if qSiteID != "" {
+			if err := r.SetQueryParam("site_id", qSiteID); err != nil {
+				return err
+			}
+		}
+
+	}
 
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
