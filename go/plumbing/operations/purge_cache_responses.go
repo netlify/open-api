@@ -52,7 +52,7 @@ func NewPurgeCacheAccepted() *PurgeCacheAccepted {
 /*
 PurgeCacheAccepted handles this case with default header values.
 
-OK
+Accepted. The purge is queued and propagates across the CDN asynchronously. The response has no body and there is no status resource to poll for completion.
 */
 type PurgeCacheAccepted struct {
 }
