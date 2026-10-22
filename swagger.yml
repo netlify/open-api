@@ -843,7 +843,10 @@ paths:
           required: true
       responses:
         '202':
-          description: OK
+          description: >-
+            Accepted. The purge is queued and propagates across the CDN asynchronously.
+            The response has no body and there is no status resource to poll for
+            completion.
         '400':
           description: Invalid request parameters
         '404':
@@ -2510,7 +2513,12 @@ paths:
       description: Same as `POST /agent_runners/{agent_runner_id}/stop`. Doesn't delete the run.
       responses:
         '202':
-          description: Accepted
+          description: >-
+            Accepted. Same behavior as `stopAgentRunner`: the response has no body, the
+            run's active sessions are set to `cancelled` before it returns, and the
+            sandbox shuts down in the background. To confirm, poll `getAgentRunnerSession`
+            (`GET /agent_runners/{agent_runner_id}/sessions/{agent_runner_session_id}`) and check
+            that `state` is `cancelled`.
         default:
           $ref: '#/responses/error'
   /agent_runners/{agent_runner_id}/stop:
@@ -2525,7 +2533,12 @@ paths:
       description: Stops the run's active session. Stopping happens in the background.
       responses:
         '202':
-          description: Accepted
+          description: >-
+            Accepted. The response has no body. The run's active sessions are set to
+            `cancelled` before this returns, and the sandbox shuts down in the
+            background. To confirm, poll `getAgentRunnerSession`
+            (`GET /agent_runners/{agent_runner_id}/sessions/{agent_runner_session_id}`) and check
+            that `state` is `cancelled`.
         default:
           $ref: '#/responses/error'
   /agent_runners/{agent_runner_id}/diff:
@@ -2569,7 +2582,10 @@ paths:
       tags: [agentRunner]
       responses:
         '202':
-          description: Accepted
+          description: >-
+            Accepted. The response has no body. The archive is applied before this
+            returns: `getAgentRunner` (`GET /agent_runners/{agent_runner_id}`) reports
+            `state` as `archived`.
         '404':
           description: Not Found
         '422':
@@ -2764,7 +2780,12 @@ paths:
       description: Same as `POST /agent_runners/{agent_runner_id}/sessions/{agent_runner_session_id}/stop`. Doesn't delete the session.
       responses:
         '202':
-          description: Accepted
+          description: >-
+            Accepted. Same behavior as `stopAgentRunnerSession`: the response has no
+            body, the session is set to `cancelled` before it returns, and the sandbox
+            shuts down in the background. To confirm, poll `getAgentRunnerSession`
+            (`GET /agent_runners/{agent_runner_id}/sessions/{agent_runner_session_id}`) and check
+            that `state` is `cancelled`.
         default:
           $ref: '#/responses/error'
   /agent_runners/{agent_runner_id}/sessions/{agent_runner_session_id}/stop:
@@ -2783,7 +2804,12 @@ paths:
       description: Stops the session. Stopping happens in the background.
       responses:
         '202':
-          description: Accepted
+          description: >-
+            Accepted. The response has no body. The session is set to `cancelled`
+            before this returns, and the sandbox shuts down in the background.
+            To confirm, poll `getAgentRunnerSession`
+            (`GET /agent_runners/{agent_runner_id}/sessions/{agent_runner_session_id}`) and check
+            that `state` is `cancelled`.
         default:
           $ref: '#/responses/error'
   /agent_runners/{agent_runner_id}/sessions/{agent_runner_session_id}/answers:
@@ -3353,7 +3379,12 @@ paths:
           in: query
       responses:
         '202':
-          description: OK
+          description: >-
+            Accepted. The response has no body. The branch's active dev servers are set
+            to `stopping` before this returns and shut down in the background. Poll
+            `getSiteDevServer` (`GET /sites/{site_id}/dev_servers/{dev_server_id}`) or
+            `listSiteDevServers` (`GET /sites/{site_id}/dev_servers`) until `state` is
+            `done` (or `error`).
         default:
           $ref: '#/responses/error'
   # end sites/{site_id}/dev_servers
