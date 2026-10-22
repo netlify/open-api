@@ -54,6 +54,7 @@ paths:
   /sites:
     get:
       operationId: listSites
+      summary: List sites
       tags: [site]
       parameters:
         - name: name
@@ -79,6 +80,7 @@ paths:
         Please use [getEnvVars](#tag/environmentVariables/operation/getEnvVars) to retrieve site environment variables.
     post:
       operationId: createSite
+      summary: Create a site
       tags: [site]
       consumes:
         - application/json
@@ -109,6 +111,7 @@ paths:
         required: true
     get:
       operationId: getSite
+      summary: Get a site
       tags: [site]
       parameters:
         - name: feature_flags
@@ -127,6 +130,7 @@ paths:
         Please use [getEnvVars](#tag/environmentVariables/operation/getEnvVars) to retrieve site environment variables.
     patch:
       operationId: updateSite
+      summary: Update a site
       tags: [site]
       consumes:
         - application/json
@@ -148,6 +152,7 @@ paths:
         Please use [updateEnvVar](#tag/environmentVariables/operation/updateEnvVar) to update a site's environment variables.
     delete:
       operationId: deleteSite
+      summary: Delete a site
       tags: [site]
       responses:
         '204':
@@ -157,6 +162,7 @@ paths:
   /sites/{site_id}/ssl:
     post:
       operationId: provisionSiteTLSCertificate
+      summary: Provision or update a site's TLS certificate
       tags: [sniCertificate]
       description: >-
         Provisions or updates a TLS certificate for the site.
@@ -203,6 +209,7 @@ paths:
           $ref: '#/responses/error'
     get:
       operationId: showSiteTLSCertificate
+      summary: Get a site's TLS certificate
       tags: [sniCertificate]
       parameters:
         - name: site_id
@@ -219,6 +226,8 @@ paths:
   /sites/{site_id}/ssl/certificates:
     get:
       operationId: getAllCertificates
+      summary: List TLS certificates for a site's domain
+      description: Returns details about the certificates associated with a domain. The site must be using the domain.
       tags: [sniCertificate]
       parameters:
         - name: site_id
@@ -245,6 +254,7 @@ paths:
       tags:
         - environmentVariables
       operationId: getEnvVars
+      summary: List environment variables for a team or site
       parameters:
         - name: account_id
           description: Scope response to account_id
@@ -294,6 +304,7 @@ paths:
       tags:
         - environmentVariables
       operationId: createEnvVars
+      summary: Create environment variables
       description: >-
         Creates new environment variables. Granular scopes are available
         on Pro plans and above.
@@ -357,6 +368,7 @@ paths:
       tags:
         - environmentVariables
       operationId: getSiteEnvVars
+      summary: List environment variables for a site
       parameters:
         - name: context_name
           description: Filter by deploy context
@@ -400,6 +412,7 @@ paths:
       tags:
         - environmentVariables
       operationId: getEnvVar
+      summary: Get an environment variable
       parameters:
         - name: account_id
           description: Scope response to account_id
@@ -431,6 +444,7 @@ paths:
       tags:
         - environmentVariables
       operationId: updateEnvVar
+      summary: Update an environment variable
       description: >-
         Updates an existing environment variable and all of its values.
         Existing values will be replaced by values provided.
@@ -492,6 +506,7 @@ paths:
       tags:
         - environmentVariables
       operationId: setEnvVarValue
+      summary: Set a value on an environment variable
       description: >-
         Updates or creates a new value for an existing environment variable.
       parameters:
@@ -543,6 +558,7 @@ paths:
       tags:
         - environmentVariables
       operationId: deleteEnvVar
+      summary: Delete an environment variable
       parameters:
         - name: account_id
           description: Scope response to account_id
@@ -571,6 +587,7 @@ paths:
       tags:
         - environmentVariables
       operationId: deleteEnvVarValue
+      summary: Delete an environment variable value
       parameters:
         - name: account_id
           description: Scope response to account_id
@@ -605,6 +622,7 @@ paths:
   /sites/{site_id}/functions:
     get:
       operationId: searchSiteFunctions
+      summary: Search a site's functions
       tags: [function]
       parameters:
         - name: site_id
@@ -628,6 +646,7 @@ paths:
   /sites/{site_id}/forms:
     get:
       operationId: listSiteForms
+      summary: List a site's forms
       tags: [form]
       parameters:
         - name: site_id
@@ -646,6 +665,8 @@ paths:
   /sites/{site_id}/forms/{form_id}:
     delete:
       operationId: deleteSiteForm
+      summary: Delete a form
+      description: Deletes a form and all of its submissions.
       tags: [form]
       parameters:
         - name: site_id
@@ -664,6 +685,7 @@ paths:
   /sites/{site_id}/submissions:
     get:
       operationId: listSiteSubmissions
+      summary: List a site's form submissions
       tags: [submission]
       parameters:
         - name: site_id
@@ -684,6 +706,7 @@ paths:
   /sites/{site_id}/files:
     get:
       operationId: listSiteFiles
+      summary: List a site's files
       tags: [file]
       parameters:
         - name: site_id
@@ -707,6 +730,8 @@ paths:
         required: true
     get:
       operationId: listSiteAssets
+      summary: List a site's assets
+      description: _This endpoint is only available to certain sites._
       tags: [asset]
       responses:
         '200':
@@ -719,6 +744,8 @@ paths:
           $ref: '#/responses/error'
     post:
       operationId: createSiteAsset
+      summary: Create a site asset
+      description: _This endpoint is only available to certain sites._
       tags: [asset]
       parameters:
         - name: name
@@ -756,6 +783,8 @@ paths:
         required: true
     get:
       operationId: getSiteAssetInfo
+      summary: Get a site asset
+      description: _This endpoint is only available to certain sites._
       tags: [asset]
       responses:
         '200':
@@ -766,6 +795,8 @@ paths:
           $ref: '#/responses/error'
     put:
       operationId: updateSiteAsset
+      summary: Update a site asset's state
+      description: _This endpoint is only available to certain sites._
       tags: [asset]
       parameters:
         - name: state
@@ -781,6 +812,8 @@ paths:
           $ref: '#/responses/error'
     delete:
       operationId: deleteSiteAsset
+      summary: Delete a site asset
+      description: _This endpoint is only available to certain sites._
       tags: [asset]
       responses:
         '204':
@@ -799,6 +832,8 @@ paths:
         required: true
     get:
       operationId: getSiteAssetPublicSignature
+      summary: Get a site asset's URL
+      description: Returns the URL of the asset. If the asset isn't publicly visible, returns a signed URL. _This endpoint is only available to certain sites._
       tags: [assetPublicSignature]
       responses:
         '200':
@@ -810,6 +845,7 @@ paths:
   /sites/{site_id}/files/{file_path}:
     get:
       operationId: getSiteFileByPathName
+      summary: Get a site file by path
       tags: [file]
       parameters:
         - name: site_id
@@ -830,6 +866,7 @@ paths:
   /purge:
     post:
       operationId: purgeCache
+      summary: Purge cached content
       description: >-
         Purges cached content from Netlify's CDN. Supports purging by Cache-Tag.
       tags: [purge]
@@ -859,6 +896,7 @@ paths:
         required: true
     get:
       operationId: listSiteSnippets
+      summary: List a site's snippets
       tags: [snippet]
       responses:
         '200':
@@ -871,6 +909,7 @@ paths:
           $ref: '#/responses/error'
     post:
       operationId: createSiteSnippet
+      summary: Create a snippet
       tags: [snippet]
       consumes:
         - application/json
@@ -899,6 +938,7 @@ paths:
         required: true
     get:
       operationId: getSiteSnippet
+      summary: Get a snippet
       tags: [snippet]
       responses:
         '200':
@@ -909,6 +949,7 @@ paths:
           $ref: '#/responses/error'
     put:
       operationId: updateSiteSnippet
+      summary: Update a snippet
       tags: [snippet]
       consumes:
         - application/json
@@ -925,6 +966,7 @@ paths:
           $ref: '#/responses/error'
     delete:
       operationId: deleteSiteSnippet
+      summary: Delete a snippet
       tags: [snippet]
       responses:
         '204':
@@ -939,6 +981,7 @@ paths:
         required: true
     get:
       operationId: getSiteMetadata
+      summary: Get a site's metadata
       tags: [metadata]
       responses:
         '200':
@@ -949,6 +992,7 @@ paths:
           $ref: '#/responses/error'
     put:
       operationId: updateSiteMetadata
+      summary: Update a site's metadata
       tags: [metadata]
       parameters:
         - name: metadata
@@ -969,6 +1013,7 @@ paths:
         required: true
     get:
       operationId: listSiteBuildHooks
+      summary: List a site's build hooks
       tags: [buildHook]
       responses:
         '200':
@@ -981,6 +1026,7 @@ paths:
           $ref: '#/responses/error'
     post:
       operationId: createSiteBuildHook
+      summary: Create a build hook
       tags: [buildHook]
       consumes:
         - application/json
@@ -1009,6 +1055,7 @@ paths:
         required: true
     get:
       operationId: getSiteBuildHook
+      summary: Get a build hook
       tags: [buildHook]
       responses:
         '200':
@@ -1019,6 +1066,7 @@ paths:
           $ref: '#/responses/error'
     put:
       operationId: updateSiteBuildHook
+      summary: Update a build hook
       tags: [buildHook]
       consumes:
         - application/json
@@ -1035,6 +1083,7 @@ paths:
           $ref: '#/responses/error'
     delete:
       operationId: deleteSiteBuildHook
+      summary: Delete a build hook
       tags: [buildHook]
       responses:
         '204':
@@ -1080,6 +1129,7 @@ paths:
         in: query
     get:
       operationId: listSiteDeploys
+      summary: List a site's deploys
       tags: [deploy]
       parameters:
         - $ref: '#/parameters/page'
@@ -1095,6 +1145,7 @@ paths:
           $ref: '#/responses/error'
     post:
       operationId: createSiteDeploy
+      summary: Create a deploy
       tags: [deploy]
       parameters:
         - name: title
@@ -1115,6 +1166,7 @@ paths:
   /sites/{site_id}/deploys/{deploy_id}:
     get:
       operationId: getSiteDeploy
+      summary: Get a site's deploy
       tags: [deploy]
       parameters:
         - name: site_id
@@ -1134,6 +1186,7 @@ paths:
           $ref: '#/responses/error'
     put:
       operationId: updateSiteDeploy
+      summary: Update a deploy
       tags: [deploy]
       parameters:
         - name: site_id
@@ -1161,6 +1214,8 @@ paths:
           $ref: '#/responses/error'
     delete:
       operationId: deleteSiteDeploy
+      summary: Delete a site's deploy
+      description: Marks a deploy for deletion.
       tags: [deploy]
       parameters:
         - name: deploy_id
@@ -1179,6 +1234,7 @@ paths:
   /deploys/{deploy_id}/cancel:
     post:
       operationId: cancelSiteDeploy
+      summary: Cancel a deploy
       tags: [deploy]
       parameters:
         - name: deploy_id
@@ -1195,6 +1251,8 @@ paths:
   /sites/{site_id}/deploys/{deploy_id}/restore:
     post:
       operationId: restoreSiteDeploy
+      summary: Restore a previous deploy
+      description: Publishes a previous deploy of the site.
       tags: [deploy]
       parameters:
         - name: site_id
@@ -1220,6 +1278,7 @@ paths:
         required: true
     get:
       operationId: listSiteBuilds
+      summary: List a site's builds
       tags: [build]
       parameters:
         - $ref: '#/parameters/page'
@@ -1235,6 +1294,7 @@ paths:
           $ref: '#/responses/error'
     post:
       operationId: createSiteBuild
+      summary: Start a build
       tags: [build]
       description: |
         Runs a build for a site. The build will be scheduled to run at the first opportunity, but it might not start immediately if insufficient account build capacity is available.
@@ -1321,6 +1381,7 @@ paths:
         required: true
     get:
       operationId: listSiteDeployedBranches
+      summary: List a site's deployed branches
       tags: [deployedBranch]
       responses:
         '200':
@@ -1339,6 +1400,7 @@ paths:
         required: true
     put:
       operationId: unlinkSiteRepo
+      summary: Unlink a site's repository
       tags: [site]
       description: >-
         [Beta] Unlinks the repo from the site.
@@ -1366,6 +1428,7 @@ paths:
         required: true
     put:
       operationId: enableSite
+      summary: Enable a site
       tags: [site]
       description: >-
         Re-enables a site that was previously disabled by the user.
@@ -1388,6 +1451,7 @@ paths:
         required: true
     put:
       operationId: disableSite
+      summary: Disable a site
       tags: [site]
       description: >-
         Disables a site, preventing it from serving content.
@@ -1411,6 +1475,7 @@ paths:
         required: true
     get:
       operationId: getSiteBuild
+      summary: Get a build
       tags: [build]
       responses:
         '200':
@@ -1432,6 +1497,7 @@ paths:
         required: true
     post:
       operationId: updateSiteBuildLog
+      summary: Add a message to a build log
       tags: [buildLogMsg]
       responses:
         '204':
@@ -1458,6 +1524,7 @@ paths:
         required: false
     post:
       operationId: notifyBuildStart
+      summary: Mark a build as started
       tags: [build]
       responses:
         '204':
@@ -1472,6 +1539,8 @@ paths:
         required: true
     get:
       operationId: getAccountBuildStatus
+      summary: Get a team's build status
+      description: Returns the team's counts of active, concurrency-pending, and enqueued builds, and its build minutes usage.
       tags: [build]
       responses:
         '200':
@@ -1490,6 +1559,7 @@ paths:
         required: true
     get:
       operationId: getDNSForSite
+      summary: Get a site's DNS configuration
       tags: [dnsZone]
       responses:
         '200':
@@ -1502,6 +1572,8 @@ paths:
           $ref: '#/responses/error'
     put:
       operationId: configureDNSForSite
+      summary: Configure a site's DNS
+      description: Creates any missing DNS zones and records for the site's custom domain and domain aliases. This usually runs automatically when the custom domain is set.
       tags: [dnsZone]
       responses:
         '200':
@@ -1520,6 +1592,8 @@ paths:
         required: true
     put:
       operationId: rollbackSiteDeploy
+      summary: Roll back a site's production deploy
+      description: Rolls back the production deploy to the deploy referenced by its `rollback_id`. Does nothing if the current production deploy has no `rollback_id`.
       tags: [deploy]
       responses:
         '204':
@@ -1529,6 +1603,7 @@ paths:
   /deploys/{deploy_id}:
     get:
       operationId: getDeploy
+      summary: Get a deploy
       tags: [deploy]
       parameters:
         - name: deploy_id
@@ -1544,6 +1619,8 @@ paths:
           $ref: '#/responses/error'
     delete:
       operationId: deleteDeploy
+      summary: Delete a deploy
+      description: Marks a deploy for deletion.
       tags: [deploy]
       parameters:
         - name: deploy_id
@@ -1558,6 +1635,7 @@ paths:
   /deploys/{deploy_id}/validations_report:
     patch:
       operationId: updateDeployValidations
+      summary: Update a deploy's validations report
       tags: [deploy]
       description: Updates the deploy validations report for a deploy.
       x-internal: true
@@ -1586,6 +1664,8 @@ paths:
   /deploys/{deploy_id}/lock:
     post:
       operationId: lockDeploy
+      summary: Lock a deploy
+      description: Locks a deploy. Subsequent deploys are built but not published.
       tags: [deploy]
       parameters:
         - name: deploy_id
@@ -1602,6 +1682,7 @@ paths:
   /deploys/{deploy_id}/unlock:
     post:
       operationId: unlockDeploy
+      summary: Unlock a deploy
       tags: [deploy]
       parameters:
         - name: deploy_id
@@ -1618,6 +1699,7 @@ paths:
   /deploys/{deploy_id}/files/{path}:
     put:
       operationId: uploadDeployFile
+      summary: Upload a deploy file
       tags: [file]
       consumes:
         - application/octet-stream
@@ -1649,6 +1731,7 @@ paths:
   /deploys/{deploy_id}/functions/{name}:
     put:
       operationId: uploadDeployFunction
+      summary: Upload a deploy function
       tags: [function]
       consumes:
         - application/octet-stream
@@ -1690,6 +1773,7 @@ paths:
   /deploys/{deploy_id}/server/{code_sha}:
     put:
       operationId: uploadDeployServer
+      summary: Upload a deploy's Netlify Server bundle
       tags: [deploy]
       consumes:
         - application/octet-stream
@@ -1723,6 +1807,7 @@ paths:
   /deploys/{deploy_id}/edge_functions/{code_sha}:
     put:
       operationId: uploadDeployEdgeFunction
+      summary: Upload a deploy's edge functions bundle
       tags: [edgeFunction]
       consumes:
         - application/octet-stream
@@ -1751,6 +1836,7 @@ paths:
     put:
       x-internal: true
       operationId: updatePlugin
+      summary: Update a site's build plugin
       tags: [x-internal]
       description: 'This is an internal-only endpoint.'
       parameters:
@@ -1777,6 +1863,7 @@ paths:
     get:
       x-internal: true
       operationId: getLatestPluginRuns
+      summary: List a site's latest build plugin runs
       tags: [x-internal]
       description: 'This is an internal-only endpoint.'
       parameters:
@@ -1806,6 +1893,7 @@ paths:
     post:
       x-internal: true
       operationId: createPluginRun
+      summary: Create a build plugin run
       tags: [x-internal]
       description: 'This is an internal-only endpoint.'
       parameters:
@@ -1827,6 +1915,7 @@ paths:
   /forms/{form_id}/submissions:
     get:
       operationId: listFormSubmissions
+      summary: List a form's submissions
       tags: [submission]
       parameters:
         - name: form_id
@@ -1847,6 +1936,8 @@ paths:
   /hooks:
     get:
       operationId: listHooksBySiteId
+      summary: List a site's outgoing hooks
+      description: Returns the outgoing hooks for a site. Pass `form_id` or `event` to filter the results.
       tags: [hook]
       parameters:
         - name: site_id
@@ -1864,6 +1955,7 @@ paths:
           $ref: '#/responses/error'
     post:
       operationId: createHookBySiteId
+      summary: Create an outgoing hook
       tags: [hook]
       consumes:
         - application/json
@@ -1892,6 +1984,7 @@ paths:
         required: true
     get:
       operationId: getHook
+      summary: Get an outgoing hook
       tags: [hook]
       responses:
         '200':
@@ -1902,6 +1995,7 @@ paths:
           $ref: '#/responses/error'
     put:
       operationId: updateHook
+      summary: Update an outgoing hook
       tags: [hook]
       parameters:
         - name: hook
@@ -1918,6 +2012,7 @@ paths:
           $ref: '#/responses/error'
     delete:
       operationId: deleteHook
+      summary: Delete an outgoing hook
       tags: [hook]
       responses:
         '204':
@@ -1930,6 +2025,8 @@ paths:
         required: true
     post:
       operationId: enableHook
+      summary: Re-enable an outgoing hook
+      description: Re-enables an outgoing hook that was disabled after repeated delivery errors.
       tags: [hook]
       responses:
         '200':
@@ -1941,6 +2038,8 @@ paths:
   /hooks/types:
     get:
       operationId: listHookTypes
+      summary: List outgoing hook types
+      description: Returns the available outgoing hook types. When `site_id` is given, returns only the types available to that site.
       tags: [hookType]
       responses:
         '200':
@@ -1954,6 +2053,7 @@ paths:
   /oauth/tickets:
     post:
       operationId: createTicket
+      summary: Create an OAuth ticket
       tags: [ticket]
       parameters:
         - name: client_id
@@ -1985,6 +2085,7 @@ paths:
   /oauth/tickets/{ticket_id}:
     get:
       operationId: showTicket
+      summary: Get an OAuth ticket
       tags: [ticket]
       parameters:
         - name: ticket_id
@@ -2001,6 +2102,7 @@ paths:
   /oauth/tickets/{ticket_id}/exchange:
     post:
       operationId: exchangeTicket
+      summary: Exchange an OAuth ticket for an access token
       tags: [accessToken]
       parameters:
         - name: ticket_id
@@ -2017,6 +2119,7 @@ paths:
   /deploy_keys:
     get:
       operationId: listDeployKeys
+      summary: List deploy keys
       tags: [deployKey]
       responses:
         '200':
@@ -2029,6 +2132,7 @@ paths:
           $ref: '#/responses/error'
     post:
       operationId: createDeployKey
+      summary: Create a deploy key
       tags: [deployKey]
       consumes:
         - application/json
@@ -2047,6 +2151,7 @@ paths:
         required: true
     get:
       operationId: getDeployKey
+      summary: Get a deploy key
       tags: [deployKey]
       responses:
         '200':
@@ -2057,6 +2162,7 @@ paths:
           $ref: '#/responses/error'
     delete:
       operationId: deleteDeployKey
+      summary: Delete a deploy key
       tags: [deployKey]
       responses:
         '204':
@@ -2066,6 +2172,7 @@ paths:
   /{account_slug}/sites:
     post:
       operationId: createSiteInTeam
+      summary: Create a site in a team
       tags: [site]
       consumes:
         - application/json
@@ -2093,6 +2200,7 @@ paths:
         Please use [createEnvVars](#tag/environmentVariables/operation/createEnvVars) to create environment variables for a site.
     get:
       operationId: listSitesForAccount # an account represents a team or a user
+      summary: List a team's sites
       tags: [site]
       parameters:
         - name: name
@@ -2124,6 +2232,7 @@ paths:
         required: true
     get:
       operationId: listMembersForAccount # an account represents a team or a user
+      summary: List a team's members
       tags: [member]
       responses:
         '200':
@@ -2136,6 +2245,7 @@ paths:
           $ref: '#/responses/error'
     post:
       operationId: addMemberToAccount # an account represents a team or a user
+      summary: Add a member to a team
       tags: [member]
       consumes:
         - application/json
@@ -2166,6 +2276,7 @@ paths:
         required: true
     get:
       operationId: getAccountMember # an account represents a team or a user
+      summary: Get a team member
       tags: [member]
       responses:
         '200':
@@ -2176,6 +2287,7 @@ paths:
           $ref: '#/responses/error'
     put:
       operationId: updateAccountMember # an account represents a team or a user
+      summary: Update a team member
       tags: [member]
       consumes:
         - application/json
@@ -2194,6 +2306,7 @@ paths:
           $ref: '#/responses/error'
     delete:
       operationId: removeAccountMember
+      summary: Remove a team member
       tags: [member]
       responses:
         '204':
@@ -2203,6 +2316,7 @@ paths:
   /billing/payment_methods:
     get:
       operationId: listPaymentMethodsForUser
+      summary: List payment methods
       tags: [paymentMethod]
       responses:
         '200':
@@ -2216,6 +2330,7 @@ paths:
   /accounts/types:
     get:
       operationId: listAccountTypesForUser
+      summary: List plans available for new teams
       tags: [accountType]
       responses:
         '200':
@@ -2229,6 +2344,7 @@ paths:
   /accounts:
     get:
       operationId: listAccountsForUser
+      summary: List the current user's teams
       tags: [accountMembership]
       parameters:
         - name: minimal
@@ -2246,6 +2362,7 @@ paths:
           $ref: '#/responses/error'
     post:
       operationId: createAccount
+      summary: Create a team
       tags: [accountMembership]
       parameters:
         - name: accountSetup
@@ -2268,6 +2385,7 @@ paths:
         required: true
     get:
       operationId: getAccount
+      summary: Get a team
       tags: [accountMembership]
       responses:
         '200':
@@ -2278,6 +2396,7 @@ paths:
           $ref: '#/responses/error'
     put:
       operationId: updateAccount
+      summary: Update a team
       tags: [accountMembership]
       parameters:
         - name: accountUpdateSetup
@@ -2293,6 +2412,7 @@ paths:
           $ref: '#/responses/error'
     delete:
       operationId: cancelAccount
+      summary: Cancel a team
       tags: [accountMembership]
       responses:
         '204':
@@ -2307,6 +2427,7 @@ paths:
         required: true
     get:
       operationId: listAccountAuditEvents
+      summary: List a team's audit log events
       tags: [auditLog]
       parameters:
         - name: query
@@ -2331,6 +2452,7 @@ paths:
   /agent_runners:
     get:
       operationId: listAgentRunners
+      summary: List a site's agent runs
       tags: [agentRunner]
       description: >-
         Lists a site's agent runs, most recently active first. Archived runs
@@ -2382,6 +2504,7 @@ paths:
           $ref: '#/responses/error'
     post:
       operationId: createAgentRunner
+      summary: Start an agent run
       tags: [agentRunner]
       parameters:
         - name: site_id
@@ -2434,6 +2557,7 @@ paths:
         description: The site's ID or one of its hostnames.
     post:
       operationId: createSiteAgentRunner
+      summary: Start an agent run on a site
       tags: [agentRunner]
       description: Starts an agent run on the site.
       parameters:
@@ -2476,6 +2600,8 @@ paths:
     post:
       x-internal: true
       operationId: createAgentRunnerUploadUrl
+      summary: Create an upload URL for agent run files
+      description: Returns a presigned URL for uploading a file that agent run sessions can use, and the file's storage key.
       tags: [agentRunner]
       parameters:
         - name: account_id
@@ -2493,6 +2619,15 @@ paths:
       responses:
         '200':
           description: OK
+          schema:
+            type: object
+            properties:
+              upload_url:
+                type: string
+                description: Presigned URL to upload the file to with a PUT request. Expires after one hour.
+              file_key:
+                type: string
+                description: Storage key of the uploaded file.
         '400':
           description: Bad Request
         '422':
@@ -2507,6 +2642,7 @@ paths:
         required: true
     get:
       operationId: getAgentRunner
+      summary: Get an agent run
       tags: [agentRunner]
       responses:
         '200':
@@ -2517,6 +2653,7 @@ paths:
           $ref: '#/responses/error'
     patch:
       operationId: updateAgentRunner
+      summary: Update an agent run
       tags: [agentRunner]
       responses:
         '200':
@@ -2527,6 +2664,7 @@ paths:
           $ref: '#/responses/error'
     delete:
       operationId: deleteAgentRunner
+      summary: Stop an agent run (alias)
       # This tag is in no x-tagGroups entry, which keeps the operation out of the docs but not the clients.
       tags: [hiddenAgentRunner]
       description: Same as `POST /agent_runners/{agent_runner_id}/stop`. Doesn't delete the run.
@@ -2548,6 +2686,7 @@ paths:
         required: true
     post:
       operationId: stopAgentRunner
+      summary: Stop an agent run
       tags: [agentRunner]
       description: Stops the run's active session. Stopping happens in the background.
       responses:
@@ -2568,6 +2707,7 @@ paths:
         required: true
     get:
       operationId: getAgentRunnerDiff
+      summary: Get an agent run's diff
       tags: [agentRunner]
       description: >-
         Returns the run's changes as a unified diff. With `page`, returns that
@@ -2598,6 +2738,7 @@ paths:
         required: true
     post:
       operationId: archiveAgentRunner
+      summary: Archive an agent run
       tags: [agentRunner]
       responses:
         '202':
@@ -2620,10 +2761,14 @@ paths:
     post:
       x-internal: true
       operationId: agentRunnerPullRequest
+      summary: Open a pull request from an agent run
+      description: Opens a pull request from the run's most recent completed session that has a diff.
       tags: [agentRunner]
       responses:
         '200':
           description: OK
+          schema:
+            $ref: '#/definitions/agentRunner'
         '400':
           description: Bad Request
         '409':
@@ -2641,6 +2786,7 @@ paths:
     post:
       x-internal: true
       operationId: agentRunnerCommitToBranch
+      summary: Commit an agent run's changes to a branch
       tags: [agentRunner]
       parameters:
         - name: target_branch
@@ -2650,6 +2796,8 @@ paths:
       responses:
         '200':
           description: OK
+          schema:
+            $ref: '#/definitions/agentRunner'
         '400':
           description: Bad Request
         '409':
@@ -2669,6 +2817,7 @@ paths:
         required: true
     get:
       operationId: listAgentRunnerSessions
+      summary: List an agent run's sessions
       tags: [agentRunnerSession]
       parameters:
         - $ref: '#/parameters/page'
@@ -2700,6 +2849,7 @@ paths:
           $ref: '#/responses/error'
     post:
       operationId: createAgentRunnerSession
+      summary: Start a follow-up agent run session
       tags: [agentRunnerSession]
       description: Starts a follow-up session on the run.
       parameters:
@@ -2770,6 +2920,7 @@ paths:
         required: true
     get:
       operationId: getAgentRunnerSession
+      summary: Get an agent run session
       tags: [agentRunnerSession]
       responses:
         '200':
@@ -2780,6 +2931,7 @@ paths:
           $ref: '#/responses/error'
     patch:
       operationId: updateAgentRunnerSession
+      summary: Update an agent run session
       tags: [agentRunnerSession]
       parameters:
         - name: is_published
@@ -2794,6 +2946,7 @@ paths:
           $ref: '#/responses/error'
     delete:
       operationId: deleteAgentRunnerSession
+      summary: Stop an agent run session (alias)
       # This tag is in no x-tagGroups entry, which keeps the operation out of the docs but not the clients.
       tags: [hiddenAgentRunner]
       description: Same as `POST /agent_runners/{agent_runner_id}/sessions/{agent_runner_session_id}/stop`. Doesn't delete the session.
@@ -2819,6 +2972,7 @@ paths:
         required: true
     post:
       operationId: stopAgentRunnerSession
+      summary: Stop an agent run session
       tags: [agentRunnerSession]
       description: Stops the session. Stopping happens in the background.
       responses:
@@ -2843,6 +2997,7 @@ paths:
         required: true
     post:
       operationId: answerAgentRunnerSession
+      summary: Answer an agent run session's pending interaction
       tags: [agentRunnerSession]
       description: >-
         Answers or skips a pending interaction and resumes the session. A
@@ -2886,6 +3041,7 @@ paths:
         required: true
     get:
       operationId: listFormSubmission
+      summary: Get a form submission
       tags: [submission]
       parameters:
         - name: query
@@ -2904,6 +3060,7 @@ paths:
           $ref: '#/responses/error'
     delete:
       operationId: deleteSubmission
+      summary: Delete a form submission
       tags: [submission]
       responses:
         '204':
@@ -2920,6 +3077,7 @@ paths:
         required: true
     get:
       operationId: listServiceInstancesForSite
+      summary: List a site's add-on instances
       tags: [serviceInstance]
       responses:
         '200':
@@ -2942,6 +3100,7 @@ paths:
         required: true
     post:
       operationId: createServiceInstance
+      summary: Create an add-on instance
       tags: [serviceInstance]
       consumes:
         - application/json
@@ -2974,6 +3133,7 @@ paths:
         required: true
     get:
       operationId: showServiceInstance
+      summary: Get an add-on instance
       tags: [serviceInstance]
       responses:
         '200':
@@ -2984,6 +3144,7 @@ paths:
           $ref: '#/responses/error'
     put:
       operationId: updateServiceInstance
+      summary: Update an add-on instance
       tags: [serviceInstance]
       consumes:
         - application/json
@@ -3000,6 +3161,7 @@ paths:
           $ref: '#/responses/error'
     delete:
       operationId: deleteServiceInstance
+      summary: Delete an add-on instance
       tags: [serviceInstance]
       responses:
         '204':
@@ -3015,6 +3177,7 @@ paths:
         in: query
     get:
       operationId: getServices
+      summary: List add-on services
       tags: [service]
       responses:
         '200':
@@ -3033,6 +3196,7 @@ paths:
         required: true
     get:
       operationId: showService
+      summary: Get an add-on service
       tags: [service]
       responses:
         '200':
@@ -3052,6 +3216,7 @@ paths:
         required: true
     get:
       operationId: showServiceManifest
+      summary: Get an add-on service's manifest
       tags: [service]
       responses:
         '201':
@@ -3065,6 +3230,7 @@ paths:
   /user:
     get:
       operationId: getCurrentUser
+      summary: Get the current user
       tags: [user]
       responses:
         '200':
@@ -3083,6 +3249,7 @@ paths:
         required: true
     post:
       operationId: createSplitTest
+      summary: Create a split test
       tags: [splitTest]
       consumes:
         - application/json
@@ -3101,6 +3268,7 @@ paths:
           $ref: '#/responses/error'
     get:
       operationId: getSplitTests
+      summary: List a site's split tests
       tags: [splitTest]
       responses:
         '200':
@@ -3123,6 +3291,7 @@ paths:
         required: true
     put:
       operationId: updateSplitTest
+      summary: Update a split test
       tags: [splitTest]
       consumes:
         - application/json
@@ -3141,6 +3310,7 @@ paths:
           $ref: '#/responses/error'
     get:
       operationId: getSplitTest
+      summary: Get a split test
       tags: [splitTest]
       responses:
         '200':
@@ -3163,6 +3333,7 @@ paths:
         required: true
     post:
       operationId: enableSplitTest
+      summary: Publish a split test
       tags: [splitTest]
       responses:
         '204':
@@ -3183,6 +3354,7 @@ paths:
         required: true
     post:
       operationId: disableSplitTest
+      summary: Unpublish a split test
       tags: [splitTest]
       responses:
         '204':
@@ -3194,6 +3366,7 @@ paths:
   /dns_zones:
     post:
       operationId: createDnsZone
+      summary: Create a DNS zone
       tags: [dnsZone]
       consumes:
         - application/json
@@ -3212,6 +3385,8 @@ paths:
           $ref: '#/responses/error'
     get:
       operationId: getDnsZones
+      summary: List DNS zones
+      description: Returns the DNS zones for the team given by `account_slug`, or all DNS zones the current user can access.
       tags: [dnsZone]
       parameters:
         - name: account_slug
@@ -3235,6 +3410,7 @@ paths:
         required: true
     get:
       operationId: getDnsZone
+      summary: Get a DNS zone
       tags: [dnsZone]
       responses:
         '200':
@@ -3245,6 +3421,7 @@ paths:
           $ref: '#/responses/error'
     delete:
       operationId: deleteDnsZone
+      summary: Delete a DNS zone
       tags: [dnsZone]
       responses:
         '204':
@@ -3276,6 +3453,7 @@ paths:
         required: true
     put:
       operationId: transferDnsZone
+      summary: Transfer a DNS zone to another team
       tags: [dnsZone]
       responses:
         '200':
@@ -3294,6 +3472,7 @@ paths:
         required: true
     get:
       operationId: getDnsRecords
+      summary: List a DNS zone's records
       tags: [dnsZone]
       responses:
         '200':
@@ -3304,6 +3483,7 @@ paths:
           $ref: '#/responses/error'
     post:
       operationId: createDnsRecord
+      summary: Create a DNS record
       tags: [dnsZone]
       consumes:
         - application/json
@@ -3334,6 +3514,7 @@ paths:
         required: true
     get:
       operationId: getIndividualDnsRecord
+      summary: Get a DNS record
       tags: [dnsZone]
       responses:
         '200':
@@ -3344,6 +3525,7 @@ paths:
           $ref: '#/responses/error'
     delete:
       operationId: deleteDnsRecord
+      summary: Delete a DNS record
       tags: [dnsZone]
       responses:
         '204':
@@ -3360,6 +3542,7 @@ paths:
         required: true
     get:
       operationId: listSiteDevServers
+      summary: List a site's dev servers
       tags: [devServer]
       parameters:
         - $ref: '#/parameters/page'
@@ -3375,6 +3558,7 @@ paths:
           $ref: '#/responses/error'
     post:
       operationId: createSiteDevServer
+      summary: Start a dev server
       tags: [devServer]
       parameters:
         - name: branch
@@ -3391,6 +3575,8 @@ paths:
           $ref: '#/responses/error'
     delete:
       operationId: deleteSiteDevServers
+      summary: Stop a branch's dev servers
+      description: Stops all dev servers for a branch. Stopping happens in the background.
       tags: [devServer]
       parameters:
         - name: branch
@@ -3420,6 +3606,7 @@ paths:
         required: true
     get:
       operationId: getSiteDevServer
+      summary: Get a dev server
       tags: [devServer]
       responses:
         '200':
@@ -3441,10 +3628,13 @@ paths:
     post:
       x-internal: true
       operationId: markDevServerActivity
+      summary: Record dev server activity
       tags: [devServer]
       responses:
         '200':
           description: OK
+          schema:
+            $ref: '#/definitions/devServer'
   # end sites/{site_id}/dev_servers/{dev_server_id}/activity
   # begin sites/{site_id}/dev_servers/{dev_server_id}/state
   /sites/{site_id}/dev_servers/{dev_server_id}/state:
@@ -3459,6 +3649,7 @@ paths:
         required: true
     post:
       operationId: updateDevServerState
+      summary: Update a dev server's state
       tags: [devServer]
       parameters:
         - name: body
@@ -3496,6 +3687,7 @@ paths:
         required: true
     get:
       operationId: listSiteDevServerHooks
+      summary: List a site's dev server hooks
       tags: [devServerHook]
       responses:
         '200':
@@ -3508,6 +3700,7 @@ paths:
           $ref: '#/responses/error'
     post:
       operationId: createSiteDevServerHook
+      summary: Create a dev server hook
       tags: [devServerHook]
       consumes:
         - application/json
@@ -3536,6 +3729,7 @@ paths:
         required: true
     get:
       operationId: getSiteDevServerHook
+      summary: Get a dev server hook
       tags: [devServerHook]
       responses:
         '200':
@@ -3546,6 +3740,7 @@ paths:
           $ref: '#/responses/error'
     put:
       operationId: updateSiteDevServerHook
+      summary: Update a dev server hook
       tags: [devServerHook]
       consumes:
         - application/json
@@ -3562,6 +3757,7 @@ paths:
           $ref: '#/responses/error'
     delete:
       operationId: deleteSiteDevServerHook
+      summary: Delete a dev server hook
       tags: [devServerHook]
       responses:
         '204':
@@ -3578,6 +3774,7 @@ paths:
     get:
       x-internal: true
       operationId: listSiteAgentRunnerHooks
+      summary: List a site's agent runner hooks
       tags: [agentRunnerHook]
       responses:
         '200':
@@ -3591,6 +3788,7 @@ paths:
     post:
       x-internal: true
       operationId: createSiteAgentRunnerHook
+      summary: Create an agent runner hook
       tags: [agentRunnerHook]
       consumes:
         - application/json
@@ -3620,6 +3818,7 @@ paths:
     get:
       x-internal: true
       operationId: getSiteAgentRunnerHook
+      summary: Get an agent runner hook
       tags: [agentRunnerHook]
       responses:
         '200':
@@ -3631,6 +3830,7 @@ paths:
     put:
       x-internal: true
       operationId: updateSiteAgentRunnerHook
+      summary: Update an agent runner hook
       tags: [agentRunnerHook]
       consumes:
         - application/json
@@ -3648,6 +3848,7 @@ paths:
     delete:
       x-internal: true
       operationId: deleteSiteAgentRunnerHook
+      summary: Delete an agent runner hook
       tags: [agentRunnerHook]
       responses:
         '204':
@@ -3658,6 +3859,7 @@ paths:
   /ai-gateway/providers:
     get:
       operationId: getAIGatewayProviders
+      summary: List AI Gateway providers and models
       tags: [aiGateway]
       security: []
       responses:
@@ -3681,6 +3883,7 @@ paths:
         description: The site ID
     get:
       operationId: getAIGatewayToken
+      summary: Get a site's AI Gateway token
       tags: [aiGateway]
       responses:
         '200':
@@ -3701,6 +3904,7 @@ paths:
         description: The account ID
     get:
       operationId: getAccountAIGatewayToken
+      summary: Get a team's AI Gateway token
       tags: [aiGateway]
       responses:
         '200':
@@ -3722,6 +3926,7 @@ paths:
         required: true
     post:
       operationId: createSiteDatabase
+      summary: Create a site database
       tags: [database]
       description: >-
         Creates a new database for the specified site. If a database already exists,
@@ -3747,6 +3952,7 @@ paths:
           $ref: '#/responses/error'
     get:
       operationId: getSiteDatabase
+      summary: Get a site database
       tags: [database]
       description: Returns the database connection string for the specified site.
       parameters:
@@ -3768,6 +3974,7 @@ paths:
           $ref: '#/responses/error'
     delete:
       operationId: deleteSiteDatabase
+      summary: Delete a site database
       tags: [database]
       description: Deletes the database and all associated branches and snapshots for the specified site.
       responses:
@@ -3783,6 +3990,7 @@ paths:
         required: true
     post:
       operationId: createSiteDatabaseBranch
+      summary: Create a database branch
       tags: [database]
       description: >-
         Creates a new database branch. If a branch already exists
@@ -3814,6 +4022,7 @@ paths:
         required: true
     get:
       operationId: listSiteDatabaseBranches
+      summary: List database branches
       tags: [database]
       description: Returns all branches for the site's database with compute status and metadata.
       responses:
@@ -3836,6 +4045,7 @@ paths:
         description: The branch ID
     get:
       operationId: getSiteDatabaseBranch
+      summary: Get a database branch
       tags: [database]
       description: Returns the database branch connection string for a specific branch.
       parameters:
@@ -3859,6 +4069,7 @@ paths:
           $ref: '#/responses/error'
     delete:
       operationId: deleteSiteDatabaseBranch
+      summary: Delete a database branch
       tags: [database]
       description: Deletes a database branch.
       responses:
@@ -3879,6 +4090,7 @@ paths:
         description: The branch ID to reset
     post:
       operationId: resetSiteDatabaseBranch
+      summary: Reset a database branch
       tags: [database]
       description: >-
         Resets a non-production database branch by re-forking it from a source branch
@@ -3932,6 +4144,7 @@ paths:
         description: The branch ID
     put:
       operationId: setSiteDatabaseBranchComputeSettings
+      summary: Set a database branch's compute settings
       tags: [database]
       description: >-
         Sets compute settings for a specific database branch, overriding project-level settings.
@@ -3961,6 +4174,7 @@ paths:
         required: true
     put:
       operationId: setSiteDatabaseComputeSettings
+      summary: Set database compute settings
       tags: [database]
       description: >-
         Sets project-level compute settings for the database.
@@ -3985,6 +4199,7 @@ paths:
           $ref: '#/responses/error'
     get:
       operationId: getSiteDatabaseComputeSettings
+      summary: Get database compute settings
       tags: [database]
       description: >-
         Returns the project-level compute settings for the database.
@@ -4001,6 +4216,7 @@ paths:
           $ref: '#/responses/error'
     delete:
       operationId: clearSiteDatabaseComputeSettings
+      summary: Reset database compute settings to defaults
       tags: [database]
       description: >-
         Resets project-level compute settings to tier defaults.
@@ -4020,6 +4236,7 @@ paths:
         required: true
     get:
       operationId: listSiteDatabaseMigrations
+      summary: List database migrations
       tags: [database]
       description: >-
         Returns the list of migrations available for the specified branch,
@@ -4055,6 +4272,7 @@ paths:
         description: The migration name
     get:
       operationId: getSiteDatabaseMigration
+      summary: Get a database migration
       tags: [database]
       description: >-
         Returns the contents of a named migration for the specified branch.
@@ -4089,6 +4307,7 @@ paths:
         description: The deploy ID to run migrations for
     post:
       operationId: runSiteDatabaseMigrations
+      summary: Run database migrations for a deploy
       tags: [database]
       description: >-
         Runs database migrations for the specified deploy.
@@ -4117,6 +4336,7 @@ paths:
         required: true
     post:
       operationId: createSiteDatabaseSnapshot
+      summary: Create a database snapshot
       tags: [database]
       description: >-
         Creates a point-in-time snapshot of a database branch.
@@ -4143,6 +4363,7 @@ paths:
         required: true
     get:
       operationId: listSiteDatabaseSnapshots
+      summary: List database snapshots
       tags: [database]
       description: Returns all snapshots for the site's database.
       responses:
@@ -4165,6 +4386,7 @@ paths:
         description: The snapshot ID
     delete:
       operationId: deleteSiteDatabaseSnapshot
+      summary: Delete a database snapshot
       tags: [database]
       description: Deletes a database snapshot.
       responses:
@@ -4185,6 +4407,7 @@ paths:
         description: The snapshot ID to restore
     post:
       operationId: restoreSiteDatabaseSnapshot
+      summary: Restore a database snapshot
       tags: [database]
       description: >-
         Restores a snapshot to a database branch.
