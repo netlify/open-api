@@ -7,9 +7,12 @@ package operations
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
+
+	"github.com/netlify/open-api/v2/go/models"
 )
 
 // MarkDevServerActivityReader is a Reader for the MarkDevServerActivity structure.
@@ -43,13 +46,25 @@ MarkDevServerActivityOK handles this case with default header values.
 OK
 */
 type MarkDevServerActivityOK struct {
+	Payload *models.DevServer
 }
 
 func (o *MarkDevServerActivityOK) Error() string {
-	return fmt.Sprintf("[POST /sites/{site_id}/dev_servers/{dev_server_id}/activity][%d] markDevServerActivityOK ", 200)
+	return fmt.Sprintf("[POST /sites/{site_id}/dev_servers/{dev_server_id}/activity][%d] markDevServerActivityOK  %+v", 200, o.Payload)
+}
+
+func (o *MarkDevServerActivityOK) GetPayload() *models.DevServer {
+	return o.Payload
 }
 
 func (o *MarkDevServerActivityOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.DevServer)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
