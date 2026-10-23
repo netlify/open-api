@@ -1,12 +1,15 @@
-const { normalize } = require('path')
+const { tmpdir } = require('os')
+const { join, normalize } = require('path')
 
 const execa = require('execa')
 
 const { copyAssets } = require('./assets')
 const { injectContent } = require('./inject')
 
-const SWAGGER_PATH = `${__dirname}/../../external.yml`
 const OUTPUT_DIR = `${__dirname}/../../dist`
+// Docs-only bundle of docs@latest (redocly.yml). build-docs doesn't run
+// decorators itself, so bundle first, like `npm run bundle` does for external.yml.
+const DOCS_BUNDLE_PATH = join(tmpdir(), 'netlify-open-api-docs.yml')
 const OUTPUT_PATH = `${OUTPUT_DIR}/index.html`
 
 // Build API documentation single self-contained HTML file using `redoc-cli`
@@ -15,6 +18,11 @@ const buildDocs = async function () {
 }
 
 const redocCli = async function () {
+  await execa(
+    'redocly',
+    ['bundle', 'docs@latest', `--output=${DOCS_BUNDLE_PATH}`],
+    { stdio: 'inherit' }
+  )
   await execa(
     'redocly',
     [
@@ -27,7 +35,7 @@ const redocCli = async function () {
       `--theme.openapi.logo.gutter=${LOGO_PADDING}`,
       `--output=${normalize(OUTPUT_PATH)}`,
       'build-docs',
-      SWAGGER_PATH,
+      DOCS_BUNDLE_PATH,
     ],
     { stdio: 'inherit' }
   )

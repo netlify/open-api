@@ -438,6 +438,8 @@ func (a *Client) AddMemberToAccount(params *AddMemberToAccountParams, authInfo r
 
 /*
 AgentRunnerCommitToBranch commits an agent run s changes to a branch
+
+Queues a commit of the run's diff to `target_branch`. The commit is made in the background: `merge_commit_is_being_created` is `true` until it finishes. Poll `getAgentRunner` until `merge_commit_sha` or `merge_commit_error` is set.
 */
 func (a *Client) AgentRunnerCommitToBranch(params *AgentRunnerCommitToBranchParams, authInfo runtime.ClientAuthInfoWriter) (*AgentRunnerCommitToBranchOK, error) {
 	// TODO: Validate the params before sending
@@ -473,7 +475,7 @@ func (a *Client) AgentRunnerCommitToBranch(params *AgentRunnerCommitToBranchPara
 /*
 AgentRunnerPullRequest opens a pull request from an agent run
 
-Opens a pull request from the run's most recent completed session that has a diff.
+Queues a pull request for the run's diff (`result_diff`). The pull request is created in the background, so `pr_url` is usually not set yet in the response: `pr_is_being_created` is `true` until it finishes. Poll `getAgentRunner` until `pr_url` or `pr_error` is set. Returns 409 if a pull request already exists or is being created, and 422 if the run has no diff, no branch, no GitHub repository or installation, or needs a git sync.
 */
 func (a *Client) AgentRunnerPullRequest(params *AgentRunnerPullRequestParams, authInfo runtime.ClientAuthInfoWriter) (*AgentRunnerPullRequestOK, error) {
 	// TODO: Validate the params before sending
@@ -5187,7 +5189,7 @@ func (a *Client) ListSitesForAccount(params *ListSitesForAccountParams, authInfo
 /*
 LockDeploy locks a deploy
 
-Locks a deploy. Subsequent deploys are built but not published.
+Locks a deploy so that subsequent deploys are built but not published. If the deploy is not the site's published deploy, locking publishes it first. When publishing is gated, the publish and lock are queued and the API responds with 202 Accepted and the deploy; poll `getDeploy` to follow it.
 */
 func (a *Client) LockDeploy(params *LockDeployParams, authInfo runtime.ClientAuthInfoWriter) (*LockDeployOK, error) {
 	// TODO: Validate the params before sending
