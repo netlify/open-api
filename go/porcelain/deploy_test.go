@@ -1126,6 +1126,7 @@ func TestBundleServerLeavesUnsetConfigEmpty(t *testing.T) {
 	assert.Empty(t, bundle.runtimeVersion)
 	assert.Nil(t, bundle.routes)
 	assert.Nil(t, bundle.excludedRoutes)
+	assert.Nil(t, bundle.scale)
 }
 
 var errStopAfterWalk = errors.New("stop after walk")
@@ -1197,6 +1198,64 @@ func TestDeployFilesServerOmitsUnsetRoutes(t *testing.T) {
 	require.NoError(t, err)
 
 	assert.JSONEq(t, `{"sha":"abc"}`, string(payload))
+}
+
+func TestDoDeploySendsTheServerScale(t *testing.T) {
+	tests := []struct {
+		name          string
+		manifestScale string
+		expectedScale string
+	}{
+		{name: "min and max", manifestScale: `,"scale":{"min":1,"max":3}`, expectedScale: `,"scale":{"min":1,"max":3}`},
+		{name: "only max", manifestScale: `,"scale":{"max":3}`, expectedScale: `,"scale":{"max":3}`},
+		{name: "min of zero", manifestScale: `,"scale":{"min":0}`, expectedScale: `,"scale":{"min":0}`},
+		{name: "empty", manifestScale: `,"scale":{}`, expectedScale: ``},
+		{name: "absent", manifestScale: ``, expectedScale: ``},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			siteDir := t.TempDir()
+			require.NoError(t, os.WriteFile(filepath.Join(siteDir, "index.html"), []byte("Hello"), 0o644))
+
+			serverDir := t.TempDir()
+			archive := filepath.Join(serverDir, "server.tgz")
+			require.NoError(t, os.WriteFile(archive, []byte("the server"), 0o644))
+
+			manifest := fmt.Sprintf(`{"server":{"path":%q%s},"version":1}`, archive, tt.manifestScale)
+			require.NoError(t, os.WriteFile(filepath.Join(serverDir, "manifest.json"), []byte(manifest), 0o644))
+
+			client := NewRetryable(apiClient.New("localhost", "/api/v1", []string{"http"}), strfmt.Default, 1)
+			observer := &walkCapturingObserver{}
+
+			_, err := client.DoDeploy(gocontext.Background(), &DeployOptions{
+				Dir:       siteDir,
+				ServerDir: serverDir,
+				Observer:  observer,
+			}, nil)
+			require.ErrorIs(t, err, errStopAfterWalk)
+			require.NotNil(t, observer.deployFiles)
+			require.NotNil(t, observer.deployFiles.Server)
+			require.NoError(t, observer.deployFiles.Server.Validate(strfmt.Default))
+
+			payload, err := json.Marshal(observer.deployFiles.Server)
+			require.NoError(t, err)
+
+			sum := sha256.Sum256([]byte("the server"))
+			expected := fmt.Sprintf(`{"sha":%q%s}`, hex.EncodeToString(sum[:]), tt.expectedScale)
+			assert.JSONEq(t, expected, string(payload))
+		})
+	}
+}
+
+func TestDeployFilesServerScaleValidatesBounds(t *testing.T) {
+	sha := "abc"
+	zero := int64(0)
+	negative := int64(-1)
+
+	require.Error(t, (&models.DeployFilesServer{Sha: &sha, Scale: &models.DeployFilesServerScale{Max: &zero}}).Validate(strfmt.Default))
+	require.Error(t, (&models.DeployFilesServer{Sha: &sha, Scale: &models.DeployFilesServerScale{Min: &negative}}).Validate(strfmt.Default))
+	require.NoError(t, (&models.DeployFilesServer{Sha: &sha, Scale: &models.DeployFilesServerScale{Min: &zero}}).Validate(strfmt.Default))
 }
 
 func TestBundleServerWithoutAServer(t *testing.T) {

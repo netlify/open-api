@@ -43,6 +43,9 @@ type DeployFilesServer struct {
 	//
 	RuntimeVersion string `json:"runtime_version,omitempty"`
 
+	// scale
+	Scale *DeployFilesServerScale `json:"scale,omitempty"`
+
 	// The SHA256 digest of the server bundle.
 	// Required: true
 	Sha *string `json:"sha"`
@@ -61,6 +64,10 @@ func (m *DeployFilesServer) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateRoutes(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateScale(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -165,6 +172,24 @@ func (m *DeployFilesServer) validateRoutes(formats strfmt.Registry) error {
 			}
 		}
 
+	}
+
+	return nil
+}
+
+func (m *DeployFilesServer) validateScale(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Scale) { // not required
+		return nil
+	}
+
+	if m.Scale != nil {
+		if err := m.Scale.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("scale")
+			}
+			return err
+		}
 	}
 
 	return nil

@@ -16,4 +16,10 @@ type serverManifestEntry struct {
 	Routes         []functionRoute         `json:"routes"`
 	ExcludedRoutes []excludedFunctionRoute `json:"excludedRoutes"`
 	RuntimeVersion string                  `json:"runtimeVersion"`
+	Scale          *serverManifestScale    `json:"scale"`
+}
+
+type serverManifestScale struct {
+	Min *int64 `json:"min"`
+	Max *int64 `json:"max"`
 }
