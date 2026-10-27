@@ -5460,6 +5460,26 @@ definitions:
             description: |
               The runtime version the server was built for, such as `nodejs24.x`. A
               default version is used when absent.
+          scale:
+            type: object
+            description: How many instances of the server run.
+            properties:
+              min:
+                type: integer
+                format: int64
+                minimum: 0
+                x-nullable: true
+                description: |
+                  The minimum number of instances the server keeps running. Defaults to 0
+                  when absent.
+              max:
+                type: integer
+                format: int64
+                minimum: 1
+                x-nullable: true
+                description: |
+                  The maximum number of instances the server scales to. Defaults to the
+                  highest the account's plan allows when absent.
       function_schedules:
         type: array
         items:
