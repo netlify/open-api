@@ -3194,6 +3194,75 @@ paths:
         default:
           $ref: '#/responses/error'
   # end service instances
+  /sites/{site_id}/identity/{identity_id}/users/{user_id}:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+      - name: identity_id
+        type: string
+        in: path
+        required: true
+        description: The site's Identity instance ID, returned as `identity_instance_id` by `getSite`.
+      - name: user_id
+        type: string
+        in: path
+        required: true
+        description: The Identity user's UUID.
+    get:
+      operationId: getIdentityUser
+      summary: Get an Identity user
+      description: >-
+        Returns one Identity user by ID. Agent runner tokens receive only the user's ID, email,
+        confirmation, invitation, sign-in, password-reset and email-change timestamps, and the
+        `provider` and `roles` fields of `app_metadata`.
+      tags: [identityUser]
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/identityUser'
+        default:
+          $ref: '#/responses/error'
+  /sites/{site_id}/identity/{identity_id}/users/lookup:
+    parameters:
+      - name: site_id
+        type: string
+        in: path
+        required: true
+      - name: identity_id
+        type: string
+        in: path
+        required: true
+        description: The site's Identity instance ID, returned as `identity_instance_id` by `getSite`.
+    post:
+      operationId: lookupIdentityUser
+      summary: Look up an Identity user by email
+      description: >-
+        Returns the one Identity user with this exact email. Matching ignores case and trailing
+        spaces. Partial matches and pagination are not supported, and an unknown email returns 404.
+        Agent runner tokens receive the same restricted fields as `getIdentityUser`.
+      tags: [identityUser]
+      consumes:
+        - application/json
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            required: [email]
+            properties:
+              email:
+                type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/identityUser'
+        default:
+          $ref: '#/responses/error'
   # begin services
   /services/:
     parameters:
@@ -5175,6 +5244,52 @@ definitions:
       created_at:
         type: string
         format: dateTime
+  identityUser:
+    type: object
+    properties:
+      id:
+        type: string
+      email:
+        type: string
+      aud:
+        type: string
+      role:
+        type: string
+      confirmed_at:
+        type: string
+        format: dateTime
+      invited_at:
+        type: string
+        format: dateTime
+      confirmation_sent_at:
+        type: string
+        format: dateTime
+      recovery_sent_at:
+        type: string
+        format: dateTime
+      email_change_sent_at:
+        type: string
+        format: dateTime
+      last_sign_in_at:
+        type: string
+        format: dateTime
+      app_metadata:
+        type: object
+        properties:
+          provider:
+            type: string
+          roles:
+            type: array
+            items:
+              type: string
+      user_metadata:
+        type: object
+      created_at:
+        type: string
+        format: dateTime
+      updated_at:
+        type: string
+        format: dateTime
   hookType:
     type: object
     properties:
@@ -6720,6 +6835,9 @@ x-tagGroups:
     tags:
       - service
       - serviceInstance
+  - name: Identity
+    tags:
+      - identityUser
   - name: Functions
     tags:
       - function
@@ -6790,6 +6908,8 @@ tags:
     x-displayName: Service
   - name: serviceInstance
     x-displayName: Service instance
+  - name: identityUser
+    x-displayName: Identity user
   - name: function
     x-displayName: Function
   - name: form

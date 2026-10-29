@@ -197,6 +197,8 @@ type ClientService interface {
 
 	GetHook(params *GetHookParams, authInfo runtime.ClientAuthInfoWriter) (*GetHookOK, error)
 
+	GetIdentityUser(params *GetIdentityUserParams, authInfo runtime.ClientAuthInfoWriter) (*GetIdentityUserOK, error)
+
 	GetIndividualDNSRecord(params *GetIndividualDNSRecordParams, authInfo runtime.ClientAuthInfoWriter) (*GetIndividualDNSRecordOK, error)
 
 	GetLatestPluginRuns(params *GetLatestPluginRunsParams, authInfo runtime.ClientAuthInfoWriter) (*GetLatestPluginRunsOK, error)
@@ -302,6 +304,8 @@ type ClientService interface {
 	ListSitesForAccount(params *ListSitesForAccountParams, authInfo runtime.ClientAuthInfoWriter) (*ListSitesForAccountOK, error)
 
 	LockDeploy(params *LockDeployParams, authInfo runtime.ClientAuthInfoWriter) (*LockDeployOK, error)
+
+	LookupIdentityUser(params *LookupIdentityUserParams, authInfo runtime.ClientAuthInfoWriter) (*LookupIdentityUserOK, error)
 
 	MarkDevServerActivity(params *MarkDevServerActivityParams, authInfo runtime.ClientAuthInfoWriter) (*MarkDevServerActivityOK, error)
 
@@ -3382,6 +3386,42 @@ func (a *Client) GetHook(params *GetHookParams, authInfo runtime.ClientAuthInfoW
 }
 
 /*
+GetIdentityUser gets an identity user
+
+Returns one Identity user by ID. Agent runner tokens receive only the user's ID, email, confirmation, invitation, sign-in, password-reset and email-change timestamps, and the `provider` and `roles` fields of `app_metadata`.
+*/
+func (a *Client) GetIdentityUser(params *GetIdentityUserParams, authInfo runtime.ClientAuthInfoWriter) (*GetIdentityUserOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetIdentityUserParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "getIdentityUser",
+		Method:             "GET",
+		PathPattern:        "/sites/{site_id}/identity/{identity_id}/users/{user_id}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &GetIdentityUserReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*GetIdentityUserOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*GetIdentityUserDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
 GetIndividualDNSRecord gets a DNS record
 */
 func (a *Client) GetIndividualDNSRecord(params *GetIndividualDNSRecordParams, authInfo runtime.ClientAuthInfoWriter) (*GetIndividualDNSRecordOK, error) {
@@ -5219,6 +5259,42 @@ func (a *Client) LockDeploy(params *LockDeployParams, authInfo runtime.ClientAut
 	}
 	// unexpected success response
 	unexpectedSuccess := result.(*LockDeployDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+LookupIdentityUser looks up an identity user by email
+
+Returns the one Identity user with this exact email. Matching ignores case and trailing spaces. Partial matches and pagination are not supported, and an unknown email returns 404. Agent runner tokens receive the same restricted fields as `getIdentityUser`.
+*/
+func (a *Client) LookupIdentityUser(params *LookupIdentityUserParams, authInfo runtime.ClientAuthInfoWriter) (*LookupIdentityUserOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewLookupIdentityUserParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "lookupIdentityUser",
+		Method:             "POST",
+		PathPattern:        "/sites/{site_id}/identity/{identity_id}/users/lookup",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &LookupIdentityUserReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*LookupIdentityUserOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*LookupIdentityUserDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
