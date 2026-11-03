@@ -84,6 +84,54 @@ size 1743570
 			t.Fatalf("expected `1743570`, got `%v`", data.Size)
 		}
 	})
+
+	t.Run("test with v1 pointer whose oid has no hash method", func(t *testing.T) {
+		content := `version https://git-lfs.github.com/spec/v1
+oid 7e56e498ccb4cbb9c672e1aed6710fb91b2fd314394a666c11c33b2059ea3d71
+size 1743570
+`
+		_, err := readLFSData(strings.NewReader(content))
+		require.Error(t, err)
+		assert.Contains(t, err.Error(), "malformed LFS OID")
+	})
+}
+
+// A file in the deploy directory that carries the LFS pointer header but an OID
+// without its "<hash method>:" prefix must fail the deploy with an error.
+// Splitting such an OID on ":" yields a single element, and reading the second
+// one panicked, which took down the whole process instead of reporting the bad
+// file.
+func TestDoDeploy_MalformedLFSPointer(t *testing.T) {
+	dir := t.TempDir()
+	pointer := `version https://git-lfs.github.com/spec/v1
+oid 7e56e498ccb4cbb9c672e1aed6710fb91b2fd314394a666c11c33b2059ea3d71
+size 1743570
+`
+	require.NoError(t, os.WriteFile(filepath.Join(dir, "photo.jpg"), []byte(pointer), 0o644))
+
+	var requests int32
+	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, _ *http.Request) {
+		atomic.AddInt32(&requests, 1)
+		rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+		rw.Write([]byte(`{ "id": "deploy-id" }`))
+	}))
+	defer server.Close()
+
+	hu, err := url.Parse(server.URL)
+	require.NoError(t, err)
+	tr := apiClient.NewWithClient(hu.Host, "/api/v1", []string{"http"}, http.DefaultClient)
+	client := NewRetryable(tr, strfmt.Default, 1)
+
+	ctx := context.WithAuthInfo(gocontext.Background(), apiClient.BearerToken("token"))
+	_, err = client.DoDeploy(ctx, &DeployOptions{
+		SiteID:            "site-id",
+		Dir:               dir,
+		LargeMediaEnabled: true,
+		Observer:          mockObserver{},
+	}, nil)
+	require.Error(t, err)
+	assert.Contains(t, err.Error(), "malformed LFS OID")
+	assert.Zero(t, atomic.LoadInt32(&requests), "the walk fails before the deploy is created")
 }
 
 func TestAddWithLargeMedia(t *testing.T) {
