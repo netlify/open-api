@@ -505,6 +505,7 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 			InstanceSize:   options.server.instanceSize,
 			Routes:         options.server.routes,
 			ExcludedRoutes: options.server.excludedRoutes,
+			Access:         options.server.access,
 			RuntimeVersion: options.server.runtimeVersion,
 			Scale:          options.server.scale,
 		}
@@ -1159,8 +1160,9 @@ func bundleFromManifest(ctx context.Context, functionsDir dirHandle, manifestFil
 
 		routes := toModelRoutes(function.Routes)
 		excludedRoutes := toModelExcludedRoutes(function.ExcludedRoutes)
+		access := toModelAccess(function.Access)
 
-		hasConfig := function.DisplayName != "" || function.Generator != "" || len(routes) > 0 || len(excludedRoutes) > 0 || len(function.BuildData) > 0 || function.Priority != 0 || function.TrafficRules != nil || function.Timeout != 0 || len(function.EventSubscriptions) > 0 || function.Region != "" || function.Memory != 0 || function.Vcpu != 0
+		hasConfig := function.DisplayName != "" || function.Generator != "" || len(routes) > 0 || len(excludedRoutes) > 0 || access != nil || len(function.BuildData) > 0 || function.Priority != 0 || function.TrafficRules != nil || function.Timeout != 0 || len(function.EventSubscriptions) > 0 || function.Region != "" || function.Memory != 0 || function.Vcpu != 0
 		if hasConfig {
 			cfg := models.FunctionConfig{
 				DisplayName:        function.DisplayName,
@@ -1169,6 +1171,7 @@ func bundleFromManifest(ctx context.Context, functionsDir dirHandle, manifestFil
 				Region:             function.Region,
 				Routes:             routes,
 				ExcludedRoutes:     excludedRoutes,
+				Access:             access,
 				BuildData:          function.BuildData,
 				Priority:           int64(function.Priority),
 				EventSubscriptions: function.EventSubscriptions,
@@ -1225,6 +1228,16 @@ func toModelExcludedRoutes(routes []excludedFunctionRoute) []*models.ExcludedFun
 		}
 	}
 	return result
+}
+
+func toModelAccess(access *functionAccess) *models.FunctionAccess {
+	if access == nil {
+		return nil
+	}
+	return &models.FunctionAccess{
+		Public:       access.Public,
+		PublicRoutes: toModelExcludedRoutes(access.PublicRoutes),
+	}
 }
 
 // manifestFunctionRel converts a manifest function path into a path relative to
@@ -1372,6 +1385,7 @@ type serverBundle struct {
 	instanceSize   string
 	routes         []*models.FunctionRoute
 	excludedRoutes []*models.ExcludedFunctionRoute
+	access         *models.FunctionAccess
 	runtimeVersion string
 	scale          *models.DeployFilesServerScale
 }
@@ -1433,6 +1447,7 @@ func bundleServer(ctx context.Context, serverDir dirHandle, observer DeployObser
 		sha:            file.Sum,
 		region:         manifest.Server.Region,
 		instanceSize:   manifest.Server.InstanceSize,
+		access:         toModelAccess(manifest.Server.Access),
 		runtimeVersion: manifest.Server.RuntimeVersion,
 	}
 	if len(manifest.Server.Routes) > 0 {

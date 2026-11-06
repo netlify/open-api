@@ -21,6 +21,9 @@ import (
 // swagger:model deployFilesServer
 type DeployFilesServer struct {
 
+	// access
+	Access *FunctionAccess `json:"access,omitempty"`
+
 	// Paths within `routes` that the server does not handle.
 	ExcludedRoutes []*ExcludedFunctionRoute `json:"excluded_routes,omitempty"`
 
@@ -55,6 +58,10 @@ type DeployFilesServer struct {
 func (m *DeployFilesServer) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateAccess(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateExcludedRoutes(formats); err != nil {
 		res = append(res, err)
 	}
@@ -78,6 +85,24 @@ func (m *DeployFilesServer) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *DeployFilesServer) validateAccess(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Access) { // not required
+		return nil
+	}
+
+	if m.Access != nil {
+		if err := m.Access.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("access")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 
