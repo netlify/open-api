@@ -18,6 +18,9 @@ import (
 // swagger:model functionConfig
 type FunctionConfig struct {
 
+	// access
+	Access *FunctionAccess `json:"access,omitempty"`
+
 	// build data
 	BuildData interface{} `json:"build_data,omitempty"`
 
@@ -59,6 +62,10 @@ type FunctionConfig struct {
 func (m *FunctionConfig) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateAccess(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateExcludedRoutes(formats); err != nil {
 		res = append(res, err)
 	}
@@ -74,6 +81,24 @@ func (m *FunctionConfig) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *FunctionConfig) validateAccess(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Access) { // not required
+		return nil
+	}
+
+	if m.Access != nil {
+		if err := m.Access.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("access")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 

@@ -25,6 +25,7 @@ type functionsManifestEntry struct {
 	InvocationMode     string                  `json:"invocationMode"`
 	Routes             []functionRoute         `json:"routes"`
 	ExcludedRoutes     []excludedFunctionRoute `json:"excludedRoutes"`
+	Access             *functionAccess         `json:"access"`
 	Priority           int                     `json:"priority"`
 	TrafficRules       *functionTrafficRules   `json:"trafficRules"`
 	Vcpu               float32                 `json:"vcpu"`
@@ -42,6 +43,11 @@ type excludedFunctionRoute struct {
 	Pattern    string `json:"pattern"`
 	Literal    string `json:"literal"`
 	Expression string `json:"expression"`
+}
+
+type functionAccess struct {
+	Public       bool                    `json:"public"`
+	PublicRoutes []excludedFunctionRoute `json:"public_routes"`
 }
 
 type functionTrafficRules struct {
