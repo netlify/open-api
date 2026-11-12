@@ -24,7 +24,7 @@ info:
     - [JS Client](https://github.com/netlify/build/tree/main/packages/js-client)
   termsOfService: https://www.netlify.com/legal/terms-of-use/
   x-logo:
-    url: netlify-logo.png
+    url: netlify-logo.svg
     href: https://www.netlify.com/docs/
     altText: Netlify
 externalDocs:

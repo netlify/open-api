@@ -3,7 +3,7 @@ const { basename } = require('path')
 const cpFile = require('cp-file')
 
 const ASSETS = [
-  `${__dirname}/netlify-logo.png`,
+  `${__dirname}/netlify-logo.svg`,
   `${__dirname}/script.js`,
   `${__dirname}/styles.css`,
   `${__dirname}/../../node_modules/analytics/dist/analytics.min.js`,
