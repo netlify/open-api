@@ -4,6 +4,7 @@ const cpFile = require('cp-file')
 
 const ASSETS = [
   `${__dirname}/netlify-logo.svg`,
+  `${__dirname}/instrument-sans-latin-variable.woff2`,
   `${__dirname}/script.js`,
   `${__dirname}/styles.css`,
   `${__dirname}/../../node_modules/analytics/dist/analytics.min.js`,

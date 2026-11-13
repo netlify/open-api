@@ -48,6 +48,14 @@
 }
 
 /* 2026 logo with "API" set as text after it, not a lockup asset. */
+@font-face {
+  font-family: 'Instrument Sans';
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+  src: url('instrument-sans-latin-variable.woff2') format('woff2');
+}
+
 .menu-content a[href='https://www.netlify.com/docs/'] {
   display: flex;
   align-items: center;
@@ -65,6 +73,6 @@
 
 .menu-content a[href='https://www.netlify.com/docs/']::after {
   content: 'API';
-  font: 600 20px/1 Roboto, sans-serif;
+  font: 600 20px/1 'Instrument Sans', system-ui, Helvetica, sans-serif;
   color: #131619;
 }
