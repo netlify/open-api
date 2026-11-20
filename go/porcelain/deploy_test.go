@@ -1034,6 +1034,136 @@ func TestBundleWithManifestEventSubscriptions(t *testing.T) {
 	assert.Equal(t, []string{"deploy_succeeded", "identity_signup"}, helloJSConfig.EventSubscriptions)
 }
 
+func TestBundleWithManifestAccess(t *testing.T) {
+	dir := t.TempDir()
+
+	source, err := os.ReadFile(filepath.Join("../internal/data", "hello-js-function-test.zip"))
+	require.NoError(t, err)
+	require.NoError(t, os.WriteFile(filepath.Join(dir, "public.zip"), source, 0o644))
+	require.NoError(t, os.WriteFile(filepath.Join(dir, "only-access.zip"), source, 0o644))
+
+	publicAccess := `{"public":true}`
+	publicRoutesAccess := `{"public_routes":[{"pattern":"/hooks/:id","expression":"^/hooks/(.*)$"}]}`
+	manifest := fmt.Sprintf(`{
+		"functions": [
+			{
+				"path": "public.zip",
+				"runtime": "js",
+				"name": "public",
+				"routes": [{"pattern": "/hooks", "literal": "/hooks"}],
+				"access": %s
+			},
+			{
+				"path": "only-access.zip",
+				"runtime": "js",
+				"name": "only-access",
+				"access": %s
+			}
+		],
+		"version": 1
+	}`, publicAccess, publicRoutesAccess)
+	require.NoError(t, os.WriteFile(filepath.Join(dir, "manifest.json"), []byte(manifest), 0o644))
+
+	_, _, functionsConfig, err := bundle(gocontext.Background(), testDir(t, dir), newTestTempDir(t), mockObserver{})
+	require.NoError(t, err)
+	require.Contains(t, functionsConfig, "only-access")
+
+	public, err := json.Marshal(functionsConfig["public"].Access)
+	require.NoError(t, err)
+	assert.JSONEq(t, publicAccess, string(public))
+
+	onlyAccess, err := json.Marshal(functionsConfig["only-access"].Access)
+	require.NoError(t, err)
+	assert.JSONEq(t, publicRoutesAccess, string(onlyAccess))
+}
+
+func TestDoDeploySendsTheAccessConfig(t *testing.T) {
+	var gotRequest string
+	var gotBody []byte
+	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		gotRequest = req.Method + " " + req.URL.Path
+		gotBody, _ = io.ReadAll(req.Body)
+
+		rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+		rw.WriteHeader(http.StatusUnprocessableEntity)
+		rw.Write([]byte(`{"message": "Unprocessable Entity", "code": 422 }`))
+	}))
+	defer server.Close()
+
+	hu, _ := url.Parse(server.URL)
+	tr := apiClient.NewWithClient(hu.Host, "/api/v1", []string{"http"}, http.DefaultClient)
+	client := NewRetryable(tr, strfmt.Default, 1)
+	ctx := context.WithAuthInfo(gocontext.Background(), apiClient.BearerToken("token"))
+
+	siteDir := t.TempDir()
+	require.NoError(t, os.WriteFile(filepath.Join(siteDir, "index.html"), []byte("Hello"), 0o644))
+
+	functionsDir := t.TempDir()
+	source, err := os.ReadFile(filepath.Join("../internal/data", "hello-js-function-test.zip"))
+	require.NoError(t, err)
+	for _, name := range []string{"public.zip", "public-routes.zip", "private.zip"} {
+		require.NoError(t, os.WriteFile(filepath.Join(functionsDir, name), source, 0o644))
+	}
+
+	publicAccess := `{"public":true}`
+	publicRoutesAccess := `{"public_routes":[{"pattern":"/hooks/:id","expression":"^/hooks/(.*)$"},{"pattern":"/hooks","literal":"/hooks"}]}`
+	functionsManifest := fmt.Sprintf(`{
+		"functions": [
+			{
+				"path": "public.zip",
+				"runtime": "js",
+				"name": "public",
+				"routes": [{"pattern": "/public", "literal": "/public"}],
+				"access": %s
+			},
+			{
+				"path": "public-routes.zip",
+				"runtime": "js",
+				"name": "public-routes",
+				"routes": [{"pattern": "/hooks/*", "expression": "^/hooks(?:/(.*))/?$"}],
+				"access": %s
+			},
+			{
+				"path": "private.zip",
+				"runtime": "js",
+				"name": "private",
+				"routes": [{"pattern": "/private", "literal": "/private"}]
+			}
+		],
+		"version": 1
+	}`, publicAccess, publicRoutesAccess)
+	require.NoError(t, os.WriteFile(filepath.Join(functionsDir, "manifest.json"), []byte(functionsManifest), 0o644))
+
+	serverDir := t.TempDir()
+	archive := filepath.Join(serverDir, "server.tgz")
+	require.NoError(t, os.WriteFile(archive, []byte("the server"), 0o644))
+
+	serverAccess := `{"public_routes":[{"pattern":"/webhooks/*","expression":"^/webhooks(?:/(.*))/?$"}]}`
+	serverManifest := fmt.Sprintf(`{"server":{"path":%q,"access":%s},"version":1}`, archive, serverAccess)
+	require.NoError(t, os.WriteFile(filepath.Join(serverDir, "manifest.json"), []byte(serverManifest), 0o644))
+
+	_, err = client.DoDeploy(ctx, &DeployOptions{
+		SiteID:       "site-id",
+		Dir:          siteDir,
+		FunctionsDir: functionsDir,
+		ServerDir:    serverDir,
+	}, nil)
+	require.ErrorContains(t, err, "Code:422 Message:Unprocessable Entity")
+	require.Equal(t, "POST /api/v1/sites/site-id/deploys", gotRequest)
+
+	var sent struct {
+		FunctionsConfig map[string]map[string]json.RawMessage `json:"functions_config"`
+		Server          map[string]json.RawMessage            `json:"server"`
+	}
+	require.NoError(t, json.Unmarshal(gotBody, &sent))
+
+	assert.JSONEq(t, publicAccess, string(sent.FunctionsConfig["public"]["access"]))
+	assert.JSONEq(t, publicRoutesAccess, string(sent.FunctionsConfig["public-routes"]["access"]))
+	require.Contains(t, sent.FunctionsConfig, "private")
+	assert.NotContains(t, sent.FunctionsConfig["private"], "access")
+	assert.JSONEq(t, serverAccess, string(sent.Server["access"]))
+}
+
 func TestReadZipRuntime(t *testing.T) {
 	runtime, err := readZipRuntime(testDir(t, "../internal/data").root, "hello-rs-function-test.zip")
 
@@ -1126,6 +1256,7 @@ func TestBundleServerLeavesUnsetConfigEmpty(t *testing.T) {
 	assert.Empty(t, bundle.runtimeVersion)
 	assert.Nil(t, bundle.routes)
 	assert.Nil(t, bundle.excludedRoutes)
+	assert.Nil(t, bundle.access)
 	assert.Nil(t, bundle.scale)
 }
 
@@ -1158,7 +1289,8 @@ func TestDoDeploySendsTheServerConfig(t *testing.T) {
 			"instanceSize": "large",
 			"runtimeVersion": "nodejs24.x",
 			"routes": [{"pattern": "/*", "expression": "^(?:/(.*))/?$", "prefer_static": true}],
-			"excludedRoutes": [{"pattern": "/static/*", "expression": "^/static(?:/(.*))/?$"}]
+			"excludedRoutes": [{"pattern": "/static/*", "expression": "^/static(?:/(.*))/?$"}],
+			"access": {"public_routes": [{"pattern": "/hooks/*", "expression": "^/hooks(?:/(.*))/?$"}]}
 		},
 		"version": 1
 	}`, archive)
@@ -1189,6 +1321,9 @@ func TestDoDeploySendsTheServerConfig(t *testing.T) {
 	assert.Equal(t, []*models.ExcludedFunctionRoute{
 		{Pattern: "/static/*", Expression: "^/static(?:/(.*))/?$"},
 	}, server.ExcludedRoutes)
+	assert.Equal(t, &models.FunctionAccess{
+		PublicRoutes: []*models.ExcludedFunctionRoute{{Pattern: "/hooks/*", Expression: "^/hooks(?:/(.*))/?$"}},
+	}, server.Access)
 	require.NoError(t, server.Validate(strfmt.Default))
 }
 

@@ -5595,6 +5595,8 @@ definitions:
                 description: |
                   The maximum number of instances the server scales to. Defaults to the
                   highest the account's plan allows when absent.
+          access:
+            $ref: '#/definitions/functionAccess'
       function_schedules:
         type: array
         items:
@@ -6595,6 +6597,8 @@ definitions:
         type: array
         items:
           type: string
+      access:
+        $ref: '#/definitions/functionAccess'
   functionRoute:
     type: object
     properties:
@@ -6620,6 +6624,19 @@ definitions:
         type: string
       expression:
         type: string
+  functionAccess:
+    type: object
+    description: Which of the paths in `routes` bypass team login protection.
+    properties:
+      public:
+        type: boolean
+        description: Every path in `routes` bypasses team login protection.
+      public_routes:
+        type: array
+        description: Paths within `routes` that bypass team login protection.
+        x-omitempty: true
+        items:
+          $ref: '#/definitions/excludedFunctionRoute'
   trafficRulesConfig:
     type: object
     properties:

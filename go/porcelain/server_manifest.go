@@ -15,6 +15,7 @@ type serverManifestEntry struct {
 	InstanceSize   string                  `json:"instanceSize"`
 	Routes         []functionRoute         `json:"routes"`
 	ExcludedRoutes []excludedFunctionRoute `json:"excludedRoutes"`
+	Access         *functionAccess         `json:"access"`
 	RuntimeVersion string                  `json:"runtimeVersion"`
 	Scale          *serverManifestScale    `json:"scale"`
 }
