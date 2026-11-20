@@ -1608,13 +1608,17 @@ func readLFSData(file io.Reader) (*pointerData, error) {
 		}
 	}
 
-	var sha string
 	oid, ok := values["oid"]
 	if !ok {
 		return nil, fmt.Errorf("missing LFS OID")
 	}
 
-	sha = strings.SplitN(oid, ":", 2)[1]
+	// An OID is "<hash method>:<hash>". Without the separator there is no hash to
+	// read, so report the bad pointer rather than indexing past the split.
+	_, sha, ok := strings.Cut(oid, ":")
+	if !ok {
+		return nil, fmt.Errorf("malformed LFS OID: %s", oid)
+	}
 
 	size, err := strconv.ParseInt(values["size"], 10, 0)
 	if err != nil {
