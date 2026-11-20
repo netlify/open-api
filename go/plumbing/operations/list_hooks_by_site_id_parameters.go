@@ -61,6 +61,16 @@ for the list hooks by site Id operation typically these are written to a http.Re
 */
 type ListHooksBySiteIDParams struct {
 
+	/*Event
+	  Only return hooks for this event name.
+
+	*/
+	Event *string
+	/*FormID
+	  Only return hooks attached to this form.
+
+	*/
+	FormID *string
 	/*SiteID*/
 	SiteID string
 
@@ -102,6 +112,28 @@ func (o *ListHooksBySiteIDParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
+// WithEvent adds the event to the list hooks by site Id params
+func (o *ListHooksBySiteIDParams) WithEvent(event *string) *ListHooksBySiteIDParams {
+	o.SetEvent(event)
+	return o
+}
+
+// SetEvent adds the event to the list hooks by site Id params
+func (o *ListHooksBySiteIDParams) SetEvent(event *string) {
+	o.Event = event
+}
+
+// WithFormID adds the formID to the list hooks by site Id params
+func (o *ListHooksBySiteIDParams) WithFormID(formID *string) *ListHooksBySiteIDParams {
+	o.SetFormID(formID)
+	return o
+}
+
+// SetFormID adds the formId to the list hooks by site Id params
+func (o *ListHooksBySiteIDParams) SetFormID(formID *string) {
+	o.FormID = formID
+}
+
 // WithSiteID adds the siteID to the list hooks by site Id params
 func (o *ListHooksBySiteIDParams) WithSiteID(siteID string) *ListHooksBySiteIDParams {
 	o.SetSiteID(siteID)
@@ -120,6 +152,38 @@ func (o *ListHooksBySiteIDParams) WriteToRequest(r runtime.ClientRequest, reg st
 		return err
 	}
 	var res []error
+
+	if o.Event != nil {
+
+		// query param event
+		var qrEvent string
+		if o.Event != nil {
+			qrEvent = *o.Event
+		}
+		qEvent := qrEvent
+		if qEvent != "" {
+			if err := r.SetQueryParam("event", qEvent); err != nil {
+				return err
+			}
+		}
+
+	}
+
+	if o.FormID != nil {
+
+		// query param form_id
+		var qrFormID string
+		if o.FormID != nil {
+			qrFormID = *o.FormID
+		}
+		qFormID := qrFormID
+		if qFormID != "" {
+			if err := r.SetQueryParam("form_id", qFormID); err != nil {
+				return err
+			}
+		}
+
+	}
 
 	// query param site_id
 	qrSiteID := o.SiteID

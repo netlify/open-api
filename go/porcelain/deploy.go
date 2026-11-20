@@ -506,6 +506,7 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 			Routes:         options.server.routes,
 			ExcludedRoutes: options.server.excludedRoutes,
 			RuntimeVersion: options.server.runtimeVersion,
+			Scale:          options.server.scale,
 		}
 	}
 
@@ -1372,6 +1373,7 @@ type serverBundle struct {
 	routes         []*models.FunctionRoute
 	excludedRoutes []*models.ExcludedFunctionRoute
 	runtimeVersion string
+	scale          *models.DeployFilesServerScale
 }
 
 // bundleServer reads the deploy's Netlify Server out of the server manifest,
@@ -1438,6 +1440,9 @@ func bundleServer(ctx context.Context, serverDir dirHandle, observer DeployObser
 	}
 	if len(manifest.Server.ExcludedRoutes) > 0 {
 		bundle.excludedRoutes = toModelExcludedRoutes(manifest.Server.ExcludedRoutes)
+	}
+	if scale := manifest.Server.Scale; scale != nil && (scale.Min != nil || scale.Max != nil) {
+		bundle.scale = &models.DeployFilesServerScale{Min: scale.Min, Max: scale.Max}
 	}
 
 	return bundle, nil

@@ -49,7 +49,7 @@ func NewStopAgentRunnerSessionAccepted() *StopAgentRunnerSessionAccepted {
 /*
 StopAgentRunnerSessionAccepted handles this case with default header values.
 
-Accepted
+Accepted. The response has no body. The session is set to `cancelled` before this returns, and the sandbox shuts down in the background. To confirm, poll `getAgentRunnerSession` (`GET /agent_runners/{agent_runner_id}/sessions/{agent_runner_session_id}`) and check that `state` is `cancelled`.
 */
 type StopAgentRunnerSessionAccepted struct {
 }

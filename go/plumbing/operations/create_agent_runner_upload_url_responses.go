@@ -64,13 +64,25 @@ CreateAgentRunnerUploadURLOK handles this case with default header values.
 OK
 */
 type CreateAgentRunnerUploadURLOK struct {
+	Payload *models.CreateAgentRunnerUploadURLOKBody
 }
 
 func (o *CreateAgentRunnerUploadURLOK) Error() string {
-	return fmt.Sprintf("[POST /agent_runners/upload_url][%d] createAgentRunnerUploadUrlOK ", 200)
+	return fmt.Sprintf("[POST /agent_runners/upload_url][%d] createAgentRunnerUploadUrlOK  %+v", 200, o.Payload)
+}
+
+func (o *CreateAgentRunnerUploadURLOK) GetPayload() *models.CreateAgentRunnerUploadURLOKBody {
+	return o.Payload
 }
 
 func (o *CreateAgentRunnerUploadURLOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.CreateAgentRunnerUploadURLOKBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }

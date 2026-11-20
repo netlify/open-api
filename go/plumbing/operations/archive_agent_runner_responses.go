@@ -61,7 +61,7 @@ func NewArchiveAgentRunnerAccepted() *ArchiveAgentRunnerAccepted {
 /*
 ArchiveAgentRunnerAccepted handles this case with default header values.
 
-Accepted
+Accepted. The response has no body. The archive is applied before this returns: `getAgentRunner` (`GET /agent_runners/{agent_runner_id}`) reports `state` as `archived`.
 */
 type ArchiveAgentRunnerAccepted struct {
 }

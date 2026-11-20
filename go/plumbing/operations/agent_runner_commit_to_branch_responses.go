@@ -70,13 +70,25 @@ AgentRunnerCommitToBranchOK handles this case with default header values.
 OK
 */
 type AgentRunnerCommitToBranchOK struct {
+	Payload *models.AgentRunner
 }
 
 func (o *AgentRunnerCommitToBranchOK) Error() string {
-	return fmt.Sprintf("[POST /agent_runners/{agent_runner_id}/commit][%d] agentRunnerCommitToBranchOK ", 200)
+	return fmt.Sprintf("[POST /agent_runners/{agent_runner_id}/commit][%d] agentRunnerCommitToBranchOK  %+v", 200, o.Payload)
+}
+
+func (o *AgentRunnerCommitToBranchOK) GetPayload() *models.AgentRunner {
+	return o.Payload
 }
 
 func (o *AgentRunnerCommitToBranchOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.AgentRunner)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }

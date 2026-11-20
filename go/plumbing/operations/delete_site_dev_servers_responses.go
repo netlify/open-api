@@ -49,7 +49,7 @@ func NewDeleteSiteDevServersAccepted() *DeleteSiteDevServersAccepted {
 /*
 DeleteSiteDevServersAccepted handles this case with default header values.
 
-OK
+Accepted. The response has no body. The branch's active dev servers are set to `stopping` before this returns and shut down in the background. Poll `getSiteDevServer` (`GET /sites/{site_id}/dev_servers/{dev_server_id}`) or `listSiteDevServers` (`GET /sites/{site_id}/dev_servers`) until `state` is `done` (or `error`).
 */
 type DeleteSiteDevServersAccepted struct {
 }

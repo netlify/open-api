@@ -70,13 +70,25 @@ AgentRunnerPullRequestOK handles this case with default header values.
 OK
 */
 type AgentRunnerPullRequestOK struct {
+	Payload *models.AgentRunner
 }
 
 func (o *AgentRunnerPullRequestOK) Error() string {
-	return fmt.Sprintf("[POST /agent_runners/{agent_runner_id}/pull_request][%d] agentRunnerPullRequestOK ", 200)
+	return fmt.Sprintf("[POST /agent_runners/{agent_runner_id}/pull_request][%d] agentRunnerPullRequestOK  %+v", 200, o.Payload)
+}
+
+func (o *AgentRunnerPullRequestOK) GetPayload() *models.AgentRunner {
+	return o.Payload
 }
 
 func (o *AgentRunnerPullRequestOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.AgentRunner)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
